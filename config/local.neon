@@ -1,0 +1,4 @@
+database:
+    dsn: 'mysql:host=127.0.0.1;dbname=argomi_bestshop;charset=utf8mb4'
+    user: root
+    password: 

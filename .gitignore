@@ -1,0 +1,6 @@
+/vendor/
+/node_modules/
+/temp/*
+/log/*
+/config/local.neon
+/www/assets/
