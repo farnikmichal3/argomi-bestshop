@@ -2,18 +2,34 @@
 
 parameters:
 
+extensions:
+	console: Contributte\Console\DI\ConsoleExtension(true)
+	dbal: Nextras\Dbal\Bridges\NetteDI\DbalExtension
+	migrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
+
+migrations:
+	dir: %appDir%/../migrations
+	driver: mysql
+	dbal: nextras
+	groups:
+		structures:
+			directory: %appDir%/../migrations/structures
+			enabled: true
+		basic-data:
+			directory: %appDir%/../migrations/basic-data
+			enabled: true
+			dependencies: [structures]
+		dummy-data:
+			directory: %appDir%/../migrations/dummy-data
+			enabled: true
+			dependencies: [basic-data]
+
 
 application:
 	errorPresenter:
 		4xx: Error:Error4xx
 		5xx: Error:Error5xx
 	mapping: App\Presentation\*\**Presenter
-
-
-database:
-	dsn: 'sqlite::memory:'
-	user:
-	password:
 
 
 latte:
