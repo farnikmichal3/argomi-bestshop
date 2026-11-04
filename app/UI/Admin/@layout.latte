@@ -6,12 +6,16 @@
 
 	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
 
-	{asset? 'main.js'}
+	<link rel="stylesheet" href="{$basePath}/assets/app.css">
+    {block head}{/block}
 </head>
 
 <body>
 	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
 	{include content}
+
+	 <script src="{$basePath}/assets/app.js"></script>
+    {block scripts}{/block}
 </body>
 </html>
