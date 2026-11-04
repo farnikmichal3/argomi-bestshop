@@ -1,6 +1,32 @@
+# Dependencies
 /vendor/
 /node_modules/
-/temp/*
-/log/*
+
+# Nette runtime
+/temp/
+/log/
+
+# Local configuration
 /config/local.neon
+
+# Generated assets
 /www/assets/
+
+# IDE
+/.idea/
+/.vscode/
+
+# Testing and analysis cache
+/.phpunit.cache/
+/phpstan-cache/
+/coverage/
+
+# Operating system
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.log
+*.tmp
+*.cache
