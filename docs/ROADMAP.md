@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 40, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 479, zrušeno 1.
+Celkem **539 kroků**: hotovo 42, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 477, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
-| F1 | Prostředí a repozitář | 36 | 9 | 0 | 0 | 0 | 0 | 27 | 0 |
+| F1 | Prostředí a repozitář | 36 | 10 | 0 | 0 | 0 | 0 | 26 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
-| F3 | Databáze a migrace | 32 | 8 | 1 | 0 | 0 | 0 | 22 | 1 |
+| F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 34 | 0 | 0 | 0 | 0 | 0 | 34 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -153,7 +153,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 9 z 36 kroků.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 10 z 36 kroků.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -164,7 +164,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-07** Přidat `.editorconfig`
 - `[HOTOVO]` **F1-08** Ověřit vývojovou konfiguraci PHP v CLI i Apache (PHP 8.5.12, `memory_limit=512M`, `E_ALL`, zobrazování a logování chyb; konfigurace `php.ini` vyhovuje, bez změn)
 - `[HOTOVO]` **F1-09** `composer.json`: nastavit minimální PHP 8.3, `config.platform.php=8.3.0`, `sort-packages`; zachovat existující skripty `phpstan` a `tester`; ověřit Composer validaci a platform requirements bez změny verzí závislostí
-- `[PLÁN]` **F1-10** Vytvořit databázi `argomi_bestshop` s `utf8mb4` a vlastního uživatele s nejmenšími oprávněními
+- `[HOTOVO]` **F1-10** Ověřit databázi `argomi_bestshop` (`utf8mb4`, `utf8mb4_0900_ai_ci`) a vytvořit oddělené účty aplikace a migrací s minimálními oprávněními; přihlášení obou účtů ověřeno
 - `[PLÁN]` **F1-11** Vytvořit `config/local.neon` a ověřit jeho načítání v `Bootstrap.php`
 - `[PLÁN]` **F1-12** Nainstalovat `nette/database`
 - `[PLÁN]` **F1-13** Nainstalovat PHPStan, `extension-installer`, `phpstan-nette`, strict-rules a deprecation-rules
@@ -237,7 +237,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
 - `[PLÁN]` **F3-19** Implementace hashe kombinace varianty (SHA-256) a test shody s SQL `SHA2(..., 256)`
 - `[PLÁN]` **F3-20** Diagram vztahů tabulek rozdělený po modulech
-- `[PLÁN]` **F3-21** Oddělit databázového uživatele pro migrace a pro aplikaci
+- `[HOTOVO]` **F3-21** Oddělit databázové účty aplikace (`argomi_app`, pouze CRUD) a migrací (`argomi_migrator`, CRUD + DDL); oba účty mají přístup pouze k `argomi_bestshop` a přihlášení bylo ověřeno
 - `[HOTOVO]` **F3-22** Zásady zálohování a obnovy databáze (před migrací povinný dump/snapshot, rollback obnovením ze zálohy)
 - `[PLÁN]` **F3-23** CI: ověřit, že schéma prochází na verzi MySQL, kterou používáme (včetně `CHECK` u sloupců s cizím klíčem)
 - `[PLÁN]` **F3-24** Test: smazání hodnoty atributu nebo osy variant nesmí potichu odebrat hodnoty variant (rozhodnout `CASCADE` a `RESTRICT`)
@@ -744,6 +744,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v1.3 (8. 11. 2026)
+- Dokončen F1-10: ověřena existující databáze `argomi_bestshop` s `utf8mb4` / `utf8mb4_0900_ai_ci`; zachováno všech 47 existujících tabulek.
+- Vytvořeny účty `argomi_app` a `argomi_migrator` s hesly generovanými MySQL. Aplikační účet má pouze SELECT/INSERT/UPDATE/DELETE; migrační účet má navíc CREATE/ALTER/DROP/INDEX/REFERENCES. Oba účty jsou omezené na `argomi_bestshop.*` a jejich přihlášení bylo ověřeno.
+- Dokončen také F3-21: oddělení databázových účtů aplikace a migrací.
+- Aktualizován souhrnný stav: **42 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
 
 ### v1.2 (8. 11. 2026)
 - Dokončen F1-09: minimální verze PHP projektu zvýšena na 8.3; nastaven `config.platform.php=8.3.0` a `sort-packages=true`; zachovány existující Composer skripty `phpstan` a `tester`.
