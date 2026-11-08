@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.1 · 8. 11. 2026  
+**Revize:** 1.2 · 8. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -38,6 +38,7 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 - Rozšiřitelnost se řeší přes interní rozhraní, adaptéry, nastavení a doménové události, ne načítáním libovolného cizího kódu do jádra.
 - Funkce určené pro všechny obchody patří do jádra. Externí poskytovatelé plateb, dopravy nebo vyhledávání se připojují přes adaptéry.
 - Platební integrace bude používat vlastní rozhraní `PaymentProvider`; konkrétní platební brána se vybere až před produkčním nasazením podle cílového trhu, podporovaných metod, poplatků a podmínek. Objednávkový proces nebude závislý na konkrétním poskytovateli.
+- Doručovací integrace bude používat vlastní rozhraní `ShippingProvider` a samostatné adaptéry jednotlivých dopravců. Architektura umožní používat více dopravců současně; konkrétní integrace se vyberou podle cílového trhu a potřeb obchodu.
 - Vyhledávání produktů má vlastní rozhraní `ProductSearch`; výchozí implementací je MySQL FULLTEXT. Elasticsearch nebo OpenSearch lze později připojit jako volitelnou implementaci přes stejné rozhraní.
 
 ## 4. Technologie a vývojová pravidla
@@ -180,3 +181,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | F0-21: Všechny jazykové varianty URL mají explicitní prefix, včetně výchozího jazyka (`/cs`, `/en`). |
 | 8. 11. 2026 | F0-22: První verze je B2C; datový a doménový model počítá s firemními zákazníky a údaji IČO/DIČ, zatímco ověřování ARES/VIES a pokročilé B2B funkce se odkládají. |
 | 8. 11. 2026 | F0-23: Platební integrace bude postavena na vlastním rozhraní `PaymentProvider`; konkrétního poskytovatele vybereme až před produkčním nasazením. |
+| 8. 11. 2026 | F0-24: Doručovací integrace bude používat `ShippingProvider` a samostatné adaptéry; systém umožní současné použití více dopravců. |
