@@ -125,7 +125,6 @@ Nové rozhodnutí stanoví, že systémové překlady mají být rozděleny podl
 - doplnit testovací databázi a integrační testy migrací,
 - ověřit všechny FK, CHECK a mazací strategie,
 - vytvořit diagramy schématu podle modulů,
-- oddělit databázového uživatele aplikace a migrací,
 - doplnit testy součtů objednávek a snapshotů,
 - dokončit pravidla archivace produktů/variant,
 - doplnit úplné demo snapshoty a další vlny produktů,
@@ -133,7 +132,18 @@ Nové rozhodnutí stanoví, že systémové překlady mají být rozděleny podl
 - navrhnout rozdělení systémových překladů do doménových tabulek,
 - ověřit všechny migrace na cílové verzi MySQL.
 
-## 9. Bezpečnost migrací a provoz
+## 9. Databázové účty a oprávnění
+
+Databáze `argomi_bestshop` používá `utf8mb4` a kolaci `utf8mb4_0900_ai_ci`. Pro lokální vývoj jsou vytvořeny dva samostatné účty, oba omezené na `localhost` a databázi `argomi_bestshop`:
+
+| Účet | Oprávnění nad `argomi_bestshop.*` | Účel |
+|---|---|---|
+| `argomi_app` | `SELECT`, `INSERT`, `UPDATE`, `DELETE` | Běžný provoz aplikace; bez oprávnění měnit schéma |
+| `argomi_migrator` | `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `ALTER`, `DROP`, `INDEX`, `REFERENCES` | Spouštění databázových migrací |
+
+Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečného úložiště. Nikdy se neukládají do repozitáře ani do dokumentace. Účty nemají globální oprávnění ani `GRANT OPTION`.
+
+## 10. Bezpečnost migrací a provozu
 
 - Migrace se spouští řízeně a jejich pořadí určuje Nextras Migrations.
 - Před produkční migrací musí existovat ověřená záloha databáze.
@@ -141,9 +151,10 @@ Nové rozhodnutí stanoví, že systémové překlady mají být rozděleny podl
 - Demo seed musí být idempotentní nebo mít jasně definované jednorázové chování.
 - Zálohy a obnova jsou provozní požadavek, ne pouze příkaz pro vývojáře.
 
-## 10. Historie
+## 11. Historie
 
 | Datum | Změna |
 |---|---|
 | 4. 11. 2026 | Vytvořeno počáteční schéma a seed data v SQL. |
 | 8. 11. 2026 | v1.0: dokumentována skutečná časově značená struktura migrací a 46 tabulek. |
+| 8. 11. 2026 | v1.1: popsány oddělené databázové účty `argomi_app` a `argomi_migrator` a jejich minimální oprávnění. |
