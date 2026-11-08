@@ -37,6 +37,7 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 - Aplikace je modulární monolit; veřejná rozhraní modulů a pravidla závislostí jsou popsána v [STRUKTURA](STRUKTURA.md).
 - Rozšiřitelnost se řeší přes interní rozhraní, adaptéry, nastavení a doménové události, ne načítáním libovolného cizího kódu do jádra.
 - Funkce určené pro všechny obchody patří do jádra. Externí poskytovatelé plateb, dopravy nebo vyhledávání se připojují přes adaptéry.
+- Vyhledávání produktů má vlastní rozhraní `ProductSearch`; výchozí implementací je MySQL FULLTEXT. Elasticsearch nebo OpenSearch lze později připojit jako volitelnou implementaci přes stejné rozhraní.
 
 ## 4. Technologie a vývojová pravidla
 
@@ -169,3 +170,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 4. 11. 2026 | Původní dokument ZÁMĚR v0.1/v0.2. |
 | 8. 11. 2026 | v1.0: sjednocení s potvrzenou strukturou aplikace, veřejným repozitářem s vyhrazenými právy, doménovým přístupem k překladům a skutečným stavem databáze. |
 | 8. 11. 2026 | Rozhodnutí: PHP kód se řídí PER Coding Style 3.0 (PER-CS 3.0). |
+| 8. 11. 2026 | F0-18: MySQL FULLTEXT jako výchozí vyhledávání; Elasticsearch/OpenSearch jako možné pozdější implementace přes `ProductSearch`. |
