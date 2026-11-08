@@ -1,6 +1,6 @@
 # ArgoMi BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.2 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.3 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,11 +48,11 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 54, rozděláno 1, k úpravě 2, rozhodnout 10, blokováno 0, plán 471, zrušeno 1.
+Celkem **539 kroků**: hotovo 55, rozděláno 1, k úpravě 2, rozhodnout 9, blokováno 0, plán 471, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| F0 | Rozhodnutí a dokumentace | 54 | 29 | 0 | 1 | 10 | 0 | 14 | 0 |
+| F0 | Rozhodnutí a dokumentace | 54 | 30 | 0 | 1 | 9 | 0 | 14 | 0 |
 | F1 | Prostředí a repozitář | 36 | 16 | 0 | 0 | 0 | 0 | 20 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
@@ -118,7 +118,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-21** Jazyk v URL: všechny jazykové varianty mají explicitní prefix, včetně výchozího jazyka (`/cs`, `/en`)
 - `[HOTOVO]` **F0-22** Režim B2B: první verze je B2C; datový a doménový model počítá s firemními zákazníky a IČO/DIČ, ověřování ARES/VIES a pokročilé B2B funkce přijdou později
 - `[HOTOVO]` **F0-23** Platební integrace: vlastní rozhraní `PaymentProvider`; konkrétního poskytovatele vybrat až před produkčním nasazením
-- `[ROZHODNOUT]` **F0-24** Poskytovatel doručovacích služeb (Zásilkovna, Balíkovna, DPD, PPL)
+- `[HOTOVO]` **F0-24** Doručovací integrace: vlastní rozhraní `ShippingProvider`, samostatné adaptéry a možnost používat více dopravců současně
 - `[HOTOVO]` **F0-25** Zvolit Sass + esbuild bez Vite
 - `[ROZHODNOUT]` **F0-26** Datagrid pro administraci: Ublaboo Datagrid vs. vlastní komponenta
 - `[ROZHODNOUT]` **F0-27** Formát ukládání textů: čistý Markdown vs. bezpečné HTML přes HTMLPurifier
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.3 (8. 11. 2026)
+- Dokončeno F0-24: doručovací integrace bude používat `ShippingProvider` a samostatné adaptéry; architektura umožní současné použití více dopravců.
+- Aktualizován souhrnný stav: **55 hotovo**, **1 rozděláno**, **2 k úpravě**, **9 čeká na rozhodnutí**.
 
 ### v2.2 (8. 11. 2026)
 - Dokončeno F0-23: platební integrace bude používat vlastní rozhraní `PaymentProvider`; konkrétního poskytovatele vybereme až před produkčním nasazením.
