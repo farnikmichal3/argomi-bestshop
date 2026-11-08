@@ -48,11 +48,11 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 48, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 471, zrušeno 1.
+Celkem **539 kroků**: hotovo 49, rozděláno 1, k úpravě 2, rozhodnout 15, blokováno 0, plán 471, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
+| F0 | Rozhodnutí a dokumentace | 54 | 24 | 0 | 1 | 15 | 0 | 14 | 0 |
 | F1 | Prostředí a repozitář | 36 | 16 | 0 | 0 | 0 | 0 | 20 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
@@ -112,7 +112,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-15** Schválit skutečnou strukturu `app/` podle stromu projektu
 - `[ROZHODNOUT]` **F0-16** Licence a podmínky služby, studentská licence (právník)
 - `[ROZHODNOUT]` **F0-17** Smlouva o zpracování osobních údajů a GDPR pro hostované obchody (právník)
-- `[ROZHODNOUT]` **F0-18** Vyhledávání: MySQL FULLTEXT jako výchozí, Elasticsearch/OpenSearch volitelně
+- `[HOTOVO]` **F0-18** Vyhledávání: MySQL FULLTEXT jako výchozí, Elasticsearch/OpenSearch volitelně
 - `[ROZHODNOUT]` **F0-19** Vývojové prostředí mimo Windows (Docker nebo DDEV)
 - `[ROZHODNOUT]` **F0-20** Ceny v databázi s DPH, nebo bez (výchozí hodnota `tax_included`)
 - `[ROZHODNOUT]` **F0-21** Jazyk v URL (`/cs`, `/en`) a prefix výchozího jazyka
