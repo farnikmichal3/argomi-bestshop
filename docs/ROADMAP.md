@@ -1,6 +1,6 @@
 # ArgoMi BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.4 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.5 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,11 +48,11 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 56, rozděláno 1, k úpravě 2, rozhodnout 8, blokováno 0, plán 471, zrušeno 1.
+Celkem **539 kroků**: hotovo 57, rozděláno 1, k úpravě 2, rozhodnout 7, blokováno 0, plán 471, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| F0 | Rozhodnutí a dokumentace | 54 | 31 | 0 | 1 | 8 | 0 | 14 | 0 |
+| F0 | Rozhodnutí a dokumentace | 54 | 32 | 0 | 1 | 7 | 0 | 14 | 0 |
 | F1 | Prostředí a repozitář | 36 | 16 | 0 | 0 | 0 | 0 | 20 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
@@ -121,7 +121,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-24** Doručovací integrace: vlastní rozhraní `ShippingProvider`, samostatné adaptéry a možnost používat více dopravců současně
 - `[HOTOVO]` **F0-25** Zvolit Sass + esbuild bez Vite
 - `[HOTOVO]` **F0-26** Datagrid pro administraci: zvolit Ublaboo Datagrid; zatím bez implementace a konfigurace, s vlastní aplikační vrstvou pro možnost budoucí náhrady
-- `[ROZHODNOUT]` **F0-27** Formát ukládání textů: čistý Markdown vs. bezpečné HTML přes HTMLPurifier
+- `[HOTOVO]` **F0-27** Formát ukládání textů: ukládat čistý Markdown; při vykreslení převést na HTML a výsledné HTML vyčistit přes HTMLPurifier nebo schválený ekvivalent
 - `[ROZHODNOUT]` **F0-28** Politika verzování a changelog pro hostované obchody
 - `[ROZHODNOUT]` **F0-29** Způsob generování faktur a PDF (mPDF vs. dompdf vs. WeasyPrint)
 - `[ROZHODNOUT]` **F0-30** Velikost a formáty generovaných miniatur obrázků (WebP, AVIF)
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.5 (8. 11. 2026)
+- Dokončeno F0-27: obsahové texty se ukládají jako čistý Markdown; při vykreslení se převedou na HTML a výsledné HTML se vyčistí přes HTMLPurifier nebo schválený ekvivalent.
+- Aktualizován souhrnný stav: **57 hotovo**, **1 rozděláno**, **2 k úpravě**, **7 čeká na rozhodnutí**.
 
 ### v2.4 (8. 11. 2026)
 - Dokončeno F0-26: pro administrační tabulky byl zvolen Ublaboo Datagrid. Implementace ani konfigurace zatím neproběhla; knihovna bude zapouzdřena vlastní aplikační vrstvou.
