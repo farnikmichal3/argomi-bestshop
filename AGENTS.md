@@ -1,101 +1,74 @@
-# To My Agents!
+# Pokyny pro AI agenty – ArgoMi BestShop
 
-It is my fervent wish that this file guide every AI coding agent working with code in this repository.
+Tento soubor je provozní instrukce pro práci v repozitáři. Produktová a architektonická rozhodnutí jsou v `docs/`; při rozporu se řiď aktuálním rozhodnutím autora a kanonickými dokumenty.
 
-This is a fresh **Nette Web Project** skeleton, a clean starting point for a new PHP
-web application. Out of the box it does almost nothing: just the directory structure,
-configuration and a single welcome page. You and the developer build the rest on top
-of it.
+## Nejdříve si přečti
 
-## First: equip your agent
+1. `docs/README.md`
+2. `docs/ZAMER.md`
+3. `docs/STRUKTURA.md`
+4. `docs/DATABASE.md` nebo `docs/TRANSLATIONS.md` podle oblasti
+5. `docs/ROADMAP.md`
 
-This skeleton is meant to be developed hand-in-hand with an AI agent. To do that
-well, the agent needs deep, up-to-date knowledge of the Nette ecosystem (its
-conventions, APIs and gotchas) plus automatic validation of the files it writes.
-That knowledge ships as a set of **skills**, not baked into this file.
+Před změnou vždy prohlédni aktuální kód, konfiguraci, migrace a návazné testy. Nepředpokládej, že plánovaný úkol už je implementovaný.
 
-**Install them before writing any real code.** If the developer has not done so yet,
-ask them to run the steps below first.
+## Projekt v kostce
 
-### Claude Code
+- PHP 8.2+, Nette 3.2, Latte 3.
+- MySQL 8.x, InnoDB, utf8mb4.
+- Nette Database Explorer jako aplikační přístup k databázi.
+- Nextras Migrations pro čisté SQL migrace.
+- Sass + esbuild, Bootstrap 5.3.8 + Bootswatch Cosmo, Naja 3.
+- PHPStan level max, Nette Tester.
+- Vite se nepoužívá.
+- Repozitář je veřejný, ale projekt není open source; všechna práva vyhrazena.
 
-Add the Nette marketplace (with auto-update), then install the plugins:
+## Struktura
 
-```
-/plugin marketplace add nette/claude-code
-/plugin install nette@nette
-```
+Hlavní strom je `app/Core`, `app/Modules`, `app/Presentation`, `app/Shared` a `app/UI`. UI se dělí na `Admin`, `Front` a `Shared`. Přesné odpovědnosti a strom jsou v `docs/STRUKTURA.md`.
 
-Strongly recommended. Validates PHP, Latte, NEON, JSON and JS after every edit and
-reports errors straight back to the agent:
+## Závazná pravidla kódu
 
-```
-/plugin install nette-lint@nette
-```
+- V každém PHP souboru používej `declare(strict_types=1);`.
+- Preferuj konstruktorovou injekci; žádný service locator ani statické získávání služeb.
+- Doménová pravidla patří do Domain/Application, ne do presenterů.
+- Databázové dotazy patří do repozitářů modulu. Presentery a UI nesmějí dotazovat databázi přímo.
+- `ActiveRow` neopouští persistence vrstvu; ven jdou typované DTO/value objecty.
+- Moduly používají pouze veřejné API jiných modulů.
+- Nezaváděj závislosti mezi moduly přes jejich interní třídy.
+- Nepoužívej `noescape` v Latte.
+- Nikdy neskládej SQL z nedůvěryhodných řetězců; používej parametrizované dotazy a API Exploreru.
+- Peníze reprezentuj celočíselnými minor units a měnou, ne floatem. Množství ukládej desetinným typem.
+- Systémové překlady dodávané aplikací jsou chráněné. Administrátor smí spravovat vlastní překlady, nikoliv přepisovat systémové zdroje.
+- Neměň historické SQL migrace; změny databáze přidávej novou dopřednou migrací.
+- Demo data zůstávají v produkci. Nikdy však nesmějí spustit skutečnou platbu, expedici ani zákaznický e-mail.
 
-Optional, for automatic PHP code-style fixing:
+## Bezpečnost
 
-```
-/plugin install php-fixer@nette
-/install-php-fixer
-```
+- Nikdy nevypisuj ani necommituj tajné údaje, tokeny, hesla nebo obsah lokální konfigurace.
+- `app/`, `config/`, `log/` a `temp/` nesmí být veřejně přístupné.
+- Tracy musí být v produkci vypnutá.
+- Vstupy validuj, výstupy kontextově escapuj.
+- HTML obsah sanitizuj schváleným způsobem.
+- Ověřuj autorizaci na serveru; skrytí tlačítka nestačí.
+- Změny autentizace, oprávnění, plateb, webhooků a osobních údajů vyžadují bezpečnostní testy.
+- Produkční migrace vyžaduje ověřenou zálohu.
 
-Details and the full skill list: https://github.com/nette/claude-code
+## Ověření změn
 
-### Other agents
+Před označením úkolu jako HOTOVO:
+1. spusť relevantní testy,
+2. spusť PHPStan level max,
+3. ověř bezpečnost a oprávnění,
+4. aktualizuj dokumentaci modulu/ADR,
+5. aktualizuj ROADMAP a její souhrny.
 
-The plugins above are Claude Code specific. For any other agent, the authoritative
-source is the official manual at https://doc.nette.org. Consult it for the area you
-are working on (architecture, forms, database, Latte, NEON, Tracy) before editing,
-rather than relying on this file. This file is a signpost, not the manual.
+Nespouštěj destruktivní příkazy typu reset databáze bez výslovného pokynu autora a potvrzení, že jde o vývojovou/testovací databázi.
 
-## Project at a glance
+## Práce s ROADMAP
 
-- **Backend:** PHP 8.2+, Nette 3.2, Latte 3 templates
-- **Database:** Nette Database Explorer (default: SQLite in-memory; change it in `config/common.neon`)
-- **Frontend:** Vite + TypeScript, `nette-forms` for client-side validation (Vite is optional, see `readme.md`)
-- **Testing:** Nette Tester (`.phpt`)
-- **Static analysis:** PHPStan level 8 (`app`, `bin`)
-
-```
-app/
-├── Bootstrap.php              # Application initialization
-├── Core/RouterFactory.php     # URL routing
-└── Presentation/              # Presenters + Latte templates
-    ├── @layout.latte
-    ├── Home/                  # Home:default, the welcome page
-    └── Error/                 # 4xx / 5xx error presenters
-config/
-├── common.neon                # framework configuration
-└── services.neon              # DI services + auto-discovery
-www/index.php                  # HTTP entry point
-```
-
-## Essential commands
-
-```bash
-# Run the app (built-in server)
-php -S localhost:8000 -t www
-
-# Tests
-composer run tester
-vendor/bin/tester tests/path/to/file.phpt -s
-
-# Static analysis
-composer run phpstan
-
-# Frontend (only if Vite is enabled)
-npm install && npm run dev      # dev server with hot reload
-npm run build                   # production assets
-```
-
-## Ground rules
-
-- **Directories `app/`, `config/`, `log/`, `temp/` must never be web-accessible.**
-  Only `www/` is the document root. See https://nette.org/security-warning.
-- Tracy debugger is enabled in development and must stay off in production.
-- Add Nette packages as you need them: `composer require nette/<package>`
-  (catalog at https://nette.org/packages).
-
-When in doubt about a Nette convention, defer to the installed skills. They are the
-source of truth, and they are kept current in a way this file is not.
+- Zachovávej ID úkolů.
+- Používej pouze definované stavy.
+- Nejvýše tři úkoly mohou být ROZDĚLÁNO současně.
+- Každou změnu architektonického rozhodnutí zapiš do ZÁMĚRU nebo ADR.
+- HOTOVO znamená ověřený výsledek, ne pouze vytvořený soubor nebo prázdnou složku.
