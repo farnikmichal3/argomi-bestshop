@@ -1,6 +1,6 @@
 # ArgoMi BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.0 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.1 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,11 +48,11 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 52, rozděláno 1, k úpravě 2, rozhodnout 12, blokováno 0, plán 471, zrušeno 1.
+Celkem **539 kroků**: hotovo 53, rozděláno 1, k úpravě 2, rozhodnout 11, blokováno 0, plán 471, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| F0 | Rozhodnutí a dokumentace | 54 | 27 | 0 | 1 | 12 | 0 | 14 | 0 |
+| F0 | Rozhodnutí a dokumentace | 54 | 28 | 0 | 1 | 11 | 0 | 14 | 0 |
 | F1 | Prostředí a repozitář | 36 | 16 | 0 | 0 | 0 | 0 | 20 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
@@ -116,7 +116,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-19** Vývojové prostředí: Laragon na Windows jako hlavní prostředí; zachovat možnost budoucího spuštění v Dockeru nebo DDEV
 - `[HOTOVO]` **F0-20** Ceny se ukládají bez DPH; daň se vypočítává podle daňových pravidel a nastavení `tax_included` řídí způsob zobrazování cen
 - `[HOTOVO]` **F0-21** Jazyk v URL: všechny jazykové varianty mají explicitní prefix, včetně výchozího jazyka (`/cs`, `/en`)
-- `[ROZHODNOUT]` **F0-22** Režim B2B v první verzi (pouze B2C, nebo přepínač IČO/DIČ s ověřením v ARES/VIES)
+- `[HOTOVO]` **F0-22** Režim B2B: první verze je B2C; datový a doménový model počítá s firemními zákazníky a IČO/DIČ, ověřování ARES/VIES a pokročilé B2B funkce přijdou později
 - `[ROZHODNOUT]` **F0-23** Poskytovatel platební brány (GoPay, Comgate, Stripe, Barion)
 - `[ROZHODNOUT]` **F0-24** Poskytovatel doručovacích služeb (Zásilkovna, Balíkovna, DPD, PPL)
 - `[HOTOVO]` **F0-25** Zvolit Sass + esbuild bez Vite
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.1 (8. 11. 2026)
+- Dokončeno F0-22: první verze je B2C, ale datový a doménový model počítá s firemními zákazníky a IČO/DIČ; ověřování ARES/VIES a pokročilé B2B funkce se odkládají.
+- Aktualizován souhrnný stav: **53 hotovo**, **1 rozděláno**, **2 k úpravě**, **11 čeká na rozhodnutí**.
 
 ### v2.0 (8. 11. 2026)
 - Dokončeno F0-21: všechny jazykové varianty URL mají explicitní prefix, včetně výchozího jazyka (`/cs`, `/en`).
