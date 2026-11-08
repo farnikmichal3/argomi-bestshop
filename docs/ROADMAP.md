@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 32, rozděláno 2, k úpravě 2, rozhodnout 16, blokováno 0, plán 486, zrušeno 1.
+Celkem **539 kroků**: hotovo 33, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 486, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
-| F1 | Prostředí a repozitář | 36 | 1 | 1 | 0 | 0 | 0 | 34 | 0 |
+| F1 | Prostředí a repozitář | 36 | 2 | 0 | 0 | 0 | 0 | 34 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 8 | 1 | 0 | 0 | 0 | 22 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -82,7 +82,7 @@ Celkem **539 kroků**: hotovo 32, rozděláno 2, k úpravě 2, rozhodnout 16, bl
 - `[ROZDĚLÁNO]` **F3-16** Příkaz `db:reset` (smazat, migrovat, naplnit) pro vývoj (připravit `composer db:reset`)
 - `[K ÚPRAVĚ]` **F0-43** Lekce 1: přejmenovat projekt na `argomi-bestshop` a databázi na `argomi_bestshop`
 - `[HOTOVO]` **F0-44** ZÁMĚR: promítnout schválenou strukturu `app/` a rozhodnutí o překladech
-- `[ROZDĚLÁNO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
+- `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace (napsána, čeká na přejmenování a ověření)
 - `[HOTOVO]` **F0-15** Schválit skutečné členění `app/Core`, `Modules`, `Presentation`, `Shared` a `UI`
 - `[PLÁN]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -153,9 +153,9 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 1 z 36 kroků.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 2 z 36 kroků.
 
-- `[ROZDĚLÁNO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
+- `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[PLÁN]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
 - `[PLÁN]` **F1-03** Povolit potřebná PHP rozšíření (`pdo_mysql`, `mbstring`, `intl`, `openssl`, `curl`, `fileinfo`, `zip`, `gd`)
 - `[PLÁN]` **F1-04** Nastavit document root na `www/` ve virtuálním hostu
@@ -744,6 +744,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v0.4 (8. 11. 2026)
+- Dokončen F1-01: úklid výchozí Nette kostry a sjednocení metadat projektu.
+- Ověřeno `composer validate --no-check-publish`, `npm ci` a `npm run build`; metadata Composer lock synchronizována bez změny verzí závislostí.
+- Aktualizován souhrnný stav: **33 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
 
 ### v0.3 (8. 11. 2026)
 - Dokončena a integrována Nextras Migrations v Nette DI (`common.neon`) (F3-02).
