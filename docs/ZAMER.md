@@ -49,6 +49,7 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 | Přístup k databázi | Nette Database Explorer |
 | Migrace | Nextras Migrations, čisté SQL |
 | Statická analýza | PHPStan level max, bez baseline |
+| Coding standard | PER Coding Style 3.0 (PER-CS 3.0), nástupce PSR-12 |
 | Testy | Nette Tester; unit, integrační a architektonické testy podle potřeby |
 | Front-end CSS | Sass |
 | Bundling | esbuild |
@@ -62,6 +63,7 @@ Front-end assety se sestavují vlastními skripty Sass a esbuild. Front a Admin 
 
 Pravidla:
 - `declare(strict_types=1);` v PHP souborech.
+- PHP kód dodržuje **PER Coding Style 3.0 (PER-CS 3.0)**; kontrolu a automatické formátování zajišťuje projektový coding-standard nástroj.
 - Žádný service locator, žádné statické získávání služeb.
 - Databázové dotazy patří do repozitářů; presentery nepracují přímo s databází.
 - `ActiveRow` neopouští infrastrukturní/persistence hranici modulu; veřejně se předávají typovaná DTO nebo value objecty.
@@ -166,3 +168,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 |---|---|
 | 4. 11. 2026 | Původní dokument ZÁMĚR v0.1/v0.2. |
 | 8. 11. 2026 | v1.0: sjednocení s potvrzenou strukturou aplikace, veřejným repozitářem s vyhrazenými právy, doménovým přístupem k překladům a skutečným stavem databáze. |
+| 8. 11. 2026 | Rozhodnutí: PHP kód se řídí PER Coding Style 3.0 (PER-CS 3.0). |
