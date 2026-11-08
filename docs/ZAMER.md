@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.10 · 8. 11. 2026  
+**Revize:** 1.11 · 8. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -201,7 +201,7 @@ Aktuální seed SQL obsahuje pouze počáteční část této sady. Přesný obs
 
 Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schválené:
 - právní licence a podmínky hostované služby,
-- GDPR smluvní dokumentace a retence,
+- Návrh smlouvy o zpracování osobních údajů (DPA) a GDPR dokumentace pro hostované obchody; finální znění a související retenční pravidla před spuštěním zkontroluje právník a specialista na ochranu osobních údajů,
 - výchozí daňový režim cen,
 - konkrétní platební a dopravní poskytovatelé,
 - volba Docker/DDEV mimo současné Windows prostředí,
@@ -216,6 +216,7 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | v1.0: sjednocení s potvrzenou strukturou aplikace, veřejným repozitářem s vyhrazenými právy, doménovým přístupem k překladům a skutečným stavem databáze. |
 | 8. 11. 2026 | Rozhodnutí: PHP kód se řídí PER Coding Style 3.0 (PER-CS 3.0). |
 | 8. 11. 2026 | F0-16: Zachováváme režim „všechna práva vyhrazena“. Připravíme návrh studentské licence a podmínek služby; finální znění před distribucí nebo komerčním spuštěním zkontroluje právník. |
+| 8. 11. 2026 | F0-17: Připravíme návrh smlouvy o zpracování osobních údajů (DPA) a GDPR dokumentace pro hostované obchody; finální znění a související retenční pravidla před spuštěním zkontroluje právník a specialista na ochranu osobních údajů. |
 | 8. 11. 2026 | F0-18: MySQL FULLTEXT jako výchozí vyhledávání; Elasticsearch/OpenSearch jako možné pozdější implementace přes `ProductSearch`. |
 | 8. 11. 2026 | F0-19: Laragon na Windows zůstává hlavním vývojovým prostředím; zachováme možnost budoucího spuštění v Dockeru nebo DDEV. |
 | 8. 11. 2026 | F0-20: Základní ceny se ukládají bez DPH; DPH se vypočítává podle daňových pravidel a `tax_included` řídí zobrazování cen. |
