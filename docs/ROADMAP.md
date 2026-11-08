@@ -1,6 +1,6 @@
 # ArgoMi BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 1.8 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 1.9 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 47, rozděláno 2, k úpravě 2, rozhodnout 16, blokováno 0, plán 471, zrušeno 1.
+Celkem **539 kroků**: hotovo 48, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 471, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
-| F1 | Prostředí a repozitář | 36 | 15 | 1 | 0 | 0 | 0 | 20 | 0 |
+| F1 | Prostředí a repozitář | 36 | 16 | 0 | 0 | 0 | 0 | 20 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -153,7 +153,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 15 z 36 kroků; jeden krok rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 16 z 36 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -170,7 +170,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-13** Nainstalovat PHPStan 2.3.5, `extension-installer` 1.4.3, `phpstan-nette` 2.0.15, `phpstan-strict-rules` 2.1.1 a `phpstan-deprecation-rules` 2.0.5; automatická registrace rozšíření ověřena Composerem
 - `[HOTOVO]` **F1-14** Vytvořit `phpstan.neon` s `level: max`
 - `[HOTOVO]` **F1-15** Opravit chyby kostry na úrovni max (bez baseline)
-- `[ROZDĚLÁNO]` **F1-16** Nastavit coding standard PER-CS 3.0 (rozhodnutí zapsáno v ZAMER; zbývá nakonfigurovat a ověřit nástroj)
+- `[HOTOVO]` **F1-16** Nastavit coding standard PER-CS 3.0: PHP-CS-Fixer 3.95.29 jako vývojová závislost, konfigurace `.php-cs-fixer.dist.php` používá pevnou sadu `@PER-CS3.0`; všech 6 existujících PHP souborů naformátováno a následná kontrola bez nálezů. PHPStan level max zůstává čistý.
 - `[PLÁN]` **F1-17** Nainstalovat testovací nástroj (po rozhodnutí F0)
 - `[PLÁN]` **F1-18** Nainstalovat nástroj pro hlídání hranic modulů (po rozhodnutí F0)
 - `[PLÁN]` **F1-19** Nainstalovat konzolový nástroj (po rozhodnutí F0)
@@ -744,6 +744,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v1.9 (8. 11. 2026)
+- Dokončen F1-16: nainstalován PHP-CS-Fixer 3.95.29, nakonfigurován pevný standard `@PER-CS3.0` v `.php-cs-fixer.dist.php` a automaticky naformátováno všech 6 existujících PHP souborů.
+- Opakovaná kontrola PHP-CS-Fixer potvrdila **0 souborů k opravě**; PHPStan `level: max` zůstal bez chyb. Automatické testy zatím nejsou součástí projektu a nebyly spouštěny.
+- Commit `d8ff580` obsahuje konfiguraci nástroje, Composer závislost a formátovací změny.
+- Aktualizován souhrnný stav: **48 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
 
 ### v1.8 (8. 11. 2026)
 - Schválen a do ZAMER zapsán standard PHP kódu **PER Coding Style 3.0 (PER-CS 3.0)**.
