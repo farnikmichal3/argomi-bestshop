@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.6 · 8. 11. 2026  
+**Revize:** 1.7 · 8. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -95,6 +95,14 @@ Pravidla:
 - Pro generování PDF dokumentů se používá knihovna **mPDF** v rámci PHP aplikace; nepřidává se samostatná Python služba ani externí proces WeasyPrint.
 - Faktury a další právně významné doklady se generují ze spravovaných šablon a po vystavení se uchovávají jako neměnný dokument. Opravy a změny se řeší novým opravným nebo navazujícím dokladem, nikoliv přepsáním již vystaveného PDF.
 - Výstupní PDF musí být ověřen bezpečnostně i vizuálně; obsah dokladu vychází z neměnného snímku objednávky a údajů platných při vystavení.
+
+### Generování a velikosti miniatur obrázků
+
+- Originální nahrané obrázky se vždy zachovávají beze změny; miniatury a odvozené varianty se generují z originálu.
+- Výchozím formátem generovaných obrazových variant je **WebP**. **AVIF** se může generovat jako další optimalizovaná varianta, pokud je jeho generování dostupné a provozně přiměřené.
+- Při zobrazování se upřednostní AVIF, následně WebP; originál slouží jako fallback tam, kde odvozené formáty nejsou vhodné nebo dostupné.
+- Systém používá centrálně definované velikosti/varianty podle účelu zobrazení. Jejich rozměry a kvalita se řídí konfigurací, nikoliv hodnotami rozptýlenými v jednotlivých modulech.
+- Generování respektuje poměr stran a podporuje definovaný způsob ořezu; front-end využívá responzivní varianty obrázků podle velikosti zobrazovací plochy.
 
 ## 5. Databázové principy
 
@@ -205,4 +213,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | F0-26: Pro administrační tabulky byl zvolen Ublaboo Datagrid. Zatím není implementován ani nakonfigurován; bude použit při tvorbě administrace a zapouzdřen vlastní aplikační vrstvou. |
 | 8. 11. 2026 | F0-27: Obsahové texty se ukládají jako čistý Markdown; při vykreslení se převádějí na HTML a výsledné HTML se čistí přes HTMLPurifier nebo schválený ekvivalent. |
 | 8. 11. 2026 | F0-28: Platforma používá SemVer, produkční vydání označuje Git tag, změny eviduje `CHANGELOG.md` a obchodníkům poskytuje srozumitelný přehled relevantních změn; verze je společná pro vydání platformy, nikoliv samostatná pro každý obchod. Databázové změny probíhají dopřednými migracemi. |
-| 8. 11. 2026 | F0-29: Pro generování PDF se volí mPDF. Doklady se generují ze spravovaných šablon, vycházejí z neměnného snímku objednávky a po vystavení se uchovávají beze změn. |
+| 8. 11. 2026 | F0-30: Originály obrázků se zachovávají; miniatury se generují primárně ve WebP, AVIF je doplňková optimalizovaná varianta. Velikosti a kvalita se řídí centrální konfigurací, s podporou ořezu, poměru stran a responzivního zobrazování. |\n| 8. 11. 2026 | F0-29: Pro generování PDF se volí mPDF. Doklady se generují ze spravovaných šablon, vycházejí z neměnného snímku objednávky a po vystavení se uchovávají beze změn. |
