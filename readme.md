@@ -1,64 +1,66 @@
-Nette Web Project
-=================
+# ArgoMi BestShop
 
-Welcome to the Nette Web Project! This is a basic skeleton application built using
-[Nette](https://nette.org), ideal for kick-starting your new web projects.
+ArgoMi BestShop je modulární e-shop postavený na PHP 8.2+ a Nette 3.2. Projekt je vyvíjen jako modulární monolit s oddělenými oblastmi Front a Admin, databázovým přístupem přes Nette Database Explorer a SQL migracemi spravovanými Nextras Migrations.
 
-Nette is a renowned PHP web development framework, celebrated for its user-friendliness,
-robust security, and outstanding performance. It's among the safest choices
-for PHP frameworks out there.
+## Dokumentace
 
-If Nette helps you, consider supporting it by [making a donation](https://nette.org/donate).
-Thank you for your generosity!
+Začni v [docs/README.md](docs/README.md). Kanonické dokumenty:
 
+- [Záměr a rozhodnutí](docs/ZAMER.md)
+- [Struktura aplikace](docs/STRUKTURA.md)
+- [Databáze a migrace](docs/DATABASE.md)
+- [Překladový subsystém](docs/TRANSLATIONS.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Architektonická rozhodnutí](docs/adr/)
 
-Requirements
-------------
+## Technologie
 
-This Web Project is compatible with Nette 3.2 and requires PHP 8.2.
+- PHP 8.2+
+- Nette 3.2 a Latte 3
+- MySQL 8.x / InnoDB / utf8mb4
+- Nette Database Explorer
+- Nextras Migrations (SQL)
+- PHPStan level max
+- Nette Tester
+- Sass + esbuild, Bootstrap 5.3.8 + Bootswatch Cosmo 5.3.8
+- Naja 3
 
+Vite se nepoužívá. Assety se sestavují vlastními skripty Sass a esbuild.
 
-Installation
-------------
+## Vývojové prostředí
 
-To install the Web Project, Composer is the recommended tool. If you're new to Composer,
-follow [these instructions](https://doc.nette.org/composer). Then, run:
+Projekt je vyvíjen v prostředí PHP/Composer, Node.js/npm a MySQL. Konkrétní lokální nastavení databáze a přístupových údajů patří do lokální konfigurace, která se necommitne.
 
-	composer create-project nette/web-project path/to/install
-	cd path/to/install
+Základní příkazy:
 
-Ensure the `temp/` and `log/` directories are writable.
+```bash
+composer install
+npm install
+npm run build
+composer run phpstan
+composer run tester
+```
 
+Dostupné příkazy a jejich skutečný stav ověřuj v `composer.json` a `package.json`. Předpokládej, že migrace spouští Nextras Migrations podle `config/common.neon`; neprováděj reset produkční databáze.
 
-Asset Building with Vite
-------------------------
+## Databázové migrace
 
-This project supports Vite for asset building, which is recommended but optional. To activate Vite:
+Migrace jsou v `migrations/` a mají tři skupiny:
+- `structures/`
+- `basic-data/`
+- `dummy-data/`
 
-1. Uncomment the `type: vite` line in the `common.neon` configuration file under the assets mapping section.
-2. Then set up and build the assets:
+Demo data zůstávají i v produkční instalaci jako demonstrační obsah. Implementace musí zabránit tomu, aby demo objednávky spustily skutečné platby, expedici nebo zákaznické e-maily.
 
-		npm install
-		npm run build
+## Licence a repozitář
 
+GitHub repozitář je veřejný, ale projekt není open source. Zdrojový kód je zveřejněn bez udělení licence k užití; všechna práva jsou vyhrazena. Konkrétní právní podmínky distribuce a případná studentská licence se doplní samostatně. Veřejná dostupnost repozitáře není svolením ke kopírování, úpravám ani šíření.
 
-Web Server Setup
-----------------
+## Bezpečnost
 
-To quickly dive in, use PHP's built-in server:
-
-	php -S localhost:8000 -t www
-
-Then, open `http://localhost:8000` in your browser to view the welcome page.
-
-For Apache or Nginx users, configure a virtual host pointing to your project's `www/` directory.
-
-**Important Note:** Ensure `app/`, `config/`, `log/`, and `temp/` directories are not web-accessible.
-Refer to [security warning](https://nette.org/security-warning) for more details.
-
-
-Minimal Skeleton
-----------------
-
-For demonstrating issues or similar tasks, rather than starting a new project, use
-[minimal skeleton](https://github.com/nette/web-project/tree/minimal).
+- Nikdy necommituj `config/local.neon`, přístupové údaje, tokeny ani produkční data.
+- `app/`, `config/`, `log/` a `temp/` nesmí být webroot.
+- Tracy debugger musí být v produkci vypnutý.
+- Nepoužívej Latte `noescape`.
+- Databázové dotazy patří do repozitářů a musí být parametrizované.
+- Neprováděj produkční migraci bez ověřené zálohy.

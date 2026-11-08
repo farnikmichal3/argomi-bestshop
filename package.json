@@ -21,9 +21,9 @@
 	},
 	"name": "argomi-bestshop",
 	"version": "1.0.0",
-	"description": "Nette Web Project =================",
+	"description": "ArgoMi BestShop – modular e-commerce application",
 	"main": "index.js",
 	"keywords": [],
 	"author": "",
-	"license": "ISC"
+	"license": "UNLICENSED"
 }
