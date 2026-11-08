@@ -748,16 +748,16 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokončena a integrována Nextras Migrations v Nette DI (`common.neon`) (F3-02).
 - Zprovozněny a ověřeny migrační skupiny: `structures`, `basic-data`, `dummy-data`.
 - Zprovozněn konzolový příkaz přes Contributte Console `php bin/console migrations:continue` (F3-18).
-- Schváleno rozhodnutí ponechat monolitický DDL soubor `001_wave1_structure_v1.sql` pro Vlnu 1 s inkrementálními přírůstky do budoucna (F3-05).
+- Schváleno rozhodnutí ponechat monolitický DDL soubor `2026-11-04-200000-init.sql` pro Vlnu 1 s inkrementálními přírůstky do budoucna (F3-05).
 - Uzavřena 3 klíčová architektonická rozhodnutí:
   - **F3-26:** Databázový přístup určen přes čistý **Nette Database Explorer** s dotazy striktně v repozitářích přes DI a návratem typovaných readonly DTO (žádné dotazy v presenterech, ActiveRow nepřekračuje repozitář).
   - **F3-27:** Spouštění migrací na produkci určeno **automaticky v CI/CD pipeline / deploy skriptu přes CLI**.
   - **F3-28:** Rollback strategie určena **výhradně přes pre-migration dump/snapshot DB** a obnovením ze zálohy v případě chyby.
-- Zahájena příprava zjednodušeného Composer příkazu pro vývojový reset databáze `composer db:reset` (F3-16 / F3-17).
+- Zahájena příprava zjednodušeného Composer příkazu pro vývojový reset databáze `composer db:reset` (F3-16).
 - Aktualizována souhrnná statistika: **25 hotovo**, **2 rozděláno**, **18 čeká na rozhodnutí**.
 
 ### v0.2 (4. 11. 2026)
-- Převzetí a ověření schématu v1 (`001_wave1_structure_v1.sql`), základních dat (`002`) a demo dat (`003`).
+- Převzetí a ověření schématu v1 (`2026-11-04-200000-init.sql`), základních dat (`2026-11-04-201000-basic-data.sql`) a demo dat (`2026-11-04-202000-demo-products.sql`).
 - Upřesnění dekompozice na Vlny 1 až 4.
 
 ### v0.1 (říjen 2026)
