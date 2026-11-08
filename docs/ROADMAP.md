@@ -1,6 +1,6 @@
 # ArgoMi BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 1.0 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 1.1 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 38, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 481, zrušeno 1.
+Celkem **539 kroků**: hotovo 39, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 480, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
-| F1 | Prostředí a repozitář | 36 | 7 | 0 | 0 | 0 | 0 | 29 | 0 |
+| F1 | Prostředí a repozitář | 36 | 8 | 0 | 0 | 0 | 0 | 28 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 8 | 1 | 0 | 0 | 0 | 22 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -162,7 +162,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-05** Založit veřejný GitHub repozitář bez licence k užití; všechna práva vyhrazena
 - `[HOTOVO]` **F1-06** Doplnit a ověřit `.gitignore` (vendor, node_modules, temp, log, local.neon, www/assets)
 - `[HOTOVO]` **F1-07** Přidat `.editorconfig`
-- `[PLÁN]` **F1-08** Konfigurace PHP pro vývoj (`php.ini`: memory limit, error reporting, max execution time)
+- `[HOTOVO]` **F1-08** Ověřit vývojovou konfiguraci PHP v CLI i Apache (PHP 8.5.12, `memory_limit=512M`, `E_ALL`, zobrazování a logování chyb; konfigurace `php.ini` vyhovuje, bez změn)
 - `[PLÁN]` **F1-09** `composer.json`: `platform.php`, `sort-packages`, skripty
 - `[PLÁN]` **F1-10** Vytvořit databázi `argomi_bestshop` s `utf8mb4` a vlastního uživatele s nejmenšími oprávněními
 - `[PLÁN]` **F1-11** Vytvořit `config/local.neon` a ověřit jeho načítání v `Bootstrap.php`
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v1.1 (8. 11. 2026)
+- Dokončen F1-08: ověřena konfigurace PHP 8.5.12 v CLI i Apache (`apache2handler`); oba používají stejný `php.ini`. Potvrzeny `memory_limit=512M`, `error_reporting=E_ALL`, `display_errors=On`, `display_startup_errors=On` a `log_errors=On`; konfigurace nevyžaduje změny.
+- Aktualizován souhrnný stav: **39 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
 
 ### v0.9 (8. 11. 2026)
 - Dokončen F1-07: vytvořen a ověřen kořenový `.editorconfig` (UTF-8, LF, koncový nový řádek, mezery; 4 mezery pro výchozí soubory, 2 pro konfigurace a frontend, CRLF pro `.bat`/`.cmd`).
