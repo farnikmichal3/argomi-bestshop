@@ -1,6 +1,6 @@
 # ArgoMi BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.11 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.12 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,11 +48,11 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 63, rozděláno 1, k úpravě 2, rozhodnout 1, blokováno 0, plán 471, zrušeno 1.
+Celkem **539 kroků**: hotovo 64, rozděláno 1, k úpravě 2, rozhodnout 0, blokováno 0, plán 471, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| F0 | Rozhodnutí a dokumentace | 54 | 36 | 0 | 1 | 3 | 0 | 14 | 0 |
+| F0 | Rozhodnutí a dokumentace | 54 | 38 | 0 | 1 | 1 | 0 | 14 | 0 |
 | F1 | Prostředí a repozitář | 36 | 16 | 0 | 0 | 0 | 0 | 20 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
@@ -111,7 +111,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-14** Kanonický dokument STRUKTURA odpovídá skutečnému stromu
 - `[HOTOVO]` **F0-15** Schválit skutečnou strukturu `app/` podle stromu projektu
 - `[HOTOVO]` **F0-16** Licence a podmínky služby: zachovat režim „všechna práva vyhrazena“, připravit návrh studentské licence a podmínek služby a před distribucí či komerčním spuštěním zajistit právní kontrolu finálního znění
-- `[ROZHODNOUT]` **F0-17** Smlouva o zpracování osobních údajů a GDPR pro hostované obchody (právník)
+- `[HOTOVO]` **F0-17** GDPR a smluvní dokumentace: připravit návrh DPA a GDPR dokumentace pro hostované obchody; finální znění a retenční pravidla před spuštěním zkontroluje právník a specialista na ochranu osobních údajů
 - `[HOTOVO]` **F0-18** Vyhledávání: MySQL FULLTEXT jako výchozí, Elasticsearch/OpenSearch volitelně
 - `[HOTOVO]` **F0-19** Vývojové prostředí: Laragon na Windows jako hlavní prostředí; zachovat možnost budoucího spuštění v Dockeru nebo DDEV
 - `[HOTOVO]` **F0-20** Ceny se ukládají bez DPH; daň se vypočítává podle daňových pravidel a nastavení `tax_included` řídí způsob zobrazování cen
@@ -744,6 +744,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.12 (8. 11. 2026)
+- Dokončeno F0-17: připraví se návrh smlouvy o zpracování osobních údajů (DPA) a GDPR dokumentace pro hostované obchody; finální znění a retenční pravidla před spuštěním zkontroluje právník a specialista na ochranu osobních údajů.
+- Aktualizován souhrnný stav: **64 hotovo**, **1 rozděláno**, **2 k úpravě**, **0 čeká na rozhodnutí**.
+
 
 ### v2.11 (8. 11. 2026)
 - Dokončeno F0-16: zachován režim „všechna práva vyhrazena“; připraví se návrh studentské licence a podmínek služby a finální znění před distribucí nebo komerčním spuštěním zkontroluje právník.
