@@ -1,6 +1,6 @@
 # ArgoMi BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.7 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.8 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,11 +48,11 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 59, rozděláno 1, k úpravě 2, rozhodnout 5, blokováno 0, plán 471, zrušeno 1.
+Celkem **539 kroků**: hotovo 60, rozděláno 1, k úpravě 2, rozhodnout 4, blokováno 0, plán 471, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| F0 | Rozhodnutí a dokumentace | 54 | 34 | 0 | 1 | 5 | 0 | 14 | 0 |
+| F0 | Rozhodnutí a dokumentace | 54 | 35 | 0 | 1 | 4 | 0 | 14 | 0 |
 | F1 | Prostředí a repozitář | 36 | 16 | 0 | 0 | 0 | 0 | 20 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
@@ -124,7 +124,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-27** Formát ukládání textů: ukládat čistý Markdown; při vykreslení převést na HTML a výsledné HTML vyčistit přes HTMLPurifier nebo schválený ekvivalent
 - `[HOTOVO]` **F0-28** Politika verzování a changelog pro hostované obchody: SemVer, Git tagy produkčních vydání, `CHANGELOG.md`, přehled změn pro obchodníky, společné verzování platformy a dopředné databázové migrace
 - `[HOTOVO]` **F0-29** Způsob generování faktur a PDF: zvoleno mPDF; PDF se generují ze spravovaných šablon, vycházejí z neměnného snímku objednávky a vystavené doklady se uchovávají beze změn
-- `[ROZHODNOUT]` **F0-30** Velikost a formáty generovaných miniatur obrázků (WebP, AVIF)
+- `[HOTOVO]` **F0-30** Miniatury: WebP jako výchozí formát, AVIF jako doplňková optimalizace; zachovat originály, centrálně konfigurovat velikosti a kvalitu, podporovat ořez, poměr stran a responzivní varianty
 - `[ROZHODNOUT]` **F0-31** Systém pro fronty a plánované úlohy (cron vs. worker nad databází)
 - `[ROZHODNOUT]` **F0-32** Šablony e-mailů: Latte v souborech vs. Latte v DB s přísným sandboxem
 - `[HOTOVO]` **F0-33** Zvolit kódování a kolaci DB: `utf8mb4` a `utf8mb4_0900_ai_ci`
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.8 (8. 11. 2026)
+- Dokončeno F0-30: originály obrázků se zachovávají; miniatury se generují primárně ve WebP, AVIF je doplňková optimalizovaná varianta. Velikosti a kvalita jsou centrálně konfigurovatelné; řešení podporuje ořez, poměr stran a responzivní zobrazování.
+- Aktualizován souhrnný stav: **60 hotovo**, **1 rozděláno**, **2 k úpravě**, **4 čeká na rozhodnutí**.
 
 ### v2.7 (8. 11. 2026)
 - Dokončeno F0-29: pro generování PDF byla zvolena knihovna mPDF. Vystavené doklady vycházejí z neměnného snímku objednávky a uchovávají se beze změn.
