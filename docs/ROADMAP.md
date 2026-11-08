@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **538 kroků**: hotovo 32, rozděláno 2, k úpravě 2, rozhodnout 16, blokováno 0, plán 485, zrušeno 1.
+Celkem **539 kroků**: hotovo 32, rozděláno 2, k úpravě 2, rozhodnout 16, blokováno 0, plán 486, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
-| F1 | Prostředí a repozitář | 35 | 1 | 1 | 0 | 0 | 0 | 33 | 0 |
+| F1 | Prostředí a repozitář | 36 | 1 | 1 | 0 | 0 | 0 | 34 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 8 | 1 | 0 | 0 | 0 | 22 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -190,6 +190,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů
 - `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0)
+- `[PLÁN]` **F1-36** Odstranit nepoužívané balíčky Vite a Vite pluginu z package.json/package-lock a ověřit build Sass + esbuild
 
 ### F2: Sdílené jádro (Shared)
 
