@@ -1,6 +1,6 @@
 # ArgoMi BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.10 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.11 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 62, rozděláno 1, k úpravě 2, rozhodnout 2, blokováno 0, plán 471, zrušeno 1.
+Celkem **539 kroků**: hotovo 63, rozděláno 1, k úpravě 2, rozhodnout 1, blokováno 0, plán 471, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -110,7 +110,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-13** Roadmap: verze 0.3 aktualizována po dokončení F3 migrací a uzavření DB rozhodnutí
 - `[HOTOVO]` **F0-14** Kanonický dokument STRUKTURA odpovídá skutečnému stromu
 - `[HOTOVO]` **F0-15** Schválit skutečnou strukturu `app/` podle stromu projektu
-- `[ROZHODNOUT]` **F0-16** Licence a podmínky služby, studentská licence (právník)
+- `[HOTOVO]` **F0-16** Licence a podmínky služby: zachovat režim „všechna práva vyhrazena“, připravit návrh studentské licence a podmínek služby a před distribucí či komerčním spuštěním zajistit právní kontrolu finálního znění
 - `[ROZHODNOUT]` **F0-17** Smlouva o zpracování osobních údajů a GDPR pro hostované obchody (právník)
 - `[HOTOVO]` **F0-18** Vyhledávání: MySQL FULLTEXT jako výchozí, Elasticsearch/OpenSearch volitelně
 - `[HOTOVO]` **F0-19** Vývojové prostředí: Laragon na Windows jako hlavní prostředí; zachovat možnost budoucího spuštění v Dockeru nebo DDEV
@@ -744,6 +744,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.11 (8. 11. 2026)
+- Dokončeno F0-16: zachován režim „všechna práva vyhrazena“; připraví se návrh studentské licence a podmínek služby a finální znění před distribucí nebo komerčním spuštěním zkontroluje právník.
+- Aktualizován souhrnný stav: **63 hotovo**, **1 rozděláno**, **2 k úpravě**, **1 čeká na rozhodnutí**.
+
 
 ### v2.10 (8. 11. 2026)
 - Dokončeno F0-32: e-mailové šablony budou uloženy jako Latte soubory v repozitáři a verzovány společně s aplikací; zdrojové šablony se nebudou upravovat v administraci.
