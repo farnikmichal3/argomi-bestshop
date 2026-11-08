@@ -1,6 +1,6 @@
 # ArgoMi BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 1.2 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 1.4 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 42, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 477, zrušeno 1.
+Celkem **539 kroků**: hotovo 43, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 476, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
-| F1 | Prostředí a repozitář | 36 | 10 | 0 | 0 | 0 | 0 | 26 | 0 |
+| F1 | Prostředí a repozitář | 36 | 11 | 0 | 0 | 0 | 0 | 25 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -165,7 +165,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-08** Ověřit vývojovou konfiguraci PHP v CLI i Apache (PHP 8.5.12, `memory_limit=512M`, `E_ALL`, zobrazování a logování chyb; konfigurace `php.ini` vyhovuje, bez změn)
 - `[HOTOVO]` **F1-09** `composer.json`: nastavit minimální PHP 8.3, `config.platform.php=8.3.0`, `sort-packages`; zachovat existující skripty `phpstan` a `tester`; ověřit Composer validaci a platform requirements bez změny verzí závislostí
 - `[HOTOVO]` **F1-10** Ověřit databázi `argomi_bestshop` (`utf8mb4`, `utf8mb4_0900_ai_ci`) a vytvořit oddělené účty aplikace a migrací s minimálními oprávněními; přihlášení obou účtů ověřeno
-- `[PLÁN]` **F1-11** Vytvořit `config/local.neon` a ověřit jeho načítání v `Bootstrap.php`
+- `[HOTOVO]` **F1-11** Vytvořit `config/local.neon` a ověřit jeho načítání v `Bootstrap.php`
 - `[PLÁN]` **F1-12** Nainstalovat `nette/database`
 - `[PLÁN]` **F1-13** Nainstalovat PHPStan, `extension-installer`, `phpstan-nette`, strict-rules a deprecation-rules
 - `[PLÁN]` **F1-14** Vytvořit `phpstan.neon` s `level: max`
@@ -744,6 +744,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v1.4 (8. 11. 2026)
+- Dokončen F1-11: vytvořen lokální `config/local.neon` s ovladačem `pdo_mysql` a účtem `argomi_app`; ověřeno sestavení Nette DI kontejneru přes `Bootstrap.php`.
+- Samotné sestavení kontejneru nepotvrzuje navázání databázového spojení; jeho ověření zůstává na pozdější krok.
+- Aktualizován souhrnný stav: **43 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
 
 ### v1.3 (8. 11. 2026)
 - Dokončen F1-10: ověřena existující databáze `argomi_bestshop` s `utf8mb4` / `utf8mb4_0900_ai_ci`; zachováno všech 47 existujících tabulek.
