@@ -92,6 +92,7 @@ Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
 
 - Výchozí jazyk: čeština (`cs`).
 - Další připravený jazyk: angličtina (`en`).
+- První verze e-shopu je zaměřena na B2C. Datový a doménový model ale od začátku počítá s firemními zákazníky a údaji IČO/DIČ; ověřování v ARES (ČR) a VIES (EU), B2B ceníky a individuální firemní podmínky se doplní později.
 - Všechny jazykové varianty URL mají vždy explicitní jazykový prefix, včetně výchozího jazyka (např. `/cs/produkty`, `/en/products`).
 - Výchozí měna: CZK.
 - Další připravená měna: EUR.
@@ -160,7 +161,6 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 - právní licence a podmínky hostované služby,
 - GDPR smluvní dokumentace a retence,
 - výchozí daňový režim cen,
-- B2B rozsah první verze,
 - konkrétní platební a dopravní poskytovatelé,
 - volba Docker/DDEV mimo současné Windows prostředí,
 - PDF, fronty, monitoring a SLA,
@@ -177,3 +177,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | F0-19: Laragon na Windows zůstává hlavním vývojovým prostředím; zachováme možnost budoucího spuštění v Dockeru nebo DDEV. |
 | 8. 11. 2026 | F0-20: Základní ceny se ukládají bez DPH; DPH se vypočítává podle daňových pravidel a `tax_included` řídí zobrazování cen. |
 | 8. 11. 2026 | F0-21: Všechny jazykové varianty URL mají explicitní prefix, včetně výchozího jazyka (`/cs`, `/en`). |
+| 8. 11. 2026 | F0-22: První verze je B2C; datový a doménový model počítá s firemními zákazníky a údaji IČO/DIČ, zatímco ověřování ARES/VIES a pokročilé B2B funkce se odkládají. |
