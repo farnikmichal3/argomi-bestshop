@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.5 · 8. 11. 2026  
+**Revize:** 1.6 · 8. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -88,6 +88,13 @@ Pravidla:
 - Provozovatelé obchodů dostanou srozumitelný přehled změn, které se jich týkají; interní technické změny není nutné prezentovat jako uživatelské novinky.
 - Verze označuje vydání platformy, nikoliv samostatnou verzi každého obchodu. Jednotlivé instalace mohou aktualizace nasazovat v různém čase.
 - Databázové změny jsou součástí vydání a provádějí se dopřednými migracemi. Již provedené historické migrace se nepřepisují; před rizikovou migrací se pořizuje záloha podle provozních zásad.
+
+
+### Generování faktur a PDF
+
+- Pro generování PDF dokumentů se používá knihovna **mPDF** v rámci PHP aplikace; nepřidává se samostatná Python služba ani externí proces WeasyPrint.
+- Faktury a další právně významné doklady se generují ze spravovaných šablon a po vystavení se uchovávají jako neměnný dokument. Opravy a změny se řeší novým opravným nebo navazujícím dokladem, nikoliv přepsáním již vystaveného PDF.
+- Výstupní PDF musí být ověřen bezpečnostně i vizuálně; obsah dokladu vychází z neměnného snímku objednávky a údajů platných při vystavení.
 
 ## 5. Databázové principy
 
@@ -198,3 +205,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | F0-26: Pro administrační tabulky byl zvolen Ublaboo Datagrid. Zatím není implementován ani nakonfigurován; bude použit při tvorbě administrace a zapouzdřen vlastní aplikační vrstvou. |
 | 8. 11. 2026 | F0-27: Obsahové texty se ukládají jako čistý Markdown; při vykreslení se převádějí na HTML a výsledné HTML se čistí přes HTMLPurifier nebo schválený ekvivalent. |
 | 8. 11. 2026 | F0-28: Platforma používá SemVer, produkční vydání označuje Git tag, změny eviduje `CHANGELOG.md` a obchodníkům poskytuje srozumitelný přehled relevantních změn; verze je společná pro vydání platformy, nikoliv samostatná pro každý obchod. Databázové změny probíhají dopřednými migracemi. |
+| 8. 11. 2026 | F0-29: Pro generování PDF se volí mPDF. Doklady se generují ze spravovaných šablon, vycházejí z neměnného snímku objednávky a po vystavení se uchovávají beze změn. |
