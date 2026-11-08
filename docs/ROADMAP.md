@@ -1,6 +1,6 @@
 # ArgoMi BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.9 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.10 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 61, rozděláno 1, k úpravě 2, rozhodnout 3, blokováno 0, plán 471, zrušeno 1.
+Celkem **539 kroků**: hotovo 62, rozděláno 1, k úpravě 2, rozhodnout 2, blokováno 0, plán 471, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -126,7 +126,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-29** Způsob generování faktur a PDF: zvoleno mPDF; PDF se generují ze spravovaných šablon, vycházejí z neměnného snímku objednávky a vystavené doklady se uchovávají beze změn
 - `[HOTOVO]` **F0-30** Miniatury: WebP jako výchozí formát, AVIF jako doplňková optimalizace; zachovat originály, centrálně konfigurovat velikosti a kvalitu, podporovat ořez, poměr stran a responzivní varianty
 - `[HOTOVO]` **F0-31** Fronty a plánované úlohy: databázová fronta zpracovávaná workerem, jehož spouštění zajišťuje cron; možnost pozdějšího nasazení samostatných či více workerů
-- `[ROZHODNOUT]` **F0-32** Šablony e-mailů: Latte v souborech vs. Latte v DB s přísným sandboxem
+- `[HOTOVO]` **F0-32** Šablony e-mailů: Latte šablony uložené v souborech repozitáře, verzované společně s aplikací; bez přímých úprav zdrojových šablon v administraci
 - `[HOTOVO]` **F0-33** Zvolit kódování a kolaci DB: `utf8mb4` a `utf8mb4_0900_ai_ci`
 - `[HOTOVO]` **F0-34** Rozhodnout způsob reprezentace peněz: celočíselné minor units (haléře/centy)
 - `[HOTOVO]` **F0-35** Rozhodnout způsob reprezentace množství: pevná desetinná místa v DB, žádný `float`
@@ -744,6 +744,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.10 (8. 11. 2026)
+- Dokončeno F0-32: e-mailové šablony budou uloženy jako Latte soubory v repozitáři a verzovány společně s aplikací; zdrojové šablony se nebudou upravovat v administraci.
+- Aktualizován souhrnný stav: **62 hotovo**, **1 rozděláno**, **2 k úpravě**, **2 čeká na rozhodnutí**.
+
 
 ### v2.9 (8. 11. 2026)
 - Dokončeno F0-31: úlohy se ukládají do databázové fronty a zpracovává je worker spouštěný cronem. Architektura umožní pozdější provoz samostatných či více souběžných workerů.
