@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.0 · 8. 11. 2026  
+**Revize:** 1.1 · 8. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -37,6 +37,7 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 - Aplikace je modulární monolit; veřejná rozhraní modulů a pravidla závislostí jsou popsána v [STRUKTURA](STRUKTURA.md).
 - Rozšiřitelnost se řeší přes interní rozhraní, adaptéry, nastavení a doménové události, ne načítáním libovolného cizího kódu do jádra.
 - Funkce určené pro všechny obchody patří do jádra. Externí poskytovatelé plateb, dopravy nebo vyhledávání se připojují přes adaptéry.
+- Platební integrace bude používat vlastní rozhraní `PaymentProvider`; konkrétní platební brána se vybere až před produkčním nasazením podle cílového trhu, podporovaných metod, poplatků a podmínek. Objednávkový proces nebude závislý na konkrétním poskytovateli.
 - Vyhledávání produktů má vlastní rozhraní `ProductSearch`; výchozí implementací je MySQL FULLTEXT. Elasticsearch nebo OpenSearch lze později připojit jako volitelnou implementaci přes stejné rozhraní.
 
 ## 4. Technologie a vývojová pravidla
@@ -178,3 +179,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | F0-20: Základní ceny se ukládají bez DPH; DPH se vypočítává podle daňových pravidel a `tax_included` řídí zobrazování cen. |
 | 8. 11. 2026 | F0-21: Všechny jazykové varianty URL mají explicitní prefix, včetně výchozího jazyka (`/cs`, `/en`). |
 | 8. 11. 2026 | F0-22: První verze je B2C; datový a doménový model počítá s firemními zákazníky a údaji IČO/DIČ, zatímco ověřování ARES/VIES a pokročilé B2B funkce se odkládají. |
+| 8. 11. 2026 | F0-23: Platební integrace bude postavena na vlastním rozhraní `PaymentProvider`; konkrétního poskytovatele vybereme až před produkčním nasazením. |
