@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.9 · 8. 11. 2026  
+**Revize:** 1.10 · 8. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -25,7 +25,7 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 - Veřejná dostupnost zdrojového kódu sama o sobě neposkytuje právo k jeho používání, kopírování, úpravám ani šíření.
 - Projekt není open source a nesmí být označován jako open source.
 - Výchozí autorskoprávní stav: **všechna práva vyhrazena**.
-- Konkrétní studentská licence, podmínky služby, případná licence pro zákazníky a právní texty zůstávají otevřeným úkolem. Před distribucí nebo komerčním spuštěním je nutná právní kontrola.
+- Výchozí autorskoprávní stav zůstává **všechna práva vyhrazena**. Připraví se návrh studentské licence a podmínek služby; jejich konečné znění, stejně jako případná licence pro zákazníky a související právní texty, musí před distribucí nebo komerčním spuštěním zkontrolovat právník.
 - V repozitáři nesmí zůstat zavádějící metadata MIT, BSD, GPL nebo ISC. Metadata balíčků musí odpovídat proprietárnímu režimu; právní dokumenty musí určit skutečné podmínky.
 - Příspěvky třetích stran a oprávnění k jejich začlenění musí být právně ošetřeny před jejich přijetím.
 
@@ -215,6 +215,7 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 4. 11. 2026 | Původní dokument ZÁMĚR v0.1/v0.2. |
 | 8. 11. 2026 | v1.0: sjednocení s potvrzenou strukturou aplikace, veřejným repozitářem s vyhrazenými právy, doménovým přístupem k překladům a skutečným stavem databáze. |
 | 8. 11. 2026 | Rozhodnutí: PHP kód se řídí PER Coding Style 3.0 (PER-CS 3.0). |
+| 8. 11. 2026 | F0-16: Zachováváme režim „všechna práva vyhrazena“. Připravíme návrh studentské licence a podmínek služby; finální znění před distribucí nebo komerčním spuštěním zkontroluje právník. |
 | 8. 11. 2026 | F0-18: MySQL FULLTEXT jako výchozí vyhledávání; Elasticsearch/OpenSearch jako možné pozdější implementace přes `ProductSearch`. |
 | 8. 11. 2026 | F0-19: Laragon na Windows zůstává hlavním vývojovým prostředím; zachováme možnost budoucího spuštění v Dockeru nebo DDEV. |
 | 8. 11. 2026 | F0-20: Základní ceny se ukládají bez DPH; DPH se vypočítává podle daňových pravidel a `tax_included` řídí zobrazování cen. |
