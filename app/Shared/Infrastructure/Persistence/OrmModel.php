@@ -10,6 +10,4 @@ use Nextras\Orm\Model\Model;
  * Tady se budou postupně registrovat repozitáře jednotlivých modulů
  * např. @property-read \App\Modules\Catalog\Infrastructure\Persistence\ProductsRepository $products
  */
-final class OrmModel extends Model
-{
-}
+final class OrmModel extends Model {}
