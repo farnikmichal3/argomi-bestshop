@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 33, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 486, zrušeno 1.
+Celkem **539 kroků**: hotovo 34, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 485, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
-| F1 | Prostředí a repozitář | 36 | 2 | 0 | 0 | 0 | 0 | 34 | 0 |
+| F1 | Prostředí a repozitář | 36 | 3 | 0 | 0 | 0 | 0 | 33 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 8 | 1 | 0 | 0 | 0 | 22 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -85,7 +85,7 @@ Celkem **539 kroků**: hotovo 33, rozděláno 1, k úpravě 2, rozhodnout 16, bl
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace (napsána, čeká na přejmenování a ověření)
 - `[HOTOVO]` **F0-15** Schválit skutečné členění `app/Core`, `Modules`, `Presentation`, `Shared` a `UI`
-- `[PLÁN]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
+- `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
 - `[PLÁN]` **F2-01** Vytvořit `app/Shared` (Domain, Infrastructure)
 - `[PLÁN]` **F3-10** Základ repozitáře nad Explorer: mapování `ActiveRow` na DTO
 
@@ -153,10 +153,10 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 2 z 36 kroků.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 3 z 36 kroků.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
-- `[PLÁN]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
+- `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
 - `[PLÁN]` **F1-03** Povolit potřebná PHP rozšíření (`pdo_mysql`, `mbstring`, `intl`, `openssl`, `curl`, `fileinfo`, `zip`, `gd`)
 - `[PLÁN]` **F1-04** Nastavit document root na `www/` ve virtuálním hostu
 - `[HOTOVO]` **F1-05** Založit veřejný GitHub repozitář bez licence k užití; všechna práva vyhrazena
@@ -744,6 +744,14 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v0.5 (8. 11. 2026)
+- Dokončen F1-02: ověřeny a aktualizovány nástroje vývojového prostředí.
+- Ověřené verze: PHP 8.5.12, Composer 2.11.1, Node.js 26.13.0, npm 12.2.2, MySQL 8.4.13 a Git for Windows 2.56.0.windows.4.
+- Ověřen Composer platform check; `npm ci` a `npm run build` proběhly úspěšně bez zranitelností v npm auditu.
+- MySQL 8.4.13 úspěšně spustil obnovený datový adresář; databáze `argomi_bestshop` obsahuje 47 tabulek.
+- GitHub připojení ověřeno příkazem `git ls-remote origin HEAD`; pracovní větev `main` je synchronizovaná s `origin/main`.
+- Aktualizován souhrnný stav: **34 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
 
 ### v0.4 (8. 11. 2026)
 - Dokončen F1-01: úklid výchozí Nette kostry a sjednocení metadat projektu.
