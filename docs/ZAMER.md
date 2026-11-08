@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.4 · 8. 11. 2026  
+**Revize:** 1.5 · 8. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -78,6 +78,16 @@ Pravidla:
 - Žádné `noescape` v Latte.
 - Žádné skládání SQL z nedůvěryhodných řetězců.
 - Závislosti se přijímají pouze po ověření údržby, kompatibility, licence a přínosu.
+
+
+### Verzování a changelog
+
+- Vydání platformy se verzují podle **Semantic Versioning (SemVer)** ve formátu `MAJOR.MINOR.PATCH`: MAJOR označuje nekompatibilní změny, MINOR zpětně kompatibilní nové funkce a PATCH opravy chyb a bezpečnostní opravy.
+- Každé produkční vydání dostane neměnný Git tag ve formátu `vMAJOR.MINOR.PATCH` (např. `v1.4.2`).
+- Repozitář bude obsahovat `CHANGELOG.md` s přehledem nových funkcí, změn, oprav a bezpečnostních oprav.
+- Provozovatelé obchodů dostanou srozumitelný přehled změn, které se jich týkají; interní technické změny není nutné prezentovat jako uživatelské novinky.
+- Verze označuje vydání platformy, nikoliv samostatnou verzi každého obchodu. Jednotlivé instalace mohou aktualizace nasazovat v různém čase.
+- Databázové změny jsou součástí vydání a provádějí se dopřednými migracemi. Již provedené historické migrace se nepřepisují; před rizikovou migrací se pořizuje záloha podle provozních zásad.
 
 ## 5. Databázové principy
 
@@ -187,3 +197,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | F0-24: Doručovací integrace bude používat `ShippingProvider` a samostatné adaptéry; systém umožní současné použití více dopravců. |
 | 8. 11. 2026 | F0-26: Pro administrační tabulky byl zvolen Ublaboo Datagrid. Zatím není implementován ani nakonfigurován; bude použit při tvorbě administrace a zapouzdřen vlastní aplikační vrstvou. |
 | 8. 11. 2026 | F0-27: Obsahové texty se ukládají jako čistý Markdown; při vykreslení se převádějí na HTML a výsledné HTML se čistí přes HTMLPurifier nebo schválený ekvivalent. |
+| 8. 11. 2026 | F0-28: Platforma používá SemVer, produkční vydání označuje Git tag, změny eviduje `CHANGELOG.md` a obchodníkům poskytuje srozumitelný přehled relevantních změn; verze je společná pro vydání platformy, nikoliv samostatná pro každý obchod. Databázové změny probíhají dopřednými migracemi. |
