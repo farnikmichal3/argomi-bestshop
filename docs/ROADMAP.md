@@ -48,11 +48,11 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **538 kroků**: hotovo 29, rozděláno 2, k úpravě 3, rozhodnout 16, blokováno 0, plán 487, zrušeno 1.
+Celkem **538 kroků**: hotovo 32, rozděláno 2, k úpravě 2, rozhodnout 16, blokováno 0, plán 485, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| F0 | Rozhodnutí a dokumentace | 54 | 20 | 0 | 2 | 16 | 0 | 16 | 0 |
+| F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
 | F1 | Prostředí a repozitář | 35 | 1 | 1 | 0 | 0 | 0 | 33 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 8 | 1 | 0 | 0 | 0 | 22 | 1 |
@@ -81,7 +81,7 @@ Celkem **538 kroků**: hotovo 29, rozděláno 2, k úpravě 3, rozhodnout 16, bl
 - `[HOTOVO]` **F0-14** Popsat skutečnou strukturu projektu v kanonickém dokumentu STRUKTURA
 - `[ROZDĚLÁNO]` **F3-16** Příkaz `db:reset` (smazat, migrovat, naplnit) pro vývoj (připravit `composer db:reset`)
 - `[K ÚPRAVĚ]` **F0-43** Lekce 1: přejmenovat projekt na `argomi-bestshop` a databázi na `argomi_bestshop`
-- `[K ÚPRAVĚ]` **F0-44** ZÁMĚR: promítnout schválenou strukturu `app/` a rozhodnutí o překladech
+- `[HOTOVO]` **F0-44** ZÁMĚR: promítnout schválenou strukturu `app/` a rozhodnutí o překladech
 - `[ROZDĚLÁNO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace (napsána, čeká na přejmenování a ověření)
 - `[HOTOVO]` **F0-15** Schválit skutečné členění `app/Core`, `Modules`, `Presentation`, `Shared` a `UI`
@@ -138,15 +138,15 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[PLÁN]` **F0-41** Zásady zálohování a disaster recovery plán
 - `[PLÁN]` **F0-42** Revize shody s Omnibus směrnicí (historie cen)
 - `[K ÚPRAVĚ]` **F0-43** Lekce 1: přejmenovat projekt na `argomi-bestshop` a databázi na `argomi_bestshop`
-- `[K ÚPRAVĚ]` **F0-44** ZAMER: promítnout schválenou strukturu `app/` do kapitoly 3.2
+- `[HOTOVO]` **F0-44** ZAMER: promítnout schválenou strukturu `app/` do kapitoly 3.2
 - `[PLÁN]` **F0-45** Definice rozhraní externích pluginů a rozšíření
 - `[PLÁN]` **F0-46** Standard pro logování a sledování chyb (Sentry/Tracy)
 - `[PLÁN]` **F0-47** Pravidla pro práci s větvemi v Gitu (Trunk-based vs. GitHub Flow)
 - `[PLÁN]` **F0-48** Zásady přístupnosti podle WCAG 2.1 AA
 - `[PLÁN]` **F0-49** Pravidla pro mazání dat a retenci logů
 - `[PLÁN]` **F0-50** Kontrola licence všech plánovaných knihoven třetích stran
-- `[PLÁN]` **F0-51** Sjednotit právní metadata Composer/npm s režimem všechna práva vyhrazena
-- `[PLÁN]` **F0-52** Aktualizovat README a AGENTS.md podle skutečného projektu, bez instrukcí skeletonu
+- `[HOTOVO]` **F0-51** Sjednotit právní metadata Composer/npm s režimem všechna práva vyhrazena
+- `[HOTOVO]` **F0-52** Aktualizovat README a AGENTS.md podle skutečného projektu, bez instrukcí skeletonu
 - `[PLÁN]` **F0-53** Popsat a otestovat bezpečné rozlišení demo objednávek od skutečných operací
 - `[PLÁN]` **F0-54** Prověřit nepoužívanou závislost Nextras ORM a soubor Shared/Infrastructure/Persistence/OrmModel.php
 
