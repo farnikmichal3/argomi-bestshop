@@ -62,6 +62,8 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 
 Front-end assety se sestavují vlastními skripty Sass a esbuild. Front a Admin mají oddělené vstupy a výstupy. Nesmí se do projektu vrátit Vite jen proto, že jej obsahuje výchozí Nette skeleton.
 
+Výchozím vývojovým prostředím je Laragon na Windows. Projekt se však nesmí na Laragon pevně vázat; konfigurace a provozní postupy mají zachovat možnost budoucího spuštění v Dockeru nebo DDEV. Kontejnerizace není součástí aktuálního vývojového kroku.
+
 Pravidla:
 - `declare(strict_types=1);` v PHP souborech.
 - PHP kód dodržuje **PER Coding Style 3.0 (PER-CS 3.0)**; kontrolu a automatické formátování zajišťuje projektový coding-standard nástroj.
@@ -171,3 +173,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | v1.0: sjednocení s potvrzenou strukturou aplikace, veřejným repozitářem s vyhrazenými právy, doménovým přístupem k překladům a skutečným stavem databáze. |
 | 8. 11. 2026 | Rozhodnutí: PHP kód se řídí PER Coding Style 3.0 (PER-CS 3.0). |
 | 8. 11. 2026 | F0-18: MySQL FULLTEXT jako výchozí vyhledávání; Elasticsearch/OpenSearch jako možné pozdější implementace přes `ProductSearch`. |
+| 8. 11. 2026 | F0-19: Laragon na Windows zůstává hlavním vývojovým prostředím; zachováme možnost budoucího spuštění v Dockeru nebo DDEV. |
