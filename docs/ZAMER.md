@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.8 · 8. 11. 2026  
+**Revize:** 1.9 · 8. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -101,6 +101,12 @@ Pravidla:
 - Úlohy se ukládají do databázové fronty a zpracovávají samostatným workerem.
 - Spouštění workeru a plánovaných úloh zajišťuje systémový **cron**; cron tedy slouží jako spouštěč, nikoliv jako náhrada databázové fronty.
 - Návrh umožní pozdější provoz samostatných nebo více souběžných workerů bez změny aplikačního rozhraní pro zadávání úloh.
+
+### Šablony e-mailů
+
+- E-mailové šablony se budou ukládat jako **soubory Latte** v repozitáři, nikoliv do databáze.
+- Šablony jsou verzované společně s aplikací a jejich změny procházejí běžnou kontrolou kódu.
+- Administrátor nebude v první verzi upravovat zdrojové Latte šablony přímo v administraci; případná správa textového obsahu e-mailů se řeší odděleně od šablonovací logiky.
 
 ### Generování a velikosti miniatur obrázků
 
@@ -219,4 +225,7 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | F0-26: Pro administrační tabulky byl zvolen Ublaboo Datagrid. Zatím není implementován ani nakonfigurován; bude použit při tvorbě administrace a zapouzdřen vlastní aplikační vrstvou. |
 | 8. 11. 2026 | F0-27: Obsahové texty se ukládají jako čistý Markdown; při vykreslení se převádějí na HTML a výsledné HTML se čistí přes HTMLPurifier nebo schválený ekvivalent. |
 | 8. 11. 2026 | F0-28: Platforma používá SemVer, produkční vydání označuje Git tag, změny eviduje `CHANGELOG.md` a obchodníkům poskytuje srozumitelný přehled relevantních změn; verze je společná pro vydání platformy, nikoliv samostatná pro každý obchod. Databázové změny probíhají dopřednými migracemi. |
-| 8. 11. 2026 | F0-29: Pro generování PDF se volí mPDF. Doklady se generují ze spravovaných šablon, vycházejí z neměnného snímku objednávky a po vystavení se uchovávají beze změn. |\n| 8. 11. 2026 | F0-30: Originály obrázků se zachovávají; miniatury se generují primárně ve WebP, AVIF je doplňková optimalizovaná varianta. Velikosti a kvalita se řídí centrální konfigurací, s podporou ořezu, poměru stran a responzivního zobrazování. |\n| 8. 11. 2026 | F0-31: Úlohy se ukládají do databázové fronty a zpracovává je worker spouštěný cronem. Architektura umožní pozdější provoz samostatných či více souběžných workerů bez změny aplikačního rozhraní. |
+| 8. 11. 2026 | F0-29: Pro generování PDF se volí mPDF. Doklady se generují ze spravovaných šablon, vycházejí z neměnného snímku objednávky a po vystavení se uchovávají beze změn. |
+| 8. 11. 2026 | F0-30: Originály obrázků se zachovávají; miniatury se generují primárně ve WebP, AVIF je doplňková optimalizovaná varianta. Velikosti a kvalita se řídí centrální konfigurací, s podporou ořezu, poměru stran a responzivního zobrazování. |
+| 8. 11. 2026 | F0-32: E-mailové šablony se ukládají jako Latte soubory v repozitáři a verzují se společně s aplikací; jejich zdrojový kód se neupravuje v administraci. |
+| 8. 11. 2026 | F0-31: Úlohy se ukládají do databázové fronty a zpracovává je worker spouštěný cronem. Architektura umožní pozdější provoz samostatných či více souběžných workerů bez změny aplikačního rozhraní. |
