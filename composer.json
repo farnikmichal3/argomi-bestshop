@@ -1,9 +1,11 @@
 {
-	"name": "nette/web-project",
-	"description": "Nette: Standard Web Project",
-	"keywords": ["nette"],
+	"name": "argomi/argomi-bestshop",
+	"description": "ArgoMi BestShop – modular e-commerce application",
+	"keywords": [
+		"nette"
+	],
 	"type": "project",
-	"license": ["MIT", "BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+	"license": "proprietary",
 	"require": {
 		"php": ">= 8.2",
 		"nette/application": "^3.2.3",
