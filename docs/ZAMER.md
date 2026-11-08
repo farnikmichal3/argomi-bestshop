@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.2 · 8. 11. 2026  
+**Revize:** 1.3 · 8. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -56,11 +56,14 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 | Testy | Nette Tester; unit, integrační a architektonické testy podle potřeby |
 | Front-end CSS | Sass |
 | Bundling | esbuild |
+| Administrační datagrid | Ublaboo Datagrid; vlastní aplikační obal pro omezení přímé závislosti na knihovně |
 | Front-end framework | Bootstrap 5.3.8 + Bootswatch Cosmo 5.3.8 |
 | AJAX | Naja 3 |
 | Vite | Nepoužívat |
 | Dependency Injection | Striktní konstruktorová injekce |
 | Debug | Tracy ve vývojovém prostředí |
+
+Pro administrační tabulky je zvolen Ublaboo Datagrid. Vlastní aplikační vrstva má omezit přímou závislost na knihovně a umožnit její případnou budoucí náhradu. Knihovna zatím není v projektu implementována ani nakonfigurována; jde o schválenou technologickou volbu pro budoucí tvorbu administrace.
 
 Front-end assety se sestavují vlastními skripty Sass a esbuild. Front a Admin mají oddělené vstupy a výstupy. Nesmí se do projektu vrátit Vite jen proto, že jej obsahuje výchozí Nette skeleton.
 
@@ -182,3 +185,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | F0-22: První verze je B2C; datový a doménový model počítá s firemními zákazníky a údaji IČO/DIČ, zatímco ověřování ARES/VIES a pokročilé B2B funkce se odkládají. |
 | 8. 11. 2026 | F0-23: Platební integrace bude postavena na vlastním rozhraní `PaymentProvider`; konkrétního poskytovatele vybereme až před produkčním nasazením. |
 | 8. 11. 2026 | F0-24: Doručovací integrace bude používat `ShippingProvider` a samostatné adaptéry; systém umožní současné použití více dopravců. |
+| 8. 11. 2026 | F0-26: Pro administrační tabulky byl zvolen Ublaboo Datagrid. Zatím není implementován ani nakonfigurován; bude použit při tvorbě administrace a zapouzdřen vlastní aplikační vrstvou. |
