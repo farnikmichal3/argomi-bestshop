@@ -46,16 +46,45 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 | **M5** | F21 (funkce, na kterých obchodník stojí; průběžně) |
 | **Průběžně** | F16 (výuka) navazuje na hotové fáze |
 
-## 2. Přehled stavu\n\nCelkem **0 kroků**: hotovo 0, rozděláno 0, k úpravě 0, rozhodnout 0, blokováno 0, plán 0, zrušeno 0.\n\n| Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |\n|---|---|---:|---:|---:|---:|---:|---:|---:|---:|\n\n## 3. Nejbližší kroky
+## 2. Přehled stavu
 
-- `[HOTOVO]` **F0-12** Sjednotit kanonickou dokumentaci a průběžné pravidlo její aktualizace
-- `[HOTOVO]` **F0-14** Popsat skutečnou strukturu projektu v kanonickém dokumentu STRUKTURA
-- `[ROZDĚLÁNO]` **F3-17** Příkaz `db:reset` (smazat, migrovat, naplnit) pro vývoj (připravit `composer db:reset`)
+Celkem **533 kroků**: hotovo 24, rozděláno 2, k úpravě 3, rozhodnout 16, blokováno 0, plán 487, zrušeno 1.
+
+| Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| F0 | Rozhodnutí a dokumentace | 50 | 16 | 0 | 2 | 16 | 0 | 16 | 0 |
+| F1 | Prostředí a repozitář | 34 | 0 | 1 | 0 | 0 | 0 | 33 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
+| F3 | Databáze a migrace | 32 | 8 | 1 | 0 | 0 | 0 | 22 | 1 |
+| F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
+| F5 | Catalog (vlna 1) | 34 | 0 | 0 | 0 | 0 | 0 | 34 | 0 |
+| F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
+| F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
+| F8 | Zákazníci a administrátoři | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
+| F9 | Orders a Checkout | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
+| F10 | Shipping, Payments, Mailing | 24 | 0 | 0 | 0 | 0 | 0 | 24 | 0 |
+| F11 | Front UI | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+| F12 | Admin UI | 26 | 0 | 0 | 0 | 0 | 0 | 26 | 0 |
+| F13 | Vyhledávání | 10 | 0 | 0 | 0 | 0 | 0 | 10 | 0 |
+| F14 | Bezpečnost a kvalita | 25 | 0 | 0 | 0 | 0 | 0 | 25 | 0 |
+| F15 | Provoz a hostování | 18 | 0 | 0 | 0 | 0 | 0 | 18 | 0 |
+| F16 | Výuka | 36 | 0 | 0 | 1 | 0 | 0 | 35 | 0 |
+| F17 | Milník 1: první nasazení | 11 | 0 | 0 | 0 | 0 | 0 | 11 | 0 |
+| F18 | Vlna 2: ceny a sklad | 18 | 0 | 0 | 0 | 0 | 0 | 18 | 0 |
+| F19 | Vlna 3: speciální chování | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+| F20 | Vlna 4: nejnáročnější | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
+| F21 | Funkce, na kterých obchodník stojí | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
+
+## 3. Nejbližší kroky
+
+- `[HOTOVO]` `**F0-12**` Sjednotit kanonickou dokumentaci a průběžné pravidlo její aktualizace
+- `[HOTOVO]` `**F0-14**` Popsat skutečnou strukturu projektu v kanonickém dokumentu STRUKTURA
+- `[ROZDĚLÁNO]` **F3-16** Příkaz `db:reset` (smazat, migrovat, naplnit) pro vývoj (připravit `composer db:reset`)
 - `[K ÚPRAVĚ]` **F0-43** Lekce 1: přejmenovat projekt na `argomi-bestshop` a databázi na `argomi_bestshop`
 - `[K ÚPRAVĚ]` **F0-44** ZÁMĚR: promítnout schválenou strukturu `app/` a rozhodnutí o překladech
 - `[ROZDĚLÁNO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace (napsána, čeká na přejmenování a ověření)
-- `[HOTOVO]` **F0-15** Schválit skutečné členění `app/Core`, `Modules`, `Presentation`, `Shared` a `UI`
+- `[HOTOVO]` `**F0-15**` Schválit skutečné členění `app/Core`, `Modules`, `Presentation`, `Shared` a `UI`
 - `[PLÁN]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
 - `[PLÁN]` **F2-01** Vytvořit `app/Shared` (Domain, Infrastructure)
 - `[PLÁN]` **F3-10** Základ repozitáře nad Explorer: mapování `ActiveRow` na DTO
@@ -64,10 +93,10 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ### F0: Rozhodnutí a dokumentace
 
-_Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme vracet._ Hotovo 17 z 50 kroků.
+_Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme vracet._ Počty stavů jsou uvedeny v přehledu výše.
 
 - `[HOTOVO]` **F0-01** Zapsat vizi, hodnoty a pořadí priorit (ZAMER kap. 1)
-- `[HOTOVO]` **F0-02** Rozhodnout distribuci: zdarma hostovaná služba a studentská licence, ne open source (kap. 2)
+- `[HOTOVO]` **F0-02** Potvrdit veřejný repozitář bez licence k užití; všechna práva vyhrazena; právní podmínky zůstávají otevřené (kap. 2)
 - `[HOTOVO]` **F0-03** Rozhodnout architekturu: modulární monolit, jedna instance a jedna databáze na obchod (kap. 3)
 - `[HOTOVO]` **F0-04** Zvolit technologie a pravidla pro přijímání závislostí (kap. 4)
 - `[HOTOVO]` **F0-05** Zapsat bezpečnostní zásady (kap. 5)
@@ -77,10 +106,10 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-09** Schválit doménově rozdělené překlady; systémové výchozí texty jsou chráněné a administrátor spravuje vlastní překlady
 - `[HOTOVO]` **F0-10** Ověřit přístup AI k veřejnému repozitáři na GitHubu
 - `[HOTOVO]` **F0-11** Opravit název projektu na ArgoMi-bestshop v dokumentu záměru
-- `[ROZDĚLÁNO]` **F0-12** Průběžně aktualizovat dokument záměru po každém rozhodnutí
+- `[HOTOVO]` `**F0-12**` Sjednotit kanonickou dokumentaci a průběžné pravidlo její aktualizace
 - `[HOTOVO]` **F0-13** Roadmap: verze 0.3 aktualizována po dokončení F3 migrací a uzavření DB rozhodnutí
-- `[ROZDĚLÁNO]` **F0-14** Kanonický dokument STRUKTURA odpovídá skutečnému stromu
-- `[ROZHODNOUT]` **F0-15** Schválit skutečnou strukturu `app/` podle stromu projektu
+- `[HOTOVO]` `**F0-14**` Kanonický dokument STRUKTURA odpovídá skutečnému stromu
+- `[HOTOVO]` `**F0-15**` Schválit skutečnou strukturu `app/` podle stromu projektu
 - `[ROZHODNOUT]` **F0-16** Licence a podmínky služby, studentská licence (právník)
 - `[ROZHODNOUT]` **F0-17** Smlouva o zpracování osobních údajů a GDPR pro hostované obchody (právník)
 - `[ROZHODNOUT]` **F0-18** Vyhledávání: MySQL FULLTEXT jako výchozí, Elasticsearch/OpenSearch volitelně
@@ -90,7 +119,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[ROZHODNOUT]` **F0-22** Režim B2B v první verzi (pouze B2C, nebo přepínač IČO/DIČ s ověřením v ARES/VIES)
 - `[ROZHODNOUT]` **F0-23** Poskytovatel platební brány (GoPay, Comgate, Stripe, Barion)
 - `[ROZHODNOUT]` **F0-24** Poskytovatel doručovacích služeb (Zásilkovna, Balíkovna, DPD, PPL)
-- `[HOTOVO]` **F0-25** Zvolit Sass + esbuild bez Vite
+- `[HOTOVO]` `**F0-25**` Zvolit Sass + esbuild bez Vite
 - `[ROZHODNOUT]` **F0-26** Datagrid pro administraci: Ublaboo Datagrid vs. vlastní komponenta
 - `[ROZHODNOUT]` **F0-27** Formát ukládání textů: čistý Markdown vs. bezpečné HTML přes HTMLPurifier
 - `[ROZHODNOUT]` **F0-28** Politika verzování a changelog pro hostované obchody
@@ -126,11 +155,11 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 
 _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 0 z 35 kroků.
 
-- `[ROZDĚLÁNO]` **F1-01** Založit projekt z `nette/web-project` (zakládá autor projektu)
+- `[ROZDĚLÁNO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[PLÁN]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
 - `[PLÁN]` **F1-03** Povolit potřebná PHP rozšíření (`pdo_mysql`, `mbstring`, `intl`, `openssl`, `curl`, `fileinfo`, `zip`, `gd`)
 - `[PLÁN]` **F1-04** Nastavit document root na `www/` ve virtuálním hostu
-- `[HOTOVO]` **F1-05** Založit veřejný GitHub repozitář bez licence k užití; všechna práva vyhrazena
+- `[HOTOVO]` `**F1-05**` Založit veřejný GitHub repozitář bez licence k užití; všechna práva vyhrazena
 - `[PLÁN]` **F1-06** Doplnit `.gitignore` (vendor, node_modules, temp, log, local.neon, www/assets)
 - `[PLÁN]` **F1-07** Přidat `.editorconfig`
 - `[PLÁN]` **F1-08** Konfigurace PHP pro vývoj (`php.ini`: memory limit, error reporting, max execution time)
