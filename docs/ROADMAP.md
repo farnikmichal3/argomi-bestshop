@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 45, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 474, zrušeno 1.
+Celkem **539 kroků**: hotovo 47, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 472, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
-| F1 | Prostředí a repozitář | 36 | 13 | 0 | 0 | 0 | 0 | 23 | 0 |
+| F1 | Prostředí a repozitář | 36 | 15 | 0 | 0 | 0 | 0 | 21 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -153,7 +153,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 13 z 36 kroků.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 15 z 36 kroků.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -168,8 +168,8 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-11** Vytvořit `config/local.neon` a ověřit jeho načítání v `Bootstrap.php`
 - `[HOTOVO]` **F1-12** Ověřit přímou závislost `nette/database` v `composer.json` a `composer.lock` (verze 3.2.10); instalace i uzamčená verze jsou shodné.
 - `[HOTOVO]` **F1-13** Nainstalovat PHPStan 2.3.5, `extension-installer` 1.4.3, `phpstan-nette` 2.0.15, `phpstan-strict-rules` 2.1.1 a `phpstan-deprecation-rules` 2.0.5; automatická registrace rozšíření ověřena Composerem
-- `[PLÁN]` **F1-14** Vytvořit `phpstan.neon` s `level: max`
-- `[PLÁN]` **F1-15** Opravit chyby kostry na úrovni max (bez baseline)
+- `[HOTOVO]` **F1-14** Vytvořit `phpstan.neon` s `level: max`
+- `[HOTOVO]` **F1-15** Opravit chyby kostry na úrovni max (bez baseline)
 - `[PLÁN]` **F1-16** Nastavit coding standard (po rozhodnutí F0)
 - `[PLÁN]` **F1-17** Nainstalovat testovací nástroj (po rozhodnutí F0)
 - `[PLÁN]` **F1-18** Nainstalovat nástroj pro hlídání hranic modulů (po rozhodnutí F0)
@@ -744,6 +744,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v1.7 (8. 11. 2026)
+- Dokončeny F1-14 a F1-15: konfigurace PHPStan na `level: max` a oprava všech nálezů v kostře bez baseline.
+- Ověřeno čisté dokončení `composer phpstan`.
+- Aktualizován souhrnný stav: **47 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
 
 ### v1.6 (8. 11. 2026)
 - Dokončen F1-13: ověřeny přímé vývojové závislosti PHPStan a všechna rozšíření; doplněny a nainstalovány `phpstan/phpstan-deprecation-rules` 2.0.5.
