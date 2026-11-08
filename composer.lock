@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2f138e50d1e45dcf0ae0bb73341099d",
+    "content-hash": "86db22cfa5fd4d9ad212dc4e3aa027b7",
     "packages": [
         {
             "name": "contributte/console",
@@ -2883,7 +2883,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-03T12:14:22+00:00"
+            "time": "2026-11-03T12:14:22+00:00",
+            "published-time": "2026-11-03T12:14:36+00:00"
         },
         {
             "name": "phpstan/phpstan-nette",
@@ -3072,8 +3073,11 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">= 8.2"
+        "php": ">=8.3"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "platform-overrides": {
+        "php": "8.3.0"
+    },
+    "plugin-api-version": "2.11.0"
 }
