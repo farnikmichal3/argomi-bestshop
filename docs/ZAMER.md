@@ -78,6 +78,7 @@ Pravidla:
 
 - Interní primární klíče jsou celočíselné; veřejné identifikátory se používají tam, kde je to potřeba.
 - Peníze se ukládají jako celočíselné minor units spolu s měnou. Nikdy `FLOAT`.
+- Základní ceny produktů a cenové podklady se ukládají bez DPH. DPH se vypočítává z příslušné daňové třídy a platných daňových pravidel; způsob zobrazování cen s DPH nebo bez DPH řídí nastavení obchodu `tax_included`. Objednávka uchovává neměnný snímek použitých cen, sazeb a vypočtených částek.
 - Množství se ukládá desetinným typem, nikoliv floatem.
 - Čas se ukládá v UTC.
 - Atributy, varianty a filtrovatelné vlastnosti jsou relační a typované; JSON není náhradou za relační model.
@@ -174,3 +175,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | Rozhodnutí: PHP kód se řídí PER Coding Style 3.0 (PER-CS 3.0). |
 | 8. 11. 2026 | F0-18: MySQL FULLTEXT jako výchozí vyhledávání; Elasticsearch/OpenSearch jako možné pozdější implementace přes `ProductSearch`. |
 | 8. 11. 2026 | F0-19: Laragon na Windows zůstává hlavním vývojovým prostředím; zachováme možnost budoucího spuštění v Dockeru nebo DDEV. |
+| 8. 11. 2026 | F0-20: Základní ceny se ukládají bez DPH; DPH se vypočítává podle daňových pravidel a `tax_included` řídí zobrazování cen. |
