@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.3 · 8. 11. 2026  
+**Revize:** 1.4 · 8. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -126,7 +126,7 @@ Cílové zásady:
 - CSP s nonce a bez `unsafe-inline`, kde to architektura umožňuje.
 - CSRF ochrana formulářů a citlivých akcí.
 - Kontextové escapování výstupu, validace vstupů.
-- HTML obsah čistit přes HTMLPurifier nebo schválený ekvivalent.
+- Textový obsah ukládat jako čistý Markdown, nikoliv jako HTML. Markdown se při vykreslení převede na HTML a výsledné HTML se bezpečně vyčistí přes HTMLPurifier nebo schválený ekvivalent; libovolné HTML vložené autorem se nepovažuje za důvěryhodné.
 - Hesla ukládat výhradně bezpečným hashováním.
 - Omezení pokusů o přihlášení, bezpečné session a ochrana obnovy hesla.
 - Oddělené zákaznické a administrátorské identity a oprávnění.
@@ -186,3 +186,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | F0-23: Platební integrace bude postavena na vlastním rozhraní `PaymentProvider`; konkrétního poskytovatele vybereme až před produkčním nasazením. |
 | 8. 11. 2026 | F0-24: Doručovací integrace bude používat `ShippingProvider` a samostatné adaptéry; systém umožní současné použití více dopravců. |
 | 8. 11. 2026 | F0-26: Pro administrační tabulky byl zvolen Ublaboo Datagrid. Zatím není implementován ani nakonfigurován; bude použit při tvorbě administrace a zapouzdřen vlastní aplikační vrstvou. |
+| 8. 11. 2026 | F0-27: Obsahové texty se ukládají jako čistý Markdown; při vykreslení se převádějí na HTML a výsledné HTML se čistí přes HTMLPurifier nebo schválený ekvivalent. |
