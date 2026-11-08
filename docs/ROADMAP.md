@@ -52,7 +52,7 @@ Celkem **539 kroků**: hotovo 64, rozděláno 1, k úpravě 2, rozhodnout 0, blo
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| F0 | Rozhodnutí a dokumentace | 54 | 38 | 0 | 1 | 1 | 0 | 14 | 0 |
+| F0 | Rozhodnutí a dokumentace | 54 | 39 | 0 | 1 | 0 | 0 | 14 | 0 |
 | F1 | Prostředí a repozitář | 36 | 16 | 0 | 0 | 0 | 0 | 20 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
