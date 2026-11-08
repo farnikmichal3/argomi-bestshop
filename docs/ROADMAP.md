@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 35, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 484, zrušeno 1.
+Celkem **539 kroků**: hotovo 36, rozděláno 1, k úpravě 2, rozhodnout 16, blokováno 0, plán 483, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 23 | 0 | 1 | 16 | 0 | 14 | 0 |
-| F1 | Prostředí a repozitář | 36 | 4 | 0 | 0 | 0 | 0 | 32 | 0 |
+| F1 | Prostředí a repozitář | 36 | 5 | 0 | 0 | 0 | 0 | 31 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 8 | 1 | 0 | 0 | 0 | 22 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -153,12 +153,12 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 4 z 36 kroků.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 5 z 36 kroků.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
 - `[HOTOVO]` **F1-03** Povolit a ověřit potřebná PHP rozšíření (`pdo_mysql`, `mbstring`, `intl`, `openssl`, `curl`, `fileinfo`, `zip`, `gd`)
-- `[PLÁN]` **F1-04** Nastavit document root na `www/` ve virtuálním hostu
+- `[HOTOVO]` **F1-04** Nastavit document root na `www/` ve virtuálním hostu
 - `[HOTOVO]` **F1-05** Založit veřejný GitHub repozitář bez licence k užití; všechna práva vyhrazena
 - `[PLÁN]` **F1-06** Doplnit `.gitignore` (vendor, node_modules, temp, log, local.neon, www/assets)
 - `[PLÁN]` **F1-07** Přidat `.editorconfig`
@@ -745,8 +745,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 
 ## 5. Historie revizí
 
+### v0.7 (8. 11. 2026)
+- Dokončen F1-04: ověřena konfigurace Apache virtuálního hostu; HTTP i HTTPS používají `C:/laragon/www/argomi-bestshop/www` jako `DocumentRoot`.
+- Aktualizován souhrnný stav: **36 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
+
 ### v0.6 (8. 11. 2026)
-- Dokončen F1-03: v Laragonu povoleno a ověřeno všech 8 požadovaných PHP rozšíření v aktivním PHP CLI, včetně `zip`.
+- Dokončen F1-03: v Laragonu povoleno a ověřeno všech 8 požadovaných PHP rozšíření v aktivním PHP CLI.
 - Aktualizován souhrnný stav: **35 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
 
 ### v0.5 (8. 11. 2026)
