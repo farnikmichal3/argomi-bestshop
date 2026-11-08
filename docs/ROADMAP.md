@@ -153,7 +153,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 0 z 35 kroků.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 1 z 36 kroků.
 
 - `[ROZDĚLÁNO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[PLÁN]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -215,7 +215,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 
 ### F3: Databáze a migrace
 
-_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 8 z 30 kroků.
+_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 8 z 32 kroků.
 
 - `[HOTOVO]` **F3-01** Počáteční schéma, základní data a demo data v časově značených Nextras migracích načtené v MySQL bez chyb
 - `[HOTOVO]` **F3-02** Nainstalovat Nextras Migrations a nastavit adresáře `structures`, `basic-data`, `dummy-data` (integrováno v Nette DI)
