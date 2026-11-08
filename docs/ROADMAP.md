@@ -48,11 +48,11 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 50, rozděláno 1, k úpravě 2, rozhodnout 14, blokováno 0, plán 471, zrušeno 1.
+Celkem **539 kroků**: hotovo 51, rozděláno 1, k úpravě 2, rozhodnout 13, blokováno 0, plán 471, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| F0 | Rozhodnutí a dokumentace | 54 | 25 | 0 | 1 | 14 | 0 | 14 | 0 |
+| F0 | Rozhodnutí a dokumentace | 54 | 26 | 0 | 1 | 13 | 0 | 14 | 0 |
 | F1 | Prostředí a repozitář | 36 | 16 | 0 | 0 | 0 | 0 | 20 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
@@ -114,7 +114,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[ROZHODNOUT]` **F0-17** Smlouva o zpracování osobních údajů a GDPR pro hostované obchody (právník)
 - `[HOTOVO]` **F0-18** Vyhledávání: MySQL FULLTEXT jako výchozí, Elasticsearch/OpenSearch volitelně
 - `[HOTOVO]` **F0-19** Vývojové prostředí: Laragon na Windows jako hlavní prostředí; zachovat možnost budoucího spuštění v Dockeru nebo DDEV
-- `[ROZHODNOUT]` **F0-20** Ceny v databázi s DPH, nebo bez (výchozí hodnota `tax_included`)
+- `[HOTOVO]` **F0-20** Ceny se ukládají bez DPH; daň se vypočítává podle daňových pravidel a nastavení `tax_included` řídí způsob zobrazování cen
 - `[ROZHODNOUT]` **F0-21** Jazyk v URL (`/cs`, `/en`) a prefix výchozího jazyka
 - `[ROZHODNOUT]` **F0-22** Režim B2B v první verzi (pouze B2C, nebo přepínač IČO/DIČ s ověřením v ARES/VIES)
 - `[ROZHODNOUT]` **F0-23** Poskytovatel platební brány (GoPay, Comgate, Stripe, Barion)
