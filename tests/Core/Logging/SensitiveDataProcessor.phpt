@@ -17,7 +17,7 @@ $record = new LogRecord(
     new DateTimeImmutable(),
     'argomi',
     Level::Error,
-    'Request failed',
+    'Request failed: token=message-secret',
     [
         'user_id' => 42,
         'credentials' => [
@@ -37,6 +37,7 @@ $record = new LogRecord(
 
 $result = $processor($record);
 
+Assert::same('Request failed: token=[REDACTED]', $result->message);
 Assert::same(42, $result->context['user_id']);
 Assert::same('[REDACTED]', $result->context['credentials']['password']);
 Assert::same('[REDACTED]', $result->context['credentials']['access_token']);
