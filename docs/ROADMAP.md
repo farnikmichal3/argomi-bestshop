@@ -139,7 +139,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-42** Stanovit pravidla Omnibus pro historii cen: automatické určení nejnižší ceny za předchozích 30 dnů, uchování doložitelné historie a zohlednění zákonných výjimek. Podrobnosti v ZAMER.md revize 1.17.
 - `[HOTOVO]` **F0-43** Oficiální název projektu: **ArgoMi-BestShop**; databáze zůstává `argomi_bestshop`, technický repozitář a projektová cesta `argomi-bestshop` se nemění.
 - `[HOTOVO]` **F0-44** ZAMER: promítnout schválenou strukturu `app/` do kapitoly 3.2
-- `[PLÁN]` **F0-45** Definice rozhraní externích pluginů a rozšíření
+- `[HOTOVO]` **F0-45** Nebudou podporovány instalovatelné pluginy třetích stran; funkce patří do vlastního jádra a interních modulů, externí služby se napojují přes interní adaptéry. Podrobnosti v ZAMER.md.
 - `[PLÁN]` **F0-46** Standard pro logování a sledování chyb (Sentry/Tracy)
 - `[PLÁN]` **F0-47** Pravidla pro práci s větvemi v Gitu (Trunk-based vs. GitHub Flow)
 - `[PLÁN]` **F0-48** Zásady přístupnosti podle WCAG 2.1 AA
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.14 (9. 11. 2026)
+- Dokončeno F0-45: projekt nebude podporovat instalovatelné pluginy třetích stran; vlastní funkce zůstávají v jádře a interních modulech, externí služby se napojují přes interní adaptéry.
+- Aktualizován souhrnný stav: **66 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 čeká na rozhodnutí**.
 
 ### v2.13 (9. 11. 2026)
 - Dokončeno F0-43: oficiální název projektu je **ArgoMi-BestShop**; databáze zůstává `argomi_bestshop` a technický název repozitáře/projektové cesty `argomi-bestshop` se nemění.
