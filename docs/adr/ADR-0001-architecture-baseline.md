@@ -1,4 +1,4 @@
-# ADR-0001: Základní architektura ArgoMi BestShop
+# ADR-0001: Základní architektura ArgoMi-BestShop
 
 - **Stav:** přijato autorem
 - **Datum:** 8. 11. 2026
