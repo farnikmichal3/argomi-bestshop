@@ -39,6 +39,7 @@ npm install
 npm run build
 composer run phpstan
 composer run tester
+composer db:reset # destruktivní: pouze lokální vývojová databáze argomi_bestshop
 ```
 
 Dostupné příkazy a jejich skutečný stav ověřuj v `composer.json` a `package.json`. Předpokládej, že migrace spouští Nextras Migrations podle `config/common.neon`; neprováděj reset produkční databáze.
