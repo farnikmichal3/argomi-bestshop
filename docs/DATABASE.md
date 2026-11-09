@@ -1,4 +1,4 @@
-# ArgoMi BestShop – databáze
+# ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního počátečního schématu  
 **Revize:** 1.0 · 8. 11. 2026  
