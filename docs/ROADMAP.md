@@ -1,6 +1,6 @@
-# ArgoMi BestShop – plán vývoje (ROADMAP)
+# ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.12 · 8. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.22 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **539 kroků**: hotovo 64, rozděláno 1, k úpravě 2, rozhodnout 0, blokováno 0, plán 471, zrušeno 1.
+Celkem **541 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 454, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| F0 | Rozhodnutí a dokumentace | 54 | 39 | 0 | 1 | 0 | 0 | 14 | 0 |
-| F1 | Prostředí a repozitář | 36 | 16 | 0 | 0 | 0 | 0 | 20 | 0 |
+| F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
+| F1 | Prostředí a repozitář | 37 | 21 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -64,7 +64,7 @@ Celkem **539 kroků**: hotovo 64, rozděláno 1, k úpravě 2, rozhodnout 0, blo
 | F9 | Orders a Checkout | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F10 | Shipping, Payments, Mailing | 24 | 0 | 0 | 0 | 0 | 0 | 24 | 0 |
 | F11 | Front UI | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
-| F12 | Admin UI | 26 | 0 | 0 | 0 | 0 | 0 | 26 | 0 |
+| F12 | Admin UI | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F13 | Vyhledávání | 10 | 0 | 0 | 0 | 0 | 0 | 10 | 0 |
 | F14 | Bezpečnost a kvalita | 25 | 0 | 0 | 0 | 0 | 0 | 25 | 0 |
 | F15 | Provoz a hostování | 18 | 0 | 0 | 0 | 0 | 0 | 18 | 0 |
@@ -77,17 +77,19 @@ Celkem **539 kroků**: hotovo 64, rozděláno 1, k úpravě 2, rozhodnout 0, blo
 
 ## 3. Nejbližší kroky
 
-- `[HOTOVO]` **F0-12** Sjednotit kanonickou dokumentaci a průběžné pravidlo její aktualizace
-- `[HOTOVO]` **F0-14** Popsat skutečnou strukturu projektu v kanonickém dokumentu STRUKTURA
-- `[ROZDĚLÁNO]` **F3-16** Příkaz `db:reset` (smazat, migrovat, naplnit) pro vývoj (připravit `composer db:reset`)
-- `[HOTOVO]` **F0-43** Oficiální název projektu: **ArgoMi-BestShop**; databáze zůstává `argomi_bestshop`, technický repozitář a projektová cesta `argomi-bestshop` se nemění.
-- `[HOTOVO]` **F0-44** ZÁMĚR: promítnout schválenou strukturu `app/` a rozhodnutí o překladech
-- `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
-- `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace (napsána, čeká na přejmenování a ověření)
-- `[HOTOVO]` **F0-15** Schválit skutečné členění `app/Core`, `Modules`, `Presentation`, `Shared` a `UI`
-- `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
-- `[PLÁN]` **F2-01** Vytvořit `app/Shared` (Domain, Infrastructure)
-- `[PLÁN]` **F3-10** Základ repozitáře nad Explorer: mapování `ActiveRow` na DTO
+### Aktivní a opravné úkoly
+- `[ROZDĚLÁNO]` **F3-16** Příkaz `db:reset` pro bezpečný vývojový reset databáze.
+- `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace – přejmenovat a ověřit.
+
+### Nejbližší technické kroky
+- `[PLÁN]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; ověřit Sass + esbuild.
+- `[PLÁN]` **F1-37** Odstranit Nextras ORM a nepoužívaný `OrmModel.php`; zachovat Nextras Migrations/DBAL pro migrace.
+- `[PLÁN]` **F1-18** Zvolit a nainstalovat nástroj pro automatické hlídání hranic modulů.
+- `[PLÁN]` **F1-20** Doplnit Composer skripty pro testy, coding standard, architekturu a audit.
+- `[PLÁN]` **F1-22** Připravit samostatné asset vstupy Front/Admin.
+- `[PLÁN]` **F1-24** Doplnit `.nvmrc` a Node.js `engines`.
+- `[PLÁN]` **F1-25** Ověřit sestavení assetů a jejich načítání v layoutech.
+- `[PLÁN]` **F1-26** a **F1-27** Připravit CI kontroly pro PHP a JavaScript.
 
 ## 4. Plán po fázích
 
@@ -99,19 +101,19 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-02** Potvrdit veřejný repozitář bez licence k užití; všechna práva vyhrazena; právní podmínky zůstávají otevřené (kap. 2)
 - `[HOTOVO]` **F0-03** Rozhodnout architekturu: modulární monolit, jedna instance a jedna databáze na obchod (kap. 3)
 - `[HOTOVO]` **F0-04** Zvolit technologie a pravidla pro přijímání závislostí (kap. 4)
-- `[HOTOVO]` **F0-05** Zapsat bezpečnostní zásady (kap. 5)
-- `[HOTOVO]` **F0-06** Rozhodnout zásady databáze: Explorer, MySQL, migrace, atributy, ID, překlady a měny (kap. 6)
-- `[HOTOVO]` **F0-07** Sestavit 15 demo produktů a rozdělit je do čtyř vln (kap. 7)
-- `[HOTOVO]` **F0-08** Rozhodnout demo data ve dvou jazycích (cs, en) a dvou měnách (CZK, EUR) (kap. 8)
+- `[HOTOVO]` **F0-05** Zapsat bezpečnostní zásady (ZAMER, kap. 8)
+- `[HOTOVO]` **F0-06** Rozhodnout zásady databáze: Explorer, MySQL, migrace, atributy, ID, překlady a měny (ZAMER, kap. 5)
+- `[HOTOVO]` **F0-07** Sestavit 15 demo produktů a rozdělit je do čtyř vln (ZAMER, kap. 10)
+- `[HOTOVO]` **F0-08** Rozhodnout demo data ve dvou jazycích (cs, en) a dvou měnách (CZK, EUR) (ZAMER, kap. 6)
 - `[HOTOVO]` **F0-09** Schválit doménově rozdělené překlady; systémové výchozí texty jsou chráněné a administrátor spravuje vlastní překlady
 - `[HOTOVO]` **F0-10** Ověřit přístup AI k veřejnému repozitáři na GitHubu
-- `[HOTOVO]` **F0-11** Opravit název projektu na ArgoMi-bestshop v dokumentu záměru
+- `[HOTOVO]` **F0-11** Původní sjednocení názvu projektu v rané dokumentaci; finální oficiální název následně sjednocen rozhodnutím F0-43
 - `[HOTOVO]` **F0-12** Sjednotit kanonickou dokumentaci a průběžné pravidlo její aktualizace
 - `[HOTOVO]` **F0-13** Roadmap: verze 0.3 aktualizována po dokončení F3 migrací a uzavření DB rozhodnutí
 - `[HOTOVO]` **F0-14** Kanonický dokument STRUKTURA odpovídá skutečnému stromu
 - `[HOTOVO]` **F0-15** Schválit skutečnou strukturu `app/` podle stromu projektu
-- `[HOTOVO]` **F0-16** Licence a podmínky služby: zachovat režim „všechna práva vyhrazena“, připravit návrh studentské licence a podmínek služby a před distribucí či komerčním spuštěním zajistit právní kontrolu finálního znění
-- `[HOTOVO]` **F0-17** GDPR a smluvní dokumentace: připravit návrh DPA a GDPR dokumentace pro hostované obchody; finální znění a retenční pravidla před spuštěním zkontroluje právník a specialista na ochranu osobních údajů
+- `[HOTOVO]` **F0-16** Rozhodnout zachování režimu „všechna práva vyhrazena“ a požadavek na přípravu studentské licence/podmínek služby s právní kontrolou před distribucí či komerčním spuštěním; samotné právní dokumenty zůstávají předprodukčním úkolem
+- `[HOTOVO]` **F0-17** Rozhodnout požadavek na DPA a GDPR dokumentaci pro hostované obchody; finální dokumenty a retenční pravidla před spuštěním ověří právník a specialista na ochranu osobních údajů
 - `[HOTOVO]` **F0-18** Vyhledávání: MySQL FULLTEXT jako výchozí, Elasticsearch/OpenSearch volitelně
 - `[HOTOVO]` **F0-19** Vývojové prostředí: Laragon na Windows jako hlavní prostředí; zachovat možnost budoucího spuštění v Dockeru nebo DDEV
 - `[HOTOVO]` **F0-20** Ceny se ukládají bez DPH; daň se vypočítává podle daňových pravidel a nastavení `tax_included` řídí způsob zobrazování cen
@@ -131,14 +133,14 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-34** Rozhodnout způsob reprezentace peněz: celočíselné minor units (haléře/centy)
 - `[HOTOVO]` **F0-35** Rozhodnout způsob reprezentace množství: pevná desetinná místa v DB, žádný `float`
 - `[HOTOVO]` **F0-36** Rozhodnout formát identifikátorů: interní auto-increment ID a veřejné ULID
-- `[HOTOVO]` **F0-37** Revidovat a schválit závazný seznam 15 demo produktů ve čtyřech vlnách; katalog je zapsán v ZAMER.md revize 1.12.
-- `[HOTOVO]` **F0-38** Rozhodnout architekturu exportních feedů: společné interní rozhraní a samostatné adaptéry pro Heureku, Zboží.cz a Google Shopping; rozhodnutí zapsáno v ZAMER.md revize 1.13.
-- `[HOTOVO]` **F0-39** Rozhodnout architekturu importu produktů: společné interní rozhraní, adaptéry CSV/XML, validace, náhled před potvrzením a protokol výsledků včetně chyb; rozhodnutí zapsáno v ZAMER.md revize 1.14.
-- `[HOTOVO]` **F0-40** Stanovit výchozí SLA hostované služby: dostupnost 99,5 % měsíčně, monitoring, oznámená údržba a reakční doby; bez finančních kompenzací v této fázi. Podrobnosti v ZAMER.md revize 1.15.
-- `[HOTOVO]` **F0-41** Stanovit zásady zálohování a obnovy: denní plné zálohy, průběžné binlogy, oddělené šifrované uložení a pravidelné testy obnovy; RPO/RTO určit pro konkrétní prostředí. Podrobnosti v ZAMER.md revize 1.16.
-- `[HOTOVO]` **F0-42** Stanovit pravidla Omnibus pro historii cen: automatické určení nejnižší ceny za předchozích 30 dnů, uchování doložitelné historie a zohlednění zákonných výjimek. Podrobnosti v ZAMER.md revize 1.17.
+- `[HOTOVO]` **F0-37** Revidovat a schválit závazný seznam 15 demo produktů ve čtyřech vlnách (ZAMER, kap. 10).
+- `[HOTOVO]` **F0-38** Rozhodnout architekturu exportních feedů: společné interní rozhraní a samostatné adaptéry pro Heureku, Zboží.cz a Google Shopping (ZAMER, kap. 12).
+- `[HOTOVO]` **F0-39** Rozhodnout architekturu importu produktů: společné interní rozhraní, adaptéry CSV/XML, validace, náhled před potvrzením a protokol výsledků včetně chyb (ZAMER, kap. 13).
+- `[HOTOVO]` **F0-40** Stanovit výchozí SLA hostované služby: dostupnost 99,5 % měsíčně, monitoring, oznámená údržba a reakční doby; bez finančních kompenzací v této fázi (ZAMER, kap. 14).
+- `[HOTOVO]` **F0-41** Stanovit zásady zálohování a obnovy: denní plné zálohy, průběžné binlogy, oddělené šifrované uložení a pravidelné testy obnovy; RPO/RTO určit pro konkrétní prostředí (ZAMER, kap. 15).
+- `[HOTOVO]` **F0-42** Stanovit pravidla Omnibus pro historii cen: automatické určení nejnižší ceny za předchozích 30 dnů, uchování doložitelné historie a zohlednění zákonných výjimek (ZAMER, kap. 17).
 - `[HOTOVO]` **F0-43** Oficiální název projektu: **ArgoMi-BestShop**; databáze zůstává `argomi_bestshop`, technický repozitář a projektová cesta `argomi-bestshop` se nemění.
-- `[HOTOVO]` **F0-44** ZAMER: promítnout schválenou strukturu `app/` do kapitoly 3.2
+- `[HOTOVO]` **F0-44** Promítnout schválenou strukturu `app/` a rozhodnutí o překladech do ZAMĚRU
 - `[HOTOVO]` **F0-45** Nebudou podporovány instalovatelné pluginy třetích stran; funkce patří do vlastního jádra a interních modulů, externí služby se napojují přes interní adaptéry. Podrobnosti v ZAMER.md.
 - `[HOTOVO]` **F0-46** Standard logování: Tracy pro vývojovou diagnostiku, Monolog pro aplikační logy, strukturované úrovně DEBUG/INFO/WARNING/ERROR/CRITICAL, bez citlivých údajů; Sentry případně později. Podrobnosti v ZAMER.md.
 - `[HOTOVO]` **F0-47** Strategie větví: během současného vývoje se pracuje přímo ve větvi `main` s průběžnou lokální zálohou. Po dokončení a prvním vydání se přejde na stabilní `main`, samostatné vývojové větve, slučování přes Pull Request a verzovací Git tagy podle SemVer. Podrobnosti v ZAMER.md.
@@ -153,7 +155,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 16 z 36 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 21 z 37 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -171,26 +173,27 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-14** Vytvořit `phpstan.neon` s `level: max`
 - `[HOTOVO]` **F1-15** Opravit chyby kostry na úrovni max (bez baseline)
 - `[HOTOVO]` **F1-16** Nastavit coding standard PER-CS 3.0: PHP-CS-Fixer 3.95.29 jako vývojová závislost, konfigurace `.php-cs-fixer.dist.php` používá pevnou sadu `@PER-CS3.0`; všech 6 existujících PHP souborů naformátováno a následná kontrola bez nálezů. PHPStan level max zůstává čistý.
-- `[PLÁN]` **F1-17** Nainstalovat testovací nástroj (po rozhodnutí F0)
+- `[HOTOVO]` **F1-17** Nainstalovat testovací nástroj (po rozhodnutí F0)
 - `[PLÁN]` **F1-18** Nainstalovat nástroj pro hlídání hranic modulů (po rozhodnutí F0)
-- `[PLÁN]` **F1-19** Nainstalovat konzolový nástroj (po rozhodnutí F0)
+- `[HOTOVO]` **F1-19** Nainstalovat konzolový nástroj (po rozhodnutí F0)
 - `[PLÁN]` **F1-20** Skripty v `composer.json`: `phpstan`, `test`, `cs`, `arch`, `audit`
-- `[PLÁN]` **F1-21** `npm init`, instalace `sass`, `esbuild`, `bootstrap`, `@popperjs/core`, `naja`
-- `[PLÁN]` **F1-22** Vytvořit zdroje front-endu `assets/scss` a `assets/js` (po schválení STRUKTURA dva balíčky `front` a `admin`)
-- `[PLÁN]` **F1-23** Skripty `build`, `watch` pro CSS a JS (po schválení STRUKTURA zvlášť pro `front` a `admin`)
+- `[HOTOVO]` **F1-21** `npm init`, instalace `sass`, `esbuild`, `bootstrap`, `@popperjs/core`, `naja`
+- `[PLÁN]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy `Front` a `Admin` v `assets/scss` a `assets/js` podle schváleného rozdělení UI
+- `[PLÁN]` **F1-23** Dokončit samostatné skripty `build` a `watch` pro CSS a JS obou částí `Front` a `Admin`
 - `[PLÁN]` **F1-24** `.nvmrc` a `engines` v `package.json`
 - `[PLÁN]` **F1-25** Ověřit `npm run build` a načtení souborů v layoutu
 - `[PLÁN]` **F1-26** GitHub Actions: `composer validate`, `composer audit`, PHPStan, coding standard, testy
 - `[PLÁN]` **F1-27** GitHub Actions: `npm ci`, build, `npm audit`
 - `[PLÁN]` **F1-28** Pravidelná kontrola aktualizací závislostí
-- `[PLÁN]` **F1-29** README projektu: jak rozjet projekt na pár příkazů
+- `[HOTOVO]` **F1-29** README projektu: jak rozjet projekt na pár příkazů
 - `[PLÁN]` **F1-30** Ověřit čisté naklonování a rozjetí podle kontrolního seznamu z Lekce 1
-- `[PLÁN]` **F1-31** Vytvořit adresářovou strukturu podle STRUKTURA
+- `[HOTOVO]` **F1-31** Vytvořit adresářovou strukturu podle STRUKTURA
 - `[PLÁN]` **F1-32** Spike: mapování presenterů pro `UI/Front` a `UI/Admin` (ověřit v dokumentaci Nette Application)
 - `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů
 - `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0)
 - `[PLÁN]` **F1-36** Odstranit nepoužívané balíčky Vite a Vite pluginu z package.json/package-lock a ověřit build Sass + esbuild
+- `[PLÁN]` **F1-37** Odstranit nepoužívaný `app/Shared/Infrastructure/Persistence/OrmModel.php` a přímou závislost `nextras/orm`; před změnou ověřit reference, aktualizovat Composer lock a spustit PHPStan/testy
 
 ### F2: Sdílené jádro (Shared)
 
@@ -215,7 +218,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 
 ### F3: Databáze a migrace
 
-_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 8 z 32 kroků.
+_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 9 z 32 kroků.
 
 - `[HOTOVO]` **F3-01** Počáteční schéma, základní data a demo data v časově značených Nextras migracích načtené v MySQL bez chyb
 - `[HOTOVO]` **F3-02** Nainstalovat Nextras Migrations a nastavit adresáře `structures`, `basic-data`, `dummy-data` (integrováno v Nette DI)
@@ -252,7 +255,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 
 ### F4: Překlady v databázi
 
-_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 0 z 25 kroků.
+_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 0 z 29 kroků.
 
 - `[PLÁN]` **F4-01** Modul `Translation`: struktura a DI extension
 - `[PLÁN]` **F4-02** `MessageStore`: načtení domény a jazyka jedním dotazem
@@ -492,7 +495,7 @@ _Veřejná část obchodu: `UI/Front`._ Hotovo 0 z 22 kroků.
 
 ### F12: Admin UI
 
-_Správa obchodu: `UI/Admin`._ Hotovo 0 z 26 kroků.
+_Správa obchodu: `UI/Admin`._ Hotovo 0 z 27 kroků.
 
 - `[PLÁN]` **F12-01** Layout, navigace a přihlášení administrace
 - `[PLÁN]` **F12-02** Přísnější CSP pro administraci a oddělená cookie
@@ -520,6 +523,7 @@ _Správa obchodu: `UI/Admin`._ Hotovo 0 z 26 kroků.
 - `[PLÁN]` **F12-24** CSRF u všech akcí
 - `[PLÁN]` **F12-25** Test oprávnění: každý presenter má definovaná oprávnění
 - `[PLÁN]` **F12-26** Dokumentace
+- `[PLÁN]` **F12-27** Ověřit přístupnost administrace podle WCAG 2.1 AA (klávesnice, kontrast, popisky, chybové stavy, čtečky obrazovek)
 
 ### F13: Vyhledávání
 
@@ -745,9 +749,15 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 
 ## 5. Historie revizí
 
+### v2.22 (9. 11. 2026)
+- Proveden audit kanonické dokumentace proti skutečnému stromu a konfiguraci repozitáře. Opraveny verze, odkazy, struktura kapitol a zastaralé souhrny.
+- F0 je uzavřena: **54/54 HOTOVO**.
+- Zpřesněny ověřené kroky F1-17, F1-19, F1-21, F1-29 a F1-31; přidány F1-37 (úklid ORM) a F12-27 (přístupnost administrace).
+- Aktuální souhrn: **84 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 rozhodnout**, **0 blokováno**, **454 plán**, **1 zrušeno**.
+
 ### v2.21 (9. 11. 2026)
 - Dokončeno F0-54: Nette Database Explorer bude jedinou databázovou vrstvou aplikačního kódu; Nextras ORM a jeho `OrmModel.php` budou po ověření závislostí odstraněny, Nextras Migrations/DBAL mohou zůstat pro migrace a testy.
-- Aktualizován souhrnný stav: **73 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 čeká na rozhodnutí**.
+- Aktualizován souhrnný stav: **79 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 čeká na rozhodnutí**.
 
 ### v2.20 (9. 11. 2026)
 - Dokončeno F0-53: stanoveno bezpečné oddělení demo dat a testovacích operací od skutečného provozu včetně ochrany produkčního prostředí.
