@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.25 · 9. 11. 2026
+**Revize:** 1.26 · 9. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -410,4 +410,14 @@ Demo data a testovací operace musí být jednoznačně rozlišitelné od skute�
 - Testovací platební brány, dopravci a další externí služby smějí být používáni pouze v odpovídajícím testovacím režimu.
 - Produkční prostředí musí bezpečně zabránit použití demo dat a testovacích konfigurací; demo režim nesmí být možné omylem aktivovat pro skutečný provoz.
 - Konkrétní technické pojistky a testy tohoto oddělení budou součástí implementace a přípravy vydání.
+
+
+## 24. Databázová vrstva a ORM
+
+**Nette Database Explorer** je jedinou povolenou databázovou vrstvou pro běžný aplikační kód ArgoMi-BestShop. Moduly, repozitáře a aplikační služby budou pro práci s provozními daty používat Nette Database Explorer; Nextras ORM se v aplikační vrstvě používat nebude.
+
+- Nextras ORM není součástí cílové architektury a jeho závislost bude odstraněna, pokud závěrečná kontrola kódu a konfigurace potvrdí, že na něm nic nezávisí.
+- Nepoužívaný soubor `app/Shared/Infrastructure/Persistence/OrmModel.php` bude odstraněn společně s ORM.
+- Oddělené nástroje pro databázové migrace a testování jsou povoleny. Zejména Nextras Migrations a případně Nextras DBAL mohou zůstat jako vývojové/migrační nástroje; jejich použití neznamená použití ORM v aplikační vrstvě.
+- Migrace, testy ani pomocné nástroje nesmějí zavádět druhou ORM vrstvu do běžného aplikačního kódu.
 
