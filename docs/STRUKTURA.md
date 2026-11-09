@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 1.1 · 9. 11. 2026  
+**Revize:** 1.2 · 9. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 9. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -148,6 +148,23 @@ Znovupoužitelné UI komponenty, formuláře a Latte helpery pro Front i Admin. 
 ### Presentation
 Centrální Nette infrastruktura: error presentery, Latte extension a další frameworkové adaptéry. Není synonymem pro UI. `Presentation` zůstává samostatná složka podle skutečného stromu.
 
+### Frontend assets
+Zdroje uživatelských rozhraní jsou oddělené podle oblastí `Front` a `Admin`:
+
+```text
+assets/
+├── js/
+│   ├── admin.js
+│   ├── front.js
+│   └── shared.js
+└── scss/
+    ├── _shared.scss
+    ├── admin.scss
+    └── front.scss
+```
+
+`front.js` a `admin.js` jsou samostatné vstupy; společná inicializace Bootstrapu, Naja a nette-forms je v `shared.js`. Sass vstupy `front.scss` a `admin.scss` používají společný základ `_shared.scss`. Specifické styly a skripty patří do odpovídající oblasti, průřezový kód pouze do sdílených souborů. Výstupní soubory a příkazy sestavení spravuje `package.json`.
+
 ## 6. Pravidla závislostí
 
 1. UI může volat veřejné API modulů nebo aplikační fasády; nesmí obcházet modul přímým přístupem do jeho persistence.
@@ -194,3 +211,4 @@ Centrální Nette infrastruktura: error presentery, Latte extension a další fr
 | 4. 11. 2026 | Původní návrhy STRUKTURA v0.1/v0.2. |
 | 8. 11. 2026 | v1.0: potvrzen skutečný strom `Core/Modules/Presentation/Shared/UI`; doplněny odpovědnosti a hranice. |
 | 9. 11. 2026 | v1.1: opraven strom podle aktuální větve `main`, odstraněna neexistující složka Console z dokumentace a doplněn plánovaný úklid Nextras ORM podle F0-54/F1-37. |
+| 9. 11. 2026 | v1.2: popsány samostatné Front/Admin asset vstupy a sdílené části JavaScriptu a Sassu podle F1-22. |
