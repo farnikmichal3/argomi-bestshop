@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.24 · 9. 11. 2026
+**Revize:** 1.25 · 9. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -399,4 +399,15 @@ Před zařazením knihovny do projektu a před každým vydáním bude ověřena
 - Nebudou přidávány knihovny s licenčními podmínkami, které by mohly nepřijatelně omezit komerční použití nebo distribuci ArgoMi-BestShop.
 - Licence a relevantní licenční povinnosti závislostí budou evidovány v projektové dokumentaci.
 - Kontrola licencí bude součástí přípravy každého vydání; nejasné nebo nekompatibilní licence musí být vyřešeny před vydáním.
+
+
+## 23. Oddělení demo dat od skutečného provozu
+
+Demo data a testovací operace musí být jednoznačně rozlišitelné od skutečných zákaznických a provozních dat.
+
+- Demo data budou jasně označena a oddělena od skutečných dat.
+- Demo objednávky nesmějí spustit skutečné platby, expedici ani jiné externí provozní operace.
+- Testovací platební brány, dopravci a další externí služby smějí být používáni pouze v odpovídajícím testovacím režimu.
+- Produkční prostředí musí bezpečně zabránit použití demo dat a testovacích konfigurací; demo režim nesmí být možné omylem aktivovat pro skutečný provoz.
+- Konkrétní technické pojistky a testy tohoto oddělení budou součástí implementace a přípravy vydání.
 
