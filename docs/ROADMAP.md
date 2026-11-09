@@ -141,7 +141,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-44** ZAMER: promítnout schválenou strukturu `app/` do kapitoly 3.2
 - `[HOTOVO]` **F0-45** Nebudou podporovány instalovatelné pluginy třetích stran; funkce patří do vlastního jádra a interních modulů, externí služby se napojují přes interní adaptéry. Podrobnosti v ZAMER.md.
 - `[HOTOVO]` **F0-46** Standard logování: Tracy pro vývojovou diagnostiku, Monolog pro aplikační logy, strukturované úrovně DEBUG/INFO/WARNING/ERROR/CRITICAL, bez citlivých údajů; Sentry případně později. Podrobnosti v ZAMER.md.
-- `[PLÁN]` **F0-47** Pravidla pro práci s větvemi v Gitu (Trunk-based vs. GitHub Flow)
+- `[HOTOVO]` **F0-47** Strategie větví: během současného vývoje se pracuje přímo ve větvi `main` s průběžnou lokální zálohou. Po dokončení a prvním vydání se přejde na stabilní `main`, samostatné vývojové větve, slučování přes Pull Request a verzovací Git tagy podle SemVer. Podrobnosti v ZAMER.md.
 - `[PLÁN]` **F0-48** Zásady přístupnosti podle WCAG 2.1 AA
 - `[PLÁN]` **F0-49** Pravidla pro mazání dat a retenci logů
 - `[PLÁN]` **F0-50** Kontrola licence všech plánovaných knihoven třetích stran
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.16 (9. 11. 2026)
+- Dokončeno F0-47: během současného vývoje zůstáváme přímo ve větvi `main` s lokální zálohou; po prvním vydání přejdeme na stabilní `main`, vývojové větve, Pull Requesty a Git tagy podle SemVer.
+- Aktualizován souhrnný stav: **68 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 čeká na rozhodnutí**.
 
 ### v2.15 (9. 11. 2026)
 - Dokončeno F0-46: Tracy pro vývojovou diagnostiku, Monolog pro aplikační logování, strukturované logy a ochrana citlivých údajů; Sentry případně později.
