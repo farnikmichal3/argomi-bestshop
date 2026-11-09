@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního počátečního schématu  
-**Revize:** 1.0 · 8. 11. 2026  
+**Revize:** 1.1 · 8. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -110,7 +110,7 @@ Konkrétní označovací mechanismus (např. explicitní `is_demo`/origin flag n
 | Způsoby dopravy a ceny dopravy | Shipping |
 | Platební metody a budoucí transakce | Payments |
 | Systémové překlady a překladová infrastruktura | Translation |
-| Jednotky a referenční překlady jednotek | vlastnictví musí zůstat konzistentní s Catalog/Translation; současné tabulky jsou `unit` a `unit_translation` |
+| Jednotky a referenční překlady jednotek | Catalog; `unit` a `unit_translation` jsou katalogová referenční data, Translation zajišťuje pouze společnou překladovou infrastrukturu |
 
 Vlastnictví je aplikační hranice; cizí klíče v současném schématu jsou popsány podle skutečných SQL vazeb a samy o sobě neznamenají povolení přímého přístupu z cizího modulu.
 
