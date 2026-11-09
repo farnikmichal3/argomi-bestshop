@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **543 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 456, zrušeno 1.
+Celkem **544 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 457, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -757,7 +757,7 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Závěrečný audit sjednotil testovací scénáře katalogu s kanonickými 15 demo produkty; doplněny testy produktů 4 a 5.
 - Opraveny rozsahy produktů ve fázích F18–F20 a zastaralé popisy e-mailových šablon a front-endového JavaScriptu.
 - Doplněn implementační krok F1-38 pro Monolog podle schváleného F0-46.
-- Souhrn po doplnění dvou testovacích kroků: **84 hotovo**, **1 rozděláno**, **1 k úpravě**, **456 plán**, **1 zrušeno**.
+- Souhrn po doplnění dvou testovacích kroků: **84 hotovo**, **1 rozděláno**, **1 k úpravě**, **457 plán**, **1 zrušeno**.
 
 ### v2.23 (9. 11. 2026)
 - Dokončena závěrečná kontrola návazností: 46 tabulek v počáteční SQL migraci odpovídá dokumentaci DATABASE; sjednocen popis PHP 8.3+, oficiální název, databázové vrstvy a zbývající úklid ORM.
