@@ -1,4 +1,4 @@
-# Pokyny pro AI agenty – ArgoMi BestShop
+# Pokyny pro AI agenty – ArgoMi-BestShop
 
 Tento soubor je provozní instrukce pro práci v repozitáři. Produktová a architektonická rozhodnutí jsou v `docs/`; při rozporu se řiď aktuálním rozhodnutím autora a kanonickými dokumenty.
 
@@ -14,14 +14,15 @@ Před změnou vždy prohlédni aktuální kód, konfiguraci, migrace a návazné
 
 ## Projekt v kostce
 
-- PHP 8.2+, Nette 3.2, Latte 3.
+- PHP 8.3+, Nette 3.2, Latte 3.
 - MySQL 8.x, InnoDB, utf8mb4.
-- Nette Database Explorer jako aplikační přístup k databázi.
-- Nextras Migrations pro čisté SQL migrace.
+- Nette Database Explorer jako jediná databázová vrstva běžného aplikačního kódu.
+- Nextras Migrations a Nextras DBAL pouze pro čisté SQL migrace a související testovací nástroje; Nextras ORM se nepoužívá.
 - Sass + esbuild, Bootstrap 5.3.8 + Bootswatch Cosmo, Naja 3.
 - PHPStan level max, Nette Tester.
-- Vite se nepoužívá.
+- Vite se nepoužívá; zbylé balíčky Vite jsou naplánované k odstranění ve F1-36.
 - Repozitář je veřejný, ale projekt není open source; všechna práva vyhrazena.
+- Během současné vývojové fáze se pracuje přímo ve větvi `main` a udržuje se lokální záloha.
 
 ## Struktura
 
