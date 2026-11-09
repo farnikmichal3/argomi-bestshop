@@ -143,7 +143,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-46** Standard logování: Tracy pro vývojovou diagnostiku, Monolog pro aplikační logy, strukturované úrovně DEBUG/INFO/WARNING/ERROR/CRITICAL, bez citlivých údajů; Sentry případně později. Podrobnosti v ZAMER.md.
 - `[HOTOVO]` **F0-47** Strategie větví: během současného vývoje se pracuje přímo ve větvi `main` s průběžnou lokální zálohou. Po dokončení a prvním vydání se přejde na stabilní `main`, samostatné vývojové větve, slučování přes Pull Request a verzovací Git tagy podle SemVer. Podrobnosti v ZAMER.md.
 - `[HOTOVO]` **F0-48** Závazný cíl přístupnosti zákaznického rozhraní i administrace: WCAG 2.1 AA. Podrobnosti v ZAMER.md.
-- `[PLÁN]` **F0-49** Pravidla pro mazání dat a retenci logů
+- `[HOTOVO]` **F0-49** Pravidla mazání a retence: zachování zákonně uchovávaných objednávek a dokladů, GDPR anonymizace/odstranění zákaznických údajů, časově omezené logy s automatickým mazáním a ochrana auditních záznamů. Konkrétní lhůty dle práva a provozu. Podrobnosti v ZAMER.md.
 - `[PLÁN]` **F0-50** Kontrola licence všech plánovaných knihoven třetích stran
 - `[HOTOVO]` **F0-51** Sjednotit právní metadata Composer/npm s režimem všechna práva vyhrazena
 - `[HOTOVO]` **F0-52** Aktualizovat README a AGENTS.md podle skutečného projektu, bez instrukcí skeletonu
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.18 (9. 11. 2026)
+- Dokončeno F0-49: stanovena pravidla pro zákonné uchovávání objednávek a dokladů, GDPR odstranění/anonymizaci údajů, retenci logů a ochranu auditních záznamů.
+- Aktualizován souhrnný stav: **70 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 čeká na rozhodnutí**.
 
 ### v2.17 (9. 11. 2026)
 - Dokončeno F0-48: zákaznické rozhraní i administrace budou cílit na WCAG 2.1 AA; požadavky se budou ověřovat průběžně a před vydáním.
