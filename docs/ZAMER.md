@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.13 · 9. 11. 2026  
+**Revize:** 1.14 · 9. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -253,6 +253,17 @@ Export produktů bude řešen společným interním rozhraním a samostatnými a
 - Přidání další platformy nesmí vyžadovat změnu základního katalogového modelu, pokud nejde o skutečně chybějící obecnou produktovou informaci.
 - Konkrétní formáty, povinná pole, plánování exportů, aktualizace a chybové stavy se specifikují při realizaci exportních feedů.
 
+## 12. Import produktů
+
+Import produktů bude řešen společným interním rozhraním a samostatnými adaptéry pro vstupní formáty **CSV a XML**.
+
+- Importní vrstva převede vstupní data na normalizovaný interní formát nezávislý na konkrétním zdroji.
+- Adaptéry odpovídají za načtení a mapování sloupců či polí ze zdrojového formátu.
+- Před zápisem do katalogu proběhne validace a kontrola konzistence dat.
+- Uživatel dostane náhled připravovaných změn a možnost import zkontrolovat před potvrzením.
+- Výsledek importu bude obsahovat protokol úspěšně zpracovaných i chybových záznamů, včetně důvodu chyby.
+- Konkrétní pravidla párování existujících produktů, aktualizací, duplicit a řešení konfliktů budou upřesněna při návrhu implementace.
+
 ## 12. Změnová historie
 
 | Datum | Změna |
@@ -278,3 +289,4 @@ Export produktů bude řešen společným interním rozhraním a samostatnými a
 | 8. 11. 2026 | F0-31: Úlohy se ukládají do databázové fronty a zpracovává je worker spouštěný cronem. Architektura umožní pozdější provoz samostatných či více souběžných workerů bez změny aplikačního rozhraní. |
 | 9. 11. 2026 | Schválen závazný katalog 15 demo produktů ve čtyřech vlnách; první tři položky navazují na existující demo seed SQL. Dvě položky kombinují související scénáře (věkové omezení + vratná záloha; konfigurátor + upload). |
 | 9. 11. 2026 | F0-38: Exportní produktové feedy budou používat společné interní rozhraní a samostatné adaptéry pro Heureku, Zboží.cz a Google Shopping; katalog zůstane nezávislý na platformách. |
+| 9. 11. 2026 | F0-39: Import produktů bude používat společné interní rozhraní a adaptéry CSV/XML, validaci, náhled před potvrzením a protokol výsledků včetně chyb. |
