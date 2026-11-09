@@ -133,7 +133,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-36** Rozhodnout formát identifikátorů: interní auto-increment ID a veřejné ULID
 - `[HOTOVO]` **F0-37** Revidovat a schválit závazný seznam 15 demo produktů ve čtyřech vlnách; katalog je zapsán v ZAMER.md revize 1.12.
 - `[HOTOVO]` **F0-38** Rozhodnout architekturu exportních feedů: společné interní rozhraní a samostatné adaptéry pro Heureku, Zboží.cz a Google Shopping; rozhodnutí zapsáno v ZAMER.md revize 1.13.
-- `[PLÁN]` **F0-39** Specifikace importu produktů z CSV/XML
+- `[HOTOVO]` **F0-39** Rozhodnout architekturu importu produktů: společné interní rozhraní, adaptéry CSV/XML, validace, náhled před potvrzením a protokol výsledků včetně chyb; rozhodnutí zapsáno v ZAMER.md revize 1.14.
 - `[PLÁN]` **F0-40** Definice SLA a parametrů dostupnosti hostované služby
 - `[PLÁN]` **F0-41** Zásady zálohování a disaster recovery plán
 - `[PLÁN]` **F0-42** Revize shody s Omnibus směrnicí (historie cen)
