@@ -1,8 +1,8 @@
-# ArgoMi BestShop – struktura projektu
+# ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 1.0 · 8. 11. 2026  
-**Zdroj stromu:** autorův aktuální výpis adresářů projektu
+**Revize:** 1.1 · 9. 11. 2026  
+**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 9. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
 
@@ -38,9 +38,8 @@ app/
 │   ├── Domain/
 │   │   └── Event/
 │   └── Infrastructure/
-│       ├── Console/
 │       └── Persistence/
-│           └── OrmModel.php  # současný soubor k prověření/odstranění
+│           └── OrmModel.php  # dočasný soubor; odstranění je naplánováno ve F1-37
 └── UI/
     ├── Admin/
     │   ├── @layout.latte
@@ -68,7 +67,7 @@ app/
 Poznámky:
 - Strom obsahuje i prázdné adresáře držené soubory `.gitkeep`.
 - Moduly kromě Catalog zatím nemusí mít vytvořené všechny vnitřní vrstvy.
-- Ve výpisu existuje `Shared/Infrastructure/Persistence/OrmModel.php`; jeho skutečné použití a vazba na Nextras ORM jsou technický dluh k prověření. Nesmí se automaticky zaměňovat za rozhodnutí používat Nextras ORM.
+- Ve výpisu stále existuje `Shared/Infrastructure/Persistence/OrmModel.php`. Kontrola všech aktuálních PHP a NEON souborů potvrdila, že na Nextras ORM odkazuje pouze tento model; jeho odstranění spolu s přímou závislostí `nextras/orm` je naplánováno ve F1-37. Nextras DBAL zůstává pouze jako infrastruktura migračního nástroje.
 - Prezentační mapování Nette se nyní opírá o `App\Presentation\*\**Presenter`. UI presenterové oblasti budou potřebovat explicitní a ověřené mapování; do té doby se nesmí předpokládat, že samotná adresářová struktura znamená funkční routování.
 
 ## 2. Odpovědnosti hlavních částí
@@ -179,7 +178,7 @@ Centrální Nette infrastruktura: error presentery, Latte extension a další fr
 - Ověřit a dokončit mapování UI presenterů pro Nette.
 - Ujasnit automatickou registraci DI extension modulů.
 - Dokončit import výchozích systémových překladů.
-- Prověřit a odstranit nepoužívaný Nextras ORM model/dependency, pokud se potvrdí, že není potřeba.
+- `[PLÁN]` F1-37: Odstranit `OrmModel.php` a přímou závislost `nextras/orm`; před změnou znovu ověřit reference, poté aktualizovat Composer lock a spustit PHPStan/testy.
 - Vynucovat hranice modulů automatickými architektonickými testy.
 
 ## 10. Historie
@@ -188,3 +187,4 @@ Centrální Nette infrastruktura: error presentery, Latte extension a další fr
 |---|---|
 | 4. 11. 2026 | Původní návrhy STRUKTURA v0.1/v0.2. |
 | 8. 11. 2026 | v1.0: potvrzen skutečný strom `Core/Modules/Presentation/Shared/UI`; doplněny odpovědnosti a hranice. |
+| 9. 11. 2026 | v1.1: opraven strom podle aktuální větve `main`, odstraněna neexistující složka Console z dokumentace a doplněn plánovaný úklid Nextras ORM podle F0-54/F1-37. |
