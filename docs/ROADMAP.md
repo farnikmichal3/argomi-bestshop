@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.35 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.36 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 91, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 454, zrušeno 1.
+Celkem **547 kroků**: hotovo 91, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 453, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 27 | 0 | 0 | 0 | 0 | 12 | 0 |
+| F1 | Prostředí a repozitář | 39 | 27 | 1 | 0 | 0 | 0 | 11 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -89,7 +89,7 @@ Celkem **547 kroků**: hotovo 91, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 - `[HOTOVO]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28. Zaveden formát založený na Keep a Changelog, pravidla pro obchodnicky relevantní změny, SemVer verze a Git tagy; první produkční vydání zatím neexistuje.
 - `[HOTOVO]` **F1-18** Nainstalovat a nakonfigurovat Deptrac 4.7.2 pro kontrolu hranic modulů; ověřit pravidla pozitivním i negativním testem. Výsledná kontrola: 0 violations, 0 uncovered, 0 errors.
 - `[HOTOVO]` **F1-20** Doplnit Composer skripty pro testy, coding standard a architekturu. Zachovány `phpstan` a `tester`, přidány `test`, `cs` a `arch`; vlastní skript `audit` byl odstraněn kvůli kolizi s vestavěným příkazem Composeru. Ověřeny `composer validate --no-check-publish`, `composer arch`, `composer cs` (0 souborů k opravě po formátování) a `composer audit` (0 bezpečnostních upozornění).
-- `[PLÁN]` **F1-22** Připravit samostatné asset vstupy Front/Admin.
+- `[ROZDĚLÁNO]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy Front/Admin. Přidány `assets/scss/front.scss`, `admin.scss`, sdílený `_shared.scss` a `assets/js/front.js`, `admin.js`, sdílený `shared.js`; dokumentováno v `STRUKTURA.md`. Čeká se na lokální ověření vstupů.
 - `[PLÁN]` **F1-24** Doplnit `.nvmrc` a Node.js `engines`.
 - `[PLÁN]` **F1-25** Ověřit sestavení assetů a jejich načítání v layoutech.
 - `[PLÁN]` **F1-26** a **F1-27** Připravit CI kontroly pro PHP a JavaScript.
@@ -181,7 +181,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-19** Nainstalovat konzolový nástroj (po rozhodnutí F0)
 - `[HOTOVO]` **F1-20** Skripty v `composer.json`: `phpstan`, `tester`, `test`, `cs`, `arch`. Bez vlastního `audit` skriptu kvůli kolizi s vestavěným příkazem `composer audit`; všechny relevantní příkazy ověřeny lokálně.
 - `[HOTOVO]` **F1-21** `npm init`, instalace `sass`, `esbuild`, `bootstrap`, `@popperjs/core`, `naja`
-- `[PLÁN]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy `Front` a `Admin` v `assets/scss` a `assets/js` podle schváleného rozdělení UI
+- `[ROZDĚLÁNO]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy `Front` a `Admin` v `assets/scss` a `assets/js`; společný základ Sassu a inicializace JS jsou oddělené do sdílených souborů. Čeká se na lokální ověření.
 - `[PLÁN]` **F1-23** Dokončit samostatné skripty `build` a `watch` pro CSS a JS obou částí `Front` a `Admin`
 - `[PLÁN]` **F1-24** `.nvmrc` a `engines` v `package.json`
 - `[PLÁN]` **F1-25** Ověřit `npm run build` a načtení souborů v layoutu
@@ -757,6 +757,9 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.36 (9. 11. 2026)
+- Zahájen F1-22: vytvořeny samostatné Sass a JavaScript vstupy pro Front/Admin se sdílenými základy; struktura popsána v `STRUKTURA.md`. Lokální ověření ještě čeká.
 
 ### v2.35 (9. 11. 2026)
 - Dokončen F1-20: Composer skripty `test`, `cs` a `arch` byly ověřeny; `composer validate` je validní, architektonická analýza bez nálezů, PHP-CS-Fixer po formátování našel 0 souborů k opravě a `composer audit` nenašel bezpečnostní zranitelnosti. Vlastní skript `audit` byl odstraněn kvůli kolizi s vestavěným příkazem Composeru.
