@@ -79,7 +79,7 @@ final class SensitiveDataProcessor implements ProcessorInterface
             '/\b(password|passwd|pwd|token|access[_-]?token|refresh[_-]?token|api[_-]?key|client[_-]?secret|secret|authorization|cookie|set-cookie)\s*([=:])\s*("[^"]*"|\'[^\']*\'|[^\s&,;]+)/i',
             '$1$2' . self::REDACTED,
             $value,
-        ) ?? $value;
+        );
     }
 
     public function __invoke(LogRecord $record): LogRecord
