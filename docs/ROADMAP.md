@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.30 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.31 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 87, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 458, zrušeno 1.
+Celkem **547 kroků**: hotovo 88, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 457, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 23 | 0 | 0 | 0 | 0 | 16 | 0 |
+| F1 | Prostředí a repozitář | 39 | 24 | 0 | 0 | 0 | 0 | 15 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -87,7 +87,7 @@ Celkem **547 kroků**: hotovo 87, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 - `[HOTOVO]` **F1-37** Odstranit přímou závislost `nextras/orm` a nepoužívaný `OrmModel.php`; zachovat Nextras DBAL/Migrations. Ověřeny reference, Composer metadata a lock; `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb.
 - `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46
 - `[PLÁN]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28.
-- `[PLÁN]` **F1-18** Zvolit a nainstalovat nástroj pro automatické hlídání hranic modulů.
+- `[HOTOVO]` **F1-18** Nainstalovat a nakonfigurovat Deptrac 4.7.2 pro kontrolu hranic modulů; ověřit pravidla pozitivním i negativním testem. Výsledná kontrola: 0 violations, 0 uncovered, 0 errors.
 - `[PLÁN]` **F1-20** Doplnit Composer skripty pro testy, coding standard, architekturu a audit.
 - `[PLÁN]` **F1-22** Připravit samostatné asset vstupy Front/Admin.
 - `[PLÁN]` **F1-24** Doplnit `.nvmrc` a Node.js `engines`.
@@ -158,7 +158,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 23 z 39 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 24 z 39 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -177,7 +177,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-15** Opravit chyby kostry na úrovni max (bez baseline)
 - `[HOTOVO]` **F1-16** Nastavit coding standard PER-CS 3.0: PHP-CS-Fixer 3.95.29 jako vývojová závislost, konfigurace `.php-cs-fixer.dist.php` používá pevnou sadu `@PER-CS3.0`; všech 6 existujících PHP souborů naformátováno a následná kontrola bez nálezů. PHPStan level max zůstává čistý.
 - `[HOTOVO]` **F1-17** Nainstalovat testovací nástroj (po rozhodnutí F0)
-- `[PLÁN]` **F1-18** Nainstalovat nástroj pro hlídání hranic modulů (po rozhodnutí F0)
+- `[HOTOVO]` **F1-18** Nainstalovat a nakonfigurovat Deptrac 4.7.2; pozitivní i negativní test potvrdil správné hlídání hranic modulů, finální analýza bez violations, uncovered a errors.
 - `[HOTOVO]` **F1-19** Nainstalovat konzolový nástroj (po rozhodnutí F0)
 - `[PLÁN]` **F1-20** Skripty v `composer.json`: `phpstan`, `test`, `cs`, `arch`, `audit`
 - `[HOTOVO]` **F1-21** `npm init`, instalace `sass`, `esbuild`, `bootstrap`, `@popperjs/core`, `naja`
@@ -757,6 +757,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.31 (9. 11. 2026)
+- Dokončen F1-18: nainstalován a nakonfigurován Deptrac 4.7.2 pro kontrolu architektonických hranic modulů. Pozitivní i negativní test ověřil pravidla; závěrečná analýza skončila s 0 violations, 0 uncovered a 0 errors.
+- Aktualizován souhrnný stav: **88 hotovo**, **0 rozděláno**, **1 k úpravě**, **457 plán**, **1 zrušeno**.
 
 ### v2.30 (9. 11. 2026)
 - Dokončen F1-36: odstraněny nepoužívané závislosti Vite a `@nette/vite-plugin`; Sass + esbuild build úspěšný, kontrola závislostí prázdná a npm audit bez zranitelností.
