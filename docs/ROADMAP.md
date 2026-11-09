@@ -148,7 +148,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-51** Sjednotit právní metadata Composer/npm s režimem všechna práva vyhrazena
 - `[HOTOVO]` **F0-52** Aktualizovat README a AGENTS.md podle skutečného projektu, bez instrukcí skeletonu
 - `[HOTOVO]` **F0-53** Demo data budou označená a oddělená; demo objednávky nespustí reálné platby, expedici ani externí operace. Testovací integrace poběží jen v testovacím režimu a produkce bude chráněna proti demo konfiguraci. Podrobnosti v ZAMER.md.
-- `[PLÁN]` **F0-54** Prověřit nepoužívanou závislost Nextras ORM a soubor Shared/Infrastructure/Persistence/OrmModel.php
+- `[HOTOVO]` **F0-54** Rozhodnuto: Nette Database Explorer bude jedinou databázovou vrstvou běžného aplikačního kódu. Nextras ORM ani `OrmModel.php` do cílové architektury nepatří a po ověření závislostí budou odstraněny. Nextras Migrations/DBAL mohou zůstat jako samostatné nástroje pro migrace a testování. Podrobnosti v ZAMER.md.
 
 
 ### F1: Prostředí a repozitář
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.21 (9. 11. 2026)
+- Dokončeno F0-54: Nette Database Explorer bude jedinou databázovou vrstvou aplikačního kódu; Nextras ORM a jeho `OrmModel.php` budou po ověření závislostí odstraněny, Nextras Migrations/DBAL mohou zůstat pro migrace a testy.
+- Aktualizován souhrnný stav: **73 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 čeká na rozhodnutí**.
 
 ### v2.20 (9. 11. 2026)
 - Dokončeno F0-53: stanoveno bezpečné oddělení demo dat a testovacích operací od skutečného provozu včetně ochrany produkčního prostředí.
