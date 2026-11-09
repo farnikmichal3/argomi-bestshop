@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.15 · 9. 11. 2026  
+**Revize:** 1.16 · 9. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -274,7 +274,18 @@ Pro budoucí hostovanou službu stanovujeme výchozí cílovou dostupnost **99,5
 - V této fázi se nezavádějí finanční kompenzace za nedodržení SLA; případné kompenzace se posoudí podle zkušeností z reálného provozu.
 - Toto SLA se vztahuje na budoucí hostovanou službu, nikoli na lokální instalace.
 
-## 12. Změnová historie
+## 14. Zálohování a obnova po havárii
+
+Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohování a obnovy:
+
+- Provádět denní plné zálohy databáze.
+- Průběžně zálohovat databázové změny pomocí binárních logů (binlogů), aby byla možná obnova k určitému okamžiku.
+- Ukládat zálohy mimo hlavní provozní server.
+- Zálohy chránit šifrováním při přenosu i při uložení.
+- Pravidelně prakticky testovat obnovu ze záloh.
+- Konkrétní cíle RPO (maximální přípustná ztráta dat) a RTO (cílová doba obnovy služby) stanovit podle požadavků a možností konkrétního provozního prostředí.
+
+
 
 | Datum | Změna |
 |---|---|
@@ -301,3 +312,4 @@ Pro budoucí hostovanou službu stanovujeme výchozí cílovou dostupnost **99,5
 | 9. 11. 2026 | F0-38: Exportní produktové feedy budou používat společné interní rozhraní a samostatné adaptéry pro Heureku, Zboží.cz a Google Shopping; katalog zůstane nezávislý na platformách. |
 | 9. 11. 2026 | F0-39: Import produktů bude používat společné interní rozhraní a adaptéry CSV/XML, validaci, náhled před potvrzením a protokol výsledků včetně chyb. |
 | 9. 11. 2026 | F0-40: Pro budoucí hostovanou službu platí výchozí cíl dostupnosti 99,5 % měsíčně, monitoring, předem oznámená údržba a definované reakční doby; bez finančních kompenzací v této fázi. |
+| 9. 11. 2026 | F0-41: Zálohování hostované služby bude zahrnovat denní plné zálohy, průběžné binlogy, oddělené a šifrované uložení a pravidelné testy obnovy; RPO/RTO se stanoví pro konkrétní prostředí. |
