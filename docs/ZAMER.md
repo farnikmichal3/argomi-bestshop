@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.21 · 9. 11. 2026
+**Revize:** 1.22 · 9. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -371,4 +371,11 @@ Během současné aktivní fáze vývoje bude projekt vyvíjen přímo ve větvi
 - Po dokončení systému a jeho prvním vydání se přejde na řízenější práci s větvemi: `main` bude stabilní větev a nové funkce či opravy se budou připravovat v samostatných větvích a slučovat přes Pull Request.
 - Vydané verze budou označovány Git tagy podle SemVer.
 - Přechod na tento režim proběhne jako samostatný krok před navazujícím vývojem po prvním vydání.
+
+
+## 20. Přístupnost uživatelského rozhraní
+
+Závazným cílem přístupnosti zákaznického rozhraní i administrace je **WCAG 2.1 na úrovni AA**.
+
+Při návrhu a implementaci se bude dbát zejména na ovládání klávesnicí, dostatečný kontrast, popisky formulářových polí, sémantickou strukturu nadpisů, přístupné chybové hlášky a podporu čteček obrazovky. Soulad se bude ověřovat průběžně při vývoji a před vydáním.
 
