@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.23 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.24 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,16 +48,16 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **541 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 454, zrušeno 1.
+Celkem **543 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 456, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 37 | 21 | 0 | 0 | 0 | 0 | 16 | 0 |
+| F1 | Prostředí a repozitář | 38 | 21 | 0 | 0 | 0 | 0 | 17 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
-| F5 | Catalog (vlna 1) | 34 | 0 | 0 | 0 | 0 | 0 | 34 | 0 |
+| F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
@@ -155,7 +155,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 21 z 37 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 21 z 38 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -194,6 +194,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0)
 - `[PLÁN]` **F1-36** Odstranit nepoužívané balíčky Vite a Vite pluginu z package.json/package-lock a ověřit build Sass + esbuild
 - `[PLÁN]` **F1-37** Odstranit nepoužívaný `app/Shared/Infrastructure/Persistence/OrmModel.php` a přímou závislost `nextras/orm`; před změnou ověřit reference, aktualizovat Composer lock a spustit PHPStan/testy
+- `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46
 
 ### F2: Sdílené jádro (Shared)
 
@@ -289,7 +290,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### F5: Catalog (vlna 1)
 
-_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 3._ Hotovo 0 z 34 kroků.
+_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 0 z 36 kroků.
 
 - `[PLÁN]` **F5-01** Modul `Catalog`: struktura a DI extension
 - `[PLÁN]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption`
@@ -317,14 +318,16 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[PLÁN]` **F5-24** Validace: kontrola povinných údajů při aktivaci produktu
 - `[PLÁN]` **F5-25** Zákaz přímého mazání: označení produktu jako archivovaný
 - `[PLÁN]` **F5-26** Oprávnění pro správu katalogu
-- `[PLÁN]` **F5-27** Test: načtení demo produktu 1 (jednoduchý produkt)
-- `[PLÁN]` **F5-28** Test: načtení demo produktu 2 (víceosé varianty: tričko velikost/barva)
-- `[PLÁN]` **F5-29** Test: načtení demo produktu 3 (volby zákazníka: hrnek s potiskem)
+- `[PLÁN]` **F5-27** Test: načtení demo produktu 1 – bavlněné tričko (varianty velikost × barva)
+- `[PLÁN]` **F5-28** Test: načtení demo produktu 2 – GaN nabíječka (varianty výkon × počet portů × barva)
+- `[PLÁN]` **F5-29** Test: načtení demo produktu 3 – USB-C kabel (varianty délky, konektorů a barvy)
 - `[PLÁN]` **F5-30** Test generování správného hashe kombinace varianty
 - `[PLÁN]` **F5-31** Jednotkové testy pro `VariantSelector` a `OptionResolver`
 - `[PLÁN]` **F5-32** Texty modulu Catalog (cs, en)
 - `[PLÁN]` **F5-33** Šablony komponent katalogu pro Front i Admin
 - `[PLÁN]` **F5-34** Dokumentace modulu Catalog
+- `[PLÁN]` **F5-35** Test: načtení demo produktu 4 – kniha / výběrová káva (jednoduchý produkt s výchozí variantou)
+- `[PLÁN]` **F5-36** Test: načtení demo produktu 5 – hrnek s vlastním potiskem (zákaznické volby a příplatky)
 
 ### F6: Tax, Pricing, Inventory
 
@@ -610,8 +613,8 @@ _Výukové materiály a lekce navazující na kód e-shopu._ Hotovo 0 z 36 krok�
 - `[PLÁN]` **F16-11** Lekce 11: Objednávkový proces a stavový automat objednávky
 - `[PLÁN]` **F16-12** Lekce 12: Integrace platebních bran a zpracování webhooků
 - `[PLÁN]` **F16-13** Lekce 13: Napojení dopravců a generování štítků
-- `[PLÁN]` **F16-14** Lekce 14: E-mailové notifikace se šablonami v DB
-- `[PLÁN]` **F16-15** Lekce 15: Tvorba front-endu s Latte 3 a Alpine.js/Naja
+- `[PLÁN]` **F16-14** Lekce 14: E-mailové notifikace se šablonami Latte v repozitáři
+- `[PLÁN]` **F16-15** Lekce 15: Tvorba front-endu s Latte 3 a Naja
 - `[PLÁN]` **F16-16** Lekce 16: Administrační rozhraní a tvorba datagridů
 - `[PLÁN]` **F16-17** Lekce 17: Vyhledávání s MySQL FULLTEXT
 - `[PLÁN]` **F16-18** Lekce 18: Bezpečnost Nette aplikace (CSP, escapování, rate limiting)
@@ -652,7 +655,7 @@ _Finalizace prvního uceleného milníku se 3 demo produkty._ Hotovo 0 z 11 krok
 
 ### F18: Vlna 2: ceny a sklad
 
-_Rozšíření pro produkty 4 až 7 (sada, množstevní slevy, předobjednávky, neceločíselné množství)._ Hotovo 0 z 18 kroků.
+_Rozšíření pro produkty 6 až 9 (dárková sada, množstevní ceny, předobjednávka a desetinná množství)._ Hotovo 0 z 18 kroků.
 
 - `[PLÁN]` **F18-01** Rozšíření DB schématu pro produktové balíčky (sady)
 - `[PLÁN]` **F18-02** Výpočet skladové dostupnosti a ceny sady z komponent
@@ -667,15 +670,15 @@ _Rozšíření pro produkty 4 až 7 (sada, množstevní slevy, předobjednávky,
 - `[PLÁN]` **F18-11** Admin: správa sad a jejich vazeb
 - `[PLÁN]` **F18-12** Admin: správa množstevních slev
 - `[PLÁN]` **F18-13** Admin: správa předobjednávek
-- `[PLÁN]` **F18-14** Migrace a demo data pro produkty vlny 2 (produkty 4–7)
+- `[PLÁN]` **F18-14** Migrace a demo data pro produkty vlny 2 (produkty 6–9)
 - `[PLÁN]` **F18-15** Testy výpočtů sad a kontroly skladů
 - `[PLÁN]` **F18-16** Testy množstevních slev v CZK i EUR
 - `[PLÁN]` **F18-17** Testy předobjednávkového toku
 - `[PLÁN]` **F18-18** Dokumentace rozšíření vlny 2
 
-### F19: Vlna 3: speciální chování
+### F19: Speciální scénáře (produkty 10 až 13)
 
-_Rozšíření pro produkty 8 až 11 (dlaždice, licence, věkové omezení, vratné zálohy, dárkové poukazy)._ Hotovo 0 z 22 kroků.
+_Speciální chování: dlažba, digitální licence, věkové omezení, vratné zálohy a dárkové poukazy. Tato fáze propojuje scénář z konce vlny 2 s produkty vln 3 a 4._ Hotovo 0 z 22 kroků.
 
 - `[PLÁN]` **F19-01** Rozšíření pro kalkulaci plochy/balení (např. obklady, dlažba)
 - `[PLÁN]` **F19-02** Přepočet požadované plochy na celá balení v košíku
@@ -693,16 +696,16 @@ _Rozšíření pro produkty 8 až 11 (dlaždice, licence, věkové omezení, vra
 - `[PLÁN]` **F19-14** Admin: správa a generování poukazů
 - `[PLÁN]` **F19-15** Front UI: kalkulačka plochy na detailu dlažby
 - `[PLÁN]` **F19-16** Front UI: zadání a validace dárkového poukazu v košíku
-- `[PLÁN]` **F19-17** Migrace a demo data pro vlnu 3 (produkty 8–11)
+- `[PLÁN]` **F19-17** Migrace a demo data pro speciální scénáře (produkty 10–13)
 - `[PLÁN]` **F19-18** Testy přepočtu plochy a balení
 - `[PLÁN]` **F19-19** Testy generování a expirovaných poukazů
 - `[PLÁN]` **F19-20** Testy účtování vratných záloh
 - `[PLÁN]` **F19-21** Právní revize toku ověření věku
 - `[PLÁN]` **F19-22** Dokumentace rozšíření vlny 3
 
-### F20: Vlna 4: nejnáročnější
+### F20: Vlna 4: pokročilé konfigurace (produkty 14 a 15)
 
-_Rozšíření pro produkty 12 až 15 (vícekrokový konfigurátor, nahrávání tiskových podkladů, předplatné)._ Hotovo 0 z 14 kroků.
+_Rozšíření pro konfigurovatelnou fotoknihu, bezpečné nahrávání tiskových podkladů a kávové předplatné. Dárkový poukaz (produkt 13) je řešen ve F19._ Hotovo 0 z 14 kroků.
 
 - `[PLÁN]` **F20-01** Doménový model vícekrokového konfigurátoru
 - `[PLÁN]` **F20-02** Pravidla závislostí a nekompatibility mezi komponentami
@@ -716,7 +719,7 @@ _Rozšíření pro produkty 12 až 15 (vícekrokový konfigurátor, nahrávání
 - `[PLÁN]` **F20-10** Front UI: drag & drop uploader souborů s náhledem
 - `[PLÁN]` **F20-11** Admin: kontrola a stažení tiskových dat u objednávky
 - `[PLÁN]` **F20-12** Admin: správa konfigurátorů a stromů pravidel
-- `[PLÁN]` **F20-13** Migrace a demo data pro vlnu 4 (produkty 12–15)
+- `[PLÁN]` **F20-13** Migrace a demo data pro produkty 14–15
 - `[PLÁN]` **F20-14** Dokumentace rozšíření vlny 4
 
 ### F21: Funkce, na kterých obchodník stojí
@@ -748,6 +751,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.24 (9. 11. 2026)
+- Závěrečný audit sjednotil testovací scénáře katalogu s kanonickými 15 demo produkty; doplněny testy produktů 4 a 5.
+- Opraveny rozsahy produktů ve fázích F18–F20 a zastaralé popisy e-mailových šablon a front-endového JavaScriptu.
+- Doplněn implementační krok F1-38 pro Monolog podle schváleného F0-46.
+- Souhrn po doplnění dvou testovacích kroků: **84 hotovo**, **1 rozděláno**, **1 k úpravě**, **456 plán**, **1 zrušeno**.
 
 ### v2.23 (9. 11. 2026)
 - Dokončena závěrečná kontrola návazností: 46 tabulek v počáteční SQL migraci odpovídá dokumentaci DATABASE; sjednocen popis PHP 8.3+, oficiální název, databázové vrstvy a zbývající úklid ORM.
