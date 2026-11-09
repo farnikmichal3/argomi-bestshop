@@ -85,6 +85,7 @@ final class SensitiveDataProcessor implements ProcessorInterface
     public function __invoke(LogRecord $record): LogRecord
     {
         return $record->with(
+            message: $this->sanitizeString($record->message),
             context: $this->sanitizeArray($record->context),
             extra: $this->sanitizeArray($record->extra),
         );
