@@ -9,3 +9,5 @@ search:
 			- *Factory
 			- *Repository
 			- *Service
+
+	- App\Shared\Infrastructure\Console\DbResetCommand
