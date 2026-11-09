@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.26 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.27 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -239,7 +239,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
 - `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců
 - `[PLÁN]` **F3-15** Testovací databáze a bootstrap integračních testů
-- `[ROZDĚLÁNO]` **F3-16** Příkaz `db:reset` (smazat, migrovat, naplnit) pro vývoj (`composer db:reset`)
+- `[ROZDĚLÁNO]` **F3-16** Bezpečný vývojový `db:reset`: ověření databáze `argomi_bestshop` a lokálního účtu `argomi_migrator`, dvojí potvrzení, odstranění tabulek/pohledů bez DROP/CREATE databáze a opětovné spuštění skupin structures → basic-data → dummy-data (`composer db:reset`); dokončit po lokálním ověření.
 - `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
 - `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
 - `[PLÁN]` **F3-19** Implementace hashe kombinace varianty (SHA-256) a test shody s SQL `SHA2(..., 256)`
@@ -756,6 +756,9 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.27 (9. 11. 2026)
+- Připraven bezpečný příkaz `composer db:reset` s kontrolou názvu databáze a lokálního migračního účtu; reset zachovává databázi i její oprávnění. F3-16 zůstává ROZDĚLÁNO do ověření v lokálním prostředí.
 
 ### v2.26 (9. 11. 2026)
 - Zpřesněny provozní kroky pro SLA 99,5 %, off-site šifrované zálohy DB i souborů, obnovu, workery, reakční doby incidentů a kontrolu licencí.
