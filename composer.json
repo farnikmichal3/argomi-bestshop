@@ -25,7 +25,6 @@
 		"nette/utils": "^4.0",
 		"nextras/dbal": "^5.0",
 		"nextras/migrations": "^3.5",
-		"nextras/orm": "^5.0",
 		"tracy/tracy": "^2.10"
 	},
 	"require-dev": {
