@@ -132,7 +132,7 @@ Ne každá složka musí existovat hned. Vytváří se tehdy, když obsahuje sku
 - `Resources/translations`: výchozí systémové texty modulu určené k importu do databáze.
 
 ### Core/Logging
-Centrální aplikační logování přes Monolog. `LoggerFactory` vytváří JSON logger s denní rotací souborů; `SensitiveDataProcessor` před zápisem odstraňuje citlivé hodnoty z kontextu a doplňkových údajů. Logy se ukládají do kořenového adresáře `log/`, mimo veřejný `www/` webroot. Tracy zůstává samostatnou diagnostickou vrstvou.
+Centrální aplikační logování přes Monolog. `LoggerFactory` vytváří JSON logger s denní rotací a limitem 30 souborů; soubory dostávají oprávnění `0600`. Limit 30 souborů je výchozí provozní nastavení, nikoliv konečné právní retenční pravidlo; jeho potvrzení nebo změna zůstává součástí F0-49. `SensitiveDataProcessor` před zápisem odstraňuje citlivé hodnoty z logovacích zpráv, kontextu a doplňkových údajů. Logy se ukládají do kořenového adresáře `log/`, mimo veřejný `www/` webroot. Tracy zůstává samostatnou diagnostickou vrstvou.
 
 ## 5. Prezentační vrstvy
 
