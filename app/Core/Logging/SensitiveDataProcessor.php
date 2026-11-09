@@ -45,7 +45,7 @@ final class SensitiveDataProcessor implements ProcessorInterface
                 'class' => $value::class,
             ];
 
-            if (is_int($value->getCode())) {
+            if ($value->getCode() !== 0) {
                 $exception['code'] = $value->getCode();
             }
 
