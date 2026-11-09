@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.11 · 8. 11. 2026  
+**Revize:** 1.12 · 9. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -189,13 +189,48 @@ Konkrétní RPO/RTO a retence zůstávají otevřenými provozními parametry.
 
 ## 10. Demo produkty
 
-Původní sada 15 zkušebních scénářů zůstává dlouhodobým cílem, rozděleným do čtyř vln:
-- vlna 1: základní varianty a katalog,
-- vlna 2: sady, množstevní slevy, předobjednávky a desetinná množství,
-- vlna 3: plošné zboží, digitální licence, věková omezení, vratné zálohy a poukazy,
-- vlna 4: konfigurátor, personalizace/upload a předplatné.
+**Závazný katalog tvoří 15 demo produktů rozdělených do čtyř vln.** Tento seznam je kanonický a při další práci se již znovu nehledá ani nevymýšlí. Slouží k ověření širokého spektra typů produktů a obchodních scénářů. Jeden produkt může záměrně demonstrovat více souvisejících funkcí.
 
-Aktuální seed SQL obsahuje pouze počáteční část této sady. Přesný obsah je popsán v DATABASE a další naplnění je úkolem ROADMAP.
+### Vlna 1 – základy katalogu a variant
+
+| # | Produkt | Ověřované scénáře |
+|---:|---|---|
+| 1 | Bavlněné tričko | Varianty velikost × barva, SKU, EAN, sklad a hash kombinace |
+| 2 | GaN nabíječka | Varianty podle výkonu, počtu portů a barvy |
+| 3 | USB-C kabel | Varianty délky, konektorů a barvy |
+| 4 | Kniha / výběrová káva | Jednoduchý produkt, výchozí varianta, pevná cena a sklad |
+| 5 | Hrnek s vlastním potiskem | Zákaznické volby, vlastní text, příplatky a dynamická cena |
+
+### Vlna 2 – ceny, sklad a množství
+
+| # | Produkt | Ověřované scénáře |
+|---:|---|---|
+| 6 | Dárková sada | Bundle, dostupnost podle skladových zásob komponent a odpis komponent |
+| 7 | Kancelářský papír / balení šroubů | Množstevní cenové hladiny a přepočet jednotkové ceny |
+| 8 | Limitovaná edice tenisek | Předobjednávky a očekávané datum naskladnění/doručení |
+| 9 | Látka / kabel na metráž | Desetinná množství, prodejní krok a přesné výpočty bez floatů |
+| 10 | Koupelnová dlažba / podlaha | Cena za m², prodej na celá balení, výpočet plochy a zaokrouhlení |
+
+### Vlna 3 – speciální druhy zboží
+
+| # | Produkt | Ověřované scénáře |
+|---:|---|---|
+| 11 | Elektronická licence / e-kniha | Digitální produkt, licenční klíč a doručení bez fyzické dopravy |
+| 12 | Řemeslné pivo ve vratné lahvi | Věkové omezení, ověření při předání a vratná záloha za obal |
+
+### Vlna 4 – pokročilé funkce
+
+| # | Produkt | Ověřované scénáře |
+|---:|---|---|
+| 13 | Dárkový poukaz | Unikátní kód, platnost, částečné čerpání a použití jako platební metoda |
+| 14 | Konfigurovatelná fotokniha | Konfigurace parametrů, upload PDF/TIFF, validace a zabezpečené uložení souboru |
+| 15 | Kávové předplatné | Pravidelné odběry, tokenizace platební karty a automatické platby |
+
+Produkt č. 12 záměrně spojuje věkové omezení a vratnou zálohu. Produkt č. 14 spojuje konfigurátor a upload zákaznického souboru. Tím katalog pokrývá všech 15 původně navržených funkčních scénářů v rámci 15 produktů.
+
+**První tři produkty jsou již součástí aktuálního demo seed SQL:** tričko, USB-C kabel a GaN nabíječka. Kanonické pořadí katalogu je tričko, GaN nabíječka, USB-C kabel; pořadí a identifikátory existujících záznamů v SQL se tímto dokumentačním rozhodnutím nemění. Jejich případné sjednocení v seed datech se provede samostatně a kontrolovanou změnou.
+
+Tento seznam určuje cílový obsah demo katalogu, nikoliv tvrzení, že všechny uvedené funkce již databáze nebo aplikace implementuje. Před realizací každého scénáře se ověří aktuální SQL a existující aplikační řešení; doplní se pouze skutečně chybějící části.
 
 ## 11. Rozhodnutí, která zůstávají otevřená
 
@@ -231,3 +266,4 @@ Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schvále
 | 8. 11. 2026 | F0-30: Originály obrázků se zachovávají; miniatury se generují primárně ve WebP, AVIF je doplňková optimalizovaná varianta. Velikosti a kvalita se řídí centrální konfigurací, s podporou ořezu, poměru stran a responzivního zobrazování. |
 | 8. 11. 2026 | F0-32: E-mailové šablony se ukládají jako Latte soubory v repozitáři a verzují se společně s aplikací; jejich zdrojový kód se neupravuje v administraci. |
 | 8. 11. 2026 | F0-31: Úlohy se ukládají do databázové fronty a zpracovává je worker spouštěný cronem. Architektura umožní pozdější provoz samostatných či více souběžných workerů bez změny aplikačního rozhraní. |
+| 9. 11. 2026 | Schválen závazný katalog 15 demo produktů ve čtyřech vlnách; první tři položky navazují na existující demo seed SQL. Dvě položky kombinují související scénáře (věkové omezení + vratná záloha; konfigurátor + upload). |
