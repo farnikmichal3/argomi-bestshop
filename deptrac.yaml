@@ -1,0 +1,257 @@
+﻿deptrac:
+  paths:
+    - app/
+
+  exclude_files:
+    - '#(^|/)Tests?(/|$)#'
+    - '#(^|/)Resources(/|$)#'
+
+  analyser:
+    types:
+      - class
+
+  layers:
+    - name: Bootstrap
+      collectors:
+        - type: classLike
+          value: '^App\\Bootstrap$'
+
+    - name: Core
+      collectors:
+        - type: classLike
+          value: '^App\\Core\\'
+
+    - name: Presentation
+      collectors:
+        - type: classLike
+          value: '^App\\Presentation\\'
+
+    - name: Shared
+      collectors:
+        - type: classLike
+          value: '^App\\Shared\\'
+
+    - name: UI
+      collectors:
+        - type: classLike
+          value: '^App\\UI\\'
+
+    - name: CartApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Cart\\Api\\'
+    - name: CartInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Cart\\(?!Api\\)'
+
+    - name: CatalogApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Catalog\\Api\\'
+    - name: CatalogInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Catalog\\(?!Api\\)'
+
+    - name: CheckoutApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Checkout\\Api\\'
+    - name: CheckoutInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Checkout\\(?!Api\\)'
+
+    - name: CustomerApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Customer\\Api\\'
+    - name: CustomerInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Customer\\(?!Api\\)'
+
+    - name: IdentityApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Identity\\Api\\'
+    - name: IdentityInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Identity\\(?!Api\\)'
+
+    - name: InventoryApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Inventory\\Api\\'
+    - name: InventoryInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Inventory\\(?!Api\\)'
+
+    - name: MailingApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Mailing\\Api\\'
+    - name: MailingInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Mailing\\(?!Api\\)'
+
+    - name: OrdersApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Orders\\Api\\'
+    - name: OrdersInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Orders\\(?!Api\\)'
+
+    - name: PaymentsApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Payments\\Api\\'
+    - name: PaymentsInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Payments\\(?!Api\\)'
+
+    - name: PricingApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Pricing\\Api\\'
+    - name: PricingInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Pricing\\(?!Api\\)'
+
+    - name: SettingsApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Settings\\Api\\'
+    - name: SettingsInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Settings\\(?!Api\\)'
+
+    - name: ShippingApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Shipping\\Api\\'
+    - name: ShippingInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Shipping\\(?!Api\\)'
+
+    - name: TaxApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Tax\\Api\\'
+    - name: TaxInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Tax\\(?!Api\\)'
+
+    - name: TranslationApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Translation\\Api\\'
+    - name: TranslationInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Translation\\(?!Api\\)'
+
+  ruleset:
+    Bootstrap:
+      - Core
+      - Presentation
+      - Shared
+      - UI
+      - CartApi
+      - CatalogApi
+      - CheckoutApi
+      - CustomerApi
+      - IdentityApi
+      - InventoryApi
+      - MailingApi
+      - OrdersApi
+      - PaymentsApi
+      - PricingApi
+      - SettingsApi
+      - ShippingApi
+      - TaxApi
+      - TranslationApi
+
+    Core:
+      - Shared
+
+    Presentation:
+      - Core
+      - Shared
+
+    Shared: ~
+
+    UI:
+      - Presentation
+      - Shared
+      - CartApi
+      - CatalogApi
+      - CheckoutApi
+      - CustomerApi
+      - IdentityApi
+      - InventoryApi
+      - MailingApi
+      - OrdersApi
+      - PaymentsApi
+      - PricingApi
+      - SettingsApi
+      - ShippingApi
+      - TaxApi
+      - TranslationApi
+
+    CartApi: [Shared]
+    CatalogApi: [Shared]
+    CheckoutApi: [Shared]
+    CustomerApi: [Shared]
+    IdentityApi: [Shared]
+    InventoryApi: [Shared]
+    MailingApi: [Shared]
+    OrdersApi: [Shared]
+    PaymentsApi: [Shared]
+    PricingApi: [Shared]
+    SettingsApi: [Shared]
+    ShippingApi: [Shared]
+    TaxApi: [Shared]
+    TranslationApi: [Shared]
+
+    CartInternal: &module_internal_allowed
+      - Shared
+      - CartApi
+      - CatalogApi
+      - CheckoutApi
+      - CustomerApi
+      - IdentityApi
+      - InventoryApi
+      - MailingApi
+      - OrdersApi
+      - PaymentsApi
+      - PricingApi
+      - SettingsApi
+      - ShippingApi
+      - TaxApi
+      - TranslationApi
+
+    CatalogInternal: *module_internal_allowed
+    CheckoutInternal: *module_internal_allowed
+    CustomerInternal: *module_internal_allowed
+    IdentityInternal: *module_internal_allowed
+    InventoryInternal: *module_internal_allowed
+    MailingInternal: *module_internal_allowed
+    OrdersInternal: *module_internal_allowed
+    PaymentsInternal: *module_internal_allowed
+    PricingInternal: *module_internal_allowed
+    SettingsInternal: *module_internal_allowed
+    ShippingInternal: *module_internal_allowed
+    TaxInternal: *module_internal_allowed
+    TranslationInternal: *module_internal_allowed
