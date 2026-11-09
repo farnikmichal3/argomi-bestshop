@@ -12,6 +12,9 @@ Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není t
 app/
 ├── Bootstrap.php
 ├── Core/
+│   ├── Logging/
+│   │   ├── LoggerFactory.php
+│   │   └── SensitiveDataProcessor.php
 │   └── RouterFactory.php
 ├── Modules/
 │   ├── Cart/
@@ -74,7 +77,7 @@ Poznámky:
 
 | Část | Odpovědnost | Co sem nepatří |
 |---|---|---|
-| `Core` | Technické jádro aplikace, bootstrapovací a centrální aplikační mechanismy | Doménová logika konkrétního e-shop modulu |
+| `Core` | Technické jádro aplikace, bootstrapovací a centrální aplikační mechanismy včetně aplikačního logování | Doménová logika konkrétního e-shop modulu |
 | `Modules` | Doménové schopnosti a jejich aplikační/infrastrukturní implementace | Prezentační vrstvy Front/Admin |
 | `Presentation` | Nette prezentační infrastruktura sdílená aplikací: error presentery, Latte rozšíření a frameworkové adaptéry | Doménové use-cases a obchodní pravidla |
 | `Shared` | Sdílené technické/doménové primitivy, které skutečně používá více modulů | Obecná odkládací složka pro kód bez vlastníka |
@@ -127,6 +130,9 @@ Ne každá složka musí existovat hned. Vytváří se tehdy, když obsahuje sku
 - `Infrastructure/Persistence`: Nette Database Explorer, repozitáře, mapování ActiveRow.
 - `Infrastructure/DI`: DI extension a registrace služeb modulu.
 - `Resources/translations`: výchozí systémové texty modulu určené k importu do databáze.
+
+### Core/Logging
+Centrální aplikační logování přes Monolog. `LoggerFactory` vytváří JSON logger s denní rotací souborů; `SensitiveDataProcessor` před zápisem odstraňuje citlivé hodnoty z kontextu a doplňkových údajů. Logy se ukládají do kořenového adresáře `log/`, mimo veřejný `www/` webroot. Tracy zůstává samostatnou diagnostickou vrstvou.
 
 ## 5. Prezentační vrstvy
 
