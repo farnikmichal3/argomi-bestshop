@@ -423,7 +423,7 @@ Demo data a testovací operace musí být jednoznačně rozlišitelné od skute�
 
 **Nette Database Explorer** je jedinou povolenou databázovou vrstvou pro běžný aplikační kód ArgoMi-BestShop. Moduly, repozitáře a aplikační služby budou pro práci s provozními daty používat Nette Database Explorer; Nextras ORM se v aplikační vrstvě používat nebude.
 
-- Nextras ORM není součástí cílové architektury a jeho závislost bude odstraněna, pokud závěrečná kontrola kódu a konfigurace potvrdí, že na něm nic nezávisí.
+- Nextras ORM není součástí cílové architektury. Kontrola všech aktuálních PHP a NEON souborů potvrdila, že jedinou zbývající referencí je `OrmModel.php`; model i přímá závislost `nextras/orm` budou odstraněny v rámci F1-37.
 - Nepoužívaný soubor `app/Shared/Infrastructure/Persistence/OrmModel.php` bude odstraněn společně s ORM.
 - Oddělené nástroje pro databázové migrace a testování jsou povoleny. Zejména Nextras Migrations a případně Nextras DBAL mohou zůstat jako vývojové/migrační nástroje; jejich použití neznamená použití ORM v aplikační vrstvě.
 - Migrace, testy ani pomocné nástroje nesmějí zavádět druhou ORM vrstvu do běžného aplikačního kódu.
