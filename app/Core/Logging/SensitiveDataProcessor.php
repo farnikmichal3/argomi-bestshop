@@ -76,7 +76,7 @@ final class SensitiveDataProcessor implements ProcessorInterface
         ) ?? $value;
 
         return preg_replace(
-            '/\b(password|passwd|pwd|access[_-]?token|refresh[_-]?token|api[_-]?key|client[_-]?secret|secret|authorization|cookie|set-cookie)\s*([=:])\s*("[^"]*"|\'[^\']*\'|[^\s&,;]+)/i',
+            '/\b(password|passwd|pwd|token|access[_-]?token|refresh[_-]?token|api[_-]?key|client[_-]?secret|secret|authorization|cookie|set-cookie)\s*([=:])\s*("[^"]*"|\'[^\']*\'|[^\s&,;]+)/i',
             '$1$2' . self::REDACTED,
             $value,
         ) ?? $value;
