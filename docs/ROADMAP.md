@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.36 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.37 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 91, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 453, zrušeno 1.
+Celkem **547 kroků**: hotovo 91, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 452, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 27 | 1 | 0 | 0 | 0 | 11 | 0 |
+| F1 | Prostředí a repozitář | 39 | 27 | 2 | 0 | 0 | 0 | 10 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -182,7 +182,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-20** Skripty v `composer.json`: `phpstan`, `tester`, `test`, `cs`, `arch`. Bez vlastního `audit` skriptu kvůli kolizi s vestavěným příkazem `composer audit`; všechny relevantní příkazy ověřeny lokálně.
 - `[HOTOVO]` **F1-21** `npm init`, instalace `sass`, `esbuild`, `bootstrap`, `@popperjs/core`, `naja`
 - `[ROZDĚLÁNO]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy `Front` a `Admin` v `assets/scss` a `assets/js`; společný základ Sassu a inicializace JS jsou oddělené do sdílených souborů. Čeká se na lokální ověření.
-- `[PLÁN]` **F1-23** Dokončit samostatné skripty `build` a `watch` pro CSS a JS obou částí `Front` a `Admin`
+- `[ROZDĚLÁNO]` **F1-23** Skripty `build:css`, `build:js`, `build`, `watch:css` a `watch:js` v `package.json` sestavují samostatné výstupy `front.css`, `admin.css`, `front.js` a `admin.js`; čeká se na lokální ověření.
 - `[PLÁN]` **F1-24** `.nvmrc` a `engines` v `package.json`
 - `[PLÁN]` **F1-25** Ověřit `npm run build` a načtení souborů v layoutu
 - `[PLÁN]` **F1-26** GitHub Actions: `composer validate`, `composer audit`, PHPStan, coding standard, testy
@@ -757,6 +757,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.37 (9. 11. 2026)
+- Zahájen F1-23: `package.json` nově sestavuje samostatné CSS/JS výstupy pro Front a Admin a obsahuje odpovídající watch skripty. Odstraněny původní společné vstupy `app.scss` a `app.js`; čeká se na lokální build.
+- `STRUKTURA.md` aktualizována o rozdělení vstupů, sdílené části a názvy výstupních souborů.
 
 ### v2.36 (9. 11. 2026)
 - Zahájen F1-22: vytvořeny samostatné Sass a JavaScript vstupy pro Front/Admin se sdílenými základy; struktura popsána v `STRUKTURA.md`. Lokální ověření ještě čeká.
