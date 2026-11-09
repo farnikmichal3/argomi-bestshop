@@ -167,12 +167,14 @@
         - type: classLike
           value: '^App\\Modules\\Translation\\(?!Api\\)'
 
+  
   ruleset:
     Bootstrap:
       - Core
       - Presentation
       - Shared
       - UI
+      - External
       - CartApi
       - CatalogApi
       - CheckoutApi
@@ -190,16 +192,20 @@
 
     Core:
       - Shared
+      - External
 
     Presentation:
       - Core
       - Shared
+      - External
 
-    Shared: ~
+    Shared:
+      - External
 
     UI:
       - Presentation
       - Shared
+      - External
       - CartApi
       - CatalogApi
       - CheckoutApi
@@ -215,23 +221,24 @@
       - TaxApi
       - TranslationApi
 
-    CartApi: [Shared]
-    CatalogApi: [Shared]
-    CheckoutApi: [Shared]
-    CustomerApi: [Shared]
-    IdentityApi: [Shared]
-    InventoryApi: [Shared]
-    MailingApi: [Shared]
-    OrdersApi: [Shared]
-    PaymentsApi: [Shared]
-    PricingApi: [Shared]
-    SettingsApi: [Shared]
-    ShippingApi: [Shared]
-    TaxApi: [Shared]
-    TranslationApi: [Shared]
+    CartApi: [Shared, External]
+    CatalogApi: [Shared, External]
+    CheckoutApi: [Shared, External]
+    CustomerApi: [Shared, External]
+    IdentityApi: [Shared, External]
+    InventoryApi: [Shared, External]
+    MailingApi: [Shared, External]
+    OrdersApi: [Shared, External]
+    PaymentsApi: [Shared, External]
+    PricingApi: [Shared, External]
+    SettingsApi: [Shared, External]
+    ShippingApi: [Shared, External]
+    TaxApi: [Shared, External]
+    TranslationApi: [Shared, External]
 
     CartInternal: &module_internal_allowed
       - Shared
+      - External
       - CartApi
       - CatalogApi
       - CheckoutApi
