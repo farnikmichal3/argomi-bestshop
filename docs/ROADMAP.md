@@ -136,7 +136,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-39** Rozhodnout architekturu importu produktů: společné interní rozhraní, adaptéry CSV/XML, validace, náhled před potvrzením a protokol výsledků včetně chyb; rozhodnutí zapsáno v ZAMER.md revize 1.14.
 - `[HOTOVO]` **F0-40** Stanovit výchozí SLA hostované služby: dostupnost 99,5 % měsíčně, monitoring, oznámená údržba a reakční doby; bez finančních kompenzací v této fázi. Podrobnosti v ZAMER.md revize 1.15.
 - `[HOTOVO]` **F0-41** Stanovit zásady zálohování a obnovy: denní plné zálohy, průběžné binlogy, oddělené šifrované uložení a pravidelné testy obnovy; RPO/RTO určit pro konkrétní prostředí. Podrobnosti v ZAMER.md revize 1.16.
-- `[PLÁN]` **F0-42** Revize shody s Omnibus směrnicí (historie cen)
+- `[HOTOVO]` **F0-42** Stanovit pravidla Omnibus pro historii cen: automatické určení nejnižší ceny za předchozích 30 dnů, uchování doložitelné historie a zohlednění zákonných výjimek. Podrobnosti v ZAMER.md revize 1.17.
 - `[K ÚPRAVĚ]` **F0-43** Lekce 1: přejmenovat projekt na `argomi-bestshop` a databázi na `argomi_bestshop`
 - `[HOTOVO]` **F0-44** ZAMER: promítnout schválenou strukturu `app/` do kapitoly 3.2
 - `[PLÁN]` **F0-45** Definice rozhraní externích pluginů a rozšíření
