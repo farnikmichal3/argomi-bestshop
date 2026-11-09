@@ -17,7 +17,7 @@ Před změnou vždy prohlédni aktuální kód, konfiguraci, migrace a návazné
 - PHP 8.3+, Nette 3.2, Latte 3.
 - MySQL 8.x, InnoDB, utf8mb4.
 - Nette Database Explorer jako jediná databázová vrstva běžného aplikačního kódu.
-- Nextras Migrations a Nextras DBAL pouze pro čisté SQL migrace a související testovací nástroje; Nextras ORM se nepoužívá.
+- Nextras Migrations a Nextras DBAL pouze pro čisté SQL migrace a související testovací nástroje. Nextras ORM není povoleno v aplikační vrstvě; zbylý model a přímá závislost se odstraní v F1-37.
 - Sass + esbuild, Bootstrap 5.3.8 + Bootswatch Cosmo, Naja 3.
 - PHPStan level max, Nette Tester.
 - Vite se nepoužívá; zbylé balíčky Vite jsou naplánované k odstranění ve F1-36.
