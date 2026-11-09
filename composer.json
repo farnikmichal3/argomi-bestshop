@@ -51,8 +51,7 @@
 		"db:reset": "@php bin/console db:reset",
 		"test": "@tester",
 		"cs": "php-cs-fixer fix --dry-run --diff",
-		"arch": "deptrac analyse --report-uncovered --no-progress",
-		"audit": "composer audit"
+		"arch": "deptrac analyse --report-uncovered --no-progress"
 	},
 	"minimum-stability": "stable",
 	"config": {
