@@ -36,6 +36,11 @@
         - type: classLike
           value: '^App\\UI\\'
 
+    - name: External
+      collectors:
+        - type: classLike
+          value: '^(?!App\\)'
+
     - name: CartApi
       collectors:
         - type: classLike
