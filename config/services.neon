@@ -1,5 +1,7 @@
 services:
 	- App\Core\RouterFactory::createRouter
+	- App\Core\Logging\SensitiveDataProcessor
+	- App\Core\Logging\LoggerFactory::createLogger(@App\Core\Logging\SensitiveDataProcessor, %logging.file%, %logging.maxFiles%, %logging.level%)
 	- App\Shared\Infrastructure\Console\DbResetCommand
 
 
