@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.18 · 9. 11. 2026  
+**Revize:** 1.19 · 9. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -315,6 +315,7 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 9. 11. 2026 | F0-41: Zálohování hostované služby bude zahrnovat denní plné zálohy, průběžné binlogy, oddělené a šifrované uložení a pravidelné testy obnovy; RPO/RTO se stanoví pro konkrétní prostředí. |
 | 9. 11. 2026 | F0-42: Historie cen bude sloužit k automatickému určení nejnižší ceny za předchozích 30 dnů při slevách; uchování historie a zákonné výjimky budou součástí implementace. |
 | 9. 11. 2026 | F0-43: Oficiální název projektu je **ArgoMi-BestShop**, technický název databáze zůstává **`argomi_bestshop`**; existující repozitář a projektová cesta `argomi-bestshop` se nemění. |
+| 9. 11. 2026 | F0-45: Projekt nebude podporovat instalovatelné pluginy třetích stran. Funkce budou součástí vlastního jádra a interních modulů; externí služby se napojují přes interní rozhraní a adaptéry. |
 
 ## 15. Historie cen a pravidla pro slevy (Omnibus)
 
@@ -337,4 +338,14 @@ Oficiální název projektu je **ArgoMi-BestShop**. Technický název databáze 
 - Repozitář, technický identifikátor projektu a existující projektová cesta používají podobu `argomi-bestshop`.
 - Existující databáze `argomi_bestshop` se nepřejmenovává.
 - Toto rozhodnutí sjednocuje pojmenování; nevyžaduje změnu databáze ani projektové cesty.
+
+
+## 17. Rozšiřování systému a integrace externích služeb
+
+ArgoMi-BestShop nebude poskytovat systém instalovatelných pluginů třetích stran. Funkce e-shopu budou součástí vlastního jádra a jeho interních modulů.
+
+- Nebude existovat veřejný mechanismus pro instalaci, načítání ani správu pluginů třetích stran.
+- Rozšiřování funkcí bude probíhat vývojem a verzováním vlastních modulů v rámci projektu.
+- Napojení externích služeb (například platebních bran, dopravců nebo vyhledávacích služeb) bude řešeno interními rozhraními a adaptéry, nikoliv pluginovým systémem.
+- Externí poskytovatelé služeb nejsou pluginy a jejich integrace nesmí umožnit obcházení bezpečnostních a doménových pravidel jádra.
 
