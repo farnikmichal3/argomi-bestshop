@@ -46,7 +46,8 @@
 	},
 	"scripts": {
 		"phpstan": "phpstan analyse",
-		"tester": "tester tests -s"
+		"tester": "tester tests -s",
+		"db:reset": "@php bin/console db:reset"
 	},
 	"minimum-stability": "stable",
 	"config": {
