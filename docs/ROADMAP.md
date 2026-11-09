@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 460, zrušeno 1.
+Celkem **547 kroků**: hotovo 85, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 460, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 21 | 0 | 0 | 0 | 0 | 18 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
-| F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
+| F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -78,7 +78,6 @@ Celkem **547 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blo
 ## 3. Nejbližší kroky
 
 ### Aktivní a opravné úkoly
-- `[ROZDĚLÁNO]` **F3-16** Příkaz `db:reset` pro bezpečný vývojový reset databáze.
 - `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace – přejmenovat a ověřit.
 
 ### Nejbližší technické kroky
@@ -239,7 +238,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
 - `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců
 - `[PLÁN]` **F3-15** Testovací databáze a bootstrap integračních testů
-- `[ROZDĚLÁNO]` **F3-16** Bezpečný vývojový `db:reset`: ověření databáze `argomi_bestshop` a lokálního účtu `argomi_migrator`, dvojí potvrzení, odstranění tabulek/pohledů bez DROP/CREATE databáze a opětovné spuštění skupin structures → basic-data → dummy-data (`composer db:reset`); dokončit po lokálním ověření.
+- `[HOTOVO]` **F3-16** Bezpečný vývojový `db:reset`: ověření databáze `argomi_bestshop` a lokálního účtu `argomi_migrator`, dvojí potvrzení, odstranění tabulek/pohledů bez DROP/CREATE databáze a opětovné spuštění skupin structures → basic-data → dummy-data (`composer db:reset`); lokálně ověřeno úspěšné odstranění 47 objektů a dokončení všech 3 migrací. Následná kontrola přes Nette Database Explorer potvrdila 3 demo produkty, 2 jazyky a 2 měny; PHPStan bez chyb.
 - `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
 - `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
 - `[PLÁN]` **F3-19** Implementace hashe kombinace varianty (SHA-256) a test shody s SQL `SHA2(..., 256)`
@@ -756,6 +755,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.28 (9. 11. 2026)
+- Dokončen a lokálně ověřen F3-16: `composer db:reset` bezpečně odstranil 47 objektů a úspěšně provedl všechny 3 migrace (`structures`, `basic-data`, `dummy-data`), bez odstranění samotné databáze či jejích oprávnění.
+- Nette Database Explorer potvrdil 3 demo produkty, 2 jazyky a 2 měny; `composer phpstan` proběhl čistě. Automatické testy zatím v projektu nejsou, proto `composer tester` nebyl spuštěn.
+- Souhrn: **85 hotovo**, **0 rozděláno**, **1 k úpravě**, **460 plán**, **1 zrušeno**.
 
 ### v2.27 (9. 11. 2026)
 - Připraven bezpečný příkaz `composer db:reset` s kontrolou názvu databáze a lokálního migračního účtu; reset zachovává databázi i její oprávnění. F3-16 zůstává ROZDĚLÁNO do ověření v lokálním prostředí.
