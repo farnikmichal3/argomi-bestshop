@@ -83,7 +83,7 @@ Celkem **547 kroků**: hotovo 87, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 - `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace – přejmenovat a ověřit.
 
 ### Nejbližší technické kroky
-- `[PLÁN]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; ověřit Sass + esbuild.
+- `[HOTOVO]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; build Sass + esbuild ověřen.
 - `[HOTOVO]` **F1-37** Odstranit přímou závislost `nextras/orm` a nepoužívaný `OrmModel.php`; zachovat Nextras DBAL/Migrations. Ověřeny reference, Composer metadata a lock; `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb.
 - `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46
 - `[PLÁN]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28.
