@@ -4,7 +4,6 @@ parameters:
 
 extensions:
 	console: Contributte\Console\DI\ConsoleExtension(true)
-	database: Nette\Bridges\DatabaseDI\DatabaseExtension
 	dbal: Nextras\Dbal\Bridges\NetteDI\DbalExtension
 	migrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
 
