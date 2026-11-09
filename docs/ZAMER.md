@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.14 · 9. 11. 2026  
+**Revize:** 1.15 · 9. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -264,6 +264,16 @@ Import produktů bude řešen společným interním rozhraním a samostatnými a
 - Výsledek importu bude obsahovat protokol úspěšně zpracovaných i chybových záznamů, včetně důvodu chyby.
 - Konkrétní pravidla párování existujících produktů, aktualizací, duplicit a řešení konfliktů budou upřesněna při návrhu implementace.
 
+## 13. SLA a dostupnost hostované služby
+
+Pro budoucí hostovanou službu stanovujeme výchozí cílovou dostupnost **99,5 % za kalendářní měsíc**.
+
+- Plánovaná údržba bude předem oznámena a evidována samostatně.
+- Dostupnost, chyby a výkon služby budou průběžně monitorovány.
+- Budou definovány reakční doby pro jednotlivé úrovně incidentů.
+- V této fázi se nezavádějí finanční kompenzace za nedodržení SLA; případné kompenzace se posoudí podle zkušeností z reálného provozu.
+- Toto SLA se vztahuje na budoucí hostovanou službu, nikoli na lokální instalace.
+
 ## 12. Změnová historie
 
 | Datum | Změna |
@@ -290,3 +300,4 @@ Import produktů bude řešen společným interním rozhraním a samostatnými a
 | 9. 11. 2026 | Schválen závazný katalog 15 demo produktů ve čtyřech vlnách; první tři položky navazují na existující demo seed SQL. Dvě položky kombinují související scénáře (věkové omezení + vratná záloha; konfigurátor + upload). |
 | 9. 11. 2026 | F0-38: Exportní produktové feedy budou používat společné interní rozhraní a samostatné adaptéry pro Heureku, Zboží.cz a Google Shopping; katalog zůstane nezávislý na platformách. |
 | 9. 11. 2026 | F0-39: Import produktů bude používat společné interní rozhraní a adaptéry CSV/XML, validaci, náhled před potvrzením a protokol výsledků včetně chyb. |
+| 9. 11. 2026 | F0-40: Pro budoucí hostovanou službu platí výchozí cíl dostupnosti 99,5 % měsíčně, monitoring, předem oznámená údržba a definované reakční doby; bez finančních kompenzací v této fázi. |
