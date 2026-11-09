@@ -1,4 +1,4 @@
-# Dokumentace ArgoMi BestShop
+# Dokumentace ArgoMi-BestShop
 
 Toto je vstupní bod pro aktuální dokumentaci projektu. Dokumentace popisuje **schválený záměr, skutečnou strukturu repozitáře, aktuální databázový základ a plán další práce**.
 
