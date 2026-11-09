@@ -23,7 +23,17 @@ final class LoggerFactory
             throw new InvalidArgumentException('The log retention must be at least one file.');
         }
 
-        $level = Level::fromName(strtoupper($minimumLevel));
+        $level = match (strtoupper($minimumLevel)) {
+            'DEBUG' => Level::Debug,
+            'INFO' => Level::Info,
+            'NOTICE' => Level::Notice,
+            'WARNING' => Level::Warning,
+            'ERROR' => Level::Error,
+            'CRITICAL' => Level::Critical,
+            'ALERT' => Level::Alert,
+            'EMERGENCY' => Level::Emergency,
+            default => throw new InvalidArgumentException('Invalid minimum log level.'),
+        };
         $handler = new RotatingFileHandler($logFile, $maxFiles, $level, true, 0600);
         $handler->setFormatter(new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true));
 
