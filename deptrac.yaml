@@ -168,7 +168,9 @@
           value: '^App\\Modules\\Translation\\(?!Api\\)'
 
   
+  
   ruleset:
+    # Composition root – smí skládat aplikační vrstvy a moduly.
     Bootstrap:
       - Core
       - Presentation
@@ -190,18 +192,22 @@
       - TaxApi
       - TranslationApi
 
+    # Technické jádro nesmí znát doménové moduly.
     Core:
       - Shared
       - External
 
+    # Centrální prezentační infrastruktura.
     Presentation:
       - Core
       - Shared
       - External
 
+    # Sdílený kód nesmí záviset na aplikačních vrstvách.
     Shared:
       - External
 
+    # Uživatelské rozhraní komunikuje s moduly přes jejich API.
     UI:
       - Presentation
       - Shared
@@ -221,49 +227,36 @@
       - TaxApi
       - TranslationApi
 
-    CartApi: [Shared, External]
-    CatalogApi: [Shared, External]
-    CheckoutApi: [Shared, External]
-    CustomerApi: [Shared, External]
-    IdentityApi: [Shared, External]
-    InventoryApi: [Shared, External]
-    MailingApi: [Shared, External]
-    OrdersApi: [Shared, External]
-    PaymentsApi: [Shared, External]
-    PricingApi: [Shared, External]
-    SettingsApi: [Shared, External]
-    ShippingApi: [Shared, External]
-    TaxApi: [Shared, External]
-    TranslationApi: [Shared, External]
+    # Veřejná API mohou používat vlastní interní implementaci.
+    CartApi: [CartInternal, Shared, External]
+    CatalogApi: [CatalogInternal, Shared, External]
+    CheckoutApi: [CheckoutInternal, Shared, External]
+    CustomerApi: [CustomerInternal, Shared, External]
+    IdentityApi: [IdentityInternal, Shared, External]
+    InventoryApi: [InventoryInternal, Shared, External]
+    MailingApi: [MailingInternal, Shared, External]
+    OrdersApi: [OrdersInternal, Shared, External]
+    PaymentsApi: [PaymentsInternal, Shared, External]
+    PricingApi: [PricingInternal, Shared, External]
+    SettingsApi: [SettingsInternal, Shared, External]
+    ShippingApi: [ShippingInternal, Shared, External]
+    TaxApi: [TaxInternal, Shared, External]
+    TranslationApi: [TranslationInternal, Shared, External]
 
-    CartInternal: &module_internal_allowed
-      - Shared
-      - External
-      - CartApi
-      - CatalogApi
-      - CheckoutApi
-      - CustomerApi
-      - IdentityApi
-      - InventoryApi
-      - MailingApi
-      - OrdersApi
-      - PaymentsApi
-      - PricingApi
-      - SettingsApi
-      - ShippingApi
-      - TaxApi
-      - TranslationApi
-
-    CatalogInternal: *module_internal_allowed
-    CheckoutInternal: *module_internal_allowed
-    CustomerInternal: *module_internal_allowed
-    IdentityInternal: *module_internal_allowed
-    InventoryInternal: *module_internal_allowed
-    MailingInternal: *module_internal_allowed
-    OrdersInternal: *module_internal_allowed
-    PaymentsInternal: *module_internal_allowed
-    PricingInternal: *module_internal_allowed
-    SettingsInternal: *module_internal_allowed
-    ShippingInternal: *module_internal_allowed
-    TaxInternal: *module_internal_allowed
-    TranslationInternal: *module_internal_allowed
+    # Interní implementace mají přístup pouze ke Shared
+    # a externím knihovnám. Ostatní moduly musí používat
+    # výslovně povolené veřejné API.
+    CartInternal: [Shared, External]
+    CatalogInternal: [Shared, External]
+    CheckoutInternal: [Shared, External]
+    CustomerInternal: [Shared, External]
+    IdentityInternal: [Shared, External]
+    InventoryInternal: [Shared, External]
+    MailingInternal: [Shared, External]
+    OrdersInternal: [Shared, External]
+    PaymentsInternal: [Shared, External]
+    PricingInternal: [Shared, External]
+    SettingsInternal: [Shared, External]
+    ShippingInternal: [Shared, External]
+    TaxInternal: [Shared, External]
+    TranslationInternal: [Shared, External]
