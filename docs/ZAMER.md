@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.17 · 9. 11. 2026  
+**Revize:** 1.18 · 9. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -314,6 +314,7 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 9. 11. 2026 | F0-40: Pro budoucí hostovanou službu platí výchozí cíl dostupnosti 99,5 % měsíčně, monitoring, předem oznámená údržba a definované reakční doby; bez finančních kompenzací v této fázi. |
 | 9. 11. 2026 | F0-41: Zálohování hostované služby bude zahrnovat denní plné zálohy, průběžné binlogy, oddělené a šifrované uložení a pravidelné testy obnovy; RPO/RTO se stanoví pro konkrétní prostředí. |
 | 9. 11. 2026 | F0-42: Historie cen bude sloužit k automatickému určení nejnižší ceny za předchozích 30 dnů při slevách; uchování historie a zákonné výjimky budou součástí implementace. |
+| 9. 11. 2026 | F0-43: Oficiální název projektu je **ArgoMi-BestShop**, technický název databáze zůstává **`argomi_bestshop`**; existující repozitář a projektová cesta `argomi-bestshop` se nemění. |
 
 ## 15. Historie cen a pravidla pro slevy (Omnibus)
 
@@ -325,4 +326,15 @@ Produktový cenový model musí uchovávat historii cen tak, aby bylo možné sp
 - Implementace musí zohlednit zákonné výjimky a zvláštní případy, například postupné zvyšování slevy.
 - Konkrétní právní výjimky a jejich přesné vyhodnocení budou ověřeny při implementaci podle aktuálně platných předpisů.
 
+
+
+
+## 16. Název projektu a databáze
+
+Oficiální název projektu je **ArgoMi-BestShop**. Technický název databáze zůstává **`argomi_bestshop`**.
+
+- Název projektu se používá v dokumentaci a uživatelské prezentaci.
+- Repozitář, technický identifikátor projektu a existující projektová cesta používají podobu `argomi-bestshop`.
+- Existující databáze `argomi_bestshop` se nepřejmenovává.
+- Toto rozhodnutí sjednocuje pojmenování; nevyžaduje změnu databáze ani projektové cesty.
 
