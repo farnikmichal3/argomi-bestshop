@@ -24,7 +24,7 @@ final class LoggerFactory
         }
 
         $level = Level::fromName(strtoupper($minimumLevel));
-        $handler = new RotatingFileHandler($logFile, $maxFiles, $level);
+        $handler = new RotatingFileHandler($logFile, $maxFiles, $level, true, 0600);
         $handler->setFormatter(new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true));
 
         $logger = new Logger('argomi');
