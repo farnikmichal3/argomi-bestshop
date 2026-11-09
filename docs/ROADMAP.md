@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.31 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.32 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 88, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 457, zrušeno 1.
+Celkem **547 kroků**: hotovo 89, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 456, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 24 | 0 | 0 | 0 | 0 | 15 | 0 |
+| F1 | Prostředí a repozitář | 39 | 25 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -85,7 +85,7 @@ Celkem **547 kroků**: hotovo 88, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 ### Nejbližší technické kroky
 - `[HOTOVO]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; build Sass + esbuild ověřen.
 - `[HOTOVO]` **F1-37** Odstranit přímou závislost `nextras/orm` a nepoužívaný `OrmModel.php`; zachovat Nextras DBAL/Migrations. Ověřeny reference, Composer metadata a lock; `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb.
-- `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46
+- `[HOTOVO]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46. Ověřeno sestavení služby přes Nette DI jako `Psr\Log\LoggerInterface`, zápis strukturovaného JSON logu a maskování citlivého kontextu; PHPStan level max a Deptrac bez nálezů. HTTP provoz bude ověřen až po implementaci aplikace.
 - `[PLÁN]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28.
 - `[HOTOVO]` **F1-18** Nainstalovat a nakonfigurovat Deptrac 4.7.2 pro kontrolu hranic modulů; ověřit pravidla pozitivním i negativním testem. Výsledná kontrola: 0 violations, 0 uncovered, 0 errors.
 - `[PLÁN]` **F1-20** Doplnit Composer skripty pro testy, coding standard, architekturu a audit.
@@ -197,7 +197,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0)
 - `[HOTOVO]` **F1-36** Odstranit nepoužívané balíčky Vite a Vite pluginu z `package.json`/`package-lock.json`; Sass + esbuild build ověřen jako úspěšný. Vite balíčky nejsou v závislostech.
 - `[HOTOVO]` **F1-37** Odstranit nepoužívaný `app/Shared/Infrastructure/Persistence/OrmModel.php` a přímou závislost `nextras/orm`; ověřit reference, aktualizovat Composer lock a zachovat Nextras DBAL/Migrations. `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb; automatické testy zatím nejsou v projektu.
-- `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46
+- `[HOTOVO]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46. Ověřeno sestavení služby přes Nette DI jako `Psr\Log\LoggerInterface`, zápis strukturovaného JSON logu a maskování citlivého kontextu; PHPStan level max a Deptrac bez nálezů. HTTP provoz bude ověřen až po implementaci aplikace.
 - `[PLÁN]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28
 
 ### F2: Sdílené jádro (Shared)
@@ -757,6 +757,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.32 (9. 11. 2026)
+- Dokončen F1-38: Monolog 3 nakonfigurován jako centrální PSR-3 logger přes Nette DI; ověřeno sestavení `Monolog\\Logger`, zápis JSON záznamu a maskování citlivého kontextu na `[REDACTED]`.
+- Logy se ukládají mimo veřejný adresář, s oprávněními `0600` a prozatímní rotací; běžný HTTP provoz bude ověřen až po implementaci aplikace. PHPStan level max a Deptrac zůstaly čisté.
+- Souhrnný stav: **89 hotovo**, **0 rozděláno**, **1 k úpravě**, **456 plán**, **1 zrušeno**.
 
 ### v2.31 (9. 11. 2026)
 - Dokončen F1-18: nainstalován a nakonfigurován Deptrac 4.7.2 pro kontrolu architektonických hranic modulů. Pozitivní i negativní test ověřil pravidla; závěrečná analýza skončila s 0 violations, 0 uncovered a 0 errors.
