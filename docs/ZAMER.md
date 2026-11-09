@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.20 · 9. 11. 2026
+**Revize:** 1.21 · 9. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -360,4 +360,15 @@ ArgoMi-BestShop bude používat jednotný standard logování a diagnostiky nap�
 - Logy budou strukturované a budou používat úrovně DEBUG, INFO, WARNING, ERROR a CRITICAL.
 - Do logů se nesmějí zapisovat hesla, přístupové tokeny, tajné klíče ani jiné citlivé údaje; citlivá data se musí před zápisem odstranit nebo maskovat.
 - **Sentry** lze doplnit později pro automatický sběr a hlášení chyb z produkčního prostředí.
+
+
+## 19. Strategie práce s větvemi v Gitu
+
+Během současné aktivní fáze vývoje bude projekt vyvíjen přímo ve větvi `main`. Samostatné vývojové větve a Pull Requesty nejsou pro tuto fázi povinné.
+
+- Aktuální vývojový režim: jedna pracovní větev `main`.
+- Předpokladem tohoto režimu je průběžná lokální záloha projektu a možnost obnovy.
+- Po dokončení systému a jeho prvním vydání se přejde na řízenější práci s větvemi: `main` bude stabilní větev a nové funkce či opravy se budou připravovat v samostatných větvích a slučovat přes Pull Request.
+- Vydané verze budou označovány Git tagy podle SemVer.
+- Přechod na tento režim proběhne jako samostatný krok před navazujícím vývojem po prvním vydání.
 
