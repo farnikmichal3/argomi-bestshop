@@ -1,4 +1,4 @@
-# ArgoMi BestShop – překladový subsystém
+# ArgoMi-BestShop – překladový subsystém
 
 **Stav:** cílové architektonické rozhodnutí; implementace postupně  
 **Revize:** 1.0 · 8. 11. 2026
