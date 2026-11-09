@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.22 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.23 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -748,6 +748,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.23 (9. 11. 2026)
+- Dokončena závěrečná kontrola návazností: 46 tabulek v počáteční SQL migraci odpovídá dokumentaci DATABASE; sjednocen popis PHP 8.3+, oficiální název, databázové vrstvy a zbývající úklid ORM.
+- Zpřesněn F0-54: audit PHP/NEON souborů nalezl jedinou zbývající referenci na Nextras ORM v `OrmModel.php`; odstranění závislosti a souboru je samostatný úkol F1-37.
+- Souhrn ROADMAP zůstává: **84 hotovo**, **1 rozděláno**, **1 k úpravě**, **454 plán**, **1 zrušeno**.
 
 ### v2.22 (9. 11. 2026)
 - Proveden audit kanonické dokumentace proti skutečnému stromu a konfiguraci repozitáře. Opraveny verze, odkazy, struktura kapitol a zastaralé souhrny.
