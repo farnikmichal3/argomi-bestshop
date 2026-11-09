@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.27 · 9. 11. 2026
+**Revize:** 1.28 · 9. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -323,7 +323,7 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 9. 11. 2026 | F0-49: Stanovena pravidla pro zákonné uchovávání objednávek a dokladů, GDPR odstranění/anonymizaci osobních údajů, retenci logů a ochranu auditních záznamů; přesné lhůty se stanoví podle práva a provozu. |
 | 9. 11. 2026 | F0-50: Kontrolují se licence přímých i nepřímých závislostí; upřednostňují se licence slučitelné s komerčním použitím a povinnosti se evidují a kontrolují před vydáním. |
 | 9. 11. 2026 | F0-53: Demo data a testovací operace musí být oddělené od skutečného provozu; demo objednávky nesmějí vyvolat reálné platby, expedici ani jiné externí operace. |
-| 9. 11. 2026 | F0-54: Nette Database Explorer je jedinou databázovou vrstvou běžného aplikačního kódu; Nextras ORM bude odstraněno, zatímco Nextras Migrations/DBAL mohou zůstat pro migrace a testování. |
+| 9. 11. 2026 | F0-54: Nette Database Explorer je jedinou databázovou vrstvou běžného aplikačního kódu; Nextras ORM bude odstraněno, zatímco Nextras Migrations/DBAL mohou zůstat pro migrace a testování. Kontrola PHP a NEON souborů potvrdila jako jedinou zbývající referenci `OrmModel.php`; jeho odstranění je vedeno ve F1-37. |
 
 ## 17. Historie cen a pravidla pro slevy (Omnibus)
 
