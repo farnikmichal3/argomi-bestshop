@@ -41,8 +41,8 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 |---|---|
 | **M1: první nasazení** | F0 až F12, F14, F15, F17; z F13 jen základ nad MySQL FULLTEXT; demo produkty 1 až 3 |
 | **M2** | F18 (vlna 2: sada, množstevní slevy, předobjednávka, neceločíselné množství) |
-| **M3** | F19 (vlna 3: dlaždice, licence, věkové omezení, záloha, poukaz) |
-| **M4** | F20 (vlna 4: konfigurátor, nahrání souboru, předplatné) |
+| **M3** | F19 (speciální scénáře: dlažba, licence, věkové omezení, vratné zálohy a poukaz; produkty 10–13) |
+| **M4** | F20 (vlna 4: fotokniha, nahrání souboru a předplatné; produkty 14–15) |
 | **M5** | F21 (funkce, na kterých obchodník stojí; průběžně) |
 | **Průběžně** | F16 (výuka) navazuje na hotové fáze |
 
@@ -71,8 +71,8 @@ Celkem **543 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blo
 | F16 | Výuka | 36 | 0 | 0 | 1 | 0 | 0 | 35 | 0 |
 | F17 | Milník 1: první nasazení | 11 | 0 | 0 | 0 | 0 | 0 | 11 | 0 |
 | F18 | Vlna 2: ceny a sklad | 18 | 0 | 0 | 0 | 0 | 0 | 18 | 0 |
-| F19 | Vlna 3: speciální chování | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
-| F20 | Vlna 4: nejnáročnější | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
+| F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+| F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
 
 ## 3. Nejbližší kroky
@@ -84,6 +84,7 @@ Celkem **543 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blo
 ### Nejbližší technické kroky
 - `[PLÁN]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; ověřit Sass + esbuild.
 - `[PLÁN]` **F1-37** Odstranit Nextras ORM a nepoužívaný `OrmModel.php`; zachovat Nextras Migrations/DBAL pro migrace.
+- `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46.
 - `[PLÁN]` **F1-18** Zvolit a nainstalovat nástroj pro automatické hlídání hranic modulů.
 - `[PLÁN]` **F1-20** Doplnit Composer skripty pro testy, coding standard, architekturu a audit.
 - `[PLÁN]` **F1-22** Připravit samostatné asset vstupy Front/Admin.
@@ -701,7 +702,7 @@ _Speciální chování: dlažba, digitální licence, věkové omezení, vratné
 - `[PLÁN]` **F19-19** Testy generování a expirovaných poukazů
 - `[PLÁN]` **F19-20** Testy účtování vratných záloh
 - `[PLÁN]` **F19-21** Právní revize toku ověření věku
-- `[PLÁN]` **F19-22** Dokumentace rozšíření vlny 3
+- `[PLÁN]` **F19-22** Dokumentace speciálních scénářů
 
 ### F20: Vlna 4: pokročilé konfigurace (produkty 14 a 15)
 
