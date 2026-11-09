@@ -95,7 +95,7 @@ Celkem **541 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blo
 
 ### F0: Rozhodnutí a dokumentace
 
-_Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme vracet._ Počty stavů jsou uvedeny v přehledu výše.
+_F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO. Navazující implementační úkoly jsou rozdělené do příslušných technických fází._
 
 - `[HOTOVO]` **F0-01** Zapsat vizi, hodnoty a pořadí priorit (ZAMER kap. 1)
 - `[HOTOVO]` **F0-02** Potvrdit veřejný repozitář bez licence k užití; všechna práva vyhrazena; právní podmínky zůstávají otevřené (kap. 2)
