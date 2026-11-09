@@ -11,11 +11,11 @@
 		"sass": "^1.107.1"
 	},
 	"scripts": {
-		"build:css": "sass --load-path=node_modules --style=compressed assets/scss/app.scss www/assets/app.css",
-		"build:js": "esbuild assets/js/app.js --bundle --minify --outfile=www/assets/app.js",
+		"build:css": "sass --load-path=node_modules --style=compressed assets/scss/front.scss www/assets/front.css && sass --load-path=node_modules --style=compressed assets/scss/admin.scss www/assets/admin.css",
+		"build:js": "esbuild assets/js/front.js assets/js/admin.js --bundle --minify --outdir=www/assets --entry-names=[name]",
 		"build": "npm run build:css && npm run build:js",
-		"watch:css": "sass --load-path=node_modules --watch assets/scss/app.scss www/assets/app.css",
-		"watch:js": "esbuild assets/js/app.js --bundle --outfile=www/assets/app.js --watch"
+		"watch:css": "sass --load-path=node_modules --watch assets/scss/front.scss:www/assets/front.css assets/scss/admin.scss:www/assets/admin.css",
+		"watch:js": "esbuild assets/js/front.js assets/js/admin.js --bundle --outdir=www/assets --entry-names=[name] --watch"
 	},
 	"name": "argomi-bestshop",
 	"version": "1.0.0",
