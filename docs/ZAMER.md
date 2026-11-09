@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.23 · 9. 11. 2026
+**Revize:** 1.24 · 9. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -389,4 +389,14 @@ ArgoMi-BestShop bude uplatňovat řízená pravidla pro mazání dat a uchováv�
 - Aplikační logy budou mít definovanou dobu uchovávání; po jejím uplynutí budou automaticky mazány.
 - Bezpečnostní a auditní záznamy budou chráněny před neoprávněnou změnou či odstraněním.
 - Konkrétní retenční lhůty jednotlivých kategorií dat budou stanoveny podle právních požadavků a potřeb skutečného provozu.
+
+
+## 22. Licence knihoven a závislostí
+
+Před zařazením knihovny do projektu a před každým vydáním bude ověřena licence všech přímých i nepřímých PHP a JavaScript závislostí.
+
+- Upřednostňovány budou otevřené licence vhodné pro komerční použití a distribuci, zejména MIT, BSD a Apache 2.0.
+- Nebudou přidávány knihovny s licenčními podmínkami, které by mohly nepřijatelně omezit komerční použití nebo distribuci ArgoMi-BestShop.
+- Licence a relevantní licenční povinnosti závislostí budou evidovány v projektové dokumentaci.
+- Kontrola licencí bude součástí přípravy každého vydání; nejasné nebo nekompatibilní licence musí být vyřešeny před vydáním.
 
