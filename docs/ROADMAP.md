@@ -144,7 +144,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-47** Strategie větví: během současného vývoje se pracuje přímo ve větvi `main` s průběžnou lokální zálohou. Po dokončení a prvním vydání se přejde na stabilní `main`, samostatné vývojové větve, slučování přes Pull Request a verzovací Git tagy podle SemVer. Podrobnosti v ZAMER.md.
 - `[HOTOVO]` **F0-48** Závazný cíl přístupnosti zákaznického rozhraní i administrace: WCAG 2.1 AA. Podrobnosti v ZAMER.md.
 - `[HOTOVO]` **F0-49** Pravidla mazání a retence: zachování zákonně uchovávaných objednávek a dokladů, GDPR anonymizace/odstranění zákaznických údajů, časově omezené logy s automatickým mazáním a ochrana auditních záznamů. Konkrétní lhůty dle práva a provozu. Podrobnosti v ZAMER.md.
-- `[PLÁN]` **F0-50** Kontrola licence všech plánovaných knihoven třetích stran
+- `[HOTOVO]` **F0-50** Kontrola licencí přímých i nepřímých PHP/JavaScript závislostí, přednostně MIT/BSD/Apache 2.0 a dalších licencí slučitelných s komerčním použitím; evidence povinností a kontrola před každým vydáním. Podrobnosti v ZAMER.md.
 - `[HOTOVO]` **F0-51** Sjednotit právní metadata Composer/npm s režimem všechna práva vyhrazena
 - `[HOTOVO]` **F0-52** Aktualizovat README a AGENTS.md podle skutečného projektu, bez instrukcí skeletonu
 - `[PLÁN]` **F0-53** Popsat a otestovat bezpečné rozlišení demo objednávek od skutečných operací
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.19 (9. 11. 2026)
+- Dokončeno F0-50: zavedena kontrola licencí přímých i nepřímých závislostí, evidence licenčních povinností a kontrola před každým vydáním.
+- Aktualizován souhrnný stav: **71 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 čeká na rozhodnutí**.
 
 ### v2.18 (9. 11. 2026)
 - Dokončeno F0-49: stanovena pravidla pro zákonné uchovávání objednávek a dokladů, GDPR odstranění/anonymizaci údajů, retenci logů a ochranu auditních záznamů.
