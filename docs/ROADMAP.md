@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.45 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.46 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **549 kroků**: hotovo 97, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 447, zrušeno 1.
+Celkem **549 kroků**: hotovo 98, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 447, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 33 | 1 | 0 | 0 | 0 | 5 | 0 |
+| F1 | Prostředí a repozitář | 39 | 34 | 0 | 0 | 0 | 0 | 5 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -94,6 +94,7 @@ Celkem **549 kroků**: hotovo 97, rozděláno 1, k úpravě 1, rozhodnout 0, blo
 - `[HOTOVO]` **F1-25** Ověřit sestavení assetů a jejich reference v layoutech. `npm run build` úspěšně sestavil CSS i JS; kontrola obou Latte layoutů potvrdila odkazy na `front.css`/`front.js` a `admin.css`/`admin.js`.
 - `[HOTOVO]` **F1-26** GitHub Actions workflow pro Composer úspěšně ověřen; všechny kontroly prošly.
 - `[HOTOVO]` **F1-27** GitHub Actions workflow pro npm úspěšně ověřen; instalace, build i audit prošly.
+- `[HOTOVO]` **F1-28** Dependabot přijat GitHubem; první aktualizační PR vytvořeny pro Composer, npm a GitHub Actions (5 otevřených PR).
 
 ## 4. Plán po fázích
 
@@ -155,7 +156,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 33 z 39 kroků; 1 krok je rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 34 z 39 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -184,7 +185,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-25** Ověřit sestavení a reference assetů v layoutech. `npm run build` proběhl úspěšně; `app/UI/Front/@layout.latte` odkazuje na `front.css` a `front.js`, `app/UI/Admin/@layout.latte` na `admin.css` a `admin.js`.
 - `[HOTOVO]` **F1-26** GitHub Actions: `composer validate`, `composer audit`, PHPStan, coding standard a Deptrac. Workflow `.github/workflows/composer.yml` úspěšně proběhl na GitHubu (push, běh č. 1); všechny kroky včetně instalace závislostí skončily úspěšně. Automatické testy budou doplněny, až bude v projektu připravena testovací sada.
 - `[HOTOVO]` **F1-27** GitHub Actions: `npm ci`, build CSS/JavaScript a `npm audit`. Workflow `.github/workflows/npm.yml` úspěšně proběhl na GitHubu (push, běh č. 1); všechny kroky včetně ověření Node.js/npm verzí skončily úspěšně.
-- `[ROZDĚLÁNO]` **F1-28** Pravidelná kontrola aktualizací závislostí. Soubor `.github/dependabot.yml` nastavuje týdenní kontroly Composer, npm a GitHub Actions každé pondělí v 06:00 (Europe/Berlin); minor/patch aktualizace seskupuje podle ekosystému, major aktualizace ponechává samostatně. Čeká se na ověření konfigurace a první aktualizační pull requesty.
+- `[HOTOVO]` **F1-28** Pravidelná kontrola aktualizací závislostí. Soubor `.github/dependabot.yml` nastavuje týdenní kontroly Composer, npm a GitHub Actions každé pondělí v 06:00 (Europe/Berlin); minor/patch aktualizace seskupuje podle ekosystému, major aktualizace ponechává samostatně. GitHub konfiguraci přijal a Dependabot vytvořil první aktualizační pull requesty pro Composer, npm i GitHub Actions.
 - `[HOTOVO]` **F1-29** README projektu: jak rozjet projekt na pár příkazů
 - `[PLÁN]` **F1-30** Ověřit čisté naklonování a rozjetí podle kontrolního seznamu z Lekce 1
 - `[HOTOVO]` **F1-31** Vytvořit adresářovou strukturu podle STRUKTURA
@@ -734,6 +735,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.46 (9. 11. 2026)
+- Dokončen F1-28: GitHub přijal `.github/dependabot.yml`; Dependabot vytvořil první aktualizační pull requesty pro Composer, npm a GitHub Actions. Ověřeno 5 otevřených PR.
+- Aktualizován souhrnný stav: **98 hotovo**, **0 rozděláno**, **1 k úpravě**, **447 plán**, **1 zrušeno**.
 
 ### v2.45 (9. 11. 2026)
 - Zahájen F1-28: vytvořen `.github/dependabot.yml` s týdenními kontrolami Composer, npm a GitHub Actions každé pondělí v 06:00 (Europe/Berlin). Minor/patch aktualizace se seskupují podle ekosystému; major aktualizace zůstávají oddělené. Čeká se na ověření konfigurace a první aktualizační pull requesty.
