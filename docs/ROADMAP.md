@@ -53,7 +53,7 @@ Celkem **549 kroků**: hotovo 95, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 31 | 0 | 0 | 0 | 0 | 8 | 0 |
+| F1 | Prostředí a repozitář | 39 | 31 | 1 | 0 | 0 | 0 | 7 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -92,7 +92,8 @@ Celkem **549 kroků**: hotovo 95, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 - `[HOTOVO]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy Front/Admin. Přidány `assets/scss/front.scss`, `admin.scss`, sdílený `_shared.scss` a `assets/js/front.js`, `admin.js`, sdílený `shared.js`; dokumentováno v `STRUKTURA.md`. Lokální build úspěšně ověřil všechny čtyři výstupy.
 - `[HOTOVO]` **F1-24** Přidat `.nvmrc` s Node.js `26.13.0` a `engines` v `package.json` (`node: >=26.13.0 <27`, `npm: >=12.2.2 <13`); obě verze odpovídají lokálně ověřenému prostředí.
 - `[HOTOVO]` **F1-25** Ověřit sestavení assetů a jejich reference v layoutech. `npm run build` úspěšně sestavil CSS i JS; kontrola obou Latte layoutů potvrdila odkazy na `front.css`/`front.js` a `admin.css`/`admin.js`.
-- `[PLÁN]` **F1-26** a **F1-27** Připravit CI kontroly pro PHP a JavaScript.
+- `[ROZDĚLÁNO]` **F1-26** Připravit a ověřit GitHub Actions workflow pro Composer.
+- `[PLÁN]` **F1-27** Připravit CI kontroly pro JavaScript.
 
 ## 4. Plán po fázích
 
@@ -185,7 +186,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-23** Skripty `build:css`, `build:js`, `build`, `watch:css` a `watch:js` v `package.json` sestavují samostatné výstupy `front.css`, `admin.css`, `front.js` a `admin.js`; `npm run build` proběhl úspěšně a všechny čtyři výstupy mají nenulovou velikost.
 - `[HOTOVO]` **F1-24** `.nvmrc` obsahuje Node.js `26.13.0`; `package.json` deklaruje `engines.node` `>=26.13.0 <27` a `engines.npm` `>=12.2.2 <13`.
 - `[HOTOVO]` **F1-25** Ověřit sestavení a reference assetů v layoutech. `npm run build` proběhl úspěšně; `app/UI/Front/@layout.latte` odkazuje na `front.css` a `front.js`, `app/UI/Admin/@layout.latte` na `admin.css` a `admin.js`.
-- `[PLÁN]` **F1-26** GitHub Actions: `composer validate`, `composer audit`, PHPStan, coding standard, testy
+- `[ROZDĚLÁNO]` **F1-26** GitHub Actions: `composer validate`, `composer audit`, PHPStan, coding standard a Deptrac. Workflow `.github/workflows/composer.yml` je vytvořen; čeká se na ověření běhu v GitHub Actions. Automatické testy budou doplněny, až bude v projektu připravena testovací sada.
 - `[PLÁN]` **F1-27** GitHub Actions: `npm ci`, build, `npm audit`
 - `[PLÁN]` **F1-28** Pravidelná kontrola aktualizací závislostí
 - `[HOTOVO]` **F1-29** README projektu: jak rozjet projekt na pár příkazů
@@ -757,6 +758,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.41 (9. 11. 2026)
+- Zahájen F1-26: vytvořen `.github/workflows/composer.yml` pro Composer validaci, audit závislostí, PHPStan level max, PHP-CS-Fixer a Deptrac. Workflow čeká na ověření běhu v GitHub Actions; automatické testy zatím nejsou zařazeny, protože testovací sada není připravena.
+- Souhrnný stav: **95 hotovo**, **1 rozděláno**, **1 k úpravě**, **449 plán**, **1 zrušeno**.
 
 ### v2.40 (9. 11. 2026)
 - Dokončen F1-25: `npm run build` úspěšně sestavil samostatné CSS a JS soubory; kontrola obou Latte layoutů potvrdila správné reference na `front.css`/`front.js` a `admin.css`/`admin.js`.
