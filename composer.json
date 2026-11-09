@@ -48,7 +48,11 @@
 	"scripts": {
 		"phpstan": "phpstan analyse",
 		"tester": "tester tests -s",
-		"db:reset": "@php bin/console db:reset"
+		"db:reset": "@php bin/console db:reset",
+		"test": "@tester",
+		"cs": "php-cs-fixer fix --dry-run --diff",
+		"arch": "deptrac analyse --report-uncovered --no-progress",
+		"audit": "composer audit"
 	},
 	"minimum-stability": "stable",
 	"config": {
