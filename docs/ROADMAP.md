@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.46 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.47 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -94,7 +94,7 @@ Celkem **549 kroků**: hotovo 98, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 - `[HOTOVO]` **F1-25** Ověřit sestavení assetů a jejich reference v layoutech. `npm run build` úspěšně sestavil CSS i JS; kontrola obou Latte layoutů potvrdila odkazy na `front.css`/`front.js` a `admin.css`/`admin.js`.
 - `[HOTOVO]` **F1-26** GitHub Actions workflow pro Composer úspěšně ověřen; všechny kontroly prošly.
 - `[HOTOVO]` **F1-27** GitHub Actions workflow pro npm úspěšně ověřen; instalace, build i audit prošly.
-- `[HOTOVO]` **F1-28** Dependabot přijat GitHubem; první aktualizační PR vytvořeny pro Composer, npm a GitHub Actions (5 otevřených PR).
+- `[HOTOVO]` **F1-28** Dependabot přijat GitHubem; všech 5 prvních aktualizačních PR pro Composer, npm a GitHub Actions bylo po úspěšném CI sloučeno přes Squash and merge.
 
 ## 4. Plán po fázích
 
@@ -185,7 +185,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-25** Ověřit sestavení a reference assetů v layoutech. `npm run build` proběhl úspěšně; `app/UI/Front/@layout.latte` odkazuje na `front.css` a `front.js`, `app/UI/Admin/@layout.latte` na `admin.css` a `admin.js`.
 - `[HOTOVO]` **F1-26** GitHub Actions: `composer validate`, `composer audit`, PHPStan, coding standard a Deptrac. Workflow `.github/workflows/composer.yml` úspěšně proběhl na GitHubu (push, běh č. 1); všechny kroky včetně instalace závislostí skončily úspěšně. Automatické testy budou doplněny, až bude v projektu připravena testovací sada.
 - `[HOTOVO]` **F1-27** GitHub Actions: `npm ci`, build CSS/JavaScript a `npm audit`. Workflow `.github/workflows/npm.yml` úspěšně proběhl na GitHubu (push, běh č. 1); všechny kroky včetně ověření Node.js/npm verzí skončily úspěšně.
-- `[HOTOVO]` **F1-28** Pravidelná kontrola aktualizací závislostí. Soubor `.github/dependabot.yml` nastavuje týdenní kontroly Composer, npm a GitHub Actions každé pondělí v 06:00 (Europe/Berlin); minor/patch aktualizace seskupuje podle ekosystému, major aktualizace ponechává samostatně. GitHub konfiguraci přijal a Dependabot vytvořil první aktualizační pull requesty pro Composer, npm i GitHub Actions.
+- `[HOTOVO]` **F1-28** Pravidelná kontrola aktualizací závislostí. Soubor `.github/dependabot.yml` nastavuje týdenní kontroly Composer, npm a GitHub Actions každé pondělí v 06:00 (Europe/Berlin); minor/patch aktualizace seskupuje podle ekosystému, major aktualizace ponechává samostatně. Všech 5 prvních PR bylo po úspěšných CI kontrolách sloučeno přes Squash and merge; změny byly staženy a lokálně ověřeny.
 - `[HOTOVO]` **F1-29** README projektu: jak rozjet projekt na pár příkazů
 - `[PLÁN]` **F1-30** Ověřit čisté naklonování a rozjetí podle kontrolního seznamu z Lekce 1
 - `[HOTOVO]` **F1-31** Vytvořit adresářovou strukturu podle STRUKTURA
@@ -735,6 +735,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.47 (9. 11. 2026)
+- Dokončena první kontrolní vlna Dependabotu: PR #5 (Composer minor/patch) a #6 (Sass) i major aktualizace GitHub Actions v PR #2, #3 a #4 byly po úspěšném CI sloučeny přes Squash and merge.
+- Aktualizace byly staženy do lokálního prostředí; `composer install`, `npm ci`, Composer validate/audit, PHPStan, PHP-CS-Fixer, Deptrac, `npm run build` a `npm audit` prošly bez chyb. Automatické testy zůstávají vynechány do připravení testovací sady.
+- Souhrnný stav zůstává: **98 hotovo**, **0 rozděláno**, **1 k úpravě**, **447 plán**, **1 zrušeno**.
 
 ### v2.46 (9. 11. 2026)
 - Dokončen F1-28: GitHub přijal `.github/dependabot.yml`; Dependabot vytvořil první aktualizační pull requesty pro Composer, npm a GitHub Actions. Ověřeno 5 otevřených PR.
