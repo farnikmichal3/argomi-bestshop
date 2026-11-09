@@ -1,6 +1,10 @@
 # see https://doc.nette.org/en/configuring
 
 parameters:
+	logging:
+		file: %appDir%/../log/application.log
+		maxFiles: 30
+		level: DEBUG
 
 extensions:
 	console: Contributte\Console\DI\ConsoleExtension(true)
