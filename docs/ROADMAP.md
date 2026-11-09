@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.27 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.30 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 86, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 459, zrušeno 1.
+Celkem **547 kroků**: hotovo 87, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 458, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 22 | 0 | 0 | 0 | 0 | 17 | 0 |
+| F1 | Prostředí a repozitář | 39 | 23 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -77,7 +77,7 @@ Celkem **547 kroků**: hotovo 86, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 
 ## 3. Nejbližší kroky
 
-- `[HOTOVO]` **F1-37** Odstraněna přímá závislost `nextras/orm` a `OrmModel.php`; zachovány Nextras DBAL/Migrations. Composer validace, platform requirements a PHPStan level max čisté.
+- `[HOTOVO]` **F1-36** Odstraněny nepoužívané závislosti `vite` a `@nette/vite-plugin`; zachovány Sass a esbuild. `npm run build` úspěšně sestavil CSS i JS, `npm ls vite @nette/vite-plugin` potvrdil prázdný výsledek a `npm audit` nahlásil 0 zranitelností. Sass vypisuje deprecation warnings z Bootstrapu; nejde o chybu buildu.
 
 ### Aktivní a opravné úkoly
 - `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace – přejmenovat a ověřit.
@@ -158,7 +158,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 21 z 39 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 23 z 39 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -195,7 +195,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů
 - `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0)
-- `[PLÁN]` **F1-36** Odstranit nepoužívané balíčky Vite a Vite pluginu z package.json/package-lock a ověřit build Sass + esbuild
+- `[HOTOVO]` **F1-36** Odstranit nepoužívané balíčky Vite a Vite pluginu z `package.json`/`package-lock.json`; Sass + esbuild build ověřen jako úspěšný. Vite balíčky nejsou v závislostech.
 - `[HOTOVO]` **F1-37** Odstranit nepoužívaný `app/Shared/Infrastructure/Persistence/OrmModel.php` a přímou závislost `nextras/orm`; ověřit reference, aktualizovat Composer lock a zachovat Nextras DBAL/Migrations. `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb; automatické testy zatím nejsou v projektu.
 - `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46
 - `[PLÁN]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28
@@ -758,14 +758,19 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 
 ## 5. Historie revizí
 
+### v2.30 (9. 11. 2026)
+- Dokončen F1-36: odstraněny nepoužívané závislosti Vite a `@nette/vite-plugin`; Sass + esbuild build úspěšný, kontrola závislostí prázdná a npm audit bez zranitelností.
+- Zaznamenána upozornění Sass deprecation pocházející z Bootstrapu; neblokují build a budou řešena samostatně.
+- Souhrn: **87 hotovo**, **0 rozděláno**, **1 k úpravě**, **458 plán**, **1 zrušeno**.
+
 ### v2.28 (9. 11. 2026)
 - Dokončen a lokálně ověřen F3-16: `composer db:reset` bezpečně odstranil 47 objektů a úspěšně provedl všechny 3 migrace (`structures`, `basic-data`, `dummy-data`), bez odstranění samotné databáze či jejích oprávnění.
 - Nette Database Explorer potvrdil 3 demo produkty, 2 jazyky a 2 měny; `composer phpstan` proběhl čistě. Automatické testy zatím v projektu nejsou, proto `composer tester` nebyl spuštěn.
 - Souhrn: **85 hotovo**, **0 rozděláno**, **1 k úpravě**, **460 plán**, **1 zrušeno**.
 
-### v2.28 (9. 11. 2026)
+### v2.29 (9. 11. 2026)
 - Dokončen F1-37: odstraněna přímá závislost `nextras/orm` a `OrmModel.php`; zachovány Nextras DBAL/Migrations. Ověřeny Composer validace, platform requirements a PHPStan level max.
-- Souhrn: **86 hotovo**, **0 rozděláno**, **1 k úpravě**, **459 plán**, **1 zrušeno**. F1-36 zůstává v plánu, dokud se odstranění Vite neprojeví v hlavní větvi.
+- Souhrn: **86 hotovo**, **0 rozděláno**, **1 k úpravě**, **459 plán**, **1 zrušeno**.
 
 ### v2.27 (9. 11. 2026)
 - Připraven bezpečný příkaz `composer db:reset` s kontrolou názvu databáze a lokálního migračního účtu; reset zachovává databázi i její oprávnění. F3-16 zůstává ROZDĚLÁNO do ověření v lokálním prostředí.
