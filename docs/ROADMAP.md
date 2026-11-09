@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.44 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.45 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **549 kroků**: hotovo 97, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 448, zrušeno 1.
+Celkem **549 kroků**: hotovo 97, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 447, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 33 | 0 | 0 | 0 | 0 | 6 | 0 |
+| F1 | Prostředí a repozitář | 39 | 33 | 1 | 0 | 0 | 0 | 5 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -117,8 +117,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 - `[HOTOVO]` **F0-14** Kanonický dokument STRUKTURA odpovídá skutečnému stromu
 - `[HOTOVO]` **F0-15** Schválit skutečnou strukturu `app/` podle stromu projektu
 - `[HOTOVO]` **F0-16** Rozhodnout zachování režimu „všechna práva vyhrazena“ a požadavek na přípravu studentské licence/podmínek služby s právní kontrolou před distribucí či komerčním spuštěním; samotné právní dokumenty zůstávají předprodukčním úkolem
-- `[HOTOVO]` **F0-17** Rozhodnout požadavek na DPA a GDPR dokumentaci pro hostované obchody; finální dokumenty a retenční pravidla před spuštěním ověří právník a specialista na ochranu osobních údajů- `[HOTOVO]` **F0-18** Vyhledávání: MySQL FULLTEXT jako výchozí, Elasticsearch/OpenSearch volitelně- `[HOTOVO]` **F0-19** Vývojové prostředí: Laragon na Windows jako hlavní prostředí; zachovat možnost budoucího spuštění v Dockeru nebo DDEV- `[HOTOVO]` **F0-20** Ceny se ukládají bez DPH; daň se vypočítává podle daňových pravidel a nastavení `tax_included` řídí způsob zobrazování cen
-- `[HOTOVO]` **F0-21** Jazyk v URL: všechny jazykové varianty mají explicitní prefix, včetně výchozího jazyka (`/cs`, `/en`)
+- `[HOTOVO]` **F0-17** Rozhodnout požadavek na DPA a GDPR dokumentaci pro hostované obchody; finální dokumenty a retenční pravidla před spuštěním ověří právník a specialista na ochranu osobních údajů- `[HOTOVO]` **F0-18** Vyhledávání: MySQL FULLTEXT jako výchozí, Elasticsearch/OpenSearch volitelně- `[HOTOVO]` **F0-19** Vývojové prostředí: Laragon na Windows jako hlavní prostředí; zachovat možnost budoucího spuštění v Dockeru nebo DDEV- `[HOTOVO]` **F0-20** Ceny se ukládají bez DPH; daň se vypočítává podle daňových pravidel a nastavení `tax_included` řídí způsob zobrazování cen- `[HOTOVO]` **F0-21** Jazyk v URL: všechny jazykové varianty mají explicitní prefix, včetně výchozího jazyka (`/cs`, `/en`)
 - `[HOTOVO]` **F0-22** Režim B2B: první verze je B2C; datový a doménový model počítá s firemními zákazníky a IČO/DIČ, ověřování ARES/VIES a pokročilé B2B funkce přijdou později
 - `[HOTOVO]` **F0-23** Platební integrace: vlastní rozhraní `PaymentProvider`; konkrétního poskytovatele vybrat až před produkčním nasazením
 - `[HOTOVO]` **F0-24** Doručovací integrace: vlastní rozhraní `ShippingProvider`, samostatné adaptéry a možnost používat více dopravců současně
@@ -156,7 +155,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 33 z 39 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 33 z 39 kroků; 1 krok je rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -185,7 +184,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-25** Ověřit sestavení a reference assetů v layoutech. `npm run build` proběhl úspěšně; `app/UI/Front/@layout.latte` odkazuje na `front.css` a `front.js`, `app/UI/Admin/@layout.latte` na `admin.css` a `admin.js`.
 - `[HOTOVO]` **F1-26** GitHub Actions: `composer validate`, `composer audit`, PHPStan, coding standard a Deptrac. Workflow `.github/workflows/composer.yml` úspěšně proběhl na GitHubu (push, běh č. 1); všechny kroky včetně instalace závislostí skončily úspěšně. Automatické testy budou doplněny, až bude v projektu připravena testovací sada.
 - `[HOTOVO]` **F1-27** GitHub Actions: `npm ci`, build CSS/JavaScript a `npm audit`. Workflow `.github/workflows/npm.yml` úspěšně proběhl na GitHubu (push, běh č. 1); všechny kroky včetně ověření Node.js/npm verzí skončily úspěšně.
-- `[PLÁN]` **F1-28** Pravidelná kontrola aktualizací závislostí
+- `[ROZDĚLÁNO]` **F1-28** Pravidelná kontrola aktualizací závislostí. Soubor `.github/dependabot.yml` nastavuje týdenní kontroly Composer, npm a GitHub Actions každé pondělí v 06:00 (Europe/Berlin); minor/patch aktualizace seskupuje podle ekosystému, major aktualizace ponechává samostatně. Čeká se na ověření konfigurace a první aktualizační pull requesty.
 - `[HOTOVO]` **F1-29** README projektu: jak rozjet projekt na pár příkazů
 - `[PLÁN]` **F1-30** Ověřit čisté naklonování a rozjetí podle kontrolního seznamu z Lekce 1
 - `[HOTOVO]` **F1-31** Vytvořit adresářovou strukturu podle STRUKTURA
@@ -237,8 +236,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-12** Implementace `Transaction` nad `Nette\Database\Connection`- `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
 - `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců- `[PLÁN]` **F3-15** Testovací databáze a bootstrap integračních testů
 - `[HOTOVO]` **F3-16** Bezpečný vývojový `db:reset`: ověření databáze `argomi_bestshop` a lokálního účtu `argomi_migrator`, dvojí potvrzení, odstranění tabulek/pohledů bez DROP/CREATE databáze a opětovné spuštění skupin structures → basic-data → dummy-data (`composer db:reset`); lokálně ověřeno úspěšné odstranění 47 objektů a dokončení všech 3 migrací. Následná kontrola přes Nette Database Explorer potvrdila 3 demo produkty, 2 jazyky a 2 měny; PHPStan bez chyb.- `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
-- `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
-- `[PLÁN]` **F3-19** Implementace hashe kombinace varianty (SHA-256) a test shody s SQL `SHA2(..., 256)`
+- `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)- `[PLÁN]` **F3-19** Implementace hashe kombinace varianty (SHA-256) a test shody s SQL `SHA2(..., 256)`
 - `[PLÁN]` **F3-20** Diagram vztahů tabulek rozdělený po modulech
 - `[HOTOVO]` **F3-21** Oddělit databázové účty aplikace (`argomi_app`, pouze CRUD) a migrací (`argomi_migrator`, CRUD + DDL); oba účty mají přístup pouze k `argomi_bestshop` a přihlášení bylo ověřeno
 - `[HOTOVO]` **F3-22** Zásady zálohování a obnovy databáze (před migrací povinný dump/snapshot, rollback obnovením ze zálohy)
@@ -358,7 +356,6 @@ _Ceny, daně a skladové hospodářství pro vlnu 1._ Hotovo 0 z 27 kroků.
 - `[PLÁN]` **F6-26** Pricing: zápis `variant_price_history` při každé změně ceny (včetně zdroje změny)- `[PLÁN]` **F6-27** Pricing: nejnižší cena za posledních 30 dní při zobrazení slevy (právní pravidlo, konzultace)
 
 ### F7: Cart
-
 _Košík jako doménový objekt, ceny přes Pricing a Tax._ Hotovo 0 z 16 kroků.
 
 - `[PLÁN]` **F7-01** Modul `Cart`: struktura, `CartFacade`
@@ -477,8 +474,7 @@ _Veřejná část obchodu: `UI/Front`._ Hotovo 0 z 22 kroků.
 - `[PLÁN]` **F11-08** Pokladna po krocích- `[PLÁN]` **F11-09** Zákaznický účet: přihlášení, registrace, objednávky, adresy
 - `[PLÁN]` **F11-10** Chybové stránky (404, 500)
 - `[PLÁN]` **F11-11** Základní audit přístupnosti
-- `[PLÁN]` **F11-12** SEO základ: title, meta, canonical, hreflang pro cs a en
-- `[PLÁN]` **F11-13** Sitemap a robots
+- `[PLÁN]` **F11-12** SEO základ: title, meta, canonical, hreflang pro cs a en- `[PLÁN]` **F11-13** Sitemap a robots
 - `[PLÁN]` **F11-14** Formuláře: jednotný vzhled a chybové hlášky přes překlady
 - `[PLÁN]` **F11-15** Komponenty: karta produktu, cena, stav skladu, vzorník barev
 - `[PLÁN]` **F11-16** Formátování cen a jednotek přes `intl`
@@ -597,8 +593,7 @@ _Výukové materiály a lekce navazující na kód e-shopu._ Hotovo 0 z 36 krok�
 - `[PLÁN]` **F16-04** Lekce 4: Nette Database Explorer bezpečně a přes repozitáře
 - `[PLÁN]` **F16-05** Lekce 5: Vícejazyčnost a překladový subsystém v DB
 - `[PLÁN]` **F16-06** Lekce 6: Katalog a řešení složitých variant (hashe)
-- `[PLÁN]` **F16-07** Lekce 7: Výpočty cen, práce s měnami a daňové sazby
-- `[PLÁN]` **F16-08** Lekce 8: Správa skladu a rezervace s ošetřením souběhu
+- `[PLÁN]` **F16-07** Lekce 7: Výpočty cen, práce s měnami a daňové sazby- `[PLÁN]` **F16-08** Lekce 8: Správa skladu a rezervace s ošetřením souběhu
 - `[PLÁN]` **F16-09** Lekce 9: Implementace košíku pro hosta i přihlášeného
 - `[PLÁN]` **F16-10** Lekce 10: Autentizace, autorizace a správa rolí v Nette
 - `[PLÁN]` **F16-11** Lekce 11: Objednávkový proces a stavový automat objednávky
@@ -717,8 +712,7 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - `[PLÁN]` **F21-01** Export XML feedu pro Google Nákupy
 - `[PLÁN]` **F21-02** Export XML feedu pro Heureku
 - `[PLÁN]` **F21-03** Export XML feedu pro Zboží.cz
-- `[PLÁN]` **F21-04** Měření konverzí a remarketingové kódy (Google, Seznam, Meta)
-- `[PLÁN]` **F21-05** Generování daňových dokladů (faktur) v PDF
+- `[PLÁN]` **F21-04** Měření konverzí a remarketingové kódy (Google, Seznam, Meta)- `[PLÁN]` **F21-05** Generování daňových dokladů (faktur) v PDF
 - `[PLÁN]` **F21-06** Číselné řady faktur a zálohových faktur
 - `[PLÁN]` **F21-07** Zasílání faktury v příloze e-mailu po zaplacení
 - `[PLÁN]` **F21-08** Hromadný tisk štítků pro přepravce
@@ -740,6 +734,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.45 (9. 11. 2026)
+- Zahájen F1-28: vytvořen `.github/dependabot.yml` s týdenními kontrolami Composer, npm a GitHub Actions každé pondělí v 06:00 (Europe/Berlin). Minor/patch aktualizace se seskupují podle ekosystému; major aktualizace zůstávají oddělené. Čeká se na ověření konfigurace a první aktualizační pull requesty.
+- Souhrnný stav: **97 hotovo**, **1 rozděláno**, **1 k úpravě**, **447 plán**, **1 zrušeno**.
 
 ### v2.44 (9. 11. 2026)
 - Dokončen F1-27: GitHub Actions workflow `.github/workflows/npm.yml` úspěšně proběhl (push, běh č. 1). Ověření Node.js/npm, `npm ci`, build CSS/JavaScript i `npm audit` skončily úspěšně.
@@ -837,8 +835,7 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - F0 je uzavřena: **54/54 HOTOVO**.
 - Zpřesněny ověřené kroky F1-17, F1-19, F1-21, F1-29 a F1-31; přidány F1-37 (úklid ORM) a F12-27 (přístupnost administrace).- Aktuální souhrn: **84 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 rozhodnout**, **0 blokováno**, **454 plán**, **1 zrušeno**.
 
-### v2.21 (9. 11. 2026)
-- Dokončeno F0-54: Nette Database Explorer bude jedinou databázovou vrstvou aplikačního kódu; Nextras ORM a jeho `OrmModel.php` budou po ověření závislostí odstraněny, Nextras Migrations/DBAL mohou zůstat pro migrace a testy.
+### v2.21 (9. 11. 2026)- Dokončeno F0-54: Nette Database Explorer bude jedinou databázovou vrstvou aplikačního kódu; Nextras ORM a jeho `OrmModel.php` budou po ověření závislostí odstraněny, Nextras Migrations/DBAL mohou zůstat pro migrace a testy.
 - Aktualizován souhrnný stav: **79 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 čeká na rozhodnutí**.
 
 ### v2.20 (9. 11. 2026)
@@ -957,8 +954,7 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Aktualizován souhrnný stav: **43 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
 ### v1.3 (8. 11. 2026)
 - Dokončen F1-10: ověřena existující databáze `argomi_bestshop` s `utf8mb4` / `utf8mb4_0900_ai_ci`; zachováno všech 47 existujících tabulek.
-- Vytvořeny účty `argomi_app` a `argomi_migrator` s hesly generovanými MySQL. Aplikační účet má pouze SELECT/INSERT/UPDATE/DELETE; migrační účet má navíc CREATE/ALTER/DROP/INDEX/REFERENCES. Oba účty jsou omezené na `argomi_bestshop.*` a jejich přihlášení bylo ověřeno.
-- Dokončen také F3-21: oddělení databázových účtů aplikace a migrací.
+- Vytvořeny účty `argomi_app` a `argomi_migrator` s hesly generovanými MySQL. Aplikační účet má pouze SELECT/INSERT/UPDATE/DELETE; migrační účet má navíc CREATE/ALTER/DROP/INDEX/REFERENCES. Oba účty jsou omezené na `argomi_bestshop.*` a jejich přihlášení bylo ověřeno.- Dokončen také F3-21: oddělení databázových účtů aplikace a migrací.
 - Aktualizován souhrnný stav: **42 hotovo**, **1 rozděláno**, **2 k úpravě**, **16 čeká na rozhodnutí**.
 
 ### v1.2 (8. 11. 2026)
