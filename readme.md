@@ -1,6 +1,6 @@
-# ArgoMi BestShop
+# ArgoMi-BestShop
 
-ArgoMi BestShop je modulární e-shop postavený na PHP 8.2+ a Nette 3.2. Projekt je vyvíjen jako modulární monolit s oddělenými oblastmi Front a Admin, databázovým přístupem přes Nette Database Explorer a SQL migracemi spravovanými Nextras Migrations.
+ArgoMi-BestShop je modulární e-shop postavený na PHP 8.3+ a Nette 3.2. Projekt je vyvíjen jako modulární monolit s oddělenými oblastmi Front a Admin, databázovým přístupem přes Nette Database Explorer a SQL migracemi spravovanými Nextras Migrations.
 
 ## Dokumentace
 
@@ -15,7 +15,7 @@ Začni v [docs/README.md](docs/README.md). Kanonické dokumenty:
 
 ## Technologie
 
-- PHP 8.2+
+- PHP 8.3+
 - Nette 3.2 a Latte 3
 - MySQL 8.x / InnoDB / utf8mb4
 - Nette Database Explorer
