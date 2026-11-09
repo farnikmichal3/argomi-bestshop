@@ -80,7 +80,7 @@ Celkem **539 kroků**: hotovo 64, rozděláno 1, k úpravě 2, rozhodnout 0, blo
 - `[HOTOVO]` **F0-12** Sjednotit kanonickou dokumentaci a průběžné pravidlo její aktualizace
 - `[HOTOVO]` **F0-14** Popsat skutečnou strukturu projektu v kanonickém dokumentu STRUKTURA
 - `[ROZDĚLÁNO]` **F3-16** Příkaz `db:reset` (smazat, migrovat, naplnit) pro vývoj (připravit `composer db:reset`)
-- `[K ÚPRAVĚ]` **F0-43** Lekce 1: přejmenovat projekt na `argomi-bestshop` a databázi na `argomi_bestshop`
+- `[HOTOVO]` **F0-43** Oficiální název projektu: **ArgoMi-BestShop**; databáze zůstává `argomi_bestshop`, technický repozitář a projektová cesta `argomi-bestshop` se nemění.
 - `[HOTOVO]` **F0-44** ZÁMĚR: promítnout schválenou strukturu `app/` a rozhodnutí o překladech
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace (napsána, čeká na přejmenování a ověření)
@@ -137,7 +137,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-40** Stanovit výchozí SLA hostované služby: dostupnost 99,5 % měsíčně, monitoring, oznámená údržba a reakční doby; bez finančních kompenzací v této fázi. Podrobnosti v ZAMER.md revize 1.15.
 - `[HOTOVO]` **F0-41** Stanovit zásady zálohování a obnovy: denní plné zálohy, průběžné binlogy, oddělené šifrované uložení a pravidelné testy obnovy; RPO/RTO určit pro konkrétní prostředí. Podrobnosti v ZAMER.md revize 1.16.
 - `[HOTOVO]` **F0-42** Stanovit pravidla Omnibus pro historii cen: automatické určení nejnižší ceny za předchozích 30 dnů, uchování doložitelné historie a zohlednění zákonných výjimek. Podrobnosti v ZAMER.md revize 1.17.
-- `[K ÚPRAVĚ]` **F0-43** Lekce 1: přejmenovat projekt na `argomi-bestshop` a databázi na `argomi_bestshop`
+- `[HOTOVO]` **F0-43** Oficiální název projektu: **ArgoMi-BestShop**; databáze zůstává `argomi_bestshop`, technický repozitář a projektová cesta `argomi-bestshop` se nemění.
 - `[HOTOVO]` **F0-44** ZAMER: promítnout schválenou strukturu `app/` do kapitoly 3.2
 - `[PLÁN]` **F0-45** Definice rozhraní externích pluginů a rozšíření
 - `[PLÁN]` **F0-46** Standard pro logování a sledování chyb (Sentry/Tracy)
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.13 (9. 11. 2026)
+- Dokončeno F0-43: oficiální název projektu je **ArgoMi-BestShop**; databáze zůstává `argomi_bestshop` a technický název repozitáře/projektové cesty `argomi-bestshop` se nemění.
+- Aktualizován souhrnný stav: **65 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 čeká na rozhodnutí**.
 
 ### v2.12 (8. 11. 2026)
 - Dokončeno F0-17: připraví se návrh smlouvy o zpracování osobních údajů (DPA) a GDPR dokumentace pro hostované obchody; finální znění a retenční pravidla před spuštěním zkontroluje právník a specialista na ochranu osobních údajů.
