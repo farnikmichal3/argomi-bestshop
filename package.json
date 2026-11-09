@@ -8,7 +8,7 @@
 	},
 	"devDependencies": {
 		"esbuild": "^0.28.2",
-		"sass": "^1.107.1"
+		"sass": "^1.108.0"
 	},
 	"scripts": {
 		"build:css": "sass --load-path=node_modules --style=compressed assets/scss/front.scss www/assets/front.css && sass --load-path=node_modules --style=compressed assets/scss/admin.scss www/assets/admin.css",
