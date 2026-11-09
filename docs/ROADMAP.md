@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.38 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.39 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 93, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 452, zrušeno 1.
+Celkem **548 kroků**: hotovo 94, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 451, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 29 | 0 | 0 | 0 | 0 | 10 | 0 |
+| F1 | Prostředí a repozitář | 39 | 30 | 0 | 0 | 0 | 0 | 9 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -90,7 +90,7 @@ Celkem **547 kroků**: hotovo 93, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 - `[HOTOVO]` **F1-18** Nainstalovat a nakonfigurovat Deptrac 4.7.2 pro kontrolu hranic modulů; ověřit pravidla pozitivním i negativním testem. Výsledná kontrola: 0 violations, 0 uncovered, 0 errors.
 - `[HOTOVO]` **F1-20** Doplnit Composer skripty pro testy, coding standard a architekturu. Zachovány `phpstan` a `tester`, přidány `test`, `cs` a `arch`; vlastní skript `audit` byl odstraněn kvůli kolizi s vestavěným příkazem Composeru. Ověřeny `composer validate --no-check-publish`, `composer arch`, `composer cs` (0 souborů k opravě po formátování) a `composer audit` (0 bezpečnostních upozornění).
 - `[HOTOVO]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy Front/Admin. Přidány `assets/scss/front.scss`, `admin.scss`, sdílený `_shared.scss` a `assets/js/front.js`, `admin.js`, sdílený `shared.js`; dokumentováno v `STRUKTURA.md`. Lokální build úspěšně ověřil všechny čtyři výstupy.
-- `[PLÁN]` **F1-24** Doplnit `.nvmrc` a Node.js `engines`.
+- `[HOTOVO]` **F1-24** Přidat `.nvmrc` s Node.js `26.13.0` a `engines` v `package.json` (`node: >=26.13.0 <27`, `npm: >=12.2.2 <13`); obě verze odpovídají lokálně ověřenému prostředí.
 - `[PLÁN]` **F1-25** Ověřit sestavení assetů a jejich načítání v layoutech.
 - `[PLÁN]` **F1-26** a **F1-27** Připravit CI kontroly pro PHP a JavaScript.
 
@@ -158,7 +158,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 29 z 39 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 30 z 39 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -183,7 +183,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-21** `npm init`, instalace `sass`, `esbuild`, `bootstrap`, `@popperjs/core`, `naja`
 - `[HOTOVO]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy `Front` a `Admin` v `assets/scss` a `assets/js`; společný základ Sassu a inicializace JS jsou oddělené do sdílených souborů. Lokální build úspěšně ověřil všechny čtyři výstupy.
 - `[HOTOVO]` **F1-23** Skripty `build:css`, `build:js`, `build`, `watch:css` a `watch:js` v `package.json` sestavují samostatné výstupy `front.css`, `admin.css`, `front.js` a `admin.js`; `npm run build` proběhl úspěšně a všechny čtyři výstupy mají nenulovou velikost.
-- `[PLÁN]` **F1-24** `.nvmrc` a `engines` v `package.json`
+- `[HOTOVO]` **F1-24** `.nvmrc` obsahuje Node.js `26.13.0`; `package.json` deklaruje `engines.node` `>=26.13.0 <27` a `engines.npm` `>=12.2.2 <13`.
 - `[PLÁN]` **F1-25** Ověřit `npm run build` a načtení souborů v layoutu
 - `[PLÁN]` **F1-26** GitHub Actions: `composer validate`, `composer audit`, PHPStan, coding standard, testy
 - `[PLÁN]` **F1-27** GitHub Actions: `npm ci`, build, `npm audit`
@@ -757,6 +757,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.39 (9. 11. 2026)
+- Dokončen F1-24: přidán `.nvmrc` s Node.js `26.13.0`; `package.json` deklaruje podporované rozsahy Node.js `>=26.13.0 <27` a npm `>=12.2.2 <13`. Obě verze byly ověřeny v lokálním prostředí.
+- Aktualizován souhrnný stav: **94 hotovo**, **0 rozděláno**, **1 k úpravě**, **451 plán**, **1 zrušeno**.
 
 ### v2.38 (9. 11. 2026)
 - Dokončeny F1-22 a F1-23: samostatné vstupy Front/Admin a build/watch skripty byly lokálně ověřeny příkazem `npm run build`; všechny čtyři výstupy (`front.css`, `admin.css`, `front.js`, `admin.js`) existují a mají nenulovou velikost. Sass vypisuje pouze deprecation warnings pocházející zejména z Bootstrapu, build však končí úspěšně.
