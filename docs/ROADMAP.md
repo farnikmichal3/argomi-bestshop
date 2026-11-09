@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.25 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.26 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -566,14 +566,14 @@ _Průřezové kontroly před prvním nasazením._ Hotovo 0 z 25 kroků.
 - `[PLÁN]` **F14-13** Záznamy o zpracování a zásady ochrany osobních údajů
 - `[PLÁN]` **F14-14** Cookie lišta a kategorie cookies
 - `[PLÁN]` **F14-15** `composer audit` a `npm audit` v CI
-- `[PLÁN]` **F14-16** Kontrola licencí závislostí
+- `[PLÁN]` **F14-16** Kontrola licencí všech přímých i nepřímých závislostí a evidence povinností před každým vydáním
 - `[PLÁN]` **F14-17** Nástroj pro analýzu kódu z hlediska bezpečnosti (rozhodnout)
 - `[PLÁN]` **F14-18** Měření pokrytí testy a cíl
 - `[PLÁN]` **F14-19** Architektonické testy v CI
 - `[PLÁN]` **F14-20** Mutační testy klíčové domény (volitelně)
 - `[PLÁN]` **F14-21** Zátěžový test základních stránek
 - `[PLÁN]` **F14-22** Externí bezpečnostní audit před spuštěním
-- `[PLÁN]` **F14-23** Plán reakce na incident
+- `[PLÁN]` **F14-23** Plán reakce na incidenty včetně závažnosti, odpovědností a reakčních dob
 - `[PLÁN]` **F14-24** Postup nahlášení zranitelnosti
 - `[PLÁN]` **F14-25** Dokumentace bezpečnosti
 
@@ -588,13 +588,13 @@ _Příprava pro produkční nasazení._ Hotovo 0 z 18 kroků.
 - `[PLÁN]` **F15-05** Automatický deploy skript v CI/CD
 - `[PLÁN]` **F15-06** Automatické spouštění migrací při deployi s pre-migration zálohou DB
 - `[PLÁN]` **F15-07** Skript pro rychlý rollback a obnovu databáze ze snapshotu
-- `[PLÁN]` **F15-08** Konfigurace cronu a plánovače úloh
-- `[PLÁN]` **F15-09** Nastavení monitoringu dostupnosti (uptime monitor)
+- `[PLÁN]` **F15-08** Konfigurace cronu, plánovače a spouštění databázové fronty přes workery
+- `[PLÁN]` **F15-09** Nastavení monitoringu dostupnosti s cílem 99,5 % měsíčně (uptime monitor)
 - `[PLÁN]` **F15-10** Sledování výkonu aplikace (APM)
 - `[PLÁN]` **F15-11** Nastavení centralizovaného logování
-- `[PLÁN]` **F15-12** Automatické denní zálohování DB s rotací
-- `[PLÁN]` **F15-13** Zálohování nahraných souborů (storage snapshot)
-- `[PLÁN]` **F15-14** Test cvičného obnovení provozu ze zálohy (disaster recovery)
+- `[PLÁN]` **F15-12** Denní plné zálohy DB, průběžné binlogy, rotace, šifrování a off-site uložení
+- `[PLÁN]` **F15-13** Zálohování nahraných souborů; šifrované off-site uložení
+- `[PLÁN]` **F15-14** Pravidelně testovat obnovu databáze i nahraných souborů ze záloh (disaster recovery)
 - `[PLÁN]` **F15-15** Stavový endpoint aplikace (`/healthcheck`)
 - `[PLÁN]` **F15-16** Správa proměnných prostředí na produkci
 - `[PLÁN]` **F15-17** Nastavení CDN pro statické assety (volitelně)
@@ -756,6 +756,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.26 (9. 11. 2026)
+- Zpřesněny provozní kroky pro SLA 99,5 %, off-site šifrované zálohy DB i souborů, obnovu, workery, reakční doby incidentů a kontrolu licencí.
+- Počet kroků a souhrnné stavy zůstávají beze změny: **84 hotovo**, **1 rozděláno**, **1 k úpravě**, **460 plán**, **1 zrušeno**.
 
 ### v2.25 (9. 11. 2026)
 - Doplněny chybějící implementační kroky pro `CHANGELOG.md` (F0-28), import produktů CSV/XML (F0-39) a plnou přístupnost Front podle WCAG 2.1 AA (F0-48).
