@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.22 · 9. 11. 2026
+**Revize:** 1.23 · 9. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -378,4 +378,15 @@ Během současné aktivní fáze vývoje bude projekt vyvíjen přímo ve větvi
 Závazným cílem přístupnosti zákaznického rozhraní i administrace je **WCAG 2.1 na úrovni AA**.
 
 Při návrhu a implementaci se bude dbát zejména na ovládání klávesnicí, dostatečný kontrast, popisky formulářových polí, sémantickou strukturu nadpisů, přístupné chybové hlášky a podporu čteček obrazovky. Soulad se bude ověřovat průběžně při vývoji a před vydáním.
+
+
+## 21. Mazání dat a doby uchovávání
+
+ArgoMi-BestShop bude uplatňovat řízená pravidla pro mazání dat a uchovávání záznamů v souladu s právními povinnostmi a zásadami ochrany osobních údajů.
+
+- Objednávky a účetní doklady se nesmějí odstranit, pokud trvá zákonná povinnost jejich uchovávání.
+- Zákaznické účty musí podporovat bezpečné odstranění nebo anonymizaci osobních údajů v souladu s GDPR a souvisejícími právními povinnostmi.
+- Aplikační logy budou mít definovanou dobu uchovávání; po jejím uplynutí budou automaticky mazány.
+- Bezpečnostní a auditní záznamy budou chráněny před neoprávněnou změnou či odstraněním.
+- Konkrétní retenční lhůty jednotlivých kategorií dat budou stanoveny podle právních požadavků a potřeb skutečného provozu.
 
