@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.33 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.34 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 90, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 455, zrušeno 1.
+Celkem **547 kroků**: hotovo 90, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 454, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 26 | 0 | 0 | 0 | 0 | 13 | 0 |
+| F1 | Prostředí a repozitář | 39 | 26 | 1 | 0 | 0 | 0 | 12 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -88,7 +88,7 @@ Celkem **547 kroků**: hotovo 90, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 - `[HOTOVO]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46. Ověřeno sestavení služby přes Nette DI jako `Psr\Log\LoggerInterface`, zápis strukturovaného JSON logu a maskování citlivého kontextu; PHPStan level max a Deptrac bez nálezů. HTTP provoz bude ověřen až po implementaci aplikace.
 - `[HOTOVO]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28. Zaveden formát založený na Keep a Changelog, pravidla pro obchodnicky relevantní změny, SemVer verze a Git tagy; první produkční vydání zatím neexistuje.
 - `[HOTOVO]` **F1-18** Nainstalovat a nakonfigurovat Deptrac 4.7.2 pro kontrolu hranic modulů; ověřit pravidla pozitivním i negativním testem. Výsledná kontrola: 0 violations, 0 uncovered, 0 errors.
-- `[PLÁN]` **F1-20** Doplnit Composer skripty pro testy, coding standard, architekturu a audit.
+- `[ROZDĚLÁNO]` **F1-20** Doplnit Composer skripty pro testy, coding standard, architekturu a audit. Skripty `test`, `cs`, `arch` a `audit` byly přidány do `composer.json`; čeká se na lokální ověření.
 - `[PLÁN]` **F1-22** Připravit samostatné asset vstupy Front/Admin.
 - `[PLÁN]` **F1-24** Doplnit `.nvmrc` a Node.js `engines`.
 - `[PLÁN]` **F1-25** Ověřit sestavení assetů a jejich načítání v layoutech.
@@ -158,7 +158,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 24 z 39 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 26 z 39 kroků; jeden krok je rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -179,7 +179,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-17** Nainstalovat testovací nástroj (po rozhodnutí F0)
 - `[HOTOVO]` **F1-18** Nainstalovat a nakonfigurovat Deptrac 4.7.2; pozitivní i negativní test potvrdil správné hlídání hranic modulů, finální analýza bez violations, uncovered a errors.
 - `[HOTOVO]` **F1-19** Nainstalovat konzolový nástroj (po rozhodnutí F0)
-- `[PLÁN]` **F1-20** Skripty v `composer.json`: `phpstan`, `test`, `cs`, `arch`, `audit`
+- `[ROZDĚLÁNO]` **F1-20** Skripty v `composer.json`: `phpstan`, `test`, `cs`, `arch`, `audit`; nové skripty byly přidány, čeká se na lokální ověření.
 - `[HOTOVO]` **F1-21** `npm init`, instalace `sass`, `esbuild`, `bootstrap`, `@popperjs/core`, `naja`
 - `[PLÁN]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy `Front` a `Admin` v `assets/scss` a `assets/js` podle schváleného rozdělení UI
 - `[PLÁN]` **F1-23** Dokončit samostatné skripty `build` a `watch` pro CSS a JS obou částí `Front` a `Admin`
@@ -757,6 +757,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.34 (9. 11. 2026)
+- Zahájen F1-20: do `composer.json` přidány sjednocené skripty `test`, `cs`, `arch` a `audit`; zachovány stávající skripty. Čeká se na lokální ověření.
+- Souhrnný stav: **90 hotovo**, **1 rozděláno**, **1 k úpravě**, **454 plán**, **1 zrušeno**.
 
 ### v2.33 (9. 11. 2026)
 - Dokončen F1-39: přidán `CHANGELOG.md` s formátem založeným na Keep a Changelog, pravidly pro obchodnicky relevantní záznamy a návazností na SemVer a Git tagy. První produkční vydání zatím nebylo publikováno.
