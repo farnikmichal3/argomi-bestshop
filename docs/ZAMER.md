@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.16 · 9. 11. 2026  
+**Revize:** 1.17 · 9. 11. 2026  
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -313,3 +313,16 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 9. 11. 2026 | F0-39: Import produktů bude používat společné interní rozhraní a adaptéry CSV/XML, validaci, náhled před potvrzením a protokol výsledků včetně chyb. |
 | 9. 11. 2026 | F0-40: Pro budoucí hostovanou službu platí výchozí cíl dostupnosti 99,5 % měsíčně, monitoring, předem oznámená údržba a definované reakční doby; bez finančních kompenzací v této fázi. |
 | 9. 11. 2026 | F0-41: Zálohování hostované služby bude zahrnovat denní plné zálohy, průběžné binlogy, oddělené a šifrované uložení a pravidelné testy obnovy; RPO/RTO se stanoví pro konkrétní prostředí. |
+| 9. 11. 2026 | F0-42: Historie cen bude sloužit k automatickému určení nejnižší ceny za předchozích 30 dnů při slevách; uchování historie a zákonné výjimky budou součástí implementace. |
+
+## 15. Historie cen a pravidla pro slevy (Omnibus)
+
+Produktový cenový model musí uchovávat historii cen tak, aby bylo možné správně určit a doložit referenční cenu při oznámení slevy podle pravidel evropské Omnibus směrnice.
+
+- Při oznámení slevy se jako referenční cena použije zpravidla nejnižší cena, za kterou byl produkt nabízen během předchozích 30 dnů.
+- Systém musí umět tuto cenu automaticky vyhodnotit z uložené historie cen.
+- Historie musí být uchovávána tak, aby její změny nebo mazání neznemožnily doložení správnosti zobrazené slevy.
+- Implementace musí zohlednit zákonné výjimky a zvláštní případy, například postupné zvyšování slevy.
+- Konkrétní právní výjimky a jejich přesné vyhodnocení budou ověřeny při implementaci podle aktuálně platných předpisů.
+
+
