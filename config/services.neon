@@ -1,5 +1,6 @@
 services:
 	- App\Core\RouterFactory::createRouter
+	- App\Shared\Infrastructure\Console\DbResetCommand
 
 
 search:
@@ -9,5 +10,3 @@ search:
 			- *Factory
 			- *Repository
 			- *Service
-
-	- App\Shared\Infrastructure\Console\DbResetCommand
