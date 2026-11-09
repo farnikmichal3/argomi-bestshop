@@ -7,10 +7,8 @@
 		"nette-forms": "^3.3"
 	},
 	"devDependencies": {
-		"@nette/vite-plugin": "^1.0.1",
 		"esbuild": "^0.28.2",
-		"sass": "^1.107.1",
-		"vite": "^6.3.5"
+		"sass": "^1.107.1"
 	},
 	"scripts": {
 		"build:css": "sass --load-path=node_modules --style=compressed assets/scss/app.scss www/assets/app.css",
