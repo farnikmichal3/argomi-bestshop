@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 85, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 460, zrušeno 1.
+Celkem **547 kroků**: hotovo 86, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 459, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 21 | 0 | 0 | 0 | 0 | 18 | 0 |
+| F1 | Prostředí a repozitář | 39 | 22 | 0 | 0 | 0 | 0 | 17 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -77,12 +77,14 @@ Celkem **547 kroků**: hotovo 85, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 
 ## 3. Nejbližší kroky
 
+- `[HOTOVO]` **F1-37** Odstraněna přímá závislost `nextras/orm` a `OrmModel.php`; zachovány Nextras DBAL/Migrations. Composer validace, platform requirements a PHPStan level max čisté.
+
 ### Aktivní a opravné úkoly
 - `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace – přejmenovat a ověřit.
 
 ### Nejbližší technické kroky
 - `[PLÁN]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; ověřit Sass + esbuild.
-- `[PLÁN]` **F1-37** Odstranit Nextras ORM a nepoužívaný `OrmModel.php`; zachovat Nextras Migrations/DBAL pro migrace.
+- `[HOTOVO]` **F1-37** Odstranit přímou závislost `nextras/orm` a nepoužívaný `OrmModel.php`; zachovat Nextras DBAL/Migrations. Ověřeny reference, Composer metadata a lock; `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb.
 - `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46
 - `[PLÁN]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28.
 - `[PLÁN]` **F1-18** Zvolit a nainstalovat nástroj pro automatické hlídání hranic modulů.
@@ -194,7 +196,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0)
 - `[PLÁN]` **F1-36** Odstranit nepoužívané balíčky Vite a Vite pluginu z package.json/package-lock a ověřit build Sass + esbuild
-- `[PLÁN]` **F1-37** Odstranit nepoužívaný `app/Shared/Infrastructure/Persistence/OrmModel.php` a přímou závislost `nextras/orm`; před změnou ověřit reference, aktualizovat Composer lock a spustit PHPStan/testy
+- `[HOTOVO]` **F1-37** Odstranit nepoužívaný `app/Shared/Infrastructure/Persistence/OrmModel.php` a přímou závislost `nextras/orm`; ověřit reference, aktualizovat Composer lock a zachovat Nextras DBAL/Migrations. `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb; automatické testy zatím nejsou v projektu.
 - `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46
 - `[PLÁN]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28
 
@@ -760,6 +762,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokončen a lokálně ověřen F3-16: `composer db:reset` bezpečně odstranil 47 objektů a úspěšně provedl všechny 3 migrace (`structures`, `basic-data`, `dummy-data`), bez odstranění samotné databáze či jejích oprávnění.
 - Nette Database Explorer potvrdil 3 demo produkty, 2 jazyky a 2 měny; `composer phpstan` proběhl čistě. Automatické testy zatím v projektu nejsou, proto `composer tester` nebyl spuštěn.
 - Souhrn: **85 hotovo**, **0 rozděláno**, **1 k úpravě**, **460 plán**, **1 zrušeno**.
+
+### v2.28 (9. 11. 2026)
+- Dokončen F1-37: odstraněna přímá závislost `nextras/orm` a `OrmModel.php`; zachovány Nextras DBAL/Migrations. Ověřeny Composer validace, platform requirements a PHPStan level max.
+- Souhrn: **86 hotovo**, **0 rozděláno**, **1 k úpravě**, **459 plán**, **1 zrušeno**. F1-36 zůstává v plánu, dokud se odstranění Vite neprojeví v hlavní větvi.
 
 ### v2.27 (9. 11. 2026)
 - Připraven bezpečný příkaz `composer db:reset` s kontrolou názvu databáze a lokálního migračního účtu; reset zachovává databázi i její oprávnění. F3-16 zůstává ROZDĚLÁNO do ověření v lokálním prostředí.
