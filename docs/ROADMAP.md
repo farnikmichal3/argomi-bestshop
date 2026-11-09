@@ -147,7 +147,7 @@ _Co je rozhodnuto, co čeká na rozhodnutí, a dokumenty, ke kterým se budeme v
 - `[HOTOVO]` **F0-50** Kontrola licencí přímých i nepřímých PHP/JavaScript závislostí, přednostně MIT/BSD/Apache 2.0 a dalších licencí slučitelných s komerčním použitím; evidence povinností a kontrola před každým vydáním. Podrobnosti v ZAMER.md.
 - `[HOTOVO]` **F0-51** Sjednotit právní metadata Composer/npm s režimem všechna práva vyhrazena
 - `[HOTOVO]` **F0-52** Aktualizovat README a AGENTS.md podle skutečného projektu, bez instrukcí skeletonu
-- `[PLÁN]` **F0-53** Popsat a otestovat bezpečné rozlišení demo objednávek od skutečných operací
+- `[HOTOVO]` **F0-53** Demo data budou označená a oddělená; demo objednávky nespustí reálné platby, expedici ani externí operace. Testovací integrace poběží jen v testovacím režimu a produkce bude chráněna proti demo konfiguraci. Podrobnosti v ZAMER.md.
 - `[PLÁN]` **F0-54** Prověřit nepoužívanou závislost Nextras ORM a soubor Shared/Infrastructure/Persistence/OrmModel.php
 
 
@@ -744,6 +744,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.20 (9. 11. 2026)
+- Dokončeno F0-53: stanoveno bezpečné oddělení demo dat a testovacích operací od skutečného provozu včetně ochrany produkčního prostředí.
+- Aktualizován souhrnný stav: **72 hotovo**, **1 rozděláno**, **1 k úpravě**, **0 čeká na rozhodnutí**.
 
 ### v2.19 (9. 11. 2026)
 - Dokončeno F0-50: zavedena kontrola licencí přímých i nepřímých závislostí, evidence licenčních povinností a kontrola před každým vydáním.
