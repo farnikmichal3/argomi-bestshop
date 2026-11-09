@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.24 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.25 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **544 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 457, zrušeno 1.
+Celkem **547 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 460, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 38 | 21 | 0 | 0 | 0 | 0 | 17 | 0 |
+| F1 | Prostředí a repozitář | 39 | 21 | 0 | 0 | 0 | 0 | 18 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 9 | 1 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -63,7 +63,7 @@ Celkem **544 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blo
 | F8 | Zákazníci a administrátoři | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
 | F9 | Orders a Checkout | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F10 | Shipping, Payments, Mailing | 24 | 0 | 0 | 0 | 0 | 0 | 24 | 0 |
-| F11 | Front UI | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+| F11 | Front UI | 23 | 0 | 0 | 0 | 0 | 0 | 23 | 0 |
 | F12 | Admin UI | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F13 | Vyhledávání | 10 | 0 | 0 | 0 | 0 | 0 | 10 | 0 |
 | F14 | Bezpečnost a kvalita | 25 | 0 | 0 | 0 | 0 | 0 | 25 | 0 |
@@ -73,7 +73,7 @@ Celkem **544 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blo
 | F18 | Vlna 2: ceny a sklad | 18 | 0 | 0 | 0 | 0 | 0 | 18 | 0 |
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
-| F21 | Funkce, na kterých obchodník stojí | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
+| F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
 ## 3. Nejbližší kroky
 
@@ -84,7 +84,8 @@ Celkem **544 kroků**: hotovo 84, rozděláno 1, k úpravě 1, rozhodnout 0, blo
 ### Nejbližší technické kroky
 - `[PLÁN]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; ověřit Sass + esbuild.
 - `[PLÁN]` **F1-37** Odstranit Nextras ORM a nepoužívaný `OrmModel.php`; zachovat Nextras Migrations/DBAL pro migrace.
-- `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46.
+- `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46
+- `[PLÁN]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28.
 - `[PLÁN]` **F1-18** Zvolit a nainstalovat nástroj pro automatické hlídání hranic modulů.
 - `[PLÁN]` **F1-20** Doplnit Composer skripty pro testy, coding standard, architekturu a audit.
 - `[PLÁN]` **F1-22** Připravit samostatné asset vstupy Front/Admin.
@@ -156,7 +157,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 21 z 38 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 21 z 39 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -196,6 +197,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[PLÁN]` **F1-36** Odstranit nepoužívané balíčky Vite a Vite pluginu z package.json/package-lock a ověřit build Sass + esbuild
 - `[PLÁN]` **F1-37** Odstranit nepoužívaný `app/Shared/Infrastructure/Persistence/OrmModel.php` a přímou závislost `nextras/orm`; před změnou ověřit reference, aktualizovat Composer lock a spustit PHPStan/testy
 - `[PLÁN]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46
+- `[PLÁN]` **F1-39** Přidat a zavést `CHANGELOG.md` podle schválené politiky verzování F0-28
 
 ### F2: Sdílené jádro (Shared)
 
@@ -300,7 +302,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[PLÁN]` **F5-05** `ProductDetailService`: načtení detailu produktu (překlady, varianty, obrázky, atributy, volby)
 - `[PLÁN]` **F5-06** `VariantSelector`: vyhledání varianty podle zvolených hodnot os
 - `[PLÁN]` **F5-07** `OptionResolver`: validace a výpočet ceny voleb zákazníka
-- `[PLÁN]` **F5-08** Repozitář obrázků a vazba na varianty
+- `[PLÁN]` **F5-08** Repozitář obrázků a vazba na varianty; zachování originálů a generování responzivních WebP/AVIF variant podle F0-30
 - `[PLÁN]` **F5-09** Správa souvisejících produktů (`product_relation`)
 - `[PLÁN]` **F5-10** Generování a kontrola slugů (unikátnost v rámci jazyka)
 - `[PLÁN]` **F5-11** Výpočet skladové dostupnosti souhrnně za produkt
@@ -400,7 +402,7 @@ _Dvě oddělené identity: zákazník na frontu a administrátor v administraci.
 - `[PLÁN]` **F8-11** Modul `Identity` pro administrátory (oddělený od zákazníků)
 - `[PLÁN]` **F8-12** Autentizace administrátora (oddělená session a cookie)
 - `[PLÁN]` **F8-13** Role a oprávnění (ACL), seznam oprávnění po modulech
-- `[PLÁN]` **F8-14** Dvoufaktorové ověření administrátora (rozhodnout rozsah)
+- `[PLÁN]` **F8-14** Dvoufaktorové ověření pro všechny administrátorské účty
 - `[PLÁN]` **F8-15** Audit přihlášení a změn v administraci
 - `[PLÁN]` **F8-16** Politika session (regenerace ID, časové limity, SameSite, Secure, HttpOnly)
 - `[PLÁN]` **F8-17** Admin: správa uživatelů a rolí
@@ -443,7 +445,7 @@ _Objednávka jako snímek, stavový automat, průchod pokladnou._ Hotovo 0 z 27 
 
 ### F10: Shipping, Payments, Mailing
 
-_Rozhraní pro dopravu a platby, e-maily s šablonami v databázi._ Hotovo 0 z 24 kroků.
+_Rozhraní pro dopravu a platby, e-maily s Latte šablonami v repozitáři._ Hotovo 0 z 24 kroků.
 
 - `[PLÁN]` **F10-01** Modul `Shipping`: struktura, `ShippingFacade`
 - `[PLÁN]` **F10-02** Rozhraní `ShippingProvider` (cena, dostupnost, omezení)
@@ -463,7 +465,7 @@ _Rozhraní pro dopravu a platby, e-maily s šablonami v databázi._ Hotovo 0 z 2
 - `[PLÁN]` **F10-16** Admin: správa platebních metod
 - `[PLÁN]` **F10-17** Testy plateb (simulovaná brána)
 - `[PLÁN]` **F10-18** Modul `Mailing`: odesílání, fronta, opakování
-- `[PLÁN]` **F10-19** Šablony e-mailů v databázi po jazycích
+- `[PLÁN]` **F10-19** Latte šablony e-mailů v repozitáři; překládaný obsah oddělit od šablonovací logiky
 - `[PLÁN]` **F10-20** E-maily: potvrzení objednávky, platba přijata, odesláno
 - `[PLÁN]` **F10-21** Bezpečnost: escapování proměnných v šablonách
 - `[PLÁN]` **F10-22** Testovací režim (zachytávání e-mailů ve vývoji)
@@ -496,6 +498,7 @@ _Veřejná část obchodu: `UI/Front`._ Hotovo 0 z 22 kroků.
 - `[PLÁN]` **F11-20** HTTP testy základních scénářů
 - `[PLÁN]` **F11-21** End-to-end test základního nákupu (rozhodnout nástroj)
 - `[PLÁN]` **F11-22** Dokumentace
+- `[PLÁN]` **F11-23** Ověřit soulad zákaznického rozhraní s WCAG 2.1 AA
 
 ### F12: Admin UI
 
@@ -559,7 +562,7 @@ _Průřezové kontroly před prvním nasazením._ Hotovo 0 z 25 kroků.
 - `[PLÁN]` **F14-09** Zabezpečení session a cookies
 - `[PLÁN]` **F14-10** Správa tajemství mimo Git a jejich rotace
 - `[PLÁN]` **F14-11** Logování bez osobních údajů
-- `[PLÁN]` **F14-12** Retence a mazání dat (GDPR)
+- `[PLÁN]` **F14-12** Retence a mazání osobních údajů a logů; automatizace mazání podle retenčních pravidel F0-49
 - `[PLÁN]` **F14-13** Záznamy o zpracování a zásady ochrany osobních údajů
 - `[PLÁN]` **F14-14** Cookie lišta a kategorie cookies
 - `[PLÁN]` **F14-15** `composer audit` a `npm audit` v CI
@@ -748,10 +751,16 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - `[PLÁN]` **F21-19** Správa reklamací (RMA modul)
 - `[PLÁN]` **F21-20** Základní CMS modul: tvorba statických stránek (kontakt, obchodní podmínky)
 - `[PLÁN]` **F21-21** Dokumentace komerčních a provozních funkcí
+- `[PLÁN]` **F21-22** Import produktů z CSV/XML: mapování polí, validace, náhled před potvrzením a chybový protokol podle F0-39
 
 ---
 
 ## 5. Historie revizí
+
+### v2.25 (9. 11. 2026)
+- Doplněny chybějící implementační kroky pro `CHANGELOG.md` (F0-28), import produktů CSV/XML (F0-39) a plnou přístupnost Front podle WCAG 2.1 AA (F0-48).
+- Sjednocen plán e-mailových šablon s rozhodnutím ukládat Latte soubory do repozitáře; upřesněna implementace WebP/AVIF, 2FA a retence logů.
+- Rozšířen souhrn o tři navazující úkoly: **84 hotovo**, **1 rozděláno**, **1 k úpravě**, **460 plán**, **1 zrušeno**.
 
 ### v2.24 (9. 11. 2026)
 - Závěrečný audit sjednotil testovací scénáře katalogu s kanonickými 15 demo produkty; doplněny testy produktů 4 a 5.
