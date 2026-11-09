@@ -1,7 +1,7 @@
 # ArgoMi BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.19 · 9. 11. 2026
+**Revize:** 1.20 · 9. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -316,6 +316,7 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 9. 11. 2026 | F0-42: Historie cen bude sloužit k automatickému určení nejnižší ceny za předchozích 30 dnů při slevách; uchování historie a zákonné výjimky budou součástí implementace. |
 | 9. 11. 2026 | F0-43: Oficiální název projektu je **ArgoMi-BestShop**, technický název databáze zůstává **`argomi_bestshop`**; existující repozitář a projektová cesta `argomi-bestshop` se nemění. |
 | 9. 11. 2026 | F0-45: Projekt nebude podporovat instalovatelné pluginy třetích stran. Funkce budou součástí vlastního jádra a interních modulů; externí služby se napojují přes interní rozhraní a adaptéry. |
+| 9. 11. 2026 | F0-46: Tracy pro vývojovou diagnostiku, Monolog pro aplikační logování, strukturované logy s úrovněmi DEBUG až CRITICAL, zákaz zápisu citlivých údajů; Sentry případně později pro produkční hlášení chyb. |
 
 ## 15. Historie cen a pravidla pro slevy (Omnibus)
 
@@ -348,4 +349,15 @@ ArgoMi-BestShop nebude poskytovat systém instalovatelných pluginů třetích s
 - Rozšiřování funkcí bude probíhat vývojem a verzováním vlastních modulů v rámci projektu.
 - Napojení externích služeb (například platebních bran, dopravců nebo vyhledávacích služeb) bude řešeno interními rozhraními a adaptéry, nikoliv pluginovým systémem.
 - Externí poskytovatelé služeb nejsou pluginy a jejich integrace nesmí umožnit obcházení bezpečnostních a doménových pravidel jádra.
+
+
+## 18. Logování a sledování chyb
+
+ArgoMi-BestShop bude používat jednotný standard logování a diagnostiky napříč moduly.
+
+- **Tracy** bude sloužit pro vývojové prostředí, ladění a diagnostiku.
+- **Monolog** bude standardní aplikační vrstvou pro zapisování logů.
+- Logy budou strukturované a budou používat úrovně DEBUG, INFO, WARNING, ERROR a CRITICAL.
+- Do logů se nesmějí zapisovat hesla, přístupové tokeny, tajné klíče ani jiné citlivé údaje; citlivá data se musí před zápisem odstranit nebo maskovat.
+- **Sentry** lze doplnit později pro automatický sběr a hlášení chyb z produkčního prostředí.
 
