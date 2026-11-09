@@ -1,14 +1,14 @@
-# ArgoMi BestShop – záměr a rozhodnutí
+# ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.26 · 9. 11. 2026
+**Revize:** 1.27 · 9. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
 
 ## 1. Vize a priority
 
-ArgoMi BestShop je modulární e-shop postavený na PHP a Nette. Cílem je nabídnout ucelený systém s rozsáhlou sadou funkcí v jádře, nikoliv skládat základní funkčnost z povinných pluginů třetích stran.
+ArgoMi-BestShop je modulární e-shop postavený na PHP a Nette. Cílem je nabídnout ucelený systém s rozsáhlou sadou funkcí v jádře, nikoliv skládat základní funkčnost z povinných pluginů třetích stran.
 
 Priority v pořadí:
 1. bezpečnost a ochrana dat,
@@ -24,8 +24,7 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 - GitHub repozitář je **veřejný**.
 - Veřejná dostupnost zdrojového kódu sama o sobě neposkytuje právo k jeho používání, kopírování, úpravám ani šíření.
 - Projekt není open source a nesmí být označován jako open source.
-- Výchozí autorskoprávní stav: **všechna práva vyhrazena**.
-- Výchozí autorskoprávní stav zůstává **všechna práva vyhrazena**. Připraví se návrh studentské licence a podmínek služby; jejich konečné znění, stejně jako případná licence pro zákazníky a související právní texty, musí před distribucí nebo komerčním spuštěním zkontrolovat právník.
+- Výchozí autorskoprávní stav: **všechna práva vyhrazena**. Připraví se návrh studentské licence a podmínek služby; jejich konečné znění, stejně jako případná licence pro zákazníky a související právní texty, musí před distribucí nebo komerčním spuštěním zkontrolovat právník.
 - V repozitáři nesmí zůstat zavádějící metadata MIT, BSD, GPL nebo ISC. Metadata balíčků musí odpovídat proprietárnímu režimu; právní dokumenty musí určit skutečné podmínky.
 - Příspěvky třetích stran a oprávnění k jejich začlenění musí být právně ošetřeny před jejich přijetím.
 
@@ -45,7 +44,7 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 
 | Oblast | Rozhodnutí |
 |---|---|
-| PHP | PHP 8.2+ |
+| PHP | PHP 8.3+ |
 | Framework | Nette 3.2 |
 | Šablony | Latte 3 |
 | Databáze | MySQL 8.x, InnoDB, utf8mb4 |
@@ -232,18 +231,20 @@ Produkt č. 12 záměrně spojuje věkové omezení a vratnou zálohu. Produkt �
 
 Tento seznam určuje cílový obsah demo katalogu, nikoliv tvrzení, že všechny uvedené funkce již databáze nebo aplikace implementuje. Před realizací každého scénáře se ověří aktuální SQL a existující aplikační řešení; doplní se pouze skutečně chybějící části.
 
-## 11. Rozhodnutí, která zůstávají otevřená
+## 11. Otevřené body před produkčním nasazením
 
-Otevřené body se vedou v ROADMAP a nesmí se svévolně považovat za schválené:
-- právní licence a podmínky hostované služby,
-- Návrh smlouvy o zpracování osobních údajů (DPA) a GDPR dokumentace pro hostované obchody; finální znění a související retenční pravidla před spuštěním zkontroluje právník a specialista na ochranu osobních údajů,
-- výchozí daňový režim cen,
-- konkrétní platební a dopravní poskytovatelé,
-- volba Docker/DDEV mimo současné Windows prostředí,
-- monitoring a SLA,
-- přesné RPO/RTO a retenční lhůty.
+Následující body nejsou nevyřešenými architektonickými rozhodnutími. Jde o právní, provozní nebo implementační detaily, které musí být dopracovány před odpovídajícím nasazením:
 
-## 11. Exportní produktové feedy
+- Připravit a právně zkontrolovat studentskou licenci, podmínky služby a případné licenční podmínky pro zákazníky.
+- Připravit DPA a GDPR dokumentaci pro hostované obchody; finální znění ověří právník a specialista na ochranu osobních údajů.
+- Při implementaci nastavení obchodu určit výchozí hodnotu `tax_included`; cenový model již stanoví ukládání základních cen bez DPH.
+- Konkrétní platební brány a dopravce vybrat podle cílového trhu před produkčním nasazením.
+- Docker/DDEV doplnit jako alternativní provozní prostředí; hlavním vývojovým prostředím zůstává Laragon na Windows.
+- Před hostovaným provozem určit konkrétní monitoring, reakční doby incidentů a provozní parametry SLA; cílová dostupnost 99,5 % měsíčně je již schválena.
+- Pro konkrétní hosting stanovit cíle RPO/RTO.
+- Stanovit přesné retenční lhůty jednotlivých kategorií dat podle právních povinností a provozních potřeb.
+
+## 12. Exportní produktové feedy
 
 Export produktů bude řešen společným interním rozhraním a samostatnými adaptéry pro jednotlivé externí platformy. První cílové platformy jsou **Heureka, Zboží.cz a Google Shopping**.
 
@@ -253,7 +254,7 @@ Export produktů bude řešen společným interním rozhraním a samostatnými a
 - Přidání další platformy nesmí vyžadovat změnu základního katalogového modelu, pokud nejde o skutečně chybějící obecnou produktovou informaci.
 - Konkrétní formáty, povinná pole, plánování exportů, aktualizace a chybové stavy se specifikují při realizaci exportních feedů.
 
-## 12. Import produktů
+## 13. Import produktů
 
 Import produktů bude řešen společným interním rozhraním a samostatnými adaptéry pro vstupní formáty **CSV a XML**.
 
@@ -264,7 +265,7 @@ Import produktů bude řešen společným interním rozhraním a samostatnými a
 - Výsledek importu bude obsahovat protokol úspěšně zpracovaných i chybových záznamů, včetně důvodu chyby.
 - Konkrétní pravidla párování existujících produktů, aktualizací, duplicit a řešení konfliktů budou upřesněna při návrhu implementace.
 
-## 13. SLA a dostupnost hostované služby
+## 14. SLA a dostupnost hostované služby
 
 Pro budoucí hostovanou službu stanovujeme výchozí cílovou dostupnost **99,5 % za kalendářní měsíc**.
 
@@ -274,7 +275,7 @@ Pro budoucí hostovanou službu stanovujeme výchozí cílovou dostupnost **99,5
 - V této fázi se nezavádějí finanční kompenzace za nedodržení SLA; případné kompenzace se posoudí podle zkušeností z reálného provozu.
 - Toto SLA se vztahuje na budoucí hostovanou službu, nikoli na lokální instalace.
 
-## 14. Zálohování a obnova po havárii
+## 15. Zálohování a obnova po havárii
 
 Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohování a obnovy:
 
@@ -285,7 +286,7 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 - Pravidelně prakticky testovat obnovu ze záloh.
 - Konkrétní cíle RPO (maximální přípustná ztráta dat) a RTO (cílová doba obnovy služby) stanovit podle požadavků a možností konkrétního provozního prostředí.
 
-
+## 16. Historie rozhodnutí
 
 | Datum | Změna |
 |---|---|
@@ -317,8 +318,14 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 9. 11. 2026 | F0-43: Oficiální název projektu je **ArgoMi-BestShop**, technický název databáze zůstává **`argomi_bestshop`**; existující repozitář a projektová cesta `argomi-bestshop` se nemění. |
 | 9. 11. 2026 | F0-45: Projekt nebude podporovat instalovatelné pluginy třetích stran. Funkce budou součástí vlastního jádra a interních modulů; externí služby se napojují přes interní rozhraní a adaptéry. |
 | 9. 11. 2026 | F0-46: Tracy pro vývojovou diagnostiku, Monolog pro aplikační logování, strukturované logy s úrovněmi DEBUG až CRITICAL, zákaz zápisu citlivých údajů; Sentry případně později pro produkční hlášení chyb. |
+| 9. 11. 2026 | F0-47: Během současného vývoje se pracuje přímo ve větvi `main` s lokální zálohou; po prvním vydání se přejde na stabilní `main`, vývojové větve, Pull Requesty a Git tagy podle SemVer. |
+| 9. 11. 2026 | F0-48: Závazným cílem přístupnosti zákaznického rozhraní i administrace je WCAG 2.1 AA. |
+| 9. 11. 2026 | F0-49: Stanovena pravidla pro zákonné uchovávání objednávek a dokladů, GDPR odstranění/anonymizaci osobních údajů, retenci logů a ochranu auditních záznamů; přesné lhůty se stanoví podle práva a provozu. |
+| 9. 11. 2026 | F0-50: Kontrolují se licence přímých i nepřímých závislostí; upřednostňují se licence slučitelné s komerčním použitím a povinnosti se evidují a kontrolují před vydáním. |
+| 9. 11. 2026 | F0-53: Demo data a testovací operace musí být oddělené od skutečného provozu; demo objednávky nesmějí vyvolat reálné platby, expedici ani jiné externí operace. |
+| 9. 11. 2026 | F0-54: Nette Database Explorer je jedinou databázovou vrstvou běžného aplikačního kódu; Nextras ORM bude odstraněno, zatímco Nextras Migrations/DBAL mohou zůstat pro migrace a testování. |
 
-## 15. Historie cen a pravidla pro slevy (Omnibus)
+## 17. Historie cen a pravidla pro slevy (Omnibus)
 
 Produktový cenový model musí uchovávat historii cen tak, aby bylo možné správně určit a doložit referenční cenu při oznámení slevy podle pravidel evropské Omnibus směrnice.
 
@@ -331,7 +338,7 @@ Produktový cenový model musí uchovávat historii cen tak, aby bylo možné sp
 
 
 
-## 16. Název projektu a databáze
+## 18. Název projektu a databáze
 
 Oficiální název projektu je **ArgoMi-BestShop**. Technický název databáze zůstává **`argomi_bestshop`**.
 
@@ -341,7 +348,7 @@ Oficiální název projektu je **ArgoMi-BestShop**. Technický název databáze 
 - Toto rozhodnutí sjednocuje pojmenování; nevyžaduje změnu databáze ani projektové cesty.
 
 
-## 17. Rozšiřování systému a integrace externích služeb
+## 19. Rozšiřování systému a integrace externích služeb
 
 ArgoMi-BestShop nebude poskytovat systém instalovatelných pluginů třetích stran. Funkce e-shopu budou součástí vlastního jádra a jeho interních modulů.
 
@@ -351,7 +358,7 @@ ArgoMi-BestShop nebude poskytovat systém instalovatelných pluginů třetích s
 - Externí poskytovatelé služeb nejsou pluginy a jejich integrace nesmí umožnit obcházení bezpečnostních a doménových pravidel jádra.
 
 
-## 18. Logování a sledování chyb
+## 20. Logování a sledování chyb
 
 ArgoMi-BestShop bude používat jednotný standard logování a diagnostiky napříč moduly.
 
@@ -362,7 +369,7 @@ ArgoMi-BestShop bude používat jednotný standard logování a diagnostiky nap�
 - **Sentry** lze doplnit později pro automatický sběr a hlášení chyb z produkčního prostředí.
 
 
-## 19. Strategie práce s větvemi v Gitu
+## 21. Strategie práce s větvemi v Gitu
 
 Během současné aktivní fáze vývoje bude projekt vyvíjen přímo ve větvi `main`. Samostatné vývojové větve a Pull Requesty nejsou pro tuto fázi povinné.
 
@@ -373,14 +380,14 @@ Během současné aktivní fáze vývoje bude projekt vyvíjen přímo ve větvi
 - Přechod na tento režim proběhne jako samostatný krok před navazujícím vývojem po prvním vydání.
 
 
-## 20. Přístupnost uživatelského rozhraní
+## 22. Přístupnost uživatelského rozhraní
 
 Závazným cílem přístupnosti zákaznického rozhraní i administrace je **WCAG 2.1 na úrovni AA**.
 
 Při návrhu a implementaci se bude dbát zejména na ovládání klávesnicí, dostatečný kontrast, popisky formulářových polí, sémantickou strukturu nadpisů, přístupné chybové hlášky a podporu čteček obrazovky. Soulad se bude ověřovat průběžně při vývoji a před vydáním.
 
 
-## 21. Mazání dat a doby uchovávání
+## 23. Mazání dat a doby uchovávání
 
 ArgoMi-BestShop bude uplatňovat řízená pravidla pro mazání dat a uchovávání záznamů v souladu s právními povinnostmi a zásadami ochrany osobních údajů.
 
@@ -391,7 +398,7 @@ ArgoMi-BestShop bude uplatňovat řízená pravidla pro mazání dat a uchováv�
 - Konkrétní retenční lhůty jednotlivých kategorií dat budou stanoveny podle právních požadavků a potřeb skutečného provozu.
 
 
-## 22. Licence knihoven a závislostí
+## 24. Licence knihoven a závislostí
 
 Před zařazením knihovny do projektu a před každým vydáním bude ověřena licence všech přímých i nepřímých PHP a JavaScript závislostí.
 
@@ -401,7 +408,7 @@ Před zařazením knihovny do projektu a před každým vydáním bude ověřena
 - Kontrola licencí bude součástí přípravy každého vydání; nejasné nebo nekompatibilní licence musí být vyřešeny před vydáním.
 
 
-## 23. Oddělení demo dat od skutečného provozu
+## 25. Oddělení demo dat od skutečného provozu
 
 Demo data a testovací operace musí být jednoznačně rozlišitelné od skutečných zákaznických a provozních dat.
 
@@ -412,7 +419,7 @@ Demo data a testovací operace musí být jednoznačně rozlišitelné od skute�
 - Konkrétní technické pojistky a testy tohoto oddělení budou součástí implementace a přípravy vydání.
 
 
-## 24. Databázová vrstva a ORM
+## 26. Databázová vrstva a ORM
 
 **Nette Database Explorer** je jedinou povolenou databázovou vrstvou pro běžný aplikační kód ArgoMi-BestShop. Moduly, repozitáře a aplikační služby budou pro práci s provozními daty používat Nette Database Explorer; Nextras ORM se v aplikační vrstvě používat nebude.
 
