@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 1.6 · 10. 11. 2026  
+**Revize:** 1.7 · 10. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 10. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -73,7 +73,7 @@ Poznámky:
 - Strom obsahuje i prázdné adresáře držené soubory `.gitkeep`.
 - Moduly kromě Catalog zatím nemusí mít vytvořené všechny vnitřní vrstvy.
 - `Shared/Domain` a `Shared/Infrastructure` jsou již vytvořené základní adresáře. `Infrastructure` obsahuje bezpečný konzolový příkaz `DbResetCommand`; doménové a infrastrukturní komponenty budou přidávány postupně podle kroků F2. Nepoužívaný `OrmModel.php` a přímá závislost `nextras/orm` byly odstraněny v rámci F1-37. Nextras DBAL/Migrations zůstávají pouze pro migrace a související nástroje.
-- `Core/Module/ModuleRegistry.php` je explicitním seznamem modulů. `Bootstrap` při kompilaci Nette DI kontejneru hledá konvencí pojmenovanou extension `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`; chybějící extension přeskočí, nalezená musí být instancovatelným potomkem `Nette\DI\CompilerExtension`. Registry je jediným zdrojem seznamu modulů; nedochází k prohledávání adresářů.
+- `Core/Module/ModuleRegistry.php` je explicitním seznamem modulů. `Bootstrap` při kompilaci Nette DI kontejneru předává tento seznam také jako parametr `registeredModules`; `TranslationFileLoader` jej dostává přes DI, takže modul Translation nemusí záviset na Core. `Bootstrap` zároveň hledá konvencí pojmenovanou extension `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`; chybějící extension přeskočí, nalezená musí být instancovatelným potomkem `Nette\DI\CompilerExtension`. Registry je jediným zdrojem seznamu modulů; nedochází k prohledávání adresářů.
 - Prezentační mapování Nette je definováno v `config/common.neon`: moduly `Front` a `Admin` používají `App\UI\Front\**Presenter` a `App\UI\Admin\**Presenter`; obecné pravidlo `*: App\Presentation\*\**Presenter` zachovává presentery v `Presentation`, zejména chybové presentery. Dvojitá hvězdička `**` odpovídá konvenci Nette Application 3.3.1. Základní routování je v `Core/RouterFactory.php`: `/` přesměruje na `/cs`, Front používá jazykové prefixy `/cs` a `/en` a Admin začíná na `/admin`. Vznikly také minimální presentery `Front:Home` a `Admin:Dashboard` s vlastními Latte šablonami.
 
 ## 2. Odpovědnosti hlavních částí
@@ -201,8 +201,7 @@ assets/
 
 ## 9. Otevřené technické úkoly
 
-- F1-32 zavádí minimální funkční kostru Front a Admin: mapování presenterů, `HomePresenter` a `DashboardPresenter`, jejich Latte šablony a základní routování. Další presentery a aplikační logika vzniknou v navazujících fázích.
-- F1-33: ověřit automatickou registraci DI extension modulů přes `ModuleRegistry` a sestavení kontejneru.
+- F1-34: dokončit spike načítání výchozích překladů modulů z JSON souborů a ověřit validaci, DI registraci a načtení více domén.
 - Dokončit import výchozích systémových překladů.
 - `[PLÁN]` F1-37: Odstranit `OrmModel.php` a přímou závislost `nextras/orm`; před změnou znovu ověřit reference, poté aktualizovat Composer lock a spustit PHPStan/testy.
 - Vynucovat hranice modulů automatickými architektonickými testy.
@@ -213,6 +212,7 @@ assets/
 | 10. 11. 2026 | v1.4: doplněno a ověřeno explicitní mapování presenterů `UI/Front` a `UI/Admin` podle Nette Application 3.3.1; zachováno obecné mapování pro `Presentation`. |
 | 10. 11. 2026 | v1.5: doplněny minimální presentery Front/Home a Admin/Dashboard, uvítací Latte šablony, jazykové routy `/cs` a `/en`, administrační `/admin` a přesměrování `/` na `/cs`. |
 | 10. 11. 2026 | v1.6: doplněn explicitní `ModuleRegistry` a konvence automatické registrace modulových DI extension při kompilaci Nette kontejneru. |
+| 10. 11. 2026 | v1.7: doplněn `TranslationFileLoader`, předávání seznamu modulů přes DI a JSON zdroje překladů `cs`/`en`; ověření spike F1-34 čeká na lokální kontrolu. |
 
 | Datum | Změna |
 |---|---|
