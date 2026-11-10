@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.52 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.53 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **549 kroků**: hotovo 99, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 445, zrušeno 1.
+Celkem **549 kroků**: hotovo 100, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 445, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 35 | 1 | 0 | 0 | 0 | 3 | 0 |
+| F1 | Prostředí a repozitář | 39 | 36 | 0 | 0 | 0 | 0 | 3 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -84,7 +84,7 @@ Celkem **549 kroků**: hotovo 99, rozděláno 1, k úpravě 1, rozhodnout 0, blo
 
 ### Nejbližší technické kroky
 - `[HOTOVO]` **F1-30** Ověřit čisté naklonování a instalaci podle kontrolního seznamu z Lekce 1. Čistý klon vytvořen v samostatné složce; `composer install`, `npm ci`, Composer validace/audit, PHPStan level max, PHP-CS-Fixer, Deptrac, npm build a npm audit prošly. Po přidání `.gitattributes` byly konce řádků sjednoceny a `git status --short` zůstal prázdný.
-- `[ROZDĚLÁNO]` **F1-32** Minimální funkční kostra Front a Admin: mapování presenterů, `HomePresenter` + Latte šablona, `DashboardPresenter` + Latte šablona a routování `/cs`, `/en` a `/admin`; `/` přesměruje na `/cs`. Obě stránky zobrazí jednoduchý potvrzovací text.
+- `[HOTOVO]` **F1-32** Minimální funkční kostra Front a Admin: mapování presenterů, `HomePresenter` + Latte šablona, `DashboardPresenter` + Latte šablona a routování `/cs`, `/en` a `/admin`; `/` přesměruje na `/cs`. Ověřeno v prohlížeči; `composer phpstan`, `composer cs` a `composer arch` proběhly bez chyb.
 - `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů.
 - `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů.
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0).
@@ -100,6 +100,11 @@ Celkem **549 kroků**: hotovo 99, rozděláno 1, k úpravě 1, rozhodnout 0, blo
 - `[HOTOVO]` **F1-26** GitHub Actions workflow pro Composer úspěšně ověřen; všechny kontroly prošly.
 - `[HOTOVO]` **F1-27** GitHub Actions workflow pro npm úspěšně ověřen; instalace, build i audit prošly.
 - `[HOTOVO]` **F1-28** Dependabot přijat GitHubem; všech 5 prvních aktualizačních PR pro Composer, npm a GitHub Actions bylo po úspěšném CI sloučeno přes Squash and merge.
+
+### v2.53 (10. 11. 2026)
+- Dokončen F1-32: minimální funkční kostra Front a Admin, mapování presenterů, Latte šablony a routování `/`, `/cs`, `/en` a `/admin` ověřeny v prohlížeči.
+- `composer phpstan`, `composer cs` a `composer arch` proběhly bez chyb; dva formátovací nálezy PHP-CS-Fixer byly opraveny.
+- Aktualizován souhrnný stav: **100 hotovo**, **0 rozděláno**, **1 k úpravě**, **445 plán**, **1 zrušeno**.
 
 ## 4. Plán po fázích
 
@@ -161,7 +166,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 35 z 39 kroků; 1 krok je rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 36 z 39 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -194,7 +199,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-29** README projektu: jak rozjet projekt na pár příkazů
 - `[HOTOVO]` **F1-30** Ověřit čisté naklonování a rozjetí podle kontrolního seznamu z Lekce 1. V samostatné kontrolní složce proběhly `composer install`, `npm ci`, `composer validate --no-check-publish`, `composer audit`, `composer phpstan`, `composer cs`, `composer arch`, `npm run build` a `npm audit`. Po doplnění `.gitattributes` byla pracovní kopie čistá (`git status --short` bez výstupu).
 - `[HOTOVO]` **F1-31** Vytvořit adresářovou strukturu podle STRUKTURA
-- `[ROZDĚLÁNO]` **F1-32** Vytvořit minimální funkční kostru Front a Admin: ověřit mapování presenterů v Nette, vytvořit `HomePresenter` a jeho `default.latte` s textem „Ahoj, tady Front“, vytvořit `DashboardPresenter` a jeho `default.latte` s textem „Ahoj, tady administrace“, nastavit routování `/cs` a `/en` pro Front, `/admin` pro Admin a přesměrování `/` na `/cs`; ověřit všechny vstupní adresy přes HTTP. Neimplementovat zatím aplikační logiku.
+- `[HOTOVO]` **F1-32** Vytvořit minimální funkční kostru Front a Admin: ověřit mapování presenterů v Nette, vytvořit `HomePresenter` a jeho `default.latte` s textem „Ahoj, tady Front“, vytvořit `DashboardPresenter` a jeho `default.latte` s textem „Ahoj, tady administrace“, nastavit routování `/cs` a `/en` pro Front, `/admin` pro Admin a přesměrování `/` na `/cs`; všechny vstupní adresy ověřeny přes HTTP. Statické kontroly `composer phpstan`, `composer cs` a `composer arch` jsou čisté; bez aplikační logiky.
 - `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů
 - `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0)
