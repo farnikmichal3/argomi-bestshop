@@ -21,6 +21,10 @@ app/
 ├── Modules/
 │   ├── Cart/
 │   ├── Catalog/
+│   │   └── Resources/
+│   │       └── translations/
+│   │           ├── cs.json
+│   │           └── en.json
 │   ├── Checkout/
 │   ├── Customer/
 │   ├── Identity/
@@ -33,6 +37,12 @@ app/
 │   ├── Shipping/
 │   ├── Tax/
 │   └── Translation/
+│       ├── Infrastructure/
+│       │   └── TranslationFileLoader.php
+│       └── Resources/
+│           └── translations/
+│               ├── cs.json
+│               └── en.json
 ├── Presentation/
 │   ├── Accessory/
 │   │   └── LatteExtension.php
