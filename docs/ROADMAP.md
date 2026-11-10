@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.47 · 9. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.48 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **549 kroků**: hotovo 98, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 447, zrušeno 1.
+Celkem **549 kroků**: hotovo 99, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 446, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 34 | 0 | 0 | 0 | 0 | 5 | 0 |
+| F1 | Prostředí a repozitář | 39 | 35 | 0 | 0 | 0 | 0 | 4 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -83,6 +83,8 @@ Celkem **549 kroků**: hotovo 98, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 - `[K ÚPRAVĚ]` **F16-01** Lekce 1: Příprava prostředí a instalace – přejmenovat a ověřit.
 
 ### Nejbližší technické kroky
+- `[HOTOVO]` **F1-30** Ověřit čisté naklonování a instalaci podle kontrolního seznamu z Lekce 1. Čistý klon vytvořen v samostatné složce; `composer install`, `npm ci`, Composer validace/audit, PHPStan level max, PHP-CS-Fixer, Deptrac, npm build a npm audit prošly. Po přidání `.gitattributes` byly konce řádků sjednoceny a `git status --short` zůstal prázdný.
+- `[PLÁN]` **F2-01** Vytvořit `app/Shared` (Domain, Infrastructure) – první implementační krok sdíleného jádra.
 - `[HOTOVO]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; build Sass + esbuild ověřen.
 - `[HOTOVO]` **F1-37** Odstranit přímou závislost `nextras/orm` a nepoužívaný `OrmModel.php`; zachovat Nextras DBAL/Migrations. Ověřeny reference, Composer metadata a lock; `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb.
 - `[HOTOVO]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46. Ověřeno sestavení služby přes Nette DI jako `Psr\Log\LoggerInterface`, zápis strukturovaného JSON logu a maskování citlivého kontextu; PHPStan level max a Deptrac bez nálezů. HTTP provoz bude ověřen až po implementaci aplikace.
@@ -156,7 +158,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 34 z 39 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 35 z 39 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -187,7 +189,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-27** GitHub Actions: `npm ci`, build CSS/JavaScript a `npm audit`. Workflow `.github/workflows/npm.yml` úspěšně proběhl na GitHubu (push, běh č. 1); všechny kroky včetně ověření Node.js/npm verzí skončily úspěšně.
 - `[HOTOVO]` **F1-28** Pravidelná kontrola aktualizací závislostí. Soubor `.github/dependabot.yml` nastavuje týdenní kontroly Composer, npm a GitHub Actions každé pondělí v 06:00 (Europe/Berlin); minor/patch aktualizace seskupuje podle ekosystému, major aktualizace ponechává samostatně. Všech 5 prvních PR bylo po úspěšných CI kontrolách sloučeno přes Squash and merge; změny byly staženy a lokálně ověřeny.
 - `[HOTOVO]` **F1-29** README projektu: jak rozjet projekt na pár příkazů
-- `[PLÁN]` **F1-30** Ověřit čisté naklonování a rozjetí podle kontrolního seznamu z Lekce 1
+- `[HOTOVO]` **F1-30** Ověřit čisté naklonování a rozjetí podle kontrolního seznamu z Lekce 1. V samostatné kontrolní složce proběhly `composer install`, `npm ci`, `composer validate --no-check-publish`, `composer audit`, `composer phpstan`, `composer cs`, `composer arch`, `npm run build` a `npm audit`. Po doplnění `.gitattributes` byla pracovní kopie čistá (`git status --short` bez výstupu).
 - `[HOTOVO]` **F1-31** Vytvořit adresářovou strukturu podle STRUKTURA
 - `[PLÁN]` **F1-32** Spike: mapování presenterů pro `UI/Front` a `UI/Admin` (ověřit v dokumentaci Nette Application)
 - `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů
@@ -735,6 +737,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.48 (10. 11. 2026)
+- Dokončen F1-30: čistý klon v samostatné složce úspěšně prošel instalací Composer/npm, validací a audity, PHPStan level max, PHP-CS-Fixer, Deptrac a sestavením assetů. Po doplnění `.gitattributes` a ověření pravidel LF/CRLF zůstal `git status --short` prázdný.
+- Přidán `.gitattributes` s jednotnými pravidly konců řádků: textové soubory LF, Windows `.bat`/`.cmd` CRLF. Změna byla ověřena v čistém kontrolním klonu.
+- Souhrnný stav: **99 hotovo**, **0 rozděláno**, **1 k úpravě**, **446 plán**, **1 zrušeno**.
 
 ### v2.47 (9. 11. 2026)
 - Dokončena první kontrolní vlna Dependabotu: PR #5 (Composer minor/patch) a #6 (Sass) i major aktualizace GitHub Actions v PR #2, #3 a #4 byly po úspěšném CI sloučeny přes Squash and merge.
