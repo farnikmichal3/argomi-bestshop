@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.59 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.60 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 102, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 443, zrušeno 1.
+Celkem **547 kroků**: hotovo 102, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 442, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 1 | 0 |
+| F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -87,7 +87,7 @@ Celkem **547 kroků**: hotovo 102, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 - `[HOTOVO]` **F1-32** Minimální funkční kostra Front a Admin: mapování presenterů, `HomePresenter` + Latte šablona, `DashboardPresenter` + Latte šablona a routování `/cs`, `/en` a `/admin`; `/` přesměruje na `/cs`. Ověřeno v prohlížeči; `composer phpstan`, `composer cs` a `composer arch` proběhly bez chyb.
 - `[HOTOVO]` **F1-33** Automatická registrace DI extension modulů přes explicitní `ModuleRegistry`; konvence `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`, registrace přes `Configurator::onCompile` a `Compiler::addExtension`, bez skenování adresářů. Ověřeno PHPStan, coding standard, Deptrac a sestavení DI kontejneru; aplikace `/cs` a `/admin` funguje.
 - `[HOTOVO]` **F1-34** Prosadit závazný DB-only standard překladů: za běhu aplikace jsou všechny systémové i obsahové překladové hodnoty výhradně v databázi; SQL migrace a seed skripty smějí obsahovat výchozí systémové hodnoty pro naplnění/aktualizaci DB. Žádné runtime souborové katalogy ani fallback ze souborů. Odstraněn file-loader spike a jeho artefakty; aktualizovány ZAMER, TRANSLATIONS a STRUKTURA. `composer phpstan`, `composer cs` a `composer arch` ověřeny lokálně bez chyb.
-- `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0).
+- `[ZRUŠENO]` **F1-35** Docker nebo DDEV konfigurace. Konečné rozhodnutí: vývojové prostředí zůstává Laragon na Windows; kontejnerizaci nezavádíme. Přenositelnost zajišťují zdokumentované verze nástrojů a reprodukovatelný postup instalace Laragonu a kopírování projektu na jiný počítač.
 - `[HOTOVO]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; build Sass + esbuild ověřen.
 - `[HOTOVO]` **F1-37** Odstranit přímou závislost `nextras/orm` a nepoužívaný `OrmModel.php`; zachovat Nextras DBAL/Migrations. Ověřeny reference, Composer metadata a lock; `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb.
 - `[HOTOVO]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46. Ověřeno sestavení služby přes Nette DI jako `Psr\Log\LoggerInterface`, zápis strukturovaného JSON logu a maskování citlivého kontextu; PHPStan level max a Deptrac bez nálezů. HTTP provoz bude ověřen až po implementaci aplikace.
@@ -124,9 +124,15 @@ Celkem **547 kroků**: hotovo 102, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 - Upřesněno DB-only pravidlo: SQL migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení/aktualizaci databáze. Zákaz se týká runtime souborových katalogů a načítání překladů ze souborů; běžící aplikace čte překlady pouze z DB.
 - Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
 
+### v2.60 (10. 11. 2026)
+- Konečné rozhodnutí: Laragon zůstává jediným vývojovým prostředím; Docker ani DDEV zavádět nebudeme.
+- F1-35 byl označen jako ZRUŠENO. Přenositelnost zajistí přesně zdokumentované verze nástrojů a reprodukovatelný postup přípravy Laragonu na dalším počítači.
+- F1 je uzavřena: 38 kroků HOTOVO, 1 krok ZRUŠENO.
+- Souhrn: **102 hotovo**, **0 rozděláno**, **1 k úpravě**, **442 plán**, **2 zrušeno**.
+
 ### v2.59 (10. 11. 2026)
 - F1-34 dokončen po lokálním ověření `composer phpstan`, `composer cs` a `composer arch` bez chyb.
-- F1 má nyní **38 hotových kroků z 39**; jediným zbývajícím krokem je F1-35 (Docker nebo DDEV konfigurace).
+- F1 má **38 hotových kroků a 1 zrušený krok z 39**; F1-35 (Docker/DDEV) byl zrušen na základě konečného rozhodnutí zachovat Laragon.
 - Souhrn: **102 hotovo**, **0 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
 
 ### v2.54 (10. 11. 2026)
