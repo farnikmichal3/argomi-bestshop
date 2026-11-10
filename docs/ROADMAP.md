@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.57 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.58 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -86,7 +86,7 @@ Celkem **547 kroků**: hotovo 101, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 - `[HOTOVO]` **F1-30** Ověřit čisté naklonování a instalaci podle kontrolního seznamu z Lekce 1. Čistý klon vytvořen v samostatné složce; `composer install`, `npm ci`, Composer validace/audit, PHPStan level max, PHP-CS-Fixer, Deptrac, npm build a npm audit prošly. Po přidání `.gitattributes` byly konce řádků sjednoceny a `git status --short` zůstal prázdný.
 - `[HOTOVO]` **F1-32** Minimální funkční kostra Front a Admin: mapování presenterů, `HomePresenter` + Latte šablona, `DashboardPresenter` + Latte šablona a routování `/cs`, `/en` a `/admin`; `/` přesměruje na `/cs`. Ověřeno v prohlížeči; `composer phpstan`, `composer cs` a `composer arch` proběhly bez chyb.
 - `[HOTOVO]` **F1-33** Automatická registrace DI extension modulů přes explicitní `ModuleRegistry`; konvence `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`, registrace přes `Configurator::onCompile` a `Compiler::addExtension`, bez skenování adresářů. Ověřeno PHPStan, coding standard, Deptrac a sestavení DI kontejneru; aplikace `/cs` a `/admin` funguje.
-- `[ROZDĚLÁNO]` **F1-34** Prosadit závazný DB-only standard překladů: všechny systémové i obsahové překladové hodnoty jsou výhradně v databázi; žádné souborové katalogy ani runtime fallback ze souborů. Odstraněn chybný file-loader spike a jeho artefakty; aktualizovány ZAMER, TRANSLATIONS a STRUKTURA. Zbývá lokální ověření kontrol.
+- `[ROZDĚLÁNO]` **F1-34** Prosadit závazný DB-only standard překladů: za běhu aplikace jsou všechny systémové i obsahové překladové hodnoty výhradně v databázi; SQL migrace a seed skripty smějí obsahovat výchozí systémové hodnoty pro naplnění/aktualizaci DB. Žádné runtime souborové katalogy ani fallback ze souborů. Odstraněn file-loader spike a jeho artefakty; aktualizovány ZAMER, TRANSLATIONS a STRUKTURA. Zbývá lokální ověření kontrol.
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0).
 - `[HOTOVO]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; build Sass + esbuild ověřen.
 - `[HOTOVO]` **F1-37** Odstranit přímou závislost `nextras/orm` a nepoužívaný `OrmModel.php`; zachovat Nextras DBAL/Migrations. Ověřeny reference, Composer metadata a lock; `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb.
@@ -119,6 +119,10 @@ Celkem **547 kroků**: hotovo 101, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 - F1-34 přeformulován na prosazení DB-only standardu: všechny překladové hodnoty včetně systémových jsou výhradně v databázi. Aktualizovány ZAMER, TRANSLATIONS a STRUKTURA; odstraněny JSON katalogy, `TranslationFileLoader` a jeho DI registrace.
 - Další implementace překladového úložiště, import/seed, ochrana systémových hodnot a runtime čtení patří do fáze F4 a proběhnou výhradně nad databází.
 - Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
+
+### v2.58 (10. 11. 2026)
+- Upřesněno DB-only pravidlo: SQL migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení/aktualizaci databáze. Zákaz se týká runtime souborových katalogů a načítání překladů ze souborů; běžící aplikace čte překlady pouze z DB.
+- Souhrn zůstává: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
 
 ### v2.54 (10. 11. 2026)
 - Zahájen F1-33: explicitní `ModuleRegistry` eviduje všech 14 modulů a Bootstrap podle něj registruje dostupné DI extension přes Nette `onCompile`.
