@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** cílové architektonické rozhodnutí; implementace postupně  
-**Revize:** 1.0 · 8. 11. 2026
+**Revize:** 1.1 · 10. 11. 2026
 
 ## 1. Cíl
 
@@ -99,6 +99,8 @@ app/Modules/<Module>/Resources/translations/<locale>.json
 Kořenem souboru je JSON objekt, jehož vlastnosti jsou stabilní klíče a hodnoty jsou neprázdné prosté texty. Klíče používají zápis s tečkami, například `product.not_found`. Jeden soubor obsahuje vždy jeden jazyk; počáteční locale jsou `cs` a `en`. HTML se ve zdrojových systémových překladech nepovoluje. Parametrizované zprávy a ICU MessageFormat se doplní v navazující implementaci.
 
 Načítání prochází explicitní seznam modulů z `ModuleRegistry`, který předává kompoziční vrstva. Modul Translation nesmí přímo záviset na Core. Chybějící soubor znamená, že modul pro daný jazyk zatím žádné výchozí texty nedodává; existující, ale nečitelný nebo neplatný soubor je chyba a nesmí být tiše ignorován.
+
+Aktuální spike F1-34 poskytuje `TranslationFileLoader` a vzorové soubory pro Catalog a Translation. Loader pouze načítá a validuje zdrojové soubory; neprovádí zápis do databáze, nepřepisuje `translation_message` a zatím neposkytuje runtime překladač.
 
 ## 8. Současný stav databáze a migrace
 
