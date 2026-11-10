@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.53 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.54 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **549 kroků**: hotovo 100, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 445, zrušeno 1.
+Celkem **549 kroků**: hotovo 100, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 444, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 36 | 0 | 0 | 0 | 0 | 3 | 0 |
+| F1 | Prostředí a repozitář | 39 | 36 | 1 | 0 | 0 | 0 | 2 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -85,7 +85,7 @@ Celkem **549 kroků**: hotovo 100, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 ### Nejbližší technické kroky
 - `[HOTOVO]` **F1-30** Ověřit čisté naklonování a instalaci podle kontrolního seznamu z Lekce 1. Čistý klon vytvořen v samostatné složce; `composer install`, `npm ci`, Composer validace/audit, PHPStan level max, PHP-CS-Fixer, Deptrac, npm build a npm audit prošly. Po přidání `.gitattributes` byly konce řádků sjednoceny a `git status --short` zůstal prázdný.
 - `[HOTOVO]` **F1-32** Minimální funkční kostra Front a Admin: mapování presenterů, `HomePresenter` + Latte šablona, `DashboardPresenter` + Latte šablona a routování `/cs`, `/en` a `/admin`; `/` přesměruje na `/cs`. Ověřeno v prohlížeči; `composer phpstan`, `composer cs` a `composer arch` proběhly bez chyb.
-- `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů.
+- `[ROZDĚLÁNO]` **F1-33** Spike: automatická registrace DI extension modulů přes explicitní `ModuleRegistry`; konvence `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`, registrace přes `Configurator::onCompile` a `Compiler::addExtension`, bez skenování adresářů. Ověřit PHPStan, coding standard, Deptrac a sestavení DI kontejneru.
 - `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů.
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0).
 - `[HOTOVO]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; build Sass + esbuild ověřen.
@@ -105,6 +105,12 @@ Celkem **549 kroků**: hotovo 100, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 - Dokončen F1-32: minimální funkční kostra Front a Admin, mapování presenterů, Latte šablony a routování `/`, `/cs`, `/en` a `/admin` ověřeny v prohlížeči.
 - `composer phpstan`, `composer cs` a `composer arch` proběhly bez chyb; dva formátovací nálezy PHP-CS-Fixer byly opraveny.
 - Aktualizován souhrnný stav: **100 hotovo**, **0 rozděláno**, **1 k úpravě**, **445 plán**, **1 zrušeno**.
+
+### v2.54 (10. 11. 2026)
+- Zahájen F1-33: explicitní `ModuleRegistry` eviduje všech 14 modulů a Bootstrap podle něj registruje dostupné DI extension přes Nette `onCompile`.
+- Chybějící extension se přeskočí; nalezená třída musí být instancovatelným potomkem `CompilerExtension`. Bez prohledávání adresářů.
+- Ověření PHPStan, coding standardu, Deptrac a sestavení DI kontejneru čeká na lokální kontrolu.
+- Souhrn: **100 hotovo**, **1 rozděláno**, **1 k úpravě**, **444 plán**, **1 zrušeno**.
 
 ## 4. Plán po fázích
 
@@ -166,7 +172,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 36 z 39 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 36 z 39 kroků; 1 krok je rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -200,7 +206,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-30** Ověřit čisté naklonování a rozjetí podle kontrolního seznamu z Lekce 1. V samostatné kontrolní složce proběhly `composer install`, `npm ci`, `composer validate --no-check-publish`, `composer audit`, `composer phpstan`, `composer cs`, `composer arch`, `npm run build` a `npm audit`. Po doplnění `.gitattributes` byla pracovní kopie čistá (`git status --short` bez výstupu).
 - `[HOTOVO]` **F1-31** Vytvořit adresářovou strukturu podle STRUKTURA
 - `[HOTOVO]` **F1-32** Vytvořit minimální funkční kostru Front a Admin: ověřit mapování presenterů v Nette, vytvořit `HomePresenter` a jeho `default.latte` s textem „Ahoj, tady Front“, vytvořit `DashboardPresenter` a jeho `default.latte` s textem „Ahoj, tady administrace“, nastavit routování `/cs` a `/en` pro Front, `/admin` pro Admin a přesměrování `/` na `/cs`; všechny vstupní adresy ověřeny přes HTTP. Statické kontroly `composer phpstan`, `composer cs` a `composer arch` jsou čisté; bez aplikační logiky.
-- `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů
+- `[ROZDĚLÁNO]` **F1-33** Spike: automatická registrace DI extension modulů přes explicitní `ModuleRegistry`; konvence `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`, registrace přes `Configurator::onCompile` a `Compiler::addExtension`, bez skenování adresářů. Ověřit PHPStan, coding standard, Deptrac a sestavení DI kontejneru.
 - `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0)
 - `[HOTOVO]` **F1-36** Odstranit nepoužívané balíčky Vite a Vite pluginu z `package.json`/`package-lock.json`; Sass + esbuild build ověřen jako úspěšný. Vite balíčky nejsou v závislostech.
