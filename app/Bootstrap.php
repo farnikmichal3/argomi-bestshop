@@ -64,10 +64,6 @@ class Bootstrap
                 }
 
                 $extension = new $extensionClass();
-                if (!$extension instanceof CompilerExtension) {
-                    throw new LogicException(sprintf('Invalid DI extension for module %s.', $module));
-                }
-
                 $compiler->addExtension('module_' . strtolower($module), $extension);
             }
         };
