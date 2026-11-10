@@ -1,4 +1,5 @@
 services:
+	- App\Modules\Translation\Infrastructure\TranslationFileLoader(%appDir%, %registeredModules%)
 	- App\Core\RouterFactory::createRouter
 	- App\Core\Logging\SensitiveDataProcessor
 	- App\Core\Logging\LoggerFactory::createLogger(@App\Core\Logging\SensitiveDataProcessor, %logging.file%, %logging.maxFiles%, %logging.level%)
