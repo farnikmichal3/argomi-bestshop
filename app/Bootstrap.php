@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Core\Module\ModuleRegistry;
 use Nette;
 use Nette\Bootstrap\Configurator;
+use Nette\DI\Compiler;
+use Nette\DI\CompilerExtension;
+use LogicException;
 
 class Bootstrap
 {
@@ -46,5 +50,26 @@ class Bootstrap
         $this->configurator->addConfig($configDir . '/common.neon');
         $this->configurator->addConfig($configDir . '/services.neon');
         $this->configurator->addConfig($configDir . '/local.neon');
+
+        $this->configurator->onCompile[] = static function (Configurator $configurator, Compiler $compiler): void {
+            foreach (ModuleRegistry::MODULES as $module) {
+                $extensionClass = 'App\\Modules\\' . $module . '\\Infrastructure\\DI\\' . $module . 'Extension';
+
+                if (!class_exists($extensionClass)) {
+                    continue;
+                }
+
+                if (!is_subclass_of($extensionClass, CompilerExtension::class)) {
+                    throw new LogicException(sprintf('Invalid DI extension for module %s.', $module));
+                }
+
+                $extension = new $extensionClass();
+                if (!$extension instanceof CompilerExtension) {
+                    throw new LogicException(sprintf('Invalid DI extension for module %s.', $module));
+                }
+
+                $compiler->addExtension('module_' . strtolower($module), $extension);
+            }
+        };
     }
 }
