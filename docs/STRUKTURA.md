@@ -71,7 +71,7 @@ Poznámky:
 - Strom obsahuje i prázdné adresáře držené soubory `.gitkeep`.
 - Moduly kromě Catalog zatím nemusí mít vytvořené všechny vnitřní vrstvy.
 - `Shared/Domain` a `Shared/Infrastructure` jsou již vytvořené základní adresáře. `Infrastructure` obsahuje bezpečný konzolový příkaz `DbResetCommand`; doménové a infrastrukturní komponenty budou přidávány postupně podle kroků F2. Nepoužívaný `OrmModel.php` a přímá závislost `nextras/orm` byly odstraněny v rámci F1-37. Nextras DBAL/Migrations zůstávají pouze pro migrace a související nástroje.
-- Prezentační mapování Nette je definováno v `config/common.neon`: moduly `Front` a `Admin` používají `App\\UI\\Front\\**Presenter` a `App\\UI\\Admin\\**Presenter`; obecné pravidlo `*: App\\Presentation\\*\\**Presenter` zachovává stávající presentery v `Presentation`, zejména `Error:Error4xx` a `Error:Error5xx`. Dvojitá hvězdička `**` odpovídá konvenci Nette Application od verze 3.2.3; projekt používá 3.3.1. Mapování převádí jméno presenteru na třídu, samo však nevytváří URL routy ani implementace presenterů.
+- Prezentační mapování Nette je definováno v `config/common.neon`: moduly `Front` a `Admin` používají `App\UI\Front\**Presenter` a `App\UI\Admin\**Presenter`; obecné pravidlo `*: App\Presentation\*\**Presenter` zachovává stávající presentery v `Presentation`, zejména `Error:Error4xx` a `Error:Error5xx`. Dvojitá hvězdička `**` odpovídá konvenci Nette Application od verze 3.2.3; projekt používá 3.3.1. Mapování převádí jméno presenteru na třídu, samo však nevytváří URL routy ani implementace presenterů.
 
 ## 2. Odpovědnosti hlavních částí
 
@@ -137,10 +137,10 @@ Centrální aplikační logování přes Monolog. `LoggerFactory` vytváří JSO
 ## 5. Prezentační vrstvy
 
 ### UI/Admin
-Administrace a její presentery, Latte šablony, formuláře, komponenty a datagridy. Presentery modulu `Admin` se mapují přes `Admin:Presenter` na `App\\UI\\Admin\\Presenter\\PresenterPresenter` podle pravidla `Admin: App\\UI\\Admin\\**Presenter`. Oprávnění kontroluje Identity; samotné skrytí ovládacího prvku není autorizace.
+Administrace a její presentery, Latte šablony, formuláře, komponenty a datagridy. Presentery modulu `Admin` se mapují přes `Admin:Presenter` na `App\UI\Admin\Dashboard\DashboardPresenter` podle pravidla `Admin: App\UI\Admin\**Presenter`. Oprávnění kontroluje Identity; samotné skrytí ovládacího prvku není autorizace.
 
 ### UI/Front
-Zákaznický obchod: katalog, účet, košík, checkout, domovská stránka a zákaznické chybové obrazovky. Presentery modulu `Front` se mapují přes `Front:Presenter` na `App\\UI\\Front\\Presenter\\PresenterPresenter` podle pravidla `Front: App\\UI\\Front\\**Presenter`.
+Zákaznický obchod: katalog, účet, košík, checkout, domovská stránka a zákaznické chybové obrazovky. Presentery modulu `Front` se mapují přes `Front:Presenter` na `App\UI\Front\Home\HomePresenter` podle pravidla `Front: App\UI\Front\**Presenter`.
 
 ### UI/Shared
 Znovupoužitelné UI komponenty, formuláře a Latte helpery pro Front i Admin. Sdílení je povoleno pouze pro prezentační prvky, nikoliv pro obchodní logiku.
