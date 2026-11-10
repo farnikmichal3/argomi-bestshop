@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.50 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.51 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **549 kroků**: hotovo 99, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 446, zrušeno 1.
+Celkem **549 kroků**: hotovo 99, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 445, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 35 | 0 | 0 | 0 | 0 | 4 | 0 |
+| F1 | Prostředí a repozitář | 39 | 35 | 1 | 0 | 0 | 0 | 3 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -84,7 +84,7 @@ Celkem **549 kroků**: hotovo 99, rozděláno 0, k úpravě 1, rozhodnout 0, blo
 
 ### Nejbližší technické kroky
 - `[HOTOVO]` **F1-30** Ověřit čisté naklonování a instalaci podle kontrolního seznamu z Lekce 1. Čistý klon vytvořen v samostatné složce; `composer install`, `npm ci`, Composer validace/audit, PHPStan level max, PHP-CS-Fixer, Deptrac, npm build a npm audit prošly. Po přidání `.gitattributes` byly konce řádků sjednoceny a `git status --short` zůstal prázdný.
-- `[PLÁN]` **F1-32** Spike: mapování presenterů pro `UI/Front` a `UI/Admin` (ověřit v dokumentaci Nette Application).
+- `[ROZDĚLÁNO]` **F1-32** Minimální funkční kostra Front a Admin: mapování presenterů, `HomePresenter` + Latte šablona, `DashboardPresenter` + Latte šablona a routování `/` a `/admin`; obě stránky zobrazí jednoduchý potvrzovací text.
 - `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů.
 - `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů.
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0).
@@ -161,7 +161,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 35 z 39 kroků; žádný krok není rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 35 z 39 kroků; 1 krok je rozpracován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -194,7 +194,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-29** README projektu: jak rozjet projekt na pár příkazů
 - `[HOTOVO]` **F1-30** Ověřit čisté naklonování a rozjetí podle kontrolního seznamu z Lekce 1. V samostatné kontrolní složce proběhly `composer install`, `npm ci`, `composer validate --no-check-publish`, `composer audit`, `composer phpstan`, `composer cs`, `composer arch`, `npm run build` a `npm audit`. Po doplnění `.gitattributes` byla pracovní kopie čistá (`git status --short` bez výstupu).
 - `[HOTOVO]` **F1-31** Vytvořit adresářovou strukturu podle STRUKTURA
-- `[PLÁN]` **F1-32** Spike: mapování presenterů pro `UI/Front` a `UI/Admin` (ověřit v dokumentaci Nette Application)
+- `[ROZDĚLÁNO]` **F1-32** Vytvořit minimální funkční kostru Front a Admin: ověřit mapování presenterů v Nette, vytvořit `HomePresenter` a jeho `default.latte` s textem „Ahoj, tady Front“, vytvořit `DashboardPresenter` a jeho `default.latte` s textem „Ahoj, tady administrace“, nastavit routování hlavní stránky a `/admin` a ověřit obě stránky přes HTTP. Neimplementovat zatím aplikační logiku.
 - `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů
 - `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0)
@@ -740,6 +740,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ---
 
 ## 5. Historie revizí
+
+### v2.51 (10. 11. 2026)
+- Zpřesněn rozsah F1-32: místo samotného SPIKE mapování se připraví minimální funkční kostra Front a Admin včetně presenterů, Latte šablon a rout `/` a `/admin`. Ověření proběhne přes HTTP; obsah stránek zůstane pouze jednoduchý uvítací text bez aplikační logiky.
+- F1-32 je rozpracován; souhrn je **99 hotovo**, **1 rozděláno**, **1 k úpravě**, **445 plán**, **1 zrušeno**.
 
 ### v2.50 (10. 11. 2026)
 - Oprava předchozí revize: F2-01 nebyl dokončen; jeho stav zůstává PLÁN. F1-32 až F1-35 jsou stále otevřené a F1 proto není uzavřená. Celkový stav vrácen na **99 hotovo**, **0 rozděláno**, **1 k úpravě**, **446 plán**, **1 zrušeno**.
