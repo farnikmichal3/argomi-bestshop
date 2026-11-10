@@ -53,16 +53,18 @@ final class TranslationFileLoader
                 throw new RuntimeException(sprintf('Translation file "%s" must contain a JSON object.', $file));
             }
 
-            $messages = get_object_vars($decoded);
+            $messages = [];
 
-            foreach ($messages as $key => $message) {
-                if (preg_match('/\\A[a-zA-Z0-9][a-zA-Z0-9._-]*\\z/', $key) !== 1) {
-                    throw new RuntimeException(sprintf('Invalid translation key "%s" in "%s".', $key, $file));
+            foreach (get_object_vars($decoded) as $key => $message) {
+                if (!is_string($key) || preg_match('/\\A[a-zA-Z0-9][a-zA-Z0-9._-]*\\z/', $key) !== 1) {
+                    throw new RuntimeException(sprintf('Invalid translation key "%s" in "%s".', (string) $key, $file));
                 }
 
                 if (!is_string($message) || trim($message) === '') {
                     throw new RuntimeException(sprintf('Translation "%s" in "%s" must be a non-empty string.', $key, $file));
                 }
+
+                $messages[$key] = $message;
             }
 
             $translations[$module] = $messages;
