@@ -1,0 +1,4 @@
+{
+    "system.translation.missing": "The requested translation was not found.",
+    "system.translation.invalid_file": "The default translation file is invalid."
+}
