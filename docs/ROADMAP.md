@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.55 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.56 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **549 kroků**: hotovo 101, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 443, zrušeno 1.
+Celkem **547 kroků**: hotovo 101, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 443, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -86,7 +86,7 @@ Celkem **549 kroků**: hotovo 101, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 - `[HOTOVO]` **F1-30** Ověřit čisté naklonování a instalaci podle kontrolního seznamu z Lekce 1. Čistý klon vytvořen v samostatné složce; `composer install`, `npm ci`, Composer validace/audit, PHPStan level max, PHP-CS-Fixer, Deptrac, npm build a npm audit prošly. Po přidání `.gitattributes` byly konce řádků sjednoceny a `git status --short` zůstal prázdný.
 - `[HOTOVO]` **F1-32** Minimální funkční kostra Front a Admin: mapování presenterů, `HomePresenter` + Latte šablona, `DashboardPresenter` + Latte šablona a routování `/cs`, `/en` a `/admin`; `/` přesměruje na `/cs`. Ověřeno v prohlížeči; `composer phpstan`, `composer cs` a `composer arch` proběhly bez chyb.
 - `[HOTOVO]` **F1-33** Automatická registrace DI extension modulů přes explicitní `ModuleRegistry`; konvence `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`, registrace přes `Configurator::onCompile` a `Compiler::addExtension`, bez skenování adresářů. Ověřeno PHPStan, coding standard, Deptrac a sestavení DI kontejneru; aplikace `/cs` a `/admin` funguje.
-- `[ROZDĚLÁNO]` **F1-34** Spike: načítání výchozích překladů modulů z JSON souborů podle locale. Přidán `TranslationFileLoader`, který načítá domény podle explicitního seznamu modulů předaného přes DI; ověřuje JSON objekt, klíče a neprázdné textové hodnoty. Připraveny ukázkové soubory `cs.json` a `en.json` pro Catalog a Translation. Čeká na lokální PHPStan, coding standard, Deptrac a ověření načtení přes DI..
+- `[ROZDĚLÁNO]` **F1-34** Spike: načítání výchozích překladů modulů z JSON souborů podle locale. Přidán `TranslationFileLoader`, který načítá domény podle explicitního seznamu modulů předaného přes DI; ověřuje JSON objekt, klíče a neprázdné textové hodnoty. Připraveny ukázkové soubory `cs.json` a `en.json` pro Catalog a Translation. Čeká na lokální PHPStan, coding standard, Deptrac a ověření načtení přes DI.
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0).
 - `[HOTOVO]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; build Sass + esbuild ověřen.
 - `[HOTOVO]` **F1-37** Odstranit přímou závislost `nextras/orm` a nepoužívaný `OrmModel.php`; zachovat Nextras DBAL/Migrations. Ověřeny reference, Composer metadata a lock; `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb.
