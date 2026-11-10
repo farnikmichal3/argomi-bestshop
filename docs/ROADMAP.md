@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.56 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.57 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -112,8 +112,12 @@ Celkem **547 kroků**: hotovo 101, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 - Souhrn: **101 hotovo**, **0 rozděláno**, **1 k úpravě**, **444 plán**, **1 zrušeno**.
 
 ### v2.56 (10. 11. 2026)
-- Zahájen F1-34: zaveden JSON formát výchozích překladů podle modulu a locale, centrální `TranslationFileLoader` a předání explicitního seznamu modulů přes DI bez závislosti Translation na Core.
-- Připraveny vzorové české a anglické soubory pro moduly Catalog a Translation. Ověření PHPStan, coding standardu, Deptrac a načtení souborů přes DI čeká na lokální kontrolu.
+- Zahájen F1-34 chybným návrhem souborových JSON katalogů; následně byl po upřesnění závazného požadavku tento směr zrušen a všechny souborové artefakty odstraněny.
+- Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
+
+### v2.57 (10. 11. 2026)
+- F1-34 přeformulován na prosazení DB-only standardu: všechny překladové hodnoty včetně systémových jsou výhradně v databázi. Aktualizovány ZAMER, TRANSLATIONS a STRUKTURA; odstraněny JSON katalogy, `TranslationFileLoader` a jeho DI registrace.
+- Další implementace překladového úložiště, import/seed, ochrana systémových hodnot a runtime čtení patří do fáze F4 a proběhnou výhradně nad databází.
 - Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
 
 ### v2.54 (10. 11. 2026)
