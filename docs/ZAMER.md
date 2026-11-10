@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.29 · 10. 11. 2026
+**Revize:** 1.30 · 10. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -148,11 +148,11 @@ Překladový model se řídí dokumentem [TRANSLATIONS](TRANSLATIONS.md).
 
 Závazná rozhodnutí:
 - Překlady budou rozdělené podle domén/modulů; nebude se dlouhodobě používat jediná obří tabulka pro všechny systémové texty.
-- **Veškerý překládaný text je uložen výhradně v databázi.** Platí to pro obsahové překlady, systémové texty dodané aplikací i vlastní texty administrátora/obchodníka. V repozitáři ani v jiných souborech nesmějí být překladové katalogy, výchozí překladové hodnoty ani záložní textové zdroje. Kód obsahuje pouze stabilní identifikátory/klíče a načítá hodnoty z databáze.
+- **Veškerý překládaný text je za běhu aplikace uložen výhradně v databázi.** Platí to pro obsahové překlady, systémové texty dodané aplikací i vlastní texty administrátora/obchodníka. SQL databázové migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení nebo aktualizaci databáze. Nesmějí však existovat runtime souborové katalogy ani fallback ze souborů; aplikace načítá překlady výhradně z databáze. Kód obsahuje pouze stabilní identifikátory/klíče a technickou logiku.
 - Obsahové překlady entit zůstávají u příslušné domény (např. produktové překlady u katalogu).
 - Systémové texty dodávané aplikací jsou chráněné. Administrátor je nesmí přímo přepisovat.
 - Administrátor smí spravovat vlastní překlady a vlastní obsahové texty v rozsahu svých oprávnění.
-- Společný modul Translation poskytuje databázovou infrastrukturu, správu systémových klíčů, import/aktualizaci databázových záznamů, fallback, cache a kontrolu konzistence; nevlastní obsahové překlady všech modulů. Výchozí systémové hodnoty se do databáze dostávají výhradně databázovou migrací nebo řízeným databázovým seedem; nikdy se nenačítají z runtime souborových katalogů.
+- Společný modul Translation poskytuje databázovou infrastrukturu, správu systémových klíčů, import/aktualizaci databázových záznamů, fallback, cache a kontrolu konzistence; nevlastní obsahové překlady všech modulů. Výchozí systémové hodnoty se do databáze dostávají řízenou databázovou migrací nebo seedem; SQL soubory mohou obsahovat jejich výchozí znění, ale nikdy se z nich nenačítá překlad za běhu aplikace.
 - Přechod ze současné tabulky `translation_message` musí proběhnout migrací bez ztráty dat.
 
 ## 8. Bezpečnost a identity
