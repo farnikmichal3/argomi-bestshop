@@ -212,6 +212,7 @@ assets/
 | 10. 11. 2026 | v1.3: aktualizován strom `Shared` podle skutečného repozitáře; odstraněna zastaralá reference na `OrmModel.php`, který byl odstraněn v F1-37. |
 | 10. 11. 2026 | v1.4: doplněno a ověřeno explicitní mapování presenterů `UI/Front` a `UI/Admin` podle Nette Application 3.3.1; zachováno obecné mapování pro `Presentation`. |
 | 10. 11. 2026 | v1.5: doplněny minimální presentery Front/Home a Admin/Dashboard, uvítací Latte šablony, jazykové routy `/cs` a `/en`, administrační `/admin` a přesměrování `/` na `/cs`. |
+| 10. 11. 2026 | v1.6: doplněn explicitní `ModuleRegistry` a konvence automatické registrace modulových DI extension při kompilaci Nette kontejneru. |
 
 | Datum | Změna |
 |---|---|
