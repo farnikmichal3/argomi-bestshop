@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 1.4 · 10. 11. 2026  
+**Revize:** 1.5 · 10. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 10. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -71,7 +71,7 @@ Poznámky:
 - Strom obsahuje i prázdné adresáře držené soubory `.gitkeep`.
 - Moduly kromě Catalog zatím nemusí mít vytvořené všechny vnitřní vrstvy.
 - `Shared/Domain` a `Shared/Infrastructure` jsou již vytvořené základní adresáře. `Infrastructure` obsahuje bezpečný konzolový příkaz `DbResetCommand`; doménové a infrastrukturní komponenty budou přidávány postupně podle kroků F2. Nepoužívaný `OrmModel.php` a přímá závislost `nextras/orm` byly odstraněny v rámci F1-37. Nextras DBAL/Migrations zůstávají pouze pro migrace a související nástroje.
-- Prezentační mapování Nette je definováno v `config/common.neon`: moduly `Front` a `Admin` používají `App\UI\Front\**Presenter` a `App\UI\Admin\**Presenter`; obecné pravidlo `*: App\Presentation\*\**Presenter` zachovává stávající presentery v `Presentation`, zejména `Error:Error4xx` a `Error:Error5xx`. Dvojitá hvězdička `**` odpovídá konvenci Nette Application od verze 3.2.3; projekt používá 3.3.1. Mapování převádí jméno presenteru na třídu, samo však nevytváří URL routy ani implementace presenterů.
+- Prezentační mapování Nette je definováno v `config/common.neon`: moduly `Front` a `Admin` používají `App\UI\Front\**Presenter` a `App\UI\Admin\**Presenter`; obecné pravidlo `*: App\Presentation\*\**Presenter` zachovává presentery v `Presentation`, zejména chybové presentery. Dvojitá hvězdička `**` odpovídá konvenci Nette Application 3.3.1. Základní routování je v `Core/RouterFactory.php`: `/` přesměruje na `/cs`, Front používá jazykové prefixy `/cs` a `/en` a Admin začíná na `/admin`. Vznikly také minimální presentery `Front:Home` a `Admin:Dashboard` s vlastními Latte šablonami.
 
 ## 2. Odpovědnosti hlavních částí
 
@@ -198,7 +198,7 @@ assets/
 
 ## 9. Otevřené technické úkoly
 
-- Mapování UI presenterů pro Nette bylo ověřeno a zavedeno v F1-32; skutečné URL routy a implementace presenterů vzniknou v navazujících fázích.
+- F1-32 zavádí minimální funkční kostru Front a Admin: mapování presenterů, `HomePresenter` a `DashboardPresenter`, jejich Latte šablony a základní routování. Další presentery a aplikační logika vzniknou v navazujících fázích.
 - Ujasnit automatickou registraci DI extension modulů.
 - Dokončit import výchozích systémových překladů.
 - `[PLÁN]` F1-37: Odstranit `OrmModel.php` a přímou závislost `nextras/orm`; před změnou znovu ověřit reference, poté aktualizovat Composer lock a spustit PHPStan/testy.
@@ -208,6 +208,7 @@ assets/
 
 | 10. 11. 2026 | v1.3: aktualizován strom `Shared` podle skutečného repozitáře; odstraněna zastaralá reference na `OrmModel.php`, který byl odstraněn v F1-37. |
 | 10. 11. 2026 | v1.4: doplněno a ověřeno explicitní mapování presenterů `UI/Front` a `UI/Admin` podle Nette Application 3.3.1; zachováno obecné mapování pro `Presentation`. |
+| 10. 11. 2026 | v1.5: doplněny minimální presentery Front/Home a Admin/Dashboard, uvítací Latte šablony, jazykové routy `/cs` a `/en`, administrační `/admin` a přesměrování `/` na `/cs`. |
 
 | Datum | Změna |
 |---|---|
