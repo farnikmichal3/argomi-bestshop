@@ -88,7 +88,19 @@ Každý modul udržuje své výchozí systémové texty v `Modules/<Module>/Reso
 
 Import musí být opakovatelný a nesmí přepsat chráněný zdroj vlastním textem administrátora.
 
-## 7. Současný stav databáze a migrace
+## 7. Formát zdrojových souborů
+
+Výchozí systémové texty jsou uloženy v JSON souborech podle modulu a jazyka:
+
+```text
+app/Modules/<Module>/Resources/translations/<locale>.json
+```
+
+Kořenem souboru je JSON objekt, jehož vlastnosti jsou stabilní klíče a hodnoty jsou neprázdné prosté texty. Klíče používají zápis s tečkami, například `product.not_found`. Jeden soubor obsahuje vždy jeden jazyk; počáteční locale jsou `cs` a `en`. HTML se ve zdrojových systémových překladech nepovoluje. Parametrizované zprávy a ICU MessageFormat se doplní v navazující implementaci.
+
+Načítání prochází explicitní seznam modulů z `ModuleRegistry`, který předává kompoziční vrstva. Modul Translation nesmí přímo záviset na Core. Chybějící soubor znamená, že modul pro daný jazyk zatím žádné výchozí texty nedodává; existující, ale nečitelný nebo neplatný soubor je chyba a nesmí být tiše ignorován.
+
+## 8. Současný stav databáze a migrace
 
 Současné schéma v1 obsahuje:
 - doménové překladové tabulky (např. `product_translation`, `category_translation`, `shipping_method_translation`, `payment_method_translation`),
@@ -104,7 +116,7 @@ Před migrací:
 5. připravit převod dat bez ztráty a test porovnání počtu/obsahu,
 6. teprve poté odstranit staré úložiště novou migrací.
 
-## 8. Minimální testy
+## 9. Minimální testy
 
 - administrátor nemůže změnit systémový výchozí text,
 - administrátor může přidat vlastní překlad v povolené doméně,
@@ -116,7 +128,7 @@ Před migrací:
 - neznámý nebo nepoužitý klíč je diagnostikován,
 - texty se bezpečně escapují a HTML se nepovolí bez sanitizace.
 
-## 9. Implementační pořadí
+## 10. Implementační pořadí
 
 1. Navrhnout cílové schéma a doménové hranice.
 2. Připravit migrační plán ze současného `translation_message`.
