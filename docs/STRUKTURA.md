@@ -137,10 +137,10 @@ Centrální aplikační logování přes Monolog. `LoggerFactory` vytváří JSO
 ## 5. Prezentační vrstvy
 
 ### UI/Admin
-Administrace a její presentery, Latte šablony, formuláře, komponenty a datagridy. Presentery modulu `Admin` se mapují přes `Admin:Presenter` na `App\UI\Admin\Dashboard\DashboardPresenter` podle pravidla `Admin: App\UI\Admin\**Presenter`. Oprávnění kontroluje Identity; samotné skrytí ovládacího prvku není autorizace.
+Administrace a její presentery, Latte šablony, formuláře, komponenty a datagridy. Například `Admin:Dashboard` se mapuje na `App\UI\Admin\Dashboard\DashboardPresenter` podle pravidla `Admin: App\UI\Admin\**Presenter`. Oprávnění kontroluje Identity; samotné skrytí ovládacího prvku není autorizace.
 
 ### UI/Front
-Zákaznický obchod: katalog, účet, košík, checkout, domovská stránka a zákaznické chybové obrazovky. Presentery modulu `Front` se mapují přes `Front:Presenter` na `App\UI\Front\Home\HomePresenter` podle pravidla `Front: App\UI\Front\**Presenter`.
+Zákaznický obchod: katalog, účet, košík, checkout, domovská stránka a zákaznické chybové obrazovky. Například `Front:Home` se mapuje na `App\UI\Front\Home\HomePresenter` podle pravidla `Front: App\UI\Front\**Presenter`.
 
 ### UI/Shared
 Znovupoužitelné UI komponenty, formuláře a Latte helpery pro Front i Admin. Sdílení je povoleno pouze pro prezentační prvky, nikoliv pro obchodní logiku.
