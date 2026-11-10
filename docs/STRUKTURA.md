@@ -121,8 +121,7 @@ Modules/<Module>/
 ├── Infrastructure/
 │   ├── DI/
 │   └── Persistence/
-└── Infrastructure/
-    └── Persistence/
+
 ```
 
 Ne každá složka musí existovat hned. Vytváří se tehdy, když obsahuje skutečný kód. Výjimky jako Cart s jednoduchým počátečním stromem se rozvíjejí postupně.
