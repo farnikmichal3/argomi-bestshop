@@ -1,8 +1,8 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 1.2 · 9. 11. 2026  
-**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 9. 11. 2026
+**Revize:** 1.3 · 10. 11. 2026  
+**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 10. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
 
@@ -41,8 +41,8 @@ app/
 │   ├── Domain/
 │   │   └── Event/
 │   └── Infrastructure/
-│       └── Persistence/
-│           └── OrmModel.php  # dočasný soubor; odstranění je naplánováno ve F1-37
+│       └── Console/
+│           └── DbResetCommand.php
 └── UI/
     ├── Admin/
     │   ├── @layout.latte
@@ -70,7 +70,7 @@ app/
 Poznámky:
 - Strom obsahuje i prázdné adresáře držené soubory `.gitkeep`.
 - Moduly kromě Catalog zatím nemusí mít vytvořené všechny vnitřní vrstvy.
-- Ve výpisu stále existuje `Shared/Infrastructure/Persistence/OrmModel.php`. Kontrola všech aktuálních PHP a NEON souborů potvrdila, že na Nextras ORM odkazuje pouze tento model; jeho odstranění spolu s přímou závislostí `nextras/orm` je naplánováno ve F1-37. Nextras DBAL zůstává pouze jako infrastruktura migračního nástroje.
+- `Shared/Domain` a `Shared/Infrastructure` jsou již vytvořené základní adresáře. `Infrastructure` obsahuje bezpečný konzolový příkaz `DbResetCommand`; doménové a infrastrukturní komponenty budou přidávány postupně podle kroků F2. Nepoužívaný `OrmModel.php` a přímá závislost `nextras/orm` byly odstraněny v rámci F1-37. Nextras DBAL/Migrations zůstávají pouze pro migrace a související nástroje.
 - Prezentační mapování Nette se nyní opírá o `App\Presentation\*\**Presenter`. UI presenterové oblasti budou potřebovat explicitní a ověřené mapování; do té doby se nesmí předpokládat, že samotná adresářová struktura znamená funkční routování.
 
 ## 2. Odpovědnosti hlavních částí
@@ -205,6 +205,8 @@ assets/
 - Vynucovat hranice modulů automatickými architektonickými testy.
 
 ## 10. Historie
+
+| 10. 11. 2026 | v1.3: aktualizován strom `Shared` podle skutečného repozitáře; odstraněna zastaralá reference na `OrmModel.php`, který byl odstraněn v F1-37. |
 
 | Datum | Změna |
 |---|---|
