@@ -66,7 +66,7 @@ Pro administrační tabulky je zvolen Ublaboo Datagrid. Vlastní aplikační vrs
 
 Front-end assety se sestavují vlastními skripty Sass a esbuild. Front a Admin mají oddělené vstupy a výstupy. Nesmí se do projektu vrátit Vite jen proto, že jej obsahuje výchozí Nette skeleton.
 
-Výchozím vývojovým prostředím je Laragon na Windows. Projekt se však nesmí na Laragon pevně vázat; konfigurace a provozní postupy mají zachovat možnost budoucího spuštění v Dockeru nebo DDEV. Kontejnerizace není součástí aktuálního vývojového kroku.
+Vývojovým prostředím projektu je Laragon na Windows. Docker ani DDEV se zavádět nebudou. Přenositelnost na další počítač zajistí zdokumentované a verzované požadavky na nástroje a jejich verze, instalační postup pro Laragon a reprodukovatelný postup zkopírování projektu. Cílem je po instalaci odpovídajících verzí Laragonu a nástrojů pokračovat s kopií projektu bez změny architektury.
 
 Pravidla:
 - `declare(strict_types=1);` v PHP souborech.
@@ -240,7 +240,7 @@ Následující body nejsou nevyřešenými architektonickými rozhodnutími. Jde
 - Připravit DPA a GDPR dokumentaci pro hostované obchody; finální znění ověří právník a specialista na ochranu osobních údajů.
 - Při implementaci nastavení obchodu určit výchozí hodnotu `tax_included`; cenový model již stanoví ukládání základních cen bez DPH.
 - Konkrétní platební brány a dopravce vybrat podle cílového trhu před produkčním nasazením.
-- Docker/DDEV doplnit jako alternativní provozní prostředí; hlavním vývojovým prostředím zůstává Laragon na Windows.
+- Docker ani DDEV nezavádět; Laragon na Windows zůstává jediným podporovaným vývojovým prostředím projektu. Přenositelnost zajistit přesným popisem verzí a postupem přípravy dalšího počítače.
 - Před hostovaným provozem určit konkrétní monitoring, reakční doby incidentů a provozní parametry SLA; cílová dostupnost 99,5 % měsíčně je již schválena.
 - Pro konkrétní hosting stanovit cíle RPO/RTO.
 - Stanovit přesné retenční lhůty jednotlivých kategorií dat podle právních povinností a provozních potřeb.
@@ -297,7 +297,8 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 8. 11. 2026 | F0-16: Zachováváme režim „všechna práva vyhrazena“. Připravíme návrh studentské licence a podmínek služby; finální znění před distribucí nebo komerčním spuštěním zkontroluje právník. |
 | 8. 11. 2026 | F0-17: Připravíme návrh smlouvy o zpracování osobních údajů (DPA) a GDPR dokumentace pro hostované obchody; finální znění a související retenční pravidla před spuštěním zkontroluje právník a specialista na ochranu osobních údajů. |
 | 8. 11. 2026 | F0-18: MySQL FULLTEXT jako výchozí vyhledávání; Elasticsearch/OpenSearch jako možné pozdější implementace přes `ProductSearch`. |
-| 8. 11. 2026 | F0-19: Laragon na Windows zůstává hlavním vývojovým prostředím; zachováme možnost budoucího spuštění v Dockeru nebo DDEV. |
+| 8. 11. 2026 | F0-19: Laragon na Windows zůstává hlavním vývojovým prostředím; původní možnost budoucího Dockeru/DDEV byla následně zamítnuta. |
+| 10. 11. 2026 | Konečné rozhodnutí k F1-35: zůstáváme výhradně u Laragonu. Přenositelnost zajistí shodné verze nástrojů a reprodukovatelný postup přípravy dalšího počítače; Docker ani DDEV nebudeme zavádět. |
 | 8. 11. 2026 | F0-20: Základní ceny se ukládají bez DPH; DPH se vypočítává podle daňových pravidel a `tax_included` řídí zobrazování cen. |
 | 8. 11. 2026 | F0-21: Všechny jazykové varianty URL mají explicitní prefix, včetně výchozího jazyka (`/cs`, `/en`). |
 | 8. 11. 2026 | F0-22: První verze je B2C; datový a doménový model počítá s firemními zákazníky a údaji IČO/DIČ, zatímco ověřování ARES/VIES a pokročilé B2B funkce se odkládají. |
