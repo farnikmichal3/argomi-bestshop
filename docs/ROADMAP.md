@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.58 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.59 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,12 +48,12 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 101, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 443, zrušeno 1.
+Celkem **547 kroků**: hotovo 102, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 443, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F1 | Prostředí a repozitář | 39 | 37 | 1 | 0 | 0 | 0 | 1 | 0 |
+| F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 1 | 0 |
 | F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
@@ -86,7 +86,7 @@ Celkem **547 kroků**: hotovo 101, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 - `[HOTOVO]` **F1-30** Ověřit čisté naklonování a instalaci podle kontrolního seznamu z Lekce 1. Čistý klon vytvořen v samostatné složce; `composer install`, `npm ci`, Composer validace/audit, PHPStan level max, PHP-CS-Fixer, Deptrac, npm build a npm audit prošly. Po přidání `.gitattributes` byly konce řádků sjednoceny a `git status --short` zůstal prázdný.
 - `[HOTOVO]` **F1-32** Minimální funkční kostra Front a Admin: mapování presenterů, `HomePresenter` + Latte šablona, `DashboardPresenter` + Latte šablona a routování `/cs`, `/en` a `/admin`; `/` přesměruje na `/cs`. Ověřeno v prohlížeči; `composer phpstan`, `composer cs` a `composer arch` proběhly bez chyb.
 - `[HOTOVO]` **F1-33** Automatická registrace DI extension modulů přes explicitní `ModuleRegistry`; konvence `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`, registrace přes `Configurator::onCompile` a `Compiler::addExtension`, bez skenování adresářů. Ověřeno PHPStan, coding standard, Deptrac a sestavení DI kontejneru; aplikace `/cs` a `/admin` funguje.
-- `[ROZDĚLÁNO]` **F1-34** Prosadit závazný DB-only standard překladů: za běhu aplikace jsou všechny systémové i obsahové překladové hodnoty výhradně v databázi; SQL migrace a seed skripty smějí obsahovat výchozí systémové hodnoty pro naplnění/aktualizaci DB. Žádné runtime souborové katalogy ani fallback ze souborů. Odstraněn file-loader spike a jeho artefakty; aktualizovány ZAMER, TRANSLATIONS a STRUKTURA. Zbývá lokální ověření kontrol.
+- `[HOTOVO]` **F1-34** Prosadit závazný DB-only standard překladů: za běhu aplikace jsou všechny systémové i obsahové překladové hodnoty výhradně v databázi; SQL migrace a seed skripty smějí obsahovat výchozí systémové hodnoty pro naplnění/aktualizaci DB. Žádné runtime souborové katalogy ani fallback ze souborů. Odstraněn file-loader spike a jeho artefakty; aktualizovány ZAMER, TRANSLATIONS a STRUKTURA. `composer phpstan`, `composer cs` a `composer arch` ověřeny lokálně bez chyb.
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0).
 - `[HOTOVO]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; build Sass + esbuild ověřen.
 - `[HOTOVO]` **F1-37** Odstranit přímou závislost `nextras/orm` a nepoužívaný `OrmModel.php`; zachovat Nextras DBAL/Migrations. Ověřeny reference, Composer metadata a lock; `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb.
@@ -122,7 +122,12 @@ Celkem **547 kroků**: hotovo 101, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 
 ### v2.58 (10. 11. 2026)
 - Upřesněno DB-only pravidlo: SQL migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení/aktualizaci databáze. Zákaz se týká runtime souborových katalogů a načítání překladů ze souborů; běžící aplikace čte překlady pouze z DB.
-- Souhrn zůstává: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
+- Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
+
+### v2.59 (10. 11. 2026)
+- F1-34 dokončen po lokálním ověření `composer phpstan`, `composer cs` a `composer arch` bez chyb.
+- F1 má nyní **38 hotových kroků z 39**; jediným zbývajícím krokem je F1-35 (Docker nebo DDEV konfigurace).
+- Souhrn: **102 hotovo**, **0 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
 
 ### v2.54 (10. 11. 2026)
 - Zahájen F1-33: explicitní `ModuleRegistry` eviduje všech 14 modulů a Bootstrap podle něj registruje dostupné DI extension přes Nette `onCompile`.
@@ -190,7 +195,7 @@ _F0 je uzavřena: všech 54 rozhodovacích a dokumentačních položek je HOTOVO
 
 ### F1: Prostředí a repozitář
 
-_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 37 z 39 kroků; jeden krok je rozpracován.
+_Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hotovo 38 z 39 kroků; jeden krok zůstává naplánován.
 
 - `[HOTOVO]` **F1-01** Dokončit úklid výchozí Nette kostry a sjednotit metadata projektu
 - `[HOTOVO]` **F1-02** Ověřit verze PHP, Composeru, Node.js, MySQL a Gitu (kontrola z Lekce 1)
@@ -225,7 +230,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-31** Vytvořit adresářovou strukturu podle STRUKTURA
 - `[HOTOVO]` **F1-32** Vytvořit minimální funkční kostru Front a Admin: ověřit mapování presenterů v Nette, vytvořit `HomePresenter` a jeho `default.latte` s textem „Ahoj, tady Front“, vytvořit `DashboardPresenter` a jeho `default.latte` s textem „Ahoj, tady administrace“, nastavit routování `/cs` a `/en` pro Front, `/admin` pro Admin a přesměrování `/` na `/cs`; všechny vstupní adresy ověřeny přes HTTP. Statické kontroly `composer phpstan`, `composer cs` a `composer arch` jsou čisté; bez aplikační logiky.
 - `[HOTOVO]` **F1-33** Automatická registrace DI extension modulů přes explicitní `ModuleRegistry`; konvence `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`, registrace přes `Configurator::onCompile` a `Compiler::addExtension`, bez skenování adresářů. Ověřeno PHPStan, coding standard, Deptrac a sestavení DI kontejneru; aplikace `/cs` a `/admin` funguje.
-- `[ROZDĚLÁNO]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů; ověřit JSON loader, DI a načtení doménových souborů.
+- `[HOTOVO]` **F1-34** Prosadit DB-only standard překladů; SQL migrace/seed smějí obsahovat výchozí hodnoty, runtime načítá výhradně z databáze. Dokumentace sjednocena a lokální statické kontroly čisté.
 - `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0)
 - `[HOTOVO]` **F1-36** Odstranit nepoužívané balíčky Vite a Vite pluginu z `package.json`/`package-lock.json`; Sass + esbuild build ověřen jako úspěšný. Vite balíčky nejsou v závislostech.
 - `[HOTOVO]` **F1-37** Odstranit nepoužívaný `app/Shared/Infrastructure/Persistence/OrmModel.php` a přímou závislost `nextras/orm`; ověřit reference, aktualizovat Composer lock a zachovat Nextras DBAL/Migrations. `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb; automatické testy zatím nejsou v projektu.
