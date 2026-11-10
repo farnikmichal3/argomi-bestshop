@@ -52,8 +52,6 @@ class Bootstrap
         $this->configurator->addConfig($configDir . '/local.neon');
 
         $this->configurator->onCompile[] = static function (Configurator $configurator, Compiler $compiler): void {
-            $compiler->addConfig(['parameters' => ['registeredModules' => ModuleRegistry::MODULES]]);
-
             foreach (ModuleRegistry::MODULES as $module) {
                 $extensionClass = 'App\\Modules\\' . $module . '\\Infrastructure\\DI\\' . $module . 'Extension';
 
