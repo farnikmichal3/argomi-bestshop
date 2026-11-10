@@ -121,7 +121,8 @@ Modules/<Module>/
 ├── Infrastructure/
 │   ├── DI/
 │   └── Persistence/
-└── (bez souborových překladových katalogů)
+└── Infrastructure/
+    └── Persistence/
 ```
 
 Ne každá složka musí existovat hned. Vytváří se tehdy, když obsahuje skutečný kód. Výjimky jako Cart s jednoduchým počátečním stromem se rozvíjejí postupně.
@@ -192,7 +193,7 @@ assets/
 3. Definovat veřejné DTO/fasády/události.
 4. Přidat DI registraci podle zavedeného mechanismu.
 5. Vlastnit vlastní tabulky a migrace; cizí moduly používat přes jejich API.
-6. Přidat systémové texty do vlastního `Resources/translations`.
+6. Zajistit databázové systémové překladové klíče a hodnoty; žádné překladové soubory.
 7. Přidat oprávnění pro administrační operace.
 8. Přidat unit/integration/architecture testy a PHPStan.
 9. Přidat UI pouze do odpovídající oblasti.
@@ -201,7 +202,7 @@ assets/
 ## 9. Otevřené technické úkoly
 
 - F1-34: prosadit databázi jako jediný zdroj všech překladových hodnot; žádné souborové katalogy ani runtime souborový fallback. Viz `TRANSLATIONS.md`.
-- Dokončit import výchozích systémových překladů.
+- Implementovat databázový seed/import systémových překladů bez souborových katalogů (F4).
 - `[PLÁN]` F1-37: Odstranit `OrmModel.php` a přímou závislost `nextras/orm`; před změnou znovu ověřit reference, poté aktualizovat Composer lock a spustit PHPStan/testy.
 - Vynucovat hranice modulů automatickými architektonickými testy.
 
