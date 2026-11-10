@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App;
 
 use App\Core\Module\ModuleRegistry;
+use LogicException;
 use Nette;
 use Nette\Bootstrap\Configurator;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
-use LogicException;
 
 class Bootstrap
 {
