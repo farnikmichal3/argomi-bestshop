@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.2 · 10. 11. 2026
+**Revize:** 1.3 · 10. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -13,7 +13,7 @@ V databázi musí být uloženo každé jazykové znění:
 - vlastních textů vytvořených administrátorem nebo obchodníkem,
 - názvů, popisů, validačních zpráv, stavů a textů uživatelského rozhraní.
 
-Překladové hodnoty nesmějí být uloženy v PHP, Latte, JSON, NEON, YAML, XML, JavaScriptu, CSS/SCSS ani v jiných souborech. Nesmějí existovat souborové katalogy, runtime fallback soubory ani kopie výchozích překladů v repozitáři. V kódu smějí být pouze stabilní klíče/identifikátory a technická logika.
+Překladové hodnoty nesmějí být součástí aplikačního kódu ani runtime souborových katalogů (PHP, Latte, JSON, NEON, YAML, XML, JavaScript, CSS/SCSS apod.). **Výjimkou jsou databázové migrace a seed skripty**, které smějí obsahovat výchozí systémové překladové hodnoty jako verzovaný instalační zdroj a vložit je do databáze. Tyto soubory nejsou runtime úložištěm: aplikace z nich nikdy překlady nenačítá. Po instalaci je jediným zdrojem pravdy databáze; žádný souborový katalog ani runtime fallback neexistuje. V aplikačním kódu smějí být pouze stabilní klíče/identifikátory a technická logika.
 
 Toto pravidlo platí i pro systémové překlady, které administrátor nesmí měnit. Jejich ochrana se realizuje databázovým modelem, aplikační autorizací a databázovými omezeními, nikoliv uložením textu mimo databázi.
 
@@ -36,7 +36,7 @@ Systémové texty mají doménu a stabilní klíč. Jejich hodnoty pro jednotliv
 ## 3. Systémové hodnoty a ochrana
 
 - Systémové klíče a jejich jazykové hodnoty jsou databázová data.
-- Výchozí hodnoty se do databáze dostávají výhradně řízenou databázovou migrací nebo databázovým seedem. Seed nesmí vytvářet souborové katalogy ani je za běhu načítat.
+- Výchozí systémové hodnoty se do databáze dostávají řízenou databázovou migrací nebo seedem. SQL migrace a seed skripty smějí obsahovat jejich výchozí znění; jde o instalační/aktualizační zdroj, nikoliv o runtime úložiště.
 - Systémové záznamy mají jednoznačně rozpoznatelný původ a stav ochrany.
 - Administrátor je může zobrazit, vyhledat a zkontrolovat, ale nesmí změnit ani odstranit chráněný systémový text.
 - Aktualizace aplikace může přinést nové nebo změněné systémové hodnoty; databázová aktualizace musí bezpečně rozpoznat novou verzi a nesmí přepsat vlastní text.
@@ -87,7 +87,7 @@ Před případnou migrací:
 ## 7. Import a aktualizace systémových textů
 
 Import znamená databázovou operaci, nikoliv načítání textových katalogů:
-- nové systémové klíče a jazykové hodnoty se vkládají řízeným DB seedem/migrací,
+- nové systémové klíče a jazykové hodnoty se vkládají řízeným DB seedem/migrací; SQL soubory smějí obsahovat výchozí hodnoty,
 - aktualizace porovnává verzi nebo hash systémového záznamu,
 - chráněné systémové hodnoty se aktualizují pouze autorizovaným migračním mechanismem,
 - administrátorské vlastní hodnoty se nikdy nepřepisují,
