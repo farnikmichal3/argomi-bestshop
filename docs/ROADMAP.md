@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.49 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.50 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **549 kroků**: hotovo 100, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 445, zrušeno 1.
+Celkem **549 kroků**: hotovo 99, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 446, zrušeno 1.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 35 | 0 | 0 | 0 | 0 | 4 | 0 |
-| F2 | Sdílené jádro (Shared) | 16 | 1 | 0 | 0 | 0 | 0 | 15 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -84,8 +84,10 @@ Celkem **549 kroků**: hotovo 100, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 
 ### Nejbližší technické kroky
 - `[HOTOVO]` **F1-30** Ověřit čisté naklonování a instalaci podle kontrolního seznamu z Lekce 1. Čistý klon vytvořen v samostatné složce; `composer install`, `npm ci`, Composer validace/audit, PHPStan level max, PHP-CS-Fixer, Deptrac, npm build a npm audit prošly. Po přidání `.gitattributes` byly konce řádků sjednoceny a `git status --short` zůstal prázdný.
-- `[HOTOVO]` **F2-01** Ověřit a sjednotit základní strukturu `app/Shared` (`Domain`, `Infrastructure`). Oba adresáře již existují z F1-31; skutečný strom byl porovnán s `STRUKTURA.md`, zastaralá reference na odstraněný `OrmModel.php` byla opravena a dokumentace aktualizována na revizi 1.3.
-- `[PLÁN]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, násobení, porovnání, výjimka při různých měnách.
+- `[PLÁN]` **F1-32** Spike: mapování presenterů pro `UI/Front` a `UI/Admin` (ověřit v dokumentaci Nette Application).
+- `[PLÁN]` **F1-33** Spike: automatická registrace DI extension jednotlivých modulů ze seznamu modulů.
+- `[PLÁN]` **F1-34** Spike: načítání výchozích překladů modulů ze souborů.
+- `[PLÁN]` **F1-35** Docker nebo DDEV konfigurace (po rozhodnutí F0).
 - `[HOTOVO]` **F1-36** Odstranit Vite a jeho plugin z npm závislostí; build Sass + esbuild ověřen.
 - `[HOTOVO]` **F1-37** Odstranit přímou závislost `nextras/orm` a nepoužívaný `OrmModel.php`; zachovat Nextras DBAL/Migrations. Ověřeny reference, Composer metadata a lock; `composer validate`, `composer check-platform-reqs` a PHPStan level max bez chyb.
 - `[HOTOVO]` **F1-38** Přidat Monolog, nakonfigurovat strukturované logování a bezpečné maskování citlivých údajů podle F0-46. Ověřeno sestavení služby přes Nette DI jako `Psr\Log\LoggerInterface`, zápis strukturovaného JSON logu a maskování citlivého kontextu; PHPStan level max a Deptrac bez nálezů. HTTP provoz bude ověřen až po implementaci aplikace.
@@ -203,7 +205,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 1 z 16 kroků.
+_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 0 z 16 kroků.
 
 - `[PLÁN]` **F2-01** Vytvořit `app/Shared` (Domain, Infrastructure)
 - `[PLÁN]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, násobení, porovnání, výjimka při různých měnách
@@ -739,9 +741,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 
 ## 5. Historie revizí
 
+### v2.50 (10. 11. 2026)
+- Oprava předchozí revize: F2-01 nebyl dokončen; jeho stav zůstává PLÁN. F1-32 až F1-35 jsou stále otevřené a F1 proto není uzavřená. Celkový stav vrácen na **99 hotovo**, **0 rozděláno**, **1 k úpravě**, **446 plán**, **1 zrušeno**.
+
 ### v2.49 (10. 11. 2026)
-- Dokončen F2-01: ověřena existující struktura `app/Shared/Domain` a `app/Shared/Infrastructure`; strom repozitáře byl porovnán s `docs/STRUKTURA.md` a dokumentace aktualizována na revizi 1.3. Zastaralá reference na odstraněný `OrmModel.php` byla odstraněna.
-- Souhrnný stav: **100 hotovo**, **0 rozděláno**, **1 k úpravě**, **445 plán**, **1 zrušeno**.
+- Poznámka k předchozí revizi: F2-01 byl chybně označen jako HOTOVO; opraveno ve v2.50.
+- Souhrnný stav před opravou: **100 hotovo**, **0 rozděláno**, **1 k úpravě**, **445 plán**, **1 zrušeno**.
 
 ### v2.48 (10. 11. 2026)
 - Dokončen F1-30: čistý klon v samostatné složce úspěšně prošel instalací Composer/npm, validací a audity, PHPStan level max, PHP-CS-Fixer, Deptrac a sestavením assetů. Po doplnění `.gitattributes` a ověření pravidel LF/CRLF zůstal `git status --short` prázdný.
