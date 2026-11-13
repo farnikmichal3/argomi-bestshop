@@ -5,6 +5,8 @@ services:
 	- App\Shared\Infrastructure\Console\DbResetCommand
 	# Produkční hodiny jsou jedinou registrovanou implementací Clock; FrozenClock zůstává pouze pro testy.
 	- App\Shared\Infrastructure\Clock\SystemClock
+	# Generátor veřejných ULID je jedinou produkční implementací rozhraní PublicIdGenerator.
+	- App\Shared\Infrastructure\PublicId\SymfonyUlidGenerator
 	# Poskytovatel není zachycen automatickým vyhledáváním *Service/*Repository,
 	# proto jej registrujeme výslovně. Rozhraní CurrencyProvider se pak autowiruje
 	# přes jedinou dostupnou implementaci.
