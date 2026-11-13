@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.69 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.70 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -126,6 +126,12 @@ Celkem **547 kroků**: hotovo 107, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 ### v2.58 (10. 11. 2026)
 - Upřesněno DB-only pravidlo: SQL migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení/aktualizaci databáze. Zákaz se týká runtime souborových katalogů a načítání překladů ze souborů; běžící aplikace čte překlady pouze z DB.
 - Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
+
+### v2.70 (13. 11. 2026)
+- Zahájen F2-06: schválen model `Locale` jako neměnný identifikátor v omezené podmnožině BCP 47; aktivita jazyka je oddělena od jeho identity a překladový fallback patří modulu Translation.
+- Implementován `Locale`, `LocaleProvider` a databázový `DatabaseLocaleProvider`. Router nyní sestavuje aktivní jazykové prefixy i kořenové přesměrování z databáze; žádný kód včetně `cs` a `en` není v `RouterFactory` pevně zapsán.
+- Základní jazyky `cs` a `en` zůstávají v databázi; výchozí jazyk je určen databázovým příznakem a při instalaci je `cs`. Implementace čeká na lokální ověření přes `check.bat`.
+- F2: **5 hotovo**, **1 rozděláno**, **10 plán**. Celkový souhrn: **107 hotovo**, **1 rozděláno**, **436 plán**, **2 zrušeno**.
 
 ### v2.69 (13. 11. 2026)
 - Dokončen F2-05: implementován neměnný hodnotový objekt `Percentage` s celočíselnou reprezentací v bazických bodech, striktním vstupem bez zaokrouhlování a bezpečným formátováním včetně `PHP_INT_MIN`.
@@ -290,7 +296,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-03** `Currency`: kód, počet desetinných míst, `CurrencyProvider` pro výchozí a aktivní měny. Implementováno doménové rozhraní, výjimka pro chybějící výchozí měnu a databázový adaptér přes Nette Database Explorer. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
 - `[HOTOVO]` **F2-04** `Quantity`: neměnný hodnotový objekt s pevnou přesností tří desetinných míst, interně celočíselné tisíciny, vstup přes desetinný řetězec bez zaokrouhlování, aritmetika s kontrolou přetečení a bez `float`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
 - `[HOTOVO]` **F2-05** `Percentage`: neměnný hodnotový objekt s podepsaným integerem v bazických bodech (1 bp = 0,01 %), striktním desetinným vstupem s nejvýše dvěma místy, formátováním, porovnáním a kontrolou rovnosti. Povoleny záporné i nad 100% sazby; bez `float`, automatického zaokrouhlování a výpočtů nad `Money`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
-- `[PLÁN]` **F2-06** `Locale`: kód jazyka, `LocaleProvider` (výchozí, aktivní)
+- `[ROZDĚLÁNO]` **F2-06** `Locale`: neměnný jazykový identifikátor, `LocaleProvider` (výchozí a aktivní jazyky), databázový poskytovatel a dynamické jazykové routování
 - `[PLÁN]` **F2-07** `Clock` (UTC) a testovací implementace
 - `[PLÁN]` **F2-08** Generátor a hodnotový objekt veřejného ID (ULID)
 - `[PLÁN]` **F2-09** Základ výjimek: doménová výjimka, nenalezeno, neplatný vstup
