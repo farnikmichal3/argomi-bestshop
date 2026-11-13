@@ -42,7 +42,7 @@ final readonly class Quantity
         // Řetězcové sestavení umožňuje ověřit rozsah ještě před převodem na integer.
         $magnitude = ltrim($whole . $fraction, '0');
         $magnitude = $magnitude === '' ? '0' : $magnitude;
-        $limit = $isNegative ? '9223372036854775808' : (string) PHP_INT_MAX;
+        $limit = $isNegative ? ltrim((string) PHP_INT_MIN, '-') : (string) PHP_INT_MAX;
 
         if (
             strlen($magnitude) > strlen($limit)
