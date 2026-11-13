@@ -334,6 +334,8 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 9. 11. 2026 | F0-53: Demo data a testovací operace musí být oddělené od skutečného provozu; demo objednávky nesmějí vyvolat reálné platby, expedici ani jiné externí operace. |
 | 9. 11. 2026 | F0-54: Nette Database Explorer je jedinou databázovou vrstvou běžného aplikačního kódu; Nextras ORM bude odstraněno, zatímco Nextras Migrations/DBAL mohou zůstat pro migrace a testování. Kontrola PHP a NEON souborů potvrdila jako jedinou zbývající referenci `OrmModel.php`; jeho odstranění je vedeno ve F1-37. |
 
+| 13. 11. 2026 | F2-06: `Locale` používá omezenou podmnožinu BCP 47; `cs` a `en` jsou databázové základní jazyky, aktivní prefixy routeru se generují z DB a překladový fallback patří modulu Translation. |
+
 ## 17. Historie cen a pravidla pro slevy (Omnibus)
 
 Produktový cenový model musí uchovávat historii cen tak, aby bylo možné správně určit a doložit referenční cenu při oznámení slevy podle pravidel evropské Omnibus směrnice.
