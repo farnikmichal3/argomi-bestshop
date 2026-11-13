@@ -304,7 +304,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 6 z 16 kroků.
+_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 7 z 16 kroků.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
