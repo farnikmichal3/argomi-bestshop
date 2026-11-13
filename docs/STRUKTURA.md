@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 2.3 · 13. 11. 2026  
+**Revize:** 2.4 · 13. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 13. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -41,6 +41,8 @@ app/
 │       └── Error5xx/
 ├── Shared/
 │   ├── Domain/
+│   │   ├── Clock/
+│   │   │   └── Clock.php
 │   │   ├── Event/
 │   │   ├── Locale/
 │   │   │   ├── DefaultLocaleNotFoundException.php
@@ -60,6 +62,9 @@ app/
 │   │       ├── InvalidQuantityException.php
 │   │       └── Quantity.php
 │   └── Infrastructure/
+│       ├── Clock/
+│       │   ├── FrozenClock.php
+│       │   └── SystemClock.php
 │       ├── Console/
 │       │   └── DbResetCommand.php
 │       └── Persistence/
@@ -94,7 +99,7 @@ app/
 Poznámky:
 - Strom obsahuje i prázdné adresáře držené soubory `.gitkeep`.
 - Moduly kromě Catalog zatím nemusí mít vytvořené všechny vnitřní vrstvy.
-- `Shared/Domain` a `Shared/Infrastructure` jsou již vytvořené základní adresáře. `Domain/Money` obsahuje neměnné hodnotové objekty `Money` a `Currency`, rozhraní `CurrencyProvider` a doménové výjimky. `Domain/Quantity` obsahuje neměnný hodnotový objekt `Quantity` s pevnou přesností tří desetinných míst a výjimku `InvalidQuantityException`; množství je interně reprezentováno celočíselnými tisícinami bez použití `float`. `Domain/Percentage` obsahuje neměnný hodnotový objekt `Percentage` a výjimku `InvalidPercentageException`; sazba je reprezentována podepsaným integerem v bazických bodech, bez omezení na rozsah 0–100 % a bez použití `float`. `Domain/Locale` obsahuje neměnný hodnotový objekt `Locale`, rozhraní `LocaleProvider` a doménové výjimky; podporuje omezenou syntaxi BCP 47 a odděluje identitu jazyka od jeho aktivity. `Infrastructure/Persistence/Locale/DatabaseLocaleProvider` načítá výchozí a aktivní jazyky z tabulky `language` přes Nette Database Explorer. `Infrastructure/Persistence/Money/DatabaseCurrencyProvider` načítá výchozí a aktivní měny přes Nette Database Explorer a mapuje `ActiveRow` na `Currency` uvnitř persistence hranice. Poskytovatel je explicitně registrován v `config/services.neon`; rozhraní se autowiruje přes jedinou implementaci. `Infrastructure/Console` obsahuje bezpečný konzolový příkaz `DbResetCommand`. Nepoužívaný `OrmModel.php` a přímá závislost `nextras/orm` byly odstraněny v rámci F1-37. Nextras DBAL/Migrations zůstávají pouze pro migrace a související nástroje.
+- `Shared/Domain` a `Shared/Infrastructure` jsou již vytvořené základní adresáře. `Domain/Clock/Clock` definuje společné rozhraní pro získání aktuálního okamžiku v UTC. `Infrastructure/Clock/SystemClock` je produkční implementace registrovaná v Nette DI; `FrozenClock` je explicitní testovací implementace a do produkčního DI se neregistruje. `Domain/Money` obsahuje neměnné hodnotové objekty `Money` a `Currency`, rozhraní `CurrencyProvider` a doménové výjimky. `Domain/Quantity` obsahuje neměnný hodnotový objekt `Quantity` s pevnou přesností tří desetinných míst a výjimku `InvalidQuantityException`; množství je interně reprezentováno celočíselnými tisícinami bez použití `float`. `Domain/Percentage` obsahuje neměnný hodnotový objekt `Percentage` a výjimku `InvalidPercentageException`; sazba je reprezentována podepsaným integerem v bazických bodech, bez omezení na rozsah 0–100 % a bez použití `float`. `Domain/Locale` obsahuje neměnný hodnotový objekt `Locale`, rozhraní `LocaleProvider` a doménové výjimky; podporuje omezenou syntaxi BCP 47 a odděluje identitu jazyka od jeho aktivity. `Infrastructure/Persistence/Locale/DatabaseLocaleProvider` načítá výchozí a aktivní jazyky z tabulky `language` přes Nette Database Explorer. `Infrastructure/Persistence/Money/DatabaseCurrencyProvider` načítá výchozí a aktivní měny přes Nette Database Explorer a mapuje `ActiveRow` na `Currency` uvnitř persistence hranice. Poskytovatel je explicitně registrován v `config/services.neon`; rozhraní se autowiruje přes jedinou implementaci. `Infrastructure/Console` obsahuje bezpečný konzolový příkaz `DbResetCommand`. Nepoužívaný `OrmModel.php` a přímá závislost `nextras/orm` byly odstraněny v rámci F1-37. Nextras DBAL/Migrations zůstávají pouze pro migrace a související nástroje.
 - `Core/Module/ModuleRegistry.php` je explicitním seznamem modulů. `Bootstrap` při kompilaci Nette DI kontejneru používá tento seznam pro registraci modulových DI extension. `Bootstrap` hledá konvencí pojmenovanou extension `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`; chybějící extension přeskočí, nalezená musí být instancovatelným potomkem `Nette\DI\CompilerExtension`. Registry je jediným zdrojem seznamu modulů; nedochází k prohledávání adresářů.
 - Prezentační mapování Nette je definováno v `config/common.neon`: moduly `Front` a `Admin` používají `App\UI\Front\**Presenter` a `App\UI\Admin\**Presenter`; obecné pravidlo `*: App\Presentation\*\**Presenter` zachovává presentery v `Presentation`, zejména chybové presentery. Dvojitá hvězdička `**` odpovídá konvenci Nette Application 3.3.1. Základní routování je v `Core/RouterFactory.php`: aktivní jazykové prefixy Front i cílový jazyk přesměrování `/` se generují z databáze přes `LocaleProvider`; `cs` ani `en` nejsou v routeru pevně zakódované. Admin začíná na `/admin`. Vznikly také minimální presentery `Front:Home` a `Admin:Dashboard` s vlastními Latte šablonami.
 
@@ -251,3 +256,4 @@ assets/
 | 13. 11. 2026 | v2.2: doplněn skutečný strom `Shared/Domain/Percentage` a popis hodnotového objektu procentní sazby podle F2-05. |
 
 | 13. 11. 2026 | v2.3: doplněn `Locale`, `LocaleProvider`, databázový poskytovatel jazyků a dynamické generování jazykových rout podle aktivních záznamů v DB podle F2-06. |
+| 13. 11. 2026 | v2.4: doplněno rozhraní `Clock`, produkční `SystemClock` a testovací `FrozenClock`; všechny implementace vracejí čas v UTC podle F2-07. |
