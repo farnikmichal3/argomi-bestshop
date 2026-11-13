@@ -7,6 +7,7 @@
 	"type": "project",
 	"license": "proprietary",
 	"require": {
+		"php": ">=8.3",
 		"contributte/console": "^0.11.0",
 		"ezyang/htmlpurifier": "^4.19",
 		"latte/latte": "^3.1",
@@ -25,7 +26,6 @@
 		"nette/utils": "^4.0",
 		"nextras/dbal": "^5.0",
 		"nextras/migrations": "^3.5",
-		"php": ">=8.3",
 		"symfony/uid": "^7.4",
 		"tracy/tracy": "^2.10"
 	},
