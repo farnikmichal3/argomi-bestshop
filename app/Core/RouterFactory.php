@@ -28,7 +28,7 @@ final class RouterFactory
         }
 
         $languageCodes = array_map(
-            static fn (Locale $locale): string => $locale->getCode(),
+            static fn(Locale $locale): string => $locale->getCode(),
             $activeLocales,
         );
         $languagePattern = implode('|', $languageCodes);
