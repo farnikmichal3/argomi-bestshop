@@ -11,8 +11,7 @@ final readonly class Money
     public function __construct(
         public int $minorAmount,
         public Currency $currency,
-    ) {
-    }
+    ) {}
 
     public function add(self $other): self
     {
