@@ -21,8 +21,7 @@ final class DatabaseCurrencyProvider implements CurrencyProvider
 {
     public function __construct(
         private readonly Explorer $database,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws DefaultCurrencyNotFoundException Pokud databáze nemá výchozí aktivní měnu.
