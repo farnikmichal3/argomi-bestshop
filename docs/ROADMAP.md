@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.63 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.64 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 104, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 440, zrušeno 2.
+Celkem **547 kroků**: hotovo 104, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 439, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 2 | 0 | 0 | 0 | 0 | 14 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 2 | 1 | 0 | 0 | 0 | 13 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -127,10 +127,10 @@ Celkem **547 kroků**: hotovo 104, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 - Upřesněno DB-only pravidlo: SQL migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení/aktualizaci databáze. Zákaz se týká runtime souborových katalogů a načítání překladů ze souborů; běžící aplikace čte překlady pouze z DB.
 - Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
 
-### v2.63 (13. 11. 2026)
-- Dokončen F2-02: implementovány neměnné hodnotové objekty `Money` a `Currency` a výjimka `CurrencyMismatchException`; částky používají celočíselné minor units, aritmetika hlídá přetečení a operace vyžadující shodnou měnu odmítají měnový nesoulad.
-- Lokální `check.bat` úspěšně dokončil PHPStan, PHP-CS-Fixer a Deptrac bez chyb. Jednotkové testy zůstávají plánovány ve F2-14.
-- F2: **2 hotovo**, **0 rozděláno**, **14 plán**. Celkový souhrn: **104 hotovo**, **0 rozděláno**, **440 plán**.
+### v2.64 (13. 11. 2026)
+- Zahájen F2-03: přidáno rozhraní `CurrencyProvider`, výjimka pro chybějící výchozí měnu a databázová implementace přes Nette Database Explorer. Aktivní měny se řadí podle `sort_order` a kódu; `ActiveRow` zůstává uvnitř infrastrukturní vrstvy.
+- Databázový poskytovatel je explicitně registrován v Nette DI. Doplněny české PHPDoc a vysvětlující komentáře u peněžních hodnotových objektů a nových komponent.
+- F2: **2 hotovo**, **1 rozděláno**, **13 plán**. Celkový souhrn: **104 hotovo**, **1 rozděláno**, **439 plán**. Lokální kontroly F2-03 čekají na ověření.
 
 ### v2.62 (13. 11. 2026)
 - Zahájen F2-02: vytvořeny neměnné hodnotové objekty `Money` a `Currency` a výjimka `CurrencyMismatchException`.
@@ -263,11 +263,11 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 1 z 16 kroků; 1 rozpracován.
+_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 2 z 16 kroků; 1 rozpracován.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
-- `[ROZDĚLÁNO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Základní `Currency` VO vzniklo jako nutná typová závislost; `CurrencyProvider` zůstává ve F2-03. Čeká na lokální PHPStan a coding-standard kontrolu.
-- `[PLÁN]` **F2-03** `Currency`: kód, počet desetinných míst, `CurrencyProvider` (výchozí, aktivní)
+- `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
+- `[ROZDĚLÁNO]` **F2-03** `Currency`: kód, počet desetinných míst, `CurrencyProvider` pro výchozí a aktivní měny. Implementováno doménové rozhraní, výjimka pro chybějící výchozí měnu a databázový adaptér přes Nette Database Explorer; čeká na lokální kontroly.
 - `[PLÁN]` **F2-04** `Quantity`: decimal s pevnou přesností, bez `float`
 - `[PLÁN]` **F2-05** `Percentage` / sazba v basis points
 - `[PLÁN]` **F2-06** `Locale`: kód jazyka, `LocaleProvider` (výchozí, aktivní)
