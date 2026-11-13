@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Domain\Locale;
+namespace App\\Shared\\Domain\\Locale;
 
 use Stringable;
 
@@ -28,16 +28,22 @@ final readonly class Locale implements Stringable
      */
     public static function fromString(string $value): self
     {
-        if (strlen($value) > 10 || preg_match('/\A([a-z]{2,3})(?:-([a-z]{4}))?(?:-([a-z]{2}|[0-9]{3}))?\z/iD', $value, $matches) !== 1) {
+        if (strlen($value) > 10 || preg_match('/\\A([a-z]{2,3})(?:-([a-z]{4}))?(?:-([a-z]{2}|[0-9]{3}))?\\z/iD', $value, $matches, PREG_UNMATCHED_AS_NULL) !== 1) {
             throw InvalidLocaleException::forValue($value);
         }
 
         $language = strtolower($matches[1]);
-        $script = $matches[2] !== null
-            ? '-' . ucfirst(strtolower($matches[2]))
+
+        // Volitelné skupiny nemusí být v poli vůbec přítomné; null-coalescing
+        // současně bezpečně pokrývá jejich nepřítomnost i hodnotu null.
+        $scriptMatch = $matches[2] ?? null;
+        $script = $scriptMatch !== null
+            ? '-' . ucfirst(strtolower($scriptMatch))
             : '';
-        $region = $matches[3] !== null
-            ? '-' . (ctype_digit($matches[3]) ? $matches[3] : strtoupper($matches[3]))
+
+        $regionMatch = $matches[3] ?? null;
+        $region = $regionMatch !== null
+            ? '-' . (ctype_digit($regionMatch) ? $regionMatch : strtoupper($regionMatch))
             : '';
 
         return new self($language . $script . $region);
