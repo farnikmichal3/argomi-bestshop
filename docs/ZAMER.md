@@ -430,3 +430,16 @@ Demo data a testovací operace musí být jednoznačně rozlišitelné od skute�
 - Oddělené nástroje pro databázové migrace a testování jsou povoleny. Zejména Nextras Migrations a případně Nextras DBAL mohou zůstat jako vývojové/migrační nástroje; jejich použití neznamená použití ORM v aplikační vrstvě.
 - Migrace, testy ani pomocné nástroje nesmějí zavádět druhou ORM vrstvu do běžného aplikačního kódu.
 
+
+
+## 27. Doménový model peněz a měn
+
+Peníze se v doméně reprezentují neměnným hodnotovým objektem `Money`. Částka je vždy celočíselná hodnota v nejmenších jednotkách měny (minor units); desetinná aritmetika ani `float` se nepoužívají.
+
+- `Money` obsahuje celočíselnou částku v minor units a hodnotový objekt `Currency`.
+- `Currency` obsahuje třípísmenný velký ISO kód měny a počet desetinných míst (minor units).
+- Sčítání, odčítání a porovnávání jsou povoleny pouze pro stejnou měnu. Rozdílná měna vyvolá doménovou výjimku; automatický kurzový přepočet se neprovádí.
+- Násobení v základní implementaci `Money` přijímá pouze celočíselný faktor. Násobení desetinným množstvím a pravidla zaokrouhlování se doplní až ve spolupráci s hodnotovými objekty `Quantity` a `Percentage`.
+- Přetečení celočíselného rozsahu musí být explicitně odmítnuto výjimkou; nesmí dojít k tichému převodu na `float`.
+- `CurrencyProvider`, výběr výchozí a aktivní měny a načítání měn z databáze jsou samostatnou odpovědností navazující implementace F2-03.
+- Běžný nákup nepřepočítává CZK a EUR automaticky. Košík a objednávka používají jednu zvolenou měnu a měna objednávky se po vytvoření nemění.
