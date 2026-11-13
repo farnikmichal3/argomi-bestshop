@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.61 · 10. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.62 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 103, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 441, zrušeno 2.
+Celkem **547 kroků**: hotovo 103, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 440, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 1 | 0 | 0 | 0 | 0 | 15 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 1 | 1 | 0 | 0 | 0 | 14 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -78,6 +78,7 @@ Celkem **547 kroků**: hotovo 103, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 ## 3. Nejbližší kroky
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; obě složky jsou součástí verzované struktury repozitáře.
+- `[ROZDĚLÁNO]` **F2-02** Základní `Money`, `Currency` a `CurrencyMismatchException` vytvořeny; čeká se na lokální kontrolu v Laragonu.
 
 - `[HOTOVO]` **F1-36** Odstraněny nepoužívané závislosti `vite` a `@nette/vite-plugin`; zachovány Sass a esbuild. `npm run build` úspěšně sestavil CSS i JS, `npm ls vite @nette/vite-plugin` potvrdil prázdný výsledek a `npm audit` nahlásil 0 zranitelností. Sass vypisuje deprecation warnings z Bootstrapu; nejde o chybu buildu.
 
@@ -125,6 +126,12 @@ Celkem **547 kroků**: hotovo 103, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 ### v2.58 (10. 11. 2026)
 - Upřesněno DB-only pravidlo: SQL migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení/aktualizaci databáze. Zákaz se týká runtime souborových katalogů a načítání překladů ze souborů; běžící aplikace čte překlady pouze z DB.
 - Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
+
+### v2.62 (13. 11. 2026)
+- Zahájen F2-02: vytvořeny neměnné hodnotové objekty `Money` a `Currency` a výjimka `CurrencyMismatchException`.
+- Zapsáno rozhodnutí: částky se počítají výhradně v celočíselných minor units; sčítání, odčítání a porovnávání vyžadují stejnou měnu; násobení je zatím celočíselné a přetečení vyvolá výjimku.
+- `CurrencyProvider` a načítání výchozích/aktivních měn zůstávají ve F2-03. Lokální PHPStan a coding-standard kontrola F2-02 čeká na ověření.
+- F2: **1 hotovo**, **1 rozděláno**, **14 plán**. Celkový souhrn: **103 hotovo**, **1 rozděláno**, **440 plán**.
 
 ### v2.61 (10. 11. 2026)
 - Ověřeno, že `app/Shared/Domain` a `app/Shared/Infrastructure` jsou již vytvořené a verzované v repozitáři; F2-01 uzavřen jako HOTOVO bez vytváření duplicitní struktury.
@@ -251,10 +258,10 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 1 z 16 kroků.
+_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 1 z 16 kroků; 1 rozpracován.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
-- `[PLÁN]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, násobení, porovnání, výjimka při různých měnách
+- `[ROZDĚLÁNO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Základní `Currency` VO vzniklo jako nutná typová závislost; `CurrencyProvider` zůstává ve F2-03. Čeká na lokální PHPStan a coding-standard kontrolu.
 - `[PLÁN]` **F2-03** `Currency`: kód, počet desetinných míst, `CurrencyProvider` (výchozí, aktivní)
 - `[PLÁN]` **F2-04** `Quantity`: decimal s pevnou přesností, bez `float`
 - `[PLÁN]` **F2-05** `Percentage` / sazba v basis points
