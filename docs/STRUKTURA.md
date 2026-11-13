@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 1.8 · 10. 11. 2026  
+**Revize:** 1.9 · 13. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 10. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -45,10 +45,15 @@ app/
 │   │   └── Money/
 │   │       ├── Currency.php
 │   │       ├── CurrencyMismatchException.php
+│   │       ├── CurrencyProvider.php
+│   │       ├── DefaultCurrencyNotFoundException.php
 │   │       └── Money.php
 │   └── Infrastructure/
-│       └── Console/
-│           └── DbResetCommand.php
+│       ├── Console/
+│       │   └── DbResetCommand.php
+│       └── Persistence/
+│           └── Money/
+│               └── DatabaseCurrencyProvider.php
 └── UI/
     ├── Admin/
     │   ├── @layout.latte
@@ -76,7 +81,7 @@ app/
 Poznámky:
 - Strom obsahuje i prázdné adresáře držené soubory `.gitkeep`.
 - Moduly kromě Catalog zatím nemusí mít vytvořené všechny vnitřní vrstvy.
-- `Shared/Domain` a `Shared/Infrastructure` jsou již vytvořené základní adresáře. `Domain/Money` obsahuje neměnné hodnotové objekty `Money` a `Currency` a výjimku `CurrencyMismatchException`; `CurrencyProvider` a načítání měn patří do F2-03. `Infrastructure` obsahuje bezpečný konzolový příkaz `DbResetCommand`; další doménové a infrastrukturní komponenty budou přidávány postupně podle kroků F2. Nepoužívaný `OrmModel.php` a přímá závislost `nextras/orm` byly odstraněny v rámci F1-37. Nextras DBAL/Migrations zůstávají pouze pro migrace a související nástroje.
+- `Shared/Domain` a `Shared/Infrastructure` jsou již vytvořené základní adresáře. `Domain/Money` obsahuje neměnné hodnotové objekty `Money` a `Currency`, rozhraní `CurrencyProvider` a doménové výjimky. `Infrastructure/Persistence/Money/DatabaseCurrencyProvider` načítá výchozí a aktivní měny přes Nette Database Explorer a mapuje `ActiveRow` na `Currency` uvnitř persistence hranice. Poskytovatel je explicitně registrován v `config/services.neon`; rozhraní se autowiruje přes jedinou implementaci. `Infrastructure/Console` obsahuje bezpečný konzolový příkaz `DbResetCommand`. Nepoužívaný `OrmModel.php` a přímá závislost `nextras/orm` byly odstraněny v rámci F1-37. Nextras DBAL/Migrations zůstávají pouze pro migrace a související nástroje.
 - `Core/Module/ModuleRegistry.php` je explicitním seznamem modulů. `Bootstrap` při kompilaci Nette DI kontejneru používá tento seznam pro registraci modulových DI extension. `Bootstrap` hledá konvencí pojmenovanou extension `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`; chybějící extension přeskočí, nalezená musí být instancovatelným potomkem `Nette\DI\CompilerExtension`. Registry je jediným zdrojem seznamu modulů; nedochází k prohledávání adresářů.
 - Prezentační mapování Nette je definováno v `config/common.neon`: moduly `Front` a `Admin` používají `App\UI\Front\**Presenter` a `App\UI\Admin\**Presenter`; obecné pravidlo `*: App\Presentation\*\**Presenter` zachovává presentery v `Presentation`, zejména chybové presentery. Dvojitá hvězdička `**` odpovídá konvenci Nette Application 3.3.1. Základní routování je v `Core/RouterFactory.php`: `/` přesměruje na `/cs`, Front používá jazykové prefixy `/cs` a `/en` a Admin začíná na `/admin`. Vznikly také minimální presentery `Front:Home` a `Admin:Dashboard` s vlastními Latte šablonami.
 
@@ -226,3 +231,4 @@ assets/
 | 9. 11. 2026 | v1.2: popsány samostatné Front/Admin asset vstupy a sdílené části JavaScriptu a Sassu podle F1-22. |
 
 | 13. 11. 2026 | v1.9: doplněn skutečný strom `Shared/Domain/Money` a odpovědnost základních hodnotových objektů Money/Currency podle F2-02. |
+| 13. 11. 2026 | v2.0: doplněno rozhraní `CurrencyProvider`, výjimka chybějící výchozí měny a databázová implementace přes Nette Database Explorer podle F2-03. |
