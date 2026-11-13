@@ -3,6 +3,10 @@ services:
 	- App\Core\Logging\SensitiveDataProcessor
 	- App\Core\Logging\LoggerFactory::createLogger(@App\Core\Logging\SensitiveDataProcessor, %logging.file%, %logging.maxFiles%, %logging.level%)
 	- App\Shared\Infrastructure\Console\DbResetCommand
+	# Poskytovatel není zachycen automatickým vyhledáváním *Service/*Repository,
+	# proto jej registrujeme výslovně. Rozhraní CurrencyProvider se pak autowiruje
+	# přes jedinou dostupnou implementaci.
+	- App\Shared\Infrastructure\Persistence\Money\DatabaseCurrencyProvider
 
 
 search:
