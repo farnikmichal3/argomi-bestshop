@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.74 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.75 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 109, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 434, zrušeno 2.
+Celkem **547 kroků**: hotovo 110, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 434, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 7 | 1 | 0 | 0 | 0 | 8 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 8 | 0 | 0 | 0 | 0 | 8 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -126,6 +126,12 @@ Celkem **547 kroků**: hotovo 109, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 ### v2.58 (10. 11. 2026)
 - Upřesněno DB-only pravidlo: SQL migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení/aktualizaci databáze. Zákaz se týká runtime souborových katalogů a načítání překladů ze souborů; běžící aplikace čte překlady pouze z DB.
 - Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
+
+### v2.75 (13. 11. 2026)
+- Dokončen F2-08: implementován neměnný doménový `PublicId`, rozhraní `PublicIdGenerator` a infrastrukturní generátor ULID přes `symfony/uid ^7.4`. Zachována kompatibilita s PHP 8.3 a funkčnost na vývojovém PHP 8.5.
+- Aktualizován a commitnut `composer.lock`. Funkčně ověřeno generování a validace ULID, rekonstrukce a porovnání identifikátorů, odmítání neplatných zápisů a registrace generátoru v Nette DI.
+- Uživatel potvrdil čisté lokální kontroly přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
+- F2: **8 hotovo**, **0 rozděláno**, **8 plán**. Celkový souhrn: **110 hotovo**, **0 rozděláno**, **1 k úpravě**, **434 plán**, **2 zrušeno**.
 
 ### v2.74 (13. 11. 2026)
 - Zahájen F2-08: přidána doménová abstrakce `PublicId`/`PublicIdGenerator` a infrastrukturní generátor ULID přes `symfony/uid` ve větvi `^7.4`.
@@ -309,7 +315,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 7 z 16 kroků; F2-08 je rozpracováno.
+_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 8 z 16 kroků; žádný krok není rozpracován.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
@@ -318,7 +324,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-05** `Percentage`: neměnný hodnotový objekt s podepsaným integerem v bazických bodech (1 bp = 0,01 %), striktním desetinným vstupem s nejvýše dvěma místy, formátováním, porovnáním a kontrolou rovnosti. Povoleny záporné i nad 100% sazby; bez `float`, automatického zaokrouhlování a výpočtů nad `Money`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
 - `[HOTOVO]` **F2-06** `Locale`: neměnný jazykový identifikátor, `LocaleProvider` (výchozí a aktivní jazyky), databázový poskytovatel a dynamické jazykové routování. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; v prohlížeči ověřeno přesměrování `/`, aktivní jazykové prefixy a dynamické přidání `/de` bez změny PHP kódu.
 - `[HOTOVO]` **F2-07** `Clock`: rozhraní pro aktuální čas v UTC, produkční `SystemClock` a testovací `FrozenClock` s metodami `setNow()` a `advance()`. Lokálně ověřeno přes `check.bat` (PHPStan, PHP-CS-Fixer a Deptrac bez chyb), funkčně ověřen převod do UTC, nastavení/posun testovacího času a registrace `Clock` v Nette DI, která vrací `SystemClock`.
-- `[ROZDĚLÁNO]` **F2-08** `PublicId`: neměnný hodnotový objekt pro kanonický ULID, rozhraní `PublicIdGenerator` a produkční generátor přes `symfony/uid` 7.4. Závislost je oddělena v infrastruktuře; čeká se na lokální aktualizaci Composer locku a ověření.
+- `[HOTOVO]` **F2-08** `PublicId`: neměnný hodnotový objekt validující kanonický 26znakový ULID, rozhraní `PublicIdGenerator` a produkční generátor přes `symfony/uid` 7.4. Závislost je oddělena v infrastruktuře; Composer lock je aktualizován a verzován. Funkčně ověřeno generování, validace, rovnost, odmítání neplatných zápisů a registrace přes Nette DI. PHPStan, PHP-CS-Fixer a Deptrac prošly bez chyb.
 - `[PLÁN]` **F2-09** Základ výjimek: doménová výjimka, nenalezeno, neplatný vstup
 - `[PLÁN]` **F2-10** Rozhraní `DomainEvent` a synchronní `EventDispatcher`
 - `[PLÁN]` **F2-11** Registrace posluchačů událostí přes DI tagy
