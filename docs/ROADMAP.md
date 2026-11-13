@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.72 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.73 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 108, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 435, zrušeno 2.
+Celkem **547 kroků**: hotovo 109, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 435, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 6 | 1 | 0 | 0 | 0 | 9 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 7 | 0 | 0 | 0 | 0 | 9 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -126,6 +126,11 @@ Celkem **547 kroků**: hotovo 108, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 ### v2.58 (10. 11. 2026)
 - Upřesněno DB-only pravidlo: SQL migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení/aktualizaci databáze. Zákaz se týká runtime souborových katalogů a načítání překladů ze souborů; běžící aplikace čte překlady pouze z DB.
 - Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
+
+### v2.73 (13. 11. 2026)
+- Dokončen F2-07: rozhraní `Clock`, produkční `SystemClock` a testovací `FrozenClock` s nastavením a posunem času.
+- Uživatel potvrdil čisté lokální kontroly PHPStan, PHP-CS-Fixer a Deptrac. Funkčně ověřeno vracení UTC, převod vstupního času do UTC, `setNow()`, `advance()` a skutečná registrace `Clock` v Nette DI jako `SystemClock`.
+- F2: **7 hotovo**, **0 rozděláno**, **9 plán**. Celkový souhrn: **109 hotovo**, **0 rozděláno**, **435 plán**, **2 zrušeno**.
 
 ### v2.72 (13. 11. 2026)
 - Zahájen F2-07: přidáno rozhraní `Clock::now(): DateTimeImmutable` s garancí UTC, produkční `SystemClock` a testovací `FrozenClock` umožňující nastavení a posun času.
@@ -307,8 +312,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-04** `Quantity`: neměnný hodnotový objekt s pevnou přesností tří desetinných míst, interně celočíselné tisíciny, vstup přes desetinný řetězec bez zaokrouhlování, aritmetika s kontrolou přetečení a bez `float`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
 - `[HOTOVO]` **F2-05** `Percentage`: neměnný hodnotový objekt s podepsaným integerem v bazických bodech (1 bp = 0,01 %), striktním desetinným vstupem s nejvýše dvěma místy, formátováním, porovnáním a kontrolou rovnosti. Povoleny záporné i nad 100% sazby; bez `float`, automatického zaokrouhlování a výpočtů nad `Money`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
 - `[HOTOVO]` **F2-06** `Locale`: neměnný jazykový identifikátor, `LocaleProvider` (výchozí a aktivní jazyky), databázový poskytovatel a dynamické jazykové routování. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; v prohlížeči ověřeno přesměrování `/`, aktivní jazykové prefixy a dynamické přidání `/de` bez změny PHP kódu.
-- `[ROZDĚLÁNO]` **F2-07** `Clock`: rozhraní pro aktuální čas v UTC, produkční `SystemClock` a testovací `FrozenClock`. Implementace a registrace produkčních hodin jsou připraveny; čeká se na lokální kontroly přes `check.bat`.
-- `[ROZDĚLÁNO]` **F2-07** `Clock` (UTC), produkční `SystemClock` registrovaný v DI a testovací `FrozenClock` s možností nastavit a posouvat čas.
+- `[HOTOVO]` **F2-07** `Clock`: rozhraní pro aktuální čas v UTC, produkční `SystemClock` a testovací `FrozenClock` s metodami `setNow()` a `advance()`. Lokálně ověřeno přes `check.bat` (PHPStan, PHP-CS-Fixer a Deptrac bez chyb), funkčně ověřen převod do UTC, nastavení/posun testovacího času a registrace `Clock` v Nette DI, která vrací `SystemClock`.
 - `[PLÁN]` **F2-08** Generátor a hodnotový objekt veřejného ID (ULID)
 - `[PLÁN]` **F2-09** Základ výjimek: doménová výjimka, nenalezeno, neplatný vstup
 - `[PLÁN]` **F2-10** Rozhraní `DomainEvent` a synchronní `EventDispatcher`
