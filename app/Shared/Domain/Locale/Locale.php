@@ -28,7 +28,7 @@ final readonly class Locale implements Stringable
      */
     public static function fromString(string $value): self
     {
-        if (preg_match('/\A([a-z]{2,3})(?:-([a-z]{4}))?(?:-([a-z]{2}|[0-9]{3}))?\z/iD', $value, $matches) !== 1) {
+        if (strlen($value) > 10 || preg_match('/\A([a-z]{2,3})(?:-([a-z]{4}))?(?:-([a-z]{2}|[0-9]{3}))?\z/iD', $value, $matches) !== 1) {
             throw InvalidLocaleException::forValue($value);
         }
 
