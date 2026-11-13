@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.31 · 10. 11. 2026
+**Revize:** 1.32 · 13. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -139,6 +139,8 @@ Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
 - Další připravená měna: EUR.
 - Ceny pro CZK a EUR jsou explicitní ceny; běžný nákup se nesmí spoléhat na automatický kurzový přepočet.
 - Košík a objednávka používají jednu zvolenou měnu; měna objednávky se po vytvoření nemění.
+- Doménové rozhraní `CurrencyProvider` poskytuje výchozí a aktivní měny. Výchozí měna musí být nastavena a aktivní; pokud chybí, poskytovatel vyhodí `DefaultCurrencyNotFoundException` místo tichého použití náhradní měny.
+- Aktivní měny se načítají z tabulky `currency` a řadí podle `sort_order`, při shodě podle kódu. Doménový objekt `Currency` obsahuje pouze kód a počet desetinných míst; název a symbol zůstávají mimo peněžní výpočty.
 - Demo data jsou součástí projektu a zůstávají i v produkční instalaci jako demonstrační obsah.
 - Produkční provoz musí bezpečně oddělit demo zákazníky/objednávky od reálných operací. Demo záznam nesmí spustit skutečnou platbu, expedici ani odeslání zákaznického e-mailu.
 
