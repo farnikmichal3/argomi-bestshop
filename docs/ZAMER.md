@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.35 · 13. 11. 2026
+**Revize:** 1.36 · 13. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -500,3 +500,15 @@ Veškerý čas používaný v doménové a aplikační logice se získává pře
 - Do Nette DI se registruje pouze `SystemClock`. `FrozenClock` se používá explicitně v testech a nesmí vytvářet nejednoznačnost při autowiringu produkční služby.
 - Převod UTC na časové pásmo obchodu nebo zákazníka patří do prezentační či aplikační vrstvy. Samotný `Clock` žádné uživatelské časové pásmo nezná.
 - Časové intervaly a kalendářní pravidla se vyhodnocují s explicitně určeným časovým pásmem; pro ukládání a porovnávání okamžiků zůstává základem UTC.
+
+
+## 32. Veřejné identifikátory ULID
+
+Veřejné identifikátory se reprezentují vlastním neměnným hodnotovým objektem `PublicId`. Používá se standardní ULID v kanonickém 26znakovém zápisu Crockford Base32.
+
+- Interní primární klíče databáze zůstávají celočíselné. Veřejné ULID je samostatný identifikátor určený pro URL, API a další externí rozhraní; nesmí se zaměňovat za databázový primární klíč.
+- `PublicId` ověřuje kanonický zápis ULID a nezná knihovnu použitou pro generování. Neplatné, malými písmeny zapsané ani nekanonické hodnoty se nepřijímají.
+- Rozhraní `PublicIdGenerator` odděluje doménu od generovací technologie. Produkční implementace `SymfonyUlidGenerator` používá komponentu `symfony/uid` z větve `^7.4`.
+- Zvolená větev Symfony 7.4 je LTS a vyžaduje PHP nejméně 8.2; projekt proto zachovává podporu PHP 8.3 a současně používá stejnou implementaci na vývojovém PHP 8.5. Vyšší hlavní verze knihovny se přijímají až po samostatném ověření kompatibility.
+- Závislost na `symfony/uid` je výhradně v infrastruktuře. Doménové API zůstává nezávislé na Symfony a umožňuje budoucí výměnu generátoru bez změny obchodní logiky.
+- ULID je lexikograficky řaditelný a obsahuje časovou složku; z veřejného identifikátoru proto lze odvodit přibližnou dobu jeho vytvoření. Není to autorizační prostředek, tajný token ani náhrada kontroly přístupu.
