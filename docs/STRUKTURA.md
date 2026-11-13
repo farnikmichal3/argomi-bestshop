@@ -43,11 +43,11 @@ app/
 │   ├── Domain/
 │   │   ├── Event/
 │   │   ├── Money/
-│   │       ├── Currency.php
-│   │       ├── CurrencyMismatchException.php
-│   │       ├── CurrencyProvider.php
-│   │       ├── DefaultCurrencyNotFoundException.php
-│   │       └── Money.php
+│   │   │   ├── Currency.php
+│   │   │   ├── CurrencyMismatchException.php
+│   │   │   ├── CurrencyProvider.php
+│   │   │   ├── DefaultCurrencyNotFoundException.php
+│   │   │   └── Money.php
 │   │   └── Quantity/
 │   │       ├── InvalidQuantityException.php
 │   │       └── Quantity.php
