@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.32 · 13. 11. 2026
+**Revize:** 1.33 · 13. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -445,3 +445,16 @@ Peníze se v doméně reprezentují neměnným hodnotovým objektem `Money`. Č�
 - Přetečení celočíselného rozsahu musí být explicitně odmítnuto výjimkou; nesmí dojít k tichému převodu na `float`.
 - `CurrencyProvider`, výběr výchozí a aktivní měny a načítání měn z databáze jsou samostatnou odpovědností navazující implementace F2-03.
 - Běžný nákup nepřepočítává CZK a EUR automaticky. Košík a objednávka používají jednu zvolenou měnu a měna objednávky se po vytvoření nemění.
+
+
+## 28. Doménový model množství
+
+Množství se v doméně reprezentuje neměnným hodnotovým objektem `Quantity` s pevnou přesností tří desetinných míst. Interně se ukládá jako celočíselný počet tisícin; desetinná aritmetika typu `float` se nepoužívá.
+
+- Konstruktor přijímá pouze celočíselnou hodnotu v tisícinách. Pro běžné vytváření slouží pojmenované metody `fromDecimal()` a `fromInteger()`.
+- `fromDecimal()` přijímá desetinný řetězec s tečkou a nejvýše třemi desetinnými místy. Vstup s vyšší přesností, čárkou, exponentem nebo jiným neplatným formátem se odmítne; žádné automatické zaokrouhlování ani tichá změna hodnoty nejsou povoleny.
+- `toDecimalString()` vrací stabilní desetinný zápis vždy se třemi místy a tečkou. Lokalizované formátování patří do prezentační vrstvy.
+- Sčítání, odčítání, porovnávání a celočíselné násobení pracují výhradně s interním integerem. Přetečení se odmítne výjimkou; desetinné násobení a dělení nejsou součástí základního API, dokud nebudou stanovena přesná pravidla zaokrouhlování.
+- Záporné hodnoty jsou povoleny, protože mohou vyjadřovat například skladový výdej nebo korekci množství.
+- `Quantity` neobsahuje měrnou jednotku a samo nepřevádí mezi kusy, kilogramy, litry ani jinými jednotkami. Kompatibilitu a převody jednotek řeší samostatná doménová odpovědnost.
+- Přesnost odpovídá databázovým sloupcům množství typu `DECIMAL(12,3)`; rozsah samotného hodnotového objektu je navíc omezen bezpečným celočíselným rozsahem PHP.
