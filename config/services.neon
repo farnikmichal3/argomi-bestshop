@@ -7,6 +7,8 @@ services:
 	# proto jej registrujeme výslovně. Rozhraní CurrencyProvider se pak autowiruje
 	# přes jedinou dostupnou implementaci.
 	- App\Shared\Infrastructure\Persistence\Money\DatabaseCurrencyProvider
+	# Aktivní jazyky a výchozí jazyk se načítají z tabulky language; router nesmí obsahovat pevný seznam kódů.
+	- App\Shared\Infrastructure\Persistence\Locale\DatabaseLocaleProvider
 
 
 search:
