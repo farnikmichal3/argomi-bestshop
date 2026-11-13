@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.34 · 13. 11. 2026
+**Revize:** 1.35 · 13. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -131,8 +131,13 @@ Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
 
 ## 6. Jazyky, měny a demo data
 
-- Výchozí jazyk: čeština (`cs`).
-- Další připravený jazyk: angličtina (`en`).
+- Základní jazyky systému jsou čeština (`cs`) a angličtina (`en`); oba jsou vedené v tabulce `language` stejně jako každý další jazyk. Při instalaci je výchozí čeština (`cs`).
+- Aktivní jazyky a jediný výchozí jazyk se načítají z databáze. Žádný jazykový kód, včetně `cs` a `en`, nesmí být natvrdo zapsán v `RouterFactory` ani v konfiguraci rout.
+- `RouterFactory` sestavuje povolené jazykové prefixy Front dynamicky podle aktivních záznamů z `LocaleProvider`; kořenová adresa `/` přesměruje na jazyk načtený jako výchozí z databáze. Přidání nebo deaktivace jazyka nevyžaduje změnu PHP kódu.
+- `Locale` je neměnný hodnotový objekt identifikátoru jazyka v podporované podmnožině BCP 47: jazykový kód o 2–3 písmenech, volitelný čtyřpísmenný script a volitelný dvoupísmenný nebo třímístný region. Rozšíření, varianty a private-use části se nepřijímají; výsledný kód se normalizuje (jazyk malými písmeny, script s počátečním velkým písmenem, region velkými písmeny). Délka odpovídá databázovému sloupci `language.code` (`VARCHAR(10)`).
+- Platnost `Locale` je oddělená od aktivity jazyka. Neaktivní jazyk lze nadále reprezentovat, například v uložené preferenci zákazníka; jeho dostupnost ověřuje `LocaleProvider`.
+- `LocaleProvider` poskytuje právě jeden výchozí aktivní jazyk, seznam aktivních jazyků a kontrolu aktivity. Výchozí jazyk musí být aktivní; databázová tabulka `language` tuto podmínku vynucuje. Implementace `DatabaseLocaleProvider` používá Nette Database Explorer a nepředává `ActiveRow` mimo persistence vrstvu.
+- Jazykový fallback není odpovědností `Locale` ani `LocaleProvider`. Překladová vrstva nejprve hledá přesný požadovaný jazyk, poté základní jazyk bez regionu/scriptu a nakonec výchozí jazyk systému. Pokud není dostupný ani výchozí překlad, musí nastat explicitně definovaná chybová situace; prázdný text se nesmí tiše vydávat za překlad.
 - První verze e-shopu je zaměřena na B2C. Datový a doménový model ale od začátku počítá s firemními zákazníky a údaji IČO/DIČ; ověřování v ARES (ČR) a VIES (EU), B2B ceníky a individuální firemní podmínky se doplní později.
 - Všechny jazykové varianty URL mají vždy explicitní jazykový prefix, včetně výchozího jazyka (např. `/cs/produkty`, `/en/products`).
 - Výchozí měna: CZK.
@@ -471,3 +476,14 @@ Procentní sazba se v doméně reprezentuje neměnným hodnotovým objektem `Per
 - Záporné hodnoty i sazby vyšší než 100 % jsou povoleny. Obecný hodnotový objekt nevynucuje obchodní rozsah 0–100 %; konkrétní limity stanoví příslušná doména, například Tax, Pricing nebo Order.
 - Převod vstupu i formátování musí bezpečně pracovat s celým rozsahem PHP integeru, včetně `PHP_INT_MIN`. Přetečení se explicitně odmítne výjimkou; nesmí dojít k tichému převodu na `float`.
 - `Percentage` samo nepočítá procentní podíl z `Money`, neprovádí násobení ani zaokrouhlování peněžních částek. Aplikace sazby na peníze bude samostatnou odpovědností, která nejprve stanoví přesná pravidla a směr zaokrouhlování.
+
+
+## 30. Doménový model jazyka a jazykové routování
+
+Jazyk se reprezentuje neměnným hodnotovým objektem `Locale`. Podporovaná syntaxe je záměrně omezená na běžné BCP 47 identifikátory: jazykový kód o 2–3 písmenech, volitelný čtyřpísmenný script a volitelný dvoupísmenný nebo třímístný region. Kód se normalizuje do kanonického zápisu; rozšíření, varianty a private-use části se odmítají. Maximální délka odpovídá `language.code VARCHAR(10)`.
+
+Rozhraní `LocaleProvider` poskytuje `getDefault(): Locale`, `getActiveLocales(): array` a `isActive(Locale): bool`. Právě jeden jazyk je výchozí a současně aktivní. Základní jazyky systému jsou `cs` a `en`, ale ani ty nejsou v aplikačním kódu routeru pevně zakódované; oba se načítají z databáze. Při instalaci je výchozí `cs`.
+
+`RouterFactory` získává `LocaleProvider` přes DI. Povolené jazykové prefixy Front i jazyk kořenového přesměrování sestavuje z databázových údajů. Přidání nebo deaktivace jazyka proto nevyžaduje úpravu `RouterFactory` ani konfigurace rout.
+
+Aktivita jazyka není součástí identity `Locale`. Neaktivní jazyk lze reprezentovat v uložených preferencích; dostupnost pro aktuální obchod ověřuje poskytovatel. Fallback překladů patří do modulu Translation: přesný jazyk, základní jazyk bez regionu a výchozí jazyk systému. Pokud chybí i výchozí překlad, aplikace vyvolá definovanou chybu místo tichého vrácení prázdného textu.
