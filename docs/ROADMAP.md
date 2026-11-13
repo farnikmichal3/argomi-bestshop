@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.62 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.63 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 103, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 440, zrušeno 2.
+Celkem **547 kroků**: hotovo 104, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 440, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 1 | 1 | 0 | 0 | 0 | 14 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 2 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -78,7 +78,7 @@ Celkem **547 kroků**: hotovo 103, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 ## 3. Nejbližší kroky
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; obě složky jsou součástí verzované struktury repozitáře.
-- `[ROZDĚLÁNO]` **F2-02** Základní `Money`, `Currency` a `CurrencyMismatchException` vytvořeny; čeká se na lokální kontrolu v Laragonu.
+- `[HOTOVO]` **F2-02** Implementovány neměnné hodnotové objekty `Money` a `Currency` a výjimka `CurrencyMismatchException`. Částky používají celočíselné minor units; aritmetika hlídá přetečení, operace vyžadující shodnou měnu odmítají měnový nesoulad. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb. Jednotkové testy jsou plánovány ve F2-14.
 
 - `[HOTOVO]` **F1-36** Odstraněny nepoužívané závislosti `vite` a `@nette/vite-plugin`; zachovány Sass a esbuild. `npm run build` úspěšně sestavil CSS i JS, `npm ls vite @nette/vite-plugin` potvrdil prázdný výsledek a `npm audit` nahlásil 0 zranitelností. Sass vypisuje deprecation warnings z Bootstrapu; nejde o chybu buildu.
 
@@ -126,6 +126,11 @@ Celkem **547 kroků**: hotovo 103, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 ### v2.58 (10. 11. 2026)
 - Upřesněno DB-only pravidlo: SQL migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení/aktualizaci databáze. Zákaz se týká runtime souborových katalogů a načítání překladů ze souborů; běžící aplikace čte překlady pouze z DB.
 - Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
+
+### v2.63 (13. 11. 2026)
+- Dokončen F2-02: implementovány neměnné hodnotové objekty `Money` a `Currency` a výjimka `CurrencyMismatchException`; částky používají celočíselné minor units, aritmetika hlídá přetečení a operace vyžadující shodnou měnu odmítají měnový nesoulad.
+- Lokální `check.bat` úspěšně dokončil PHPStan, PHP-CS-Fixer a Deptrac bez chyb. Jednotkové testy zůstávají plánovány ve F2-14.
+- F2: **2 hotovo**, **0 rozděláno**, **14 plán**. Celkový souhrn: **104 hotovo**, **0 rozděláno**, **440 plán**.
 
 ### v2.62 (13. 11. 2026)
 - Zahájen F2-02: vytvořeny neměnné hodnotové objekty `Money` a `Currency` a výjimka `CurrencyMismatchException`.
