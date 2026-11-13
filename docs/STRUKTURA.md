@@ -71,6 +71,8 @@ app/
 │       │   └── SystemClock.php
 │       ├── Console/
 │       │   └── DbResetCommand.php
+│       ├── PublicId/
+│       │   └── SymfonyUlidGenerator.php
 │       └── Persistence/
 │           ├── Locale/
 │           │   └── DatabaseLocaleProvider.php
