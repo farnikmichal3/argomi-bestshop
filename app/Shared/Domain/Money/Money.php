@@ -95,16 +95,19 @@ final readonly class Money
             && $this->minorAmount === $other->minorAmount;
     }
 
+    /** Zjistí, zda je tato částka větší než zadaná částka stejné měny. */
     public function isGreaterThan(self $other): bool
     {
         return $this->compareTo($other) > 0;
     }
 
+    /** Zjistí, zda je tato částka menší než zadaná částka stejné měny. */
     public function isLessThan(self $other): bool
     {
         return $this->compareTo($other) < 0;
     }
 
+    /** Ověří, zda částka představuje přesně nulu. */
     public function isZero(): bool
     {
         return $this->minorAmount === 0;
