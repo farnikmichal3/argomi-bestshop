@@ -489,3 +489,14 @@ Rozhraní `LocaleProvider` poskytuje `getDefault(): Locale`, `getActiveLocales()
 `RouterFactory` získává `LocaleProvider` přes DI. Povolené jazykové prefixy Front i jazyk kořenového přesměrování sestavuje z databázových údajů. Přidání nebo deaktivace jazyka proto nevyžaduje úpravu `RouterFactory` ani konfigurace rout.
 
 Aktivita jazyka není součástí identity `Locale`. Neaktivní jazyk lze reprezentovat v uložených preferencích; dostupnost pro aktuální obchod ověřuje poskytovatel. Fallback překladů patří do modulu Translation: přesný jazyk, základní jazyk bez regionu a výchozí jazyk systému. Pokud chybí i výchozí překlad, aplikace vyvolá definovanou chybu místo tichého vrácení prázdného textu.
+
+## 31. Společné hodiny a časové pásmo
+
+Veškerý čas používaný v doménové a aplikační logice se získává přes rozhraní `Clock`. Kanonickým časovým pásmem systému je UTC; čas se ukládá do databáze v UTC a lokalizuje se až při zobrazení uživateli.
+
+- `Clock::now(): DateTimeImmutable` vrací aktuální okamžik vždy v časovém pásmu UTC. Doménová a aplikační logika nesmí přímo číst systémové hodiny.
+- Produkční implementace `SystemClock` vytváří aktuální čas s explicitním `DateTimeZone('UTC')`; nespoléhá na výchozí časové pásmo PHP, operačního systému ani webového serveru.
+- Testovací implementace `FrozenClock` umožňuje nastavit pevný okamžik a posouvat jej pomocí `DateInterval`. Vstupní čas normalizuje do UTC, takže testy jsou deterministické bez čekání na reálný čas.
+- Do Nette DI se registruje pouze `SystemClock`. `FrozenClock` se používá explicitně v testech a nesmí vytvářet nejednoznačnost při autowiringu produkční služby.
+- Převod UTC na časové pásmo obchodu nebo zákazníka patří do prezentační či aplikační vrstvy. Samotný `Clock` žádné uživatelské časové pásmo nezná.
+- Časové intervaly a kalendářní pravidla se vyhodnocují s explicitně určeným časovým pásmem; pro ukládání a porovnávání okamžiků zůstává základem UTC.
