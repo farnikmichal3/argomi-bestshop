@@ -278,13 +278,13 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 4 z 16 kroků.
+_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 4 z 16 kroků, 1 rozpracován.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
 - `[HOTOVO]` **F2-03** `Currency`: kód, počet desetinných míst, `CurrencyProvider` pro výchozí a aktivní měny. Implementováno doménové rozhraní, výjimka pro chybějící výchozí měnu a databázový adaptér přes Nette Database Explorer. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
 - `[HOTOVO]` **F2-04** `Quantity`: neměnný hodnotový objekt s pevnou přesností tří desetinných míst, interně celočíselné tisíciny, vstup přes desetinný řetězec bez zaokrouhlování, aritmetika s kontrolou přetečení a bez `float`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
-- `[ROZDĚLÁNO]` **F2-05** `Percentage`: schválen podepsaný integer v bazických bodech (1 bp = 0,01 %), striktní desetinný vstup s nejvýše dvěma místy, povolené záporné i nad 100% sazby. Pravidla jsou zapsána v ZAMER; implementace a lokální kontroly následují.
+- `[ROZDĚLÁNO]` **F2-05** `Percentage`: schválen podepsaný integer v bazických bodech (1 bp = 0,01 %), striktní desetinný vstup s nejvýše dvěma místy, povolené záporné i nad 100% sazby. Pravidla jsou zapsána v ZAMER a základní implementace je připravena; lokální kontroly přes `check.bat` čekají na ověření.
 - `[PLÁN]` **F2-06** `Locale`: kód jazyka, `LocaleProvider` (výchozí, aktivní)
 - `[PLÁN]` **F2-07** `Clock` (UTC) a testovací implementace
 - `[PLÁN]` **F2-08** Generátor a hodnotový objekt veřejného ID (ULID)
