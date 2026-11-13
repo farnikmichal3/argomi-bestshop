@@ -42,7 +42,10 @@ final class DatabaseCurrencyProvider implements CurrencyProvider
     }
 
     /**
+     * Vrátí aktivní měny seřazené podle pořadí nastaveného správcem obchodu.
+     *
      * @return list<Currency>
+     * @throws UnexpectedValueException Pokud některý databázový záznam nelze převést na měnu.
      */
     public function getActive(): array
     {
@@ -61,6 +64,8 @@ final class DatabaseCurrencyProvider implements CurrencyProvider
     }
 
     /**
+     * @throws UnexpectedValueException Pokud databázový řádek obsahuje neočekávané hodnoty.
+     *
      * Převede databázový řádek na doménový objekt bez úniku ActiveRow.
      *
      * Hodnoty se kontrolují i přesto, že je omezuje databázové schéma.
