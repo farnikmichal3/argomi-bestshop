@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.33 · 13. 11. 2026
+**Revize:** 1.34 · 13. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -458,3 +458,16 @@ Množství se v doméně reprezentuje neměnným hodnotovým objektem `Quantity`
 - Záporné hodnoty jsou povoleny, protože mohou vyjadřovat například skladový výdej nebo korekci množství.
 - `Quantity` neobsahuje měrnou jednotku a samo nepřevádí mezi kusy, kilogramy, litry ani jinými jednotkami. Kompatibilitu a převody jednotek řeší samostatná doménová odpovědnost.
 - Přesnost odpovídá databázovým sloupcům množství typu `DECIMAL(12,3)`; rozsah samotného hodnotového objektu je navíc omezen bezpečným celočíselným rozsahem PHP.
+
+
+## 29. Doménový model procentní sazby
+
+Procentní sazba se v doméně reprezentuje neměnným hodnotovým objektem `Percentage`. Interní hodnota je podepsané celé číslo v bazických bodech (basis points, bp); jeden bazický bod představuje 0,01 % a 10 000 bp představuje 100 %. Desetinná aritmetika typu `float` se nepoužívá.
+
+- Konstruktor přijímá pouze celočíselnou hodnotu v bazických bodech. Pro běžné vytváření slouží pojmenované metody `fromPercent()` a `fromBasisPoints()`.
+- `fromPercent()` přijímá desetinný řetězec s tečkou a nejvýše dvěma desetinnými místy. Zápis s čárkou, exponentem, mezerami nebo vyšší přesností se odmítne; žádné automatické zaokrouhlování není povoleno.
+- `toBasisPoints()` vrací interní celočíselnou hodnotu. `toPercentString()` vrací stabilní desetinný zápis procent vždy se dvěma místy a tečkou; lokalizované formátování patří do prezentační vrstvy.
+- Porovnání, kontrola rovnosti a ověření nulové hodnoty pracují výhradně s celočíselnými bazickými body.
+- Záporné hodnoty i sazby vyšší než 100 % jsou povoleny. Obecný hodnotový objekt nevynucuje obchodní rozsah 0–100 %; konkrétní limity stanoví příslušná doména, například Tax, Pricing nebo Order.
+- Převod vstupu i formátování musí bezpečně pracovat s celým rozsahem PHP integeru, včetně `PHP_INT_MIN`. Přetečení se explicitně odmítne výjimkou; nesmí dojít k tichému převodu na `float`.
+- `Percentage` samo nepočítá procentní podíl z `Money`, neprovádí násobení ani zaokrouhlování peněžních částek. Aplikace sazby na peníze bude samostatnou odpovědností, která nejprve stanoví přesná pravidla a směr zaokrouhlování.
