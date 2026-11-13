@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.65 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.66 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 105, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 439, zrušeno 2.
+Celkem **547 kroků**: hotovo 105, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 438, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 3 | 0 | 0 | 0 | 0 | 13 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 3 | 1 | 0 | 0 | 0 | 12 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -273,7 +273,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
 - `[HOTOVO]` **F2-03** `Currency`: kód, počet desetinných míst, `CurrencyProvider` pro výchozí a aktivní měny. Implementováno doménové rozhraní, výjimka pro chybějící výchozí měnu a databázový adaptér přes Nette Database Explorer. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
-- `[PLÁN]` **F2-04** `Quantity`: decimal s pevnou přesností, bez `float`
+- `[ROZDĚLÁNO]` **F2-04** `Quantity`: neměnný hodnotový objekt s pevnou přesností tří desetinných míst, interně celočíselné tisíciny, vstup přes desetinný řetězec bez zaokrouhlování, aritmetika s kontrolou přetečení a bez `float`.
 - `[PLÁN]` **F2-05** `Percentage` / sazba v basis points
 - `[PLÁN]` **F2-06** `Locale`: kód jazyka, `LocaleProvider` (výchozí, aktivní)
 - `[PLÁN]` **F2-07** `Clock` (UTC) a testovací implementace
@@ -1110,3 +1110,7 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 
 ### v0.1 (říjen 2026)
 - Výchozí návrh a rozpad na 528 kroků a 22 fází.
+
+### v2.66 (13. 11. 2026)
+- Zahájen F2-04: schválena pevná přesnost `Quantity` na tři desetinná místa, odpovídající množstevním sloupcům `DECIMAL(12,3)`. Implementován základní hodnotový objekt a výjimka pro neplatný desetinný vstup; probíhá lokální ověření.
+- Souhrn: **105 hotovo**, **1 rozděláno**, **1 k úpravě**, **438 plán**, **2 zrušeno**.
