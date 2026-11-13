@@ -33,10 +33,10 @@ final readonly class Locale implements Stringable
         }
 
         $language = strtolower($matches[1]);
-        $script = isset($matches[2]) && $matches[2] !== ''
+        $script = $matches[2] !== null
             ? '-' . ucfirst(strtolower($matches[2]))
             : '';
-        $region = isset($matches[3]) && $matches[3] !== ''
+        $region = $matches[3] !== null
             ? '-' . (ctype_digit($matches[3]) ? $matches[3] : strtoupper($matches[3]))
             : '';
 
