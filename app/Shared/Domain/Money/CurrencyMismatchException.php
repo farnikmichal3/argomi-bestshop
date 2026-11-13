@@ -6,8 +6,17 @@ namespace App\Shared\Domain\Money;
 
 use DomainException;
 
+/**
+ * Označuje pokus o peněžní operaci mezi rozdílnými měnami.
+ *
+ * Výjimka zahrnuje také rozdílný počet desetinných míst, protože ten
+ * ovlivňuje interpretaci celočíselné částky v nejmenších jednotkách.
+ */
 final class CurrencyMismatchException extends DomainException
 {
+    /**
+     * Vytvoří výjimku s popisem obou měn, které nelze společně použít.
+     */
     public static function forCurrencies(Currency $left, Currency $right): self
     {
         return new self(sprintf(
