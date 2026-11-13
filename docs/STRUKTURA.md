@@ -1,8 +1,8 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 1.9 · 13. 11. 2026  
-**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 10. 11. 2026
+**Revize:** 2.0 · 13. 11. 2026  
+**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 13. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
 
