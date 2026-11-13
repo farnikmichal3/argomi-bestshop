@@ -41,7 +41,11 @@ app/
 │       └── Error5xx/
 ├── Shared/
 │   ├── Domain/
-│   │   └── Event/
+│   │   ├── Event/
+│   │   └── Money/
+│   │       ├── Currency.php
+│   │       ├── CurrencyMismatchException.php
+│   │       └── Money.php
 │   └── Infrastructure/
 │       └── Console/
 │           └── DbResetCommand.php
@@ -72,7 +76,7 @@ app/
 Poznámky:
 - Strom obsahuje i prázdné adresáře držené soubory `.gitkeep`.
 - Moduly kromě Catalog zatím nemusí mít vytvořené všechny vnitřní vrstvy.
-- `Shared/Domain` a `Shared/Infrastructure` jsou již vytvořené základní adresáře. `Infrastructure` obsahuje bezpečný konzolový příkaz `DbResetCommand`; doménové a infrastrukturní komponenty budou přidávány postupně podle kroků F2. Nepoužívaný `OrmModel.php` a přímá závislost `nextras/orm` byly odstraněny v rámci F1-37. Nextras DBAL/Migrations zůstávají pouze pro migrace a související nástroje.
+- `Shared/Domain` a `Shared/Infrastructure` jsou již vytvořené základní adresáře. `Domain/Money` obsahuje neměnné hodnotové objekty `Money` a `Currency` a výjimku `CurrencyMismatchException`; `CurrencyProvider` a načítání měn patří do F2-03. `Infrastructure` obsahuje bezpečný konzolový příkaz `DbResetCommand`; další doménové a infrastrukturní komponenty budou přidávány postupně podle kroků F2. Nepoužívaný `OrmModel.php` a přímá závislost `nextras/orm` byly odstraněny v rámci F1-37. Nextras DBAL/Migrations zůstávají pouze pro migrace a související nástroje.
 - `Core/Module/ModuleRegistry.php` je explicitním seznamem modulů. `Bootstrap` při kompilaci Nette DI kontejneru používá tento seznam pro registraci modulových DI extension. `Bootstrap` hledá konvencí pojmenovanou extension `App\Modules\<Module>\Infrastructure\DI\<Module>Extension`; chybějící extension přeskočí, nalezená musí být instancovatelným potomkem `Nette\DI\CompilerExtension`. Registry je jediným zdrojem seznamu modulů; nedochází k prohledávání adresářů.
 - Prezentační mapování Nette je definováno v `config/common.neon`: moduly `Front` a `Admin` používají `App\UI\Front\**Presenter` a `App\UI\Admin\**Presenter`; obecné pravidlo `*: App\Presentation\*\**Presenter` zachovává presentery v `Presentation`, zejména chybové presentery. Dvojitá hvězdička `**` odpovídá konvenci Nette Application 3.3.1. Základní routování je v `Core/RouterFactory.php`: `/` přesměruje na `/cs`, Front používá jazykové prefixy `/cs` a `/en` a Admin začíná na `/admin`. Vznikly také minimální presentery `Front:Home` a `Admin:Dashboard` s vlastními Latte šablonami.
 
@@ -220,3 +224,5 @@ assets/
 | 8. 11. 2026 | v1.0: potvrzen skutečný strom `Core/Modules/Presentation/Shared/UI`; doplněny odpovědnosti a hranice. |
 | 9. 11. 2026 | v1.1: opraven strom podle aktuální větve `main`, odstraněna neexistující složka Console z dokumentace a doplněn plánovaný úklid Nextras ORM podle F0-54/F1-37. |
 | 9. 11. 2026 | v1.2: popsány samostatné Front/Admin asset vstupy a sdílené části JavaScriptu a Sassu podle F1-22. |
+
+| 13. 11. 2026 | v1.9: doplněn skutečný strom `Shared/Domain/Money` a odpovědnost základních hodnotových objektů Money/Currency podle F2-02. |
