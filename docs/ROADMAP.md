@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.66 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.67 · 13. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 105, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 438, zrušeno 2.
+Celkem **547 kroků**: hotovo 106, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 438, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 3 | 1 | 0 | 0 | 0 | 12 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 4 | 0 | 0 | 0 | 0 | 12 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -126,6 +126,11 @@ Celkem **547 kroků**: hotovo 105, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 ### v2.58 (10. 11. 2026)
 - Upřesněno DB-only pravidlo: SQL migrace a seed skripty smějí obsahovat výchozí systémové překladové hodnoty pro vložení/aktualizaci databáze. Zákaz se týká runtime souborových katalogů a načítání překladů ze souborů; běžící aplikace čte překlady pouze z DB.
 - Souhrn: **101 hotovo**, **1 rozděláno**, **1 k úpravě**, **443 plán**, **1 zrušeno**.
+
+### v2.67 (13. 11. 2026)
+- Dokončen F2-04: implementován neměnný hodnotový objekt `Quantity` s pevnou přesností tří desetinných míst, celočíselnými tisícinami, striktním desetinným vstupem bez zaokrouhlování a aritmetikou s kontrolou přetečení; bez použití `float`.
+- Lokální `check.bat` ověřil PHPStan, PHP-CS-Fixer a Deptrac bez chyb. F2-04 je uzavřen jako HOTOVO; jednotkové testy zůstávají plánovány ve F2-14.
+- F2: **4 hotovo**, **0 rozděláno**, **12 plán**. Celkový souhrn: **106 hotovo**, **0 rozděláno**, **438 plán**.
 
 ### v2.65 (13. 11. 2026)
 - Dokončen F2-03: rozhraní `CurrencyProvider`, výjimka pro chybějící výchozí měnu a databázový adaptér přes Nette Database Explorer. Aktivní měny se řadí podle `sort_order` a kódu; `ActiveRow` zůstává uvnitř infrastrukturní vrstvy.
@@ -268,12 +273,12 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 3 z 16 kroků; jeden krok je rozpracován.
+_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 4 z 16 kroků.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
 - `[HOTOVO]` **F2-03** `Currency`: kód, počet desetinných míst, `CurrencyProvider` pro výchozí a aktivní měny. Implementováno doménové rozhraní, výjimka pro chybějící výchozí měnu a databázový adaptér přes Nette Database Explorer. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
-- `[ROZDĚLÁNO]` **F2-04** `Quantity`: neměnný hodnotový objekt s pevnou přesností tří desetinných míst, interně celočíselné tisíciny, vstup přes desetinný řetězec bez zaokrouhlování, aritmetika s kontrolou přetečení a bez `float`.
+- `[HOTOVO]` **F2-04** `Quantity`: neměnný hodnotový objekt s pevnou přesností tří desetinných míst, interně celočíselné tisíciny, vstup přes desetinný řetězec bez zaokrouhlování, aritmetika s kontrolou přetečení a bez `float`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
 - `[PLÁN]` **F2-05** `Percentage` / sazba v basis points
 - `[PLÁN]` **F2-06** `Locale`: kód jazyka, `LocaleProvider` (výchozí, aktivní)
 - `[PLÁN]` **F2-07** `Clock` (UTC) a testovací implementace
