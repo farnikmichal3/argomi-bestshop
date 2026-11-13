@@ -44,13 +44,18 @@ final readonly class Money
 
     public function multiply(int $factor): self
     {
-        $result = $this->minorAmount * $factor;
+        $amount = $this->minorAmount;
 
-        if (!is_int($result)) {
+        if (
+            ($amount > 0 && $factor > 0 && $amount > intdiv(PHP_INT_MAX, $factor))
+            || ($amount > 0 && $factor < 0 && $factor < intdiv(PHP_INT_MIN, $amount))
+            || ($amount < 0 && $factor > 0 && $amount < intdiv(PHP_INT_MIN, $factor))
+            || ($amount < 0 && $factor < 0 && $amount < intdiv(PHP_INT_MAX, $factor))
+        ) {
             throw new OverflowException('Money multiplication exceeds the integer range.');
         }
 
-        return new self($result, $this->currency);
+        return new self($amount * $factor, $this->currency);
     }
 
     public function compareTo(self $other): int
