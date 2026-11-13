@@ -15,8 +15,6 @@ use OverflowException;
  */
 final readonly class Percentage
 {
-    private const int BASIS_POINTS_PER_PERCENT = 100;
-
     private const int DECIMAL_PLACES = 2;
 
     public function __construct(
