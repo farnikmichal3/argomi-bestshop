@@ -132,7 +132,7 @@ Pravidla:
 - Aplikační kód provádí databázové operace v transakci přes rozhraní `App\Shared\Application\Transaction\Transaction` a jeho metodu `run(callable $operation): mixed`. Aplikační vrstva tak nezná Nette Database ani konkrétní databázové spojení.
 - Produkční adaptér `NetteTransaction` v `Shared/Infrastructure/Transaction` obaluje `Nette\Database\Explorer::transaction()`. Frameworková závislost zůstává výhradně v infrastruktuře.
 - Úspěšné dokončení callbacku znamená COMMIT. Výjimka nebo chyba znamená ROLLBACK; původní chyba se propaguje volajícímu. Callback nedostává Explorer ani databázové spojení.
-- Vnořování transakcí se deleguje na Nette Database a jeho podporu vnořených transakcí. Aplikační kód nesmí ručně provádět `BEGIN`, `COMMIT` ani `ROLLBACK`.
+- Vnořená volání `Transaction::run()` jsou povolena, ale sdílejí jednu databázovou transakci a nevytvářejí savepointy. Pokud vnější callback zachytí výjimku z vnořeného volání, změny provedené uvnitř zůstávají součástí vnější transakce; samostatný rollback vnořené operace není garantován. Rollback nastane, pokud chyba opustí nejvyšší transakční callback. Aplikační kód nesmí ručně provádět `BEGIN`, `COMMIT` ani `ROLLBACK`.
 - Databázová transakce zajišťuje atomicitu databázových změn, nikoliv automatické vrácení vedlejších účinků mimo databázi. Synchronní posluchače doménových událostí mohou například odeslat e-mail nebo provést jinou externí operaci, kterou rollback databáze nevrátí. Transakční outbox ani automaticky transakční doručování událostí nejsou součástí tohoto kontraktu.
 
 Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
