@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\Quantity;
 
-use DomainException;
+use App\Shared\Domain\Exception\DomainException;
 
 /**
  * Označuje neplatný desetinný zápis množství.
