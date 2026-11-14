@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.88 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.89 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 114, rozděláno 0, k úpravě 3, rozhodnout 0, blokováno 0, plán 435, zrušeno 2.
+Celkem **554 kroků**: hotovo 114, rozděláno 1, k úpravě 3, rozhodnout 0, blokováno 0, plán 434, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 13 | 0 | 1 | 0 | 0 | 6 | 0 |
-| F3 | Databáze a migrace | 34 | 9 | 0 | 1 | 0 | 0 | 23 | 1 |
+| F3 | Databáze a migrace | 34 | 9 | 1 | 1 | 0 | 0 | 22 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -339,7 +339,7 @@ _Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí
 
 ### F3: Databáze a migrace
 
-_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 9 z 34 kroků; jeden krok je k úpravě.
+_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 9 z 34 kroků; jeden krok je rozpracován a jeden je k úpravě.
 
 - `[HOTOVO]` **F3-01** Počáteční schéma, základní data a demo data v časově značených Nextras migracích načtené v MySQL bez chyb
 - `[HOTOVO]` **F3-02** Nainstalovat Nextras Migrations a nastavit adresáře `structures`, `basic-data`, `dummy-data` (integrováno v Nette DI)
@@ -373,7 +373,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-30** Demo data v dalším vydání: plné texty produktů, úplné snímky objednávek (atributy, adresy), počáteční pohyby skladu, další systémové texty
 - `[PLÁN]` **F3-31** Navrhnout a migrovat doménově rozdělené systémové překlady ze současné tabulky `translation_message`
 - `[PLÁN]` **F3-32** Navrhnout a implementovat explicitní označení demo dat a zákaz vedlejších efektů pro demo objednávky
-- `[PLÁN]` **F3-33** Ochrana `DbResetCommand`: povolit standardně pouze `development` (případně `testing` výhradně s izolovanou testovací DB); odmítnout staging/production/unknown/missing ještě před DB dotazy a doplnit automatické negativní testy
+- `[ROZPRACOVÁNO]` **F3-33** Ochrana `DbResetCommand`: zavedena samostatná `DbResetEnvironmentPolicy`; `common.neon` má fail-closed výchozí hodnotu `app.environment: null`; příkaz odmítá vše kromě přesné hodnoty `development` ještě před prvním DB dotazem. Přidán test politiky pro chybějící, neznámé, testing, staging a production. Zbývá nastavit `parameters.app.environment: development` v lokálním `config/local.neon` a ověřit `check.bat` i chování příkazu.
 - `[PLÁN]` **F3-34** Databázová persistence Transactional Outbox: atomický zápis s obchodní transakcí, indexy a stavový model pro bezpečné vyzvednutí workerem
 
 ### F4: Překlady v databázi
@@ -1200,6 +1200,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Implementace čeká na stažení do Laragonu, funkční ověření rollbacku/commitů/vnoření a čisté aktivní kontroly přes `check.bat`.
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
+
+### v2.89 (15. 11. 2026)
+- Zahájena implementace F3-33: explicitní fail-closed politika `app.environment`, povolen pouze přesný `development`, kontrola před prvním databázovým dotazem a samostatný test politiky.
+- Lokální ověření a nastavení `config/local.neon` zůstávají před označením kroku jako hotového.
+- Souhrn: **114 hotovo**, **1 rozpracováno**, **3 k úpravě**, **434 plán**, **2 zrušeno**.
 
 ### v2.88 (15. 11. 2026)
 - Zpřesněn základní bezpečnostní a architektonický plán podle nezávislé revize: explicitní prostředí pro destruktivní příkazy, ISO 4217 katalog a doménový limit `minorUnits`, hranice synchronních doménových posluchačů, Transactional Outbox s idempotentním workerem a jednotná politika bezpečného logování.
