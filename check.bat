@@ -9,24 +9,24 @@ echo  ArgoMi BestShop - project checks
 echo ========================================
 echo.
 
-echo [1/3] PHPStan
+echo [1/4] Nette Tester
+call composer run test
+if errorlevel 1 goto :failed
+
+echo.
+echo [2/4] PHPStan
 call composer run phpstan
 if errorlevel 1 goto :failed
 
 echo.
-echo [2/3] PHP-CS-Fixer
+echo [3/4] PHP-CS-Fixer
 call composer run cs
 if errorlevel 1 goto :failed
 
 echo.
-echo [3/3] Deptrac
+echo [4/4] Deptrac
 call composer run arch
 if errorlevel 1 goto :failed
-
-REM Nette Tester is not part of the active check suite yet.
-REM Enable it when the test suite is ready:
-REM call composer run tester
-REM if errorlevel 1 goto :failed
 
 echo.
 echo ========================================
