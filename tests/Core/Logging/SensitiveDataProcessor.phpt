@@ -3,8 +3,6 @@ SensitiveDataProcessor redacts sensitive values in nested context, strings, exce
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Core\Logging\SensitiveDataProcessor;
 use Monolog\Level;
 use Monolog\LogRecord;
