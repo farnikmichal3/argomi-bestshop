@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.36 · 13. 11. 2026
+**Revize:** 1.37 · 14. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -126,6 +126,14 @@ Pravidla:
 - Objednávka uchovává snímek údajů a cen z okamžiku nákupu.
 - Historie cen se ukládá samostatně; zákonný výpočet nejnižší ceny za období je samostatná aplikační odpovědnost.
 - Schéma v1 je jeden počáteční celek. Další změny budou přidávány inkrementálně pomocí migrací.
+
+### Transakce v aplikační vrstvě
+
+- Aplikační kód provádí databázové operace v transakci přes rozhraní `App\\Shared\\Application\\Transaction\\Transaction` a jeho metodu `run(callable $operation): mixed`. Aplikační vrstva tak nezná Nette Database ani konkrétní databázové spojení.
+- Produkční adaptér `NetteTransaction` v `Shared/Infrastructure/Transaction` obaluje `Nette\\Database\\Explorer::transaction()`. Frameworková závislost zůstává výhradně v infrastruktuře.
+- Úspěšné dokončení callbacku znamená COMMIT. Výjimka nebo chyba znamená ROLLBACK; původní chyba se propaguje volajícímu. Callback nedostává Explorer ani databázové spojení.
+- Vnořování transakcí se deleguje na Nette Database a jeho podporu vnořených transakcí. Aplikační kód nesmí ručně provádět `BEGIN`, `COMMIT` ani `ROLLBACK`.
+- Databázová transakce zajišťuje atomicitu databázových změn, nikoliv automatické vrácení vedlejších účinků mimo databázi. Synchronní posluchače doménových událostí mohou například odeslat e-mail nebo provést jinou externí operaci, kterou rollback databáze nevrátí. Transakční outbox ani automaticky transakční doručování událostí nejsou součástí tohoto kontraktu.
 
 Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
 
