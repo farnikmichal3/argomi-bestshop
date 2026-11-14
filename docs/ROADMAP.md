@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 115, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 428, zrušeno 2.
+Celkem **547 kroků**: hotovo 116, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 428, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 13 | 1 | 0 | 0 | 0 | 2 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 14 | 0 | 0 | 0 | 0 | 2 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -78,7 +78,7 @@ Celkem **547 kroků**: hotovo 115, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 ## 3. Nejbližší kroky
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; obě složky jsou součástí verzované struktury repozitáře.
-- `[HOTOVO]` **F2-02** Implementovány neměnné hodnotové objekty `Money` a `Currency` a výjimka `CurrencyMismatchException`. Částky používají celočíselné minor units; aritmetika hlídá přetečení, operace vyžadující shodnou měnu odmítají měnový nesoulad. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb. Jednotkové testy jsou plánovány ve F2-14.
+- `[HOTOVO]` **F2-02** Implementovány neměnné hodnotové objekty `Money` a `Currency` a výjimka `CurrencyMismatchException`. Částky používají celočíselné minor units; aritmetika hlídá přetečení, operace vyžadující shodnou měnu odmítají měnový nesoulad. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb. Jednotkové testy byly doplněny a ověřeny ve F2-14.
 
 - `[HOTOVO]` **F1-36** Odstraněny nepoužívané závislosti `vite` a `@nette/vite-plugin`; zachovány Sass a esbuild. `npm run build` úspěšně sestavil CSS i JS, `npm ls vite @nette/vite-plugin` potvrdil prázdný výsledek a `npm audit` nahlásil 0 zranitelností. Sass vypisuje deprecation warnings z Bootstrapu; nejde o chybu buildu.
 
@@ -314,7 +314,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 13 z 16 kroků; jeden krok je rozpracovaný a dva zůstávají naplánované.
+_Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 14 z 16 kroků; dva zůstávají naplánované.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
@@ -329,7 +329,7 @@ _Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí
 - `[HOTOVO]` **F2-11** Registrace posluchačů událostí přes DI tagy. Dispatcher přijímá služby označené `domainEventListener` pomocí `tagged()` při kompilaci Nette DI. Funkčně ověřeno doručení události skutečně tagovanému posluchači, vyloučení netagovaných služeb a sdílení jediné instance přes `EventDispatcher` i `SynchronousEventDispatcher`; uživatel potvrdil čisté `check.bat` a odstranění dočasné testovací registrace.
 - `[HOTOVO]` **F2-12** Rozhraní `Transaction` (spuštění v transakci). Aplikační kontrakt `run()` a infrastrukturní adaptér `NetteTransaction` jsou implementovány a registrovány v DI. Funkční test na SQLite `:memory:` úspěšně ověřil návratovou hodnotu callbacku, commit, rollback, propagaci původních instancí `Exception` a `Error` a chování vnořených volání bez savepointů (včetně rollbacku při selhání vnější transakce). Samostatný DI test potvrdil registraci rozhraní i adaptéru a sdílení jediné instance. Uživatel potvrdil čistý výsledek `check.bat` včetně PHPStan, PHP-CS-Fixer a Deptrac.
 - `[HOTOVO]` **F2-13** Typovaná neměnná kolekce DTO `Shared\Application\Collection\DtoCollection<T>`. Generická PHPStan šablona zachovává typ položek; konstruktor ověřuje existenci očekávané třídy/rozhraní a runtime typ každé položky, přijímá `iterable` a materializuje jej do vlastního seznamu. Implementuje `IteratorAggregate` a `Countable`; poskytuje `count()`, `isEmpty()`, `first()`, `get()`, `toArray()` a `getIterator()`. Strukturální neměnnost, hranice použití a pravidla rozšiřování jsou popsány v `ZAMER.md` a `STRUKTURA.md`. Všech 21 funkčních kontrol prošlo a uživatel potvrdil čistý `check.bat` (PHPStan, PHP-CS-Fixer, Deptrac).
-- `[ROZDĚLÁNO]` **F2-14** Jednotkové testy: Money, Quantity, Locale, Clock, ULID. Přidány testy Nette Tester v `tests/Core/Shared/` pro peněžní aritmetiku a měny, přesné množství, jazykové identifikátory, UTC hodiny a veřejné ULID. Čeká se na lokální spuštění testů a `check.bat`.
+- `[HOTOVO]` **F2-14** Jednotkové testy: Money/Currency, Quantity, Locale, Clock a PublicId/ULID. Přidáno pět samostatných testů Nette Tester v `tests/Core/Shared/` a opraveny také dva starší testy logování, které odhalilo zapojení Testeru do kontrolního skriptu. Testy pokrývají běžné operace, neplatné vstupy, měnový nesoulad, přesnost tří desetinných míst, UTC, práci s časem, validaci ULID a ochranu proti celočíselnému přetečení. Uživatel potvrdil úspěšné dokončení všech aktivních kontrol přes `check.bat`, včetně Nette Testeru, PHPStan, PHP-CS-Fixer a Deptrac.
 - `[PLÁN]` **F2-15** Architektonický test: `Shared` nezávisí na žádném modulu
 - `[PLÁN]` **F2-16** Dokumentace: co do `Shared` patří a co ne
 
@@ -1189,6 +1189,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Implementace čeká na stažení do Laragonu, funkční ověření rollbacku/commitů/vnoření a čisté aktivní kontroly přes `check.bat`.
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
+
+### v2.87 (14. 11. 2026)
+- Dokončen F2-14: pět nových testů Nette Tester pokrývá Money/Currency, Quantity, Locale, Clock a PublicId/ULID. Opraveny také dva starší testy logování, které po zapojení Nette Testeru do `check.bat` odhalily chybnou syntaxi a nesprávné očekávání.
+- Uživatel potvrdil, že všechny aktivní kontroly `check.bat` prošly: Nette Tester, PHPStan, PHP-CS-Fixer a Deptrac. Testovací sada je součástí lokálního i GitHub Actions kontrolního workflow.
+- F2: **14 hotovo**, **0 rozděláno**, **2 plán**. Celkový souhrn: **116 hotovo**, **0 rozděláno**, **1 k úpravě**, **428 plán**, **2 zrušeno**.
 
 ### v2.86 (14. 11. 2026)
 - Zahájen F2-14: přidáno pět samostatných testovacích souborů Nette Tester pro Money/Currency, Quantity, Locale, Clock a PublicId/ULID.
