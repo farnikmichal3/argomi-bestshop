@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.82 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.84 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 113, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 429, zrušeno 2.
+Celkem **547 kroků**: hotovo 114, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 430, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 11 | 1 | 0 | 0 | 0 | 4 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 12 | 0 | 0 | 0 | 0 | 4 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -327,7 +327,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-09** Základ výjimek: implementovány společné typy `DomainException`, `NotFoundException` a `InvalidInputException`; specializované výjimky byly převedeny pouze při zachování jejich významu. `check.bat` potvrdil úspěšné PHPStan, PHP-CS-Fixer a Deptrac kontroly. Funkční test potvrdil dědičnost přes vlastní i nativní PHP výjimky a zachování samostatné větve `DefaultCurrencyNotFoundException` jako `RuntimeException`.
 - `[HOTOVO]` **F2-10** Rozhraní `DomainEvent`, kontrakt `DomainEventListener` a synchronní `EventDispatcher` jsou implementovány. Ověřeno filtrování posluchačů, zachování pořadí, opakované použití generátoru, propagace výjimek, prázdný dispatcher a registrace v Nette DI. Registrace posluchačů přes DI tagy navazuje ve F2-11.
 - `[HOTOVO]` **F2-11** Registrace posluchačů událostí přes DI tagy. Dispatcher přijímá služby označené `domainEventListener` pomocí `tagged()` při kompilaci Nette DI. Funkčně ověřeno doručení události skutečně tagovanému posluchači, vyloučení netagovaných služeb a sdílení jediné instance přes `EventDispatcher` i `SynchronousEventDispatcher`; uživatel potvrdil čisté `check.bat` a odstranění dočasné testovací registrace.
-- `[ROZDĚLÁNO]` **F2-12** Rozhraní `Transaction` (spuštění v transakci). Aplikační kontrakt `run()` a infrastrukturní adaptér `NetteTransaction` jsou implementovány a registrovány v DI. Funkční testy na SQLite `:memory:` potvrdily návratovou hodnotu, commit, rollback i propagaci `Exception` a `Error`. Schválený kontrakt vnoření odpovídá Nette Database: vnořená volání sdílejí transakci bez savepointů; zachycená vnitřní výjimka nevrací vnitřní změny zpět. Čeká na doplnění testů tohoto chování, ověření DI a čisté aktivní kontroly.
+- `[HOTOVO]` **F2-12** Rozhraní `Transaction` (spuštění v transakci). Aplikační kontrakt `run()` a infrastrukturní adaptér `NetteTransaction` jsou implementovány a registrovány v DI. Funkční test na SQLite `:memory:` úspěšně ověřil návratovou hodnotu callbacku, commit, rollback, propagaci původních instancí `Exception` a `Error` a chování vnořených volání bez savepointů (včetně rollbacku při selhání vnější transakce). Samostatný DI test potvrdil registraci rozhraní i adaptéru a sdílení jediné instance. Uživatel potvrdil čistý výsledek `check.bat` včetně PHPStan, PHP-CS-Fixer a Deptrac.
 - `[PLÁN]` **F2-13** Typované neměnné kolekce pro DTO
 - `[PLÁN]` **F2-14** Jednotkové testy: Money, Quantity, Locale, Clock, ULID
 - `[PLÁN]` **F2-15** Architektonický test: `Shared` nezávisí na žádném modulu
@@ -1189,6 +1189,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Implementace čeká na stažení do Laragonu, funkční ověření rollbacku/commitů/vnoření a čisté aktivní kontroly přes `check.bat`.
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
+
+### v2.84 (14. 11. 2026)
+- Dokončen F2-12: aplikační rozhraní `Transaction` a adaptér `NetteTransaction` jsou funkčně ověřeny na izolované SQLite databázi v paměti. Všech 12 kontrol potvrdilo návrat callbacku, commit, rollback, zachování a propagaci původních instancí `Exception` a `Error` i skutečné chování vnořených transakcí Nette Database 3.2.10 bez savepointů.
+- Samostatný test Nette DI potvrdil registraci `Transaction` i `NetteTransaction` a jejich rozlišení na stejnou instanci služby. Uživatel potvrdil čistý `check.bat`; poslední formátovací nález PHP-CS-Fixer byl opraven a následná kontrola prošla.
+- F2: **12 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **114 hotovo**, **0 rozděláno**, **1 k úpravě**, **430 plán**, **2 zrušeno**.
 
 ### v2.83 (14. 11. 2026)
 - Upřesněn aplikační kontrakt transakcí: vnořená volání sdílejí jednu transakci bez savepointů; zachycená vnitřní výjimka sama nevrací vnitřní změny zpět.
