@@ -27,9 +27,12 @@ final class NetteTransaction implements Transaction
     /**
      * Předá operaci správě transakcí Nette Database.
      *
-     * Nette při úspěšném dokončení callbacku transakci potvrdí a při
-     * výjimce nebo chybě ji vrátí zpět. Původní chybu necháváme
-     * propagovat; zde ji nepřevádíme ani nepotlačujeme.
+     * Nette při úspěšném dokončení nejvyššího callbacku transakci
+     * potvrdí a při výjimce nebo chybě, která opustí nejvyšší callback,
+     * ji vrátí zpět. Vnořená volání pouze sdílejí stejnou transakci:
+     * Nette pro ně nevytváří savepointy. Pokud vnější callback zachytí
+     * výjimku z vnořeného volání, vnitřní změny zůstávají součástí
+     * vnější transakce. Původní chybu necháváme propagovat beze změny.
      *
      * @template TResult
      *
