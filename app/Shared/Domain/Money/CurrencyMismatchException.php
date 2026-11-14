@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\Money;
 
-use DomainException;
+use App\Shared\Domain\Exception\DomainException;
 
 /**
  * Označuje pokus o peněžní operaci mezi rozdílnými měnami.
