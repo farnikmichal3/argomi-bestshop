@@ -373,7 +373,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-30** Demo data v dalším vydání: plné texty produktů, úplné snímky objednávek (atributy, adresy), počáteční pohyby skladu, další systémové texty
 - `[PLÁN]` **F3-31** Navrhnout a migrovat doménově rozdělené systémové překlady ze současné tabulky `translation_message`
 - `[PLÁN]` **F3-32** Navrhnout a implementovat explicitní označení demo dat a zákaz vedlejších efektů pro demo objednávky
-- `[PLÁN]` **F3-33** Ochrana `DbResetCommand`: explicitní allowlist aplikačních prostředí, odmítnutí production/unknown/missing před DB dotazy a automatické negativní testy
+- `[PLÁN]` **F3-33** Ochrana `DbResetCommand`: povolit standardně pouze `development` (případně `testing` výhradně s izolovanou testovací DB); odmítnout staging/production/unknown/missing ještě před DB dotazy a doplnit automatické negativní testy
 - `[PLÁN]` **F3-34** Databázová persistence Transactional Outbox: atomický zápis s obchodní transakcí, indexy a stavový model pro bezpečné vyzvednutí workerem
 
 ### F4: Překlady v databázi
