@@ -3,8 +3,6 @@ Clock implementations always expose UTC and FrozenClock advances deterministical
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Shared\Domain\Clock\Clock;
 use App\Shared\Infrastructure\Clock\FrozenClock;
 use App\Shared\Infrastructure\Clock\SystemClock;
