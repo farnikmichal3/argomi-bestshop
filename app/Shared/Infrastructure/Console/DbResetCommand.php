@@ -33,6 +33,7 @@ final class DbResetCommand extends BaseCommand
         IDriver $driver,
         IConfiguration $config,
         private readonly IDbal $dbal,
+        private readonly DbResetEnvironmentPolicy $environmentPolicy,
         ?IPrinter $printer = null,
     ) {
         parent::__construct($driver, $config, $printer);
@@ -41,14 +42,25 @@ final class DbResetCommand extends BaseCommand
     protected function configure(): void
     {
         $this->setHelp(
-            'Destruktivní příkaz určený výhradně pro lokální vývojovou databázi argomi_bestshop. '
-            . 'Ponechá databázi a její oprávnění, odstraní její tabulky a pohledy a znovu provede všechny migrace.',
+            'Destruktivní příkaz povolený pouze při explicitně nastaveném aplikačním prostředí development '
+            . 'a pro databázi argomi_bestshop. Ponechá databázi a její oprávnění, odstraní její tabulky a pohledy '
+            . 'a znovu provede všechny migrace.',
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        if (!$this->environmentPolicy->isAllowed()) {
+            $io->error(
+                'Reset odmítnut. Příkaz db:reset je povolen pouze v explicitně nastaveném prostředí development.'
+                . ' Zkontroluj parametr app.environment v lokální konfiguraci.',
+            );
+
+            return Command::FAILURE;
+        }
+
         $identity = $this->dbal->query(
             'SELECT DATABASE() AS database_name, CURRENT_USER() AS database_user',
         )[0] ?? [];
