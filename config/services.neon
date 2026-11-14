@@ -8,7 +8,8 @@ services:
 		arguments:
 			listeners: tagged(domainEventListener)
 	# Transakční rozhraní používá jediný produkční adaptér nad Nette Database Explorerem.
-	- App\Shared\Infrastructure\Transaction\NetteTransaction
+	- App\Shared\Infrastructure\Transaction\NetteTransaction:
+		autowired: App\Shared\Application\Transaction\Transaction
 	# Produkční hodiny jsou jedinou registrovanou implementací Clock; FrozenClock zůstává pouze pro testy.
 	- App\Shared\Infrastructure\Clock\SystemClock
 	# Generátor veřejných ULID je jedinou produkční implementací rozhraní PublicIdGenerator.
