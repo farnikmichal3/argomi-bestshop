@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.78 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.79 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 111, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 432, zrušeno 2.
+Celkem **547 kroků**: hotovo 112, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 431, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 9 | 1 | 0 | 0 | 0 | 6 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 10 | 0 | 0 | 0 | 0 | 6 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -297,8 +297,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 - `[HOTOVO]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy `Front` a `Admin` v `assets/scss` a `assets/js`; společný základ Sassu a inicializace JS jsou oddělené do sdílených souborů. Lokální build úspěšně ověřil všechny čtyři výstupy.
 - `[HOTOVO]` **F1-23** Skripty `build:css`, `build:js`, `build`, `watch:css` a `watch:js` v `package.json` sestavují samostatné výstupy `front.css`, `admin.css`, `front.js` a `admin.js`; `npm run build` proběhl úspěšně a všechny čtyři výstupy mají nenulovou velikost.
 - `[HOTOVO]` **F1-24** `.nvmrc` obsahuje Node.js `26.13.0`; `package.json` deklaruje `engines.node` `>=26.13.0 <27` a `engines.npm` `>=12.2.2 <13`.
-- `[HOTOVO]` **F1-25** Ověřit sestavení a reference assetů v layoutech. `npm run build` proběhl úspěšně; `app/UI/Front/@layout.latte` odkazuje na `front.css` a `front.js`, `app/UI/Admin/@layout.latte` na `admin.css` a `admin.js`.
-- `[HOTOVO]` **F1-26** GitHub Actions: `composer validate`, `composer audit`, PHPStan, coding standard a Deptrac. Workflow `.github/workflows/composer.yml` úspěšně proběhl na GitHubu (push, běh č. 1); všechny kroky včetně instalace závislostí skončily úspěšně. Automatické testy budou doplněny, až bude v projektu připravena testovací sada.
+- `[HOTOVO]` **F1-25** Ověřit sestavení a reference assetů v layoutech. `npm run build` proběhl úspěšně; `app/UI/Front/@layout.latte` odkazuje na `front.css` a `front.js`, `app/UI/Admin/@layout.latte` na `admin.css` a `admin.js`.- `[HOTOVO]` **F1-26** GitHub Actions: `composer validate`, `composer audit`, PHPStan, coding standard a Deptrac. Workflow `.github/workflows/composer.yml` úspěšně proběhl na GitHubu (push, běh č. 1); všechny kroky včetně instalace závislostí skončily úspěšně. Automatické testy budou doplněny, až bude v projektu připravena testovací sada.
 - `[HOTOVO]` **F1-27** GitHub Actions: `npm ci`, build CSS/JavaScript a `npm audit`. Workflow `.github/workflows/npm.yml` úspěšně proběhl na GitHubu (push, běh č. 1); všechny kroky včetně ověření Node.js/npm verzí skončily úspěšně.
 - `[HOTOVO]` **F1-28** Pravidelná kontrola aktualizací závislostí. Soubor `.github/dependabot.yml` nastavuje týdenní kontroly Composer, npm a GitHub Actions každé pondělí v 06:00 (Europe/Berlin); minor/patch aktualizace seskupuje podle ekosystému, major aktualizace ponechává samostatně. Všech 5 prvních PR bylo po úspěšných CI kontrolách sloučeno přes Squash and merge; změny byly staženy a lokálně ověřeny.
 - `[HOTOVO]` **F1-29** README projektu: jak rozjet projekt na pár příkazů
@@ -326,7 +325,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-07** `Clock`: rozhraní pro aktuální čas v UTC, produkční `SystemClock` a testovací `FrozenClock` s metodami `setNow()` a `advance()`. Lokálně ověřeno přes `check.bat` (PHPStan, PHP-CS-Fixer a Deptrac bez chyb), funkčně ověřen převod do UTC, nastavení/posun testovacího času a registrace `Clock` v Nette DI, která vrací `SystemClock`.
 - `[HOTOVO]` **F2-08** `PublicId`: neměnný hodnotový objekt validující kanonický 26znakový ULID, rozhraní `PublicIdGenerator` a produkční generátor přes `symfony/uid` 7.4. Závislost je oddělena v infrastruktuře; Composer lock je aktualizován a verzován. Funkčně ověřeno generování, validace, rovnost, odmítání neplatných zápisů a registrace přes Nette DI. PHPStan, PHP-CS-Fixer a Deptrac prošly bez chyb.
 - `[HOTOVO]` **F2-09** Základ výjimek: implementovány společné typy `DomainException`, `NotFoundException` a `InvalidInputException`; specializované výjimky byly převedeny pouze při zachování jejich významu. `check.bat` potvrdil úspěšné PHPStan, PHP-CS-Fixer a Deptrac kontroly. Funkční test potvrdil dědičnost přes vlastní i nativní PHP výjimky a zachování samostatné větve `DefaultCurrencyNotFoundException` jako `RuntimeException`.
-- `[ROZDĚLÁNO]` **F2-10** Rozhraní `DomainEvent`, kontrakt `DomainEventListener` a synchronní `EventDispatcher`; registrace posluchačů přes DI tagy navazuje ve F2-11.
+- `[HOTOVO]` **F2-10** Rozhraní `DomainEvent`, kontrakt `DomainEventListener` a synchronní `EventDispatcher` jsou implementovány. Ověřeno filtrování posluchačů, zachování pořadí, opakované použití generátoru, propagace výjimek, prázdný dispatcher a registrace v Nette DI. Registrace posluchačů přes DI tagy navazuje ve F2-11.
 - `[PLÁN]` **F2-11** Registrace posluchačů událostí přes DI tagy
 - `[PLÁN]` **F2-12** Rozhraní `Transaction` (spuštění v transakci)
 - `[PLÁN]` **F2-13** Typované neměnné kolekce pro DTO
@@ -597,8 +596,7 @@ _Veřejná část obchodu: `UI/Front`._ Hotovo 0 z 22 kroků.
 - `[PLÁN]` **F11-17** Obrázky: responzivní a líné načítání
 - `[PLÁN]` **F11-18** Výkon: cache šablon, komprese, hlavičky cache pro `assets`
 - `[PLÁN]` **F11-19** Cache busting souborů z buildu
-- `[PLÁN]` **F11-20** HTTP testy základních scénářů
-- `[PLÁN]` **F11-21** End-to-end test základního nákupu (rozhodnout nástroj)
+- `[PLÁN]` **F11-20** HTTP testy základních scénářů- `[PLÁN]` **F11-21** End-to-end test základního nákupu (rozhodnout nástroj)
 - `[PLÁN]` **F11-22** Dokumentace
 - `[PLÁN]` **F11-23** Ověřit soulad zákaznického rozhraní s WCAG 2.1 AA
 
@@ -898,7 +896,6 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ### v2.41 (9. 11. 2026)
 - Zahájen F1-26: vytvořen `.github/workflows/composer.yml` pro Composer validaci, audit závislostí, PHPStan level max, PHP-CS-Fixer a Deptrac. Workflow čeká na ověření běhu v GitHub Actions; automatické testy zatím nejsou zařazeny, protože testovací sada není připravena.
 - Souhrnný stav: **95 hotovo**, **1 rozděláno**, **1 k úpravě**, **449 plán**, **1 zrušeno**.
-
 ### v2.40 (9. 11. 2026)
 - Dokončen F1-25: `npm run build` úspěšně sestavil samostatné CSS a JS soubory; kontrola obou Latte layoutů potvrdila správné reference na `front.css`/`front.js` a `admin.css`/`admin.js`.
 - Aktualizován souhrnný stav: **95 hotovo**, **0 rozděláno**, **1 k úpravě**, **450 plán**, **1 zrušeno**.
@@ -1163,11 +1160,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Souhrn: **105 hotovo**, **1 rozděláno**, **1 k úpravě**, **438 plán**, **2 zrušeno**.
 
 
-### v2.78 (14. 11. 2026)
-- Zahájen F2-10: přidáno rozhraní `DomainEvent`, aplikační `EventDispatcher` a `DomainEventListener`, synchronní infrastrukturní implementace a její registrace v Nette DI.
-- Schváleno pořadí posluchačů podle předaného iterovatelného seznamu; výjimky posluchačů se nepotlačují a předávají se volajícímu. Registrace posluchačů přes DI tagy zůstává navazujícím F2-11.
-- Implementace čeká na lokální ověření přes `check.bat` a funkční testy.
-- F2: **9 hotovo**, **1 rozděláno**, **6 plán**. Celkový souhrn: **111 hotovo**, **1 rozděláno**, **1 k úpravě**, **432 plán**, **2 zrušeno**.
+### v2.79 (14. 11. 2026)
+- Dokončen F2-10: implementována doménová událost, aplikační kontrakty posluchače a dispatcheru a synchronní infrastrukturní dispatcher. Lokálně potvrzeny všechny aktivní kontroly přes `check.bat` (PHPStan, PHP-CS-Fixer, Deptrac) i funkční testy filtrování, pořadí, opakovaného dispatchování z generátoru, propagace výjimek, prázdného dispatcheru a registrace služby v Nette DI. Zastaralá cache DI kontejneru byla po vymazání obnovena a registrace následně úspěšně ověřena.
+- F2-11 zůstává navazujícím krokem pro automatickou registraci posluchačů přes DI tagy.
+- F2: **10 hotovo**, **0 rozděláno**, **6 plán**. Celkový souhrn: **112 hotovo**, **0 rozděláno**, **1 k úpravě**, **431 plán**, **2 zrušeno**.
 
 ### v2.77 (14. 11. 2026)
 - Dokončen F2-09: společná hierarchie doménových výjimek a specializované výjimky jsou implementovány a zdokumentovány. Zachována kompatibilita s nativními PHP `\DomainException` a `\InvalidArgumentException`; `DefaultCurrencyNotFoundException` zůstává samostatnou `RuntimeException`.
