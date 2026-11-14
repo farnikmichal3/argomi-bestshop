@@ -3,8 +3,6 @@ Money and Currency preserve exact minor-unit arithmetic, currency identity and o
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Shared\Domain\Money\Currency;
 use App\Shared\Domain\Money\CurrencyMismatchException;
 use App\Shared\Domain\Money\Money;
