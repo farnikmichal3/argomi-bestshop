@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.37 · 14. 11. 2026
+**Revize:** 1.38 · 14. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -547,3 +547,47 @@ Doménové události slouží k volné komunikaci mezi moduly. Událost oznamuje
 - Každý modul registruje svého posluchače jako běžnou DI službu a označí ji tagem `domainEventListener`. Centrální dispatcher nezná konkrétní třídy ani moduly. Služby bez tohoto tagu se mezi posluchače nezařadí; prázdný seznam je platný.
 - Pořadí posluchačů odpovídá pořadí, v jakém je Nette DI předá v seznamu tagovaných služeb. Nepřidáváme vlastní prioritu ani dodatečné řazení; posluchače, které potřebují pořadí, musí být v DI konfiguraci zaregistrovány v požadovaném pořadí.
 - Synchronní doručování nezajišťuje transakční atomicitu, opakování ani trvalé uložení událostí. Transakční pravidla se řeší samostatně; asynchronní/outbox zpracování není součástí tohoto základu.
+
+
+## 35. Typované neměnné kolekce pro DTO
+
+Veřejná API modulů mohou vracet více DTO stejného typu. Pro tyto případy se používá společná generická kolekce `App\\Shared\\Application\\Collection\\DtoCollection<T>`. Cílem je sjednotit chování kolekcí, zachovat přesné typování položek a zabránit tomu, aby příjemce mohl měnit členství v kolekci.
+
+### Umístění a odpovědnost
+
+- Implementace patří do `Shared/Application/Collection/DtoCollection.php`, protože jde o aplikační pomůcku pro předávání datových přenosových objektů, nikoliv o doménový pojem ani databázovou infrastrukturu.
+- Kolekce je sdílená pouze proto, že stejné technické chování potřebují různá veřejná API modulů. Neobsahuje pravidla konkrétního modulu ani znalost databáze, Nette nebo prezentační vrstvy.
+- DTO konkrétního modulu zůstávají v jeho `Api/Dto`. Kolekce je pouze obaluje; nepřebírá jejich vlastnictví ani odpovědnost za jejich vytvoření.
+- Repozitář nadále mapuje databázové řádky na DTO. Kolekce se používá až pro bezpečné předání hotových DTO aplikační nebo veřejnou API vrstvou.
+
+### Typová bezpečnost
+
+- `DtoCollection` je generická třída s PHPStan šablonou `T` omezenou na objekty (`@template T of object`). Díky tomu lze vyjádřit například `DtoCollection<ProductDto>` a statická analýza zná typ každé iterované položky i návratové hodnoty metod.
+- Konstruktor obdrží `class-string<T>` očekávaného typu a `iterable<mixed>` položek. Každá položka se při vytvoření ověří operátorem `instanceof`; nesprávný typ způsobí okamžitou výjimku `InvalidArgumentException`. Tím se kontrola neopírá pouze o PHPDoc, který PHP samo za běhu nevynucuje.
+- Kontrola přijímá i instance potomků očekávané třídy, protože jde o standardní polymorfní chování `instanceof`.
+- Kolekce nepřijímá skalární hodnoty ani `null`; DTO jsou objekty.
+
+### Neměnnost a životní cyklus
+
+- Konstruktor přijímá `iterable`, takže zdrojem může být pole, iterator nebo generátor. Při konstrukci se všechny položky zkopírují do interního seznamu v pořadí, v jakém byly iterovány.
+- Kolekce po vytvoření neposkytuje operace pro přidání, odebrání ani nahrazení položky. Její členství a pořadí se proto nemění.
+- Kolekce je strukturálně neměnná, nikoliv hluboce neměnná: neklonuje ani nezamyká obsažené objekty. DTO předávaná přes veřejné API proto mají být sama navržena jako neměnná, typicky pomocí `final readonly class` a readonly vlastností.
+- Změna původního pole nebo další použití původního generátoru po vytvoření kolekce nesmí změnit její obsah. Iterátor rovněž neposkytuje přístup k internímu poli kolekce.
+
+### Veřejné operace
+
+- `count(): int` vrací počet položek a umožňuje použití konstrukce `count($collection)`.
+- `isEmpty(): bool` explicitně vyjadřuje, zda kolekce neobsahuje žádnou položku.
+- `first(): ?T` vrací první položku nebo `null`, pokud je kolekce prázdná.
+- `get(int $index): T` vrací položku podle nulově indexované pozice. Neplatný index včetně záporného vyvolá `OutOfBoundsException`; metoda nikdy tiše nevrací `null`.
+- `toArray(): list<T>` vrací běžné pole v pořadí kolekce. Jde o nové pole; změna jeho struktury neovlivní kolekci.
+- `getIterator(): Traversable<int, T>` umožňuje `foreach` bez odhalení interní reprezentace.
+- Kolekce záměrně neimplementuje `ArrayAccess` a neposkytuje mutační metody. Nezavádí tak alternativní cestu, kterou by šlo členství měnit.
+
+### Pravidla použití a rozšiřování
+
+- Kolekci používáme pro homogenní seznam DTO stejného očekávaného typu, zejména ve veřejných module API. Není určena jako univerzální kontejner pro libovolné objekty ani jako náhrada doménových kolekcí, které vynucují obchodní invarianty.
+- Pokud doména potřebuje například unikátnost, maximální počet položek, řazení podle obchodního pravidla nebo operace nad agregátem, patří tato pravidla do vlastní doménové kolekce. Nesmí se přidávat do obecné `DtoCollection`.
+- Nové metody lze doplnit pouze tehdy, pokud zachovají typovou přesnost, strukturální neměnnost a obecnou použitelnost. Změna kontraktu musí být zaznamenána v tomto dokumentu a ve `STRUKTURA.md`.
+- Kolekce není služba a neregistruje se v Nette DI. Vytváří se přímo tam, kde vzniká seznam DTO.
+- Testy musí pokrýt prázdnou i neprázdnou kolekci, pořadí, všechny veřejné operace, generátor jako vstup, runtime odmítnutí chybného typu, hranice indexů a nezávislost struktury na původním vstupu i vráceném poli.
