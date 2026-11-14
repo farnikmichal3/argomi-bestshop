@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 110, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 434, zrušeno 2.
+Celkem **547 kroků**: hotovo 110, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 433, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 8 | 0 | 0 | 0 | 0 | 8 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 8 | 1 | 0 | 0 | 0 | 7 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -315,7 +315,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 8 z 16 kroků; žádný krok není rozpracován.
+_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 8 z 16 kroků; jeden krok je rozpracován.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
@@ -325,7 +325,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-06** `Locale`: neměnný jazykový identifikátor, `LocaleProvider` (výchozí a aktivní jazyky), databázový poskytovatel a dynamické jazykové routování. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; v prohlížeči ověřeno přesměrování `/`, aktivní jazykové prefixy a dynamické přidání `/de` bez změny PHP kódu.
 - `[HOTOVO]` **F2-07** `Clock`: rozhraní pro aktuální čas v UTC, produkční `SystemClock` a testovací `FrozenClock` s metodami `setNow()` a `advance()`. Lokálně ověřeno přes `check.bat` (PHPStan, PHP-CS-Fixer a Deptrac bez chyb), funkčně ověřen převod do UTC, nastavení/posun testovacího času a registrace `Clock` v Nette DI, která vrací `SystemClock`.
 - `[HOTOVO]` **F2-08** `PublicId`: neměnný hodnotový objekt validující kanonický 26znakový ULID, rozhraní `PublicIdGenerator` a produkční generátor přes `symfony/uid` 7.4. Závislost je oddělena v infrastruktuře; Composer lock je aktualizován a verzován. Funkčně ověřeno generování, validace, rovnost, odmítání neplatných zápisů a registrace přes Nette DI. PHPStan, PHP-CS-Fixer a Deptrac prošly bez chyb.
-- `[PLÁN]` **F2-09** Základ výjimek: doménová výjimka, nenalezeno, neplatný vstup
+- `[ROZDĚLÁNO]` **F2-09** Základ výjimek: přidány společné typy `DomainException`, `NotFoundException` a `InvalidInputException`; rozhodnuto zachovat kompatibilitu s nativními PHP výjimkami a nepřevádět stávající výjimky mechanicky. Čeká na doplnění návazných specializovaných výjimek, struktury a lokální ověření.
 - `[PLÁN]` **F2-10** Rozhraní `DomainEvent` a synchronní `EventDispatcher`
 - `[PLÁN]` **F2-11** Registrace posluchačů událostí přes DI tagy
 - `[PLÁN]` **F2-12** Rozhraní `Transaction` (spuštění v transakci)
@@ -1161,3 +1161,9 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ### v2.66 (13. 11. 2026)
 - Zahájen F2-04: schválena pevná přesnost `Quantity` na tři desetinná místa, odpovídající množstevním sloupcům `DECIMAL(12,3)`. Implementován základní hodnotový objekt a výjimka pro neplatný desetinný vstup; probíhá lokální ověření.
 - Souhrn: **105 hotovo**, **1 rozděláno**, **1 k úpravě**, **438 plán**, **2 zrušeno**.
+
+
+### v2.76 (14. 11. 2026)
+- Zahájen F2-09: přidány společné typy `DomainException`, `NotFoundException` a `InvalidInputException`. Doménová větev zůstává kompatibilní s PHP `\DomainException` a neplatné vstupy s PHP `\InvalidArgumentException`.
+- Schválena zásada nepřevádět stávající výjimky mechanicky: chybějící konfigurace zůstává odlišena od nenalezeného doménového objektu. Rozhodnutí je zapsáno v `ZAMER.md`; lokální ověření F2-09 čeká na dokončení.
+- F2: **8 hotovo**, **1 rozděláno**, **7 plán**. Celkový souhrn: **110 hotovo**, **1 rozděláno**, **1 k úpravě**, **433 plán**, **2 zrušeno**.
