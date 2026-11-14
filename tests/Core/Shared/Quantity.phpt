@@ -95,5 +95,6 @@ Assert::exception(
 );
 
 echo "OK\n";
+?>
 --EXPECT--
 OK
