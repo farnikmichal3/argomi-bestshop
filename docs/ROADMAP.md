@@ -100,7 +100,7 @@ Celkem **547 kroků**: hotovo 115, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 - `[HOTOVO]` **F1-22** Rozdělit zdroje front-endu na samostatné vstupy Front/Admin. Přidány `assets/scss/front.scss`, `admin.scss`, sdílený `_shared.scss` a `assets/js/front.js`, `admin.js`, sdílený `shared.js`; dokumentováno v `STRUKTURA.md`. Lokální build úspěšně ověřil všechny čtyři výstupy.
 - `[HOTOVO]` **F1-24** Přidat `.nvmrc` s Node.js `26.13.0` a `engines` v `package.json` (`node: >=26.13.0 <27`, `npm: >=12.2.2 <13`); obě verze odpovídají lokálně ověřenému prostředí.
 - `[HOTOVO]` **F1-25** Ověřit sestavení assetů a jejich reference v layoutech. `npm run build` úspěšně sestavil CSS i JS; kontrola obou Latte layoutů potvrdila odkazy na `front.css`/`front.js` a `admin.css`/`admin.js`.
-- `[HOTOVO]` **F1-26** GitHub Actions workflow pro Composer úspěšně ověřen; všechny kontroly prošly.
+- `[HOTOVO]` **F1-26** GitHub Actions workflow pro Composer úspěšně ověřen; všechny kontroly prošly. Po zavedení testovací sady F2-14 workflow spouští také `composer test`; lokální `check.bat` zahrnuje stejný testovací krok.
 - `[HOTOVO]` **F1-27** GitHub Actions workflow pro npm úspěšně ověřen; instalace, build i audit prošly.
 - `[HOTOVO]` **F1-28** Dependabot přijat GitHubem; všech 5 prvních aktualizačních PR pro Composer, npm a GitHub Actions bylo po úspěšném CI sloučeno přes Squash and merge.
 
