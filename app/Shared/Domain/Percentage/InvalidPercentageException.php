@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\Percentage;
 
-use DomainException;
+use App\Shared\Domain\Exception\DomainException;
 
 /**
  * Označuje procentní vstup, který nedodržuje přesný formát hodnoty Percentage.
