@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.86 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.88 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 116, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 428, zrušeno 2.
+Celkem **554 kroků**: hotovo 114, rozděláno 0, k úpravě 3, rozhodnout 0, blokováno 0, plán 435, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 14 | 0 | 0 | 0 | 0 | 2 | 0 |
-| F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
+| F2 | Sdílené jádro (Shared) | 20 | 13 | 0 | 1 | 0 | 0 | 6 | 0 |
+| F3 | Databáze a migrace | 34 | 9 | 0 | 1 | 0 | 0 | 23 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -66,7 +66,7 @@ Celkem **547 kroků**: hotovo 116, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F11 | Front UI | 23 | 0 | 0 | 0 | 0 | 0 | 23 | 0 |
 | F12 | Admin UI | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F13 | Vyhledávání | 10 | 0 | 0 | 0 | 0 | 0 | 10 | 0 |
-| F14 | Bezpečnost a kvalita | 25 | 0 | 0 | 0 | 0 | 0 | 25 | 0 |
+| F14 | Bezpečnost a kvalita | 26 | 0 | 0 | 0 | 0 | 0 | 26 | 0 |
 | F15 | Provoz a hostování | 18 | 0 | 0 | 0 | 0 | 0 | 18 | 0 |
 | F16 | Výuka | 36 | 0 | 0 | 1 | 0 | 0 | 35 | 0 |
 | F17 | Milník 1: první nasazení | 11 | 0 | 0 | 0 | 0 | 0 | 11 | 0 |
@@ -314,11 +314,11 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 14 z 16 kroků; dva zůstávají naplánované.
+_Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 13 z 20 kroků; jeden krok je k úpravě a šest je naplánováno.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
-- `[HOTOVO]` **F2-03** `Currency`: kód, počet desetinných míst, `CurrencyProvider` pro výchozí a aktivní měny. Implementováno doménové rozhraní, výjimka pro chybějící výchozí měnu a databázový adaptér přes Nette Database Explorer. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
+- `[K ÚPRAVĚ]` **F2-03** `Currency`: zpřesnit doménovou validaci `minorUnits` na rozsah 0–4 a ověřování kódu proti centrálnímu katalogu ISO 4217. Oddělit syntaktickou validaci, existenci měny v ISO 4217 a její aktivitu v obchodě; samotný regex tří velkých písmen nesmí být považován za důkaz platné měny.
 - `[HOTOVO]` **F2-04** `Quantity`: neměnný hodnotový objekt s pevnou přesností tří desetinných míst, interně celočíselné tisíciny, vstup přes desetinný řetězec bez zaokrouhlování, aritmetika s kontrolou přetečení a bez `float`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
 - `[HOTOVO]` **F2-05** `Percentage`: neměnný hodnotový objekt s podepsaným integerem v bazických bodech (1 bp = 0,01 %), striktním desetinným vstupem s nejvýše dvěma místy, formátováním, porovnáním a kontrolou rovnosti. Povoleny záporné i nad 100% sazby; bez `float`, automatického zaokrouhlování a výpočtů nad `Money`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
 - `[HOTOVO]` **F2-06** `Locale`: neměnný jazykový identifikátor, `LocaleProvider` (výchozí a aktivní jazyky), databázový poskytovatel a dynamické jazykové routování. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; v prohlížeči ověřeno přesměrování `/`, aktivní jazykové prefixy a dynamické přidání `/de` bez změny PHP kódu.
@@ -332,10 +332,14 @@ _Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí
 - `[HOTOVO]` **F2-14** Jednotkové testy: Money/Currency, Quantity, Locale, Clock a PublicId/ULID. Přidáno pět samostatných testů Nette Tester v `tests/Core/Shared/` a opraveny také dva starší testy logování, které odhalilo zapojení Testeru do kontrolního skriptu. Testy pokrývají běžné operace, neplatné vstupy, měnový nesoulad, přesnost tří desetinných míst, UTC, práci s časem, validaci ULID a ochranu proti celočíselnému přetečení. Uživatel potvrdil úspěšné dokončení všech aktivních kontrol přes `check.bat`, včetně Nette Testeru, PHPStan, PHP-CS-Fixer a Deptrac.
 - `[PLÁN]` **F2-15** Architektonický test: `Shared` nezávisí na žádném modulu
 - `[PLÁN]` **F2-16** Dokumentace: co do `Shared` patří a co ne
+- `[PLÁN]` **F2-17** Katalog ISO 4217: verzovaný seznam platných kódů, povolené hodnoty `minorUnits` 0–4 a oddělení registrace měny od její aktivity v obchodě
+- `[PLÁN]` **F2-18** Pravidla doménových událostí: synchronní dispatcher pouze pro kritické interní posluchače; zákaz externích vedlejších účinků v synchronních listenerech
+- `[PLÁN]` **F2-19** Aplikační kontrakt Transactional Outbox: atomický zápis události ve stejné transakci jako zdrojová obchodní změna
+- `[PLÁN]` **F2-20** Kontrakt zpracování Outboxu: worker, at-least-once doručení, idempotence, retry/backoff, evidence chyb a bezpečné opakování
 
 ### F3: Databáze a migrace
 
-_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 9 z 32 kroků.
+_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 9 z 34 kroků; jeden krok je k úpravě.
 
 - `[HOTOVO]` **F3-01** Počáteční schéma, základní data a demo data v časově značených Nextras migracích načtené v MySQL bez chyb
 - `[HOTOVO]` **F3-02** Nainstalovat Nextras Migrations a nastavit adresáře `structures`, `basic-data`, `dummy-data` (integrováno v Nette DI)
@@ -350,7 +354,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-11** Typované `readonly` DTO pro entity vlny 1
 - `[PLÁN]` **F3-12** Implementace `Transaction` nad `Nette\Database\Connection`- `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
 - `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců- `[PLÁN]` **F3-15** Testovací databáze a bootstrap integračních testů
-- `[HOTOVO]` **F3-16** Bezpečný vývojový `db:reset`: ověření databáze `argomi_bestshop` a lokálního účtu `argomi_migrator`, dvojí potvrzení, odstranění tabulek/pohledů bez DROP/CREATE databáze a opětovné spuštění skupin structures → basic-data → dummy-data (`composer db:reset`); lokálně ověřeno úspěšné odstranění 47 objektů a dokončení všech 3 migrací. Následná kontrola přes Nette Database Explorer potvrdila 3 demo produkty, 2 jazyky a 2 měny; PHPStan bez chyb.- `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
+- `[K ÚPRAVĚ]` **F3-16** Bezpečný vývojový `db:reset`: zachovat kontroly databáze, účtu a dvojí potvrzení, ale doplnit explicitní kontrolu aplikačního prostředí před jakýmkoliv databázovým dotazem. Příkaz musí odmítnout produkční, neznámé nebo chybějící prostředí bez vedlejších účinků.
 - `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)- `[PLÁN]` **F3-19** Implementace hashe kombinace varianty (SHA-256) a test shody s SQL `SHA2(..., 256)`
 - `[PLÁN]` **F3-20** Diagram vztahů tabulek rozdělený po modulech
 - `[HOTOVO]` **F3-21** Oddělit databázové účty aplikace (`argomi_app`, pouze CRUD) a migrací (`argomi_migrator`, CRUD + DDL); oba účty mají přístup pouze k `argomi_bestshop` a přihlášení bylo ověřeno
@@ -365,6 +369,8 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-30** Demo data v dalším vydání: plné texty produktů, úplné snímky objednávek (atributy, adresy), počáteční pohyby skladu, další systémové texty
 - `[PLÁN]` **F3-31** Navrhnout a migrovat doménově rozdělené systémové překlady ze současné tabulky `translation_message`
 - `[PLÁN]` **F3-32** Navrhnout a implementovat explicitní označení demo dat a zákaz vedlejších efektů pro demo objednávky
+- `[PLÁN]` **F3-33** Ochrana `DbResetCommand`: explicitní allowlist aplikačních prostředí, odmítnutí production/unknown/missing před DB dotazy a automatické negativní testy
+- `[PLÁN]` **F3-34** Databázová persistence Transactional Outbox: atomický zápis s obchodní transakcí, indexy a stavový model pro bezpečné vyzvednutí workerem
 
 ### F4: Překlady v databázi
 
@@ -649,7 +655,7 @@ _Rozhraní `ProductSearch` a jeho implementace._ Hotovo 0 z 10 kroků.
 
 ### F14: Bezpečnost a kvalita
 
-_Průřezové kontroly před prvním nasazením._ Hotovo 0 z 25 kroků.
+_Průřezové kontroly před prvním nasazením._ Hotovo 0 z 26 kroků.
 
 - `[PLÁN]` **F14-01** Bezpečnostní hlavičky: CSP s nonce, HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
 - `[PLÁN]` **F14-02** Test CSP: žádné `unsafe-inline`
@@ -676,6 +682,7 @@ _Průřezové kontroly před prvním nasazením._ Hotovo 0 z 25 kroků.
 - `[PLÁN]` **F14-23** Plán reakce na incidenty včetně závažnosti, odpovědností a reakčních dob
 - `[PLÁN]` **F14-24** Postup nahlášení zranitelnosti
 - `[PLÁN]` **F14-25** Dokumentace bezpečnosti
+- `[PLÁN]` **F14-26** Politika bezpečného logování: allowlist kontextu, bezpečné zprávy výjimek, zákaz PII/surových payloadů a testy vnořených struktur, tokenů a citlivých hodnot
 
 ### F15: Provoz a hostování
 
@@ -1191,6 +1198,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 
 
 ### v2.87 (14. 11. 2026)
+### v2.88 (15. 11. 2026)
+- Zpřesněn základní bezpečnostní a architektonický plán podle nezávislé revize: explicitní prostředí pro destruktivní příkazy, ISO 4217 katalog a doménový limit `minorUnits`, hranice synchronních doménových posluchačů, Transactional Outbox s idempotentním workerem a jednotná politika bezpečného logování.
+- F2-03 a F3-16 vráceny k úpravě; doplněny kroky F2-17 až F2-20, F3-33 až F3-34 a F14-26. Aktualizovány `ZAMER.md` a `STRUKTURA.md`.
+- Souhrn: **114 hotovo**, **0 rozděláno**, **3 k úpravě**, **435 plán**, **2 zrušeno**.
+
 - Dokončen F2-14: pět nových testů Nette Tester pokrývá Money/Currency, Quantity, Locale, Clock a PublicId/ULID. Opraveny také dva starší testy logování, které po zapojení Nette Testeru do `check.bat` odhalily chybnou syntaxi a nesprávné očekávání.
 - Uživatel potvrdil, že všechny aktivní kontroly `check.bat` prošly: Nette Tester, PHPStan, PHP-CS-Fixer a Deptrac. Testovací sada je součástí lokálního i GitHub Actions kontrolního workflow.
 - F2: **14 hotovo**, **0 rozděláno**, **2 plán**. Celkový souhrn: **116 hotovo**, **0 rozděláno**, **1 k úpravě**, **428 plán**, **2 zrušeno**.
