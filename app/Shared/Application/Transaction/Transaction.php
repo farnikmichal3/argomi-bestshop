@@ -15,9 +15,14 @@ interface Transaction
     /**
      * Provede operaci atomicky v rámci databázové transakce.
      *
-     * Při úspěchu se transakce potvrdí. Pokud operace vyhodí výjimku
-     * nebo jinou chybu, implementace zajistí rollback a chybu propaguje.
-     * Vnořování transakcí se řídí možnostmi infrastrukturní implementace.
+     * Při úspěchu nejvyšší transakce se změny potvrdí. Pokud výjimka
+     * nebo jiná chyba opustí nejvyšší transakční callback, implementace
+     * zajistí rollback a chybu propaguje.
+     *
+     * Vnořená volání jsou povolena, ale jejich rollback není izolovaný:
+     * pokud vnější callback zachytí chybu z vnořeného volání, změny
+     * provedené uvnitř zůstávají součástí vnější transakce. Kontrakt
+     * negarantuje savepointy ani samostatný rollback vnořené operace.
      *
      * @template TResult
      *
