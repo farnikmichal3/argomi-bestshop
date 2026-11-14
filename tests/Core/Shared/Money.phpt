@@ -83,6 +83,14 @@ Assert::exception(
     OverflowException::class,
 );
 Assert::exception(
+    static fn () => (new Money(PHP_INT_MIN, $czk))->add(new Money(-1, $czk)),
+    OverflowException::class,
+);
+Assert::exception(
+    static fn () => (new Money(PHP_INT_MAX, $czk))->subtract(new Money(-1, $czk)),
+    OverflowException::class,
+);
+Assert::exception(
     static fn () => (new Money(PHP_INT_MIN, $czk))->subtract(new Money(1, $czk)),
     OverflowException::class,
 );
