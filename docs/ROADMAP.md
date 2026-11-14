@@ -928,7 +928,7 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Souhrnný stav: **90 hotovo**, **0 rozděláno**, **1 k úpravě**, **455 plán**, **1 zrušeno**.
 
 ### v2.32 (9. 11. 2026)
-- Dokončen F1-38: Monolog 3 nakonfigurován jako centrální PSR-3 logger přes Nette DI; ověřeno sestavení `Monolog\\Logger`, zápis JSON záznamu a maskování citlivého kontextu na `[REDACTED]`.
+- Dokončen F1-38: Monolog 3 nakonfigurován jako centrální PSR-3 logger přes Nette DI; ověřeno sestavení `Monolog\Logger`, zápis JSON záznamu a maskování citlivého kontextu na `[REDACTED]`.
 - Logy se ukládají mimo veřejný adresář, s oprávněními `0600` a prozatímní rotací; běžný HTTP provoz bude ověřen až po implementaci aplikace. PHPStan level max a Deptrac zůstaly čisté.
 - Souhrnný stav: **89 hotovo**, **0 rozděláno**, **1 k úpravě**, **456 plán**, **1 zrušeno**.
 
@@ -1184,7 +1184,7 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - F2: **8 hotovo**, **1 rozděláno**, **7 plán**. Celkový souhrn: **110 hotovo**, **1 rozděláno**, **1 k úpravě**, **433 plán**, **2 zrušeno**.
 
 ### v2.82 (14. 11. 2026)
-- Zahájen F2-12: přidán aplikační kontrakt `Shared\\Application\\Transaction\\Transaction::run()` a infrastrukturní adaptér `NetteTransaction` nad Nette Database Explorerem. Adaptér je explicitně registrován v DI; rozhraní se má autowirovat přes jedinou produkční implementaci.
+- Zahájen F2-12: přidán aplikační kontrakt `Shared\Application\Transaction\Transaction::run()` a infrastrukturní adaptér `NetteTransaction` nad Nette Database Explorerem. Adaptér je explicitně registrován v DI; rozhraní se má autowirovat přes jedinou produkční implementaci.
 - Dokumentovány commit/rollback pravidla, vnořování transakcí a hranice databázové atomicity vůči externím vedlejším účinkům synchronních posluchačů událostí.
 - Implementace čeká na stažení do Laragonu, funkční ověření rollbacku/commitů/vnoření a čisté aktivní kontroly přes `check.bat`.
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
