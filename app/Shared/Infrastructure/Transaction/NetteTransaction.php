@@ -21,8 +21,7 @@ final class NetteTransaction implements Transaction
      */
     public function __construct(
         private readonly Explorer $database,
-    ) {
-    }
+    ) {}
 
     /**
      * Předá operaci správě transakcí Nette Database.
@@ -43,7 +42,7 @@ final class NetteTransaction implements Transaction
     public function run(callable $operation): mixed
     {
         return $this->database->transaction(
-            static fn (): mixed => $operation(),
+            static fn(): mixed => $operation(),
         );
     }
 }
