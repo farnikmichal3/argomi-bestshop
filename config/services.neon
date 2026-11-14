@@ -4,9 +4,9 @@ services:
 	- App\Core\Logging\LoggerFactory::createLogger(@App\Core\Logging\SensitiveDataProcessor, %logging.file%, %logging.maxFiles%, %logging.level%)
 	- App\Shared\Infrastructure\Console\DbResetCommand
 	# Dispatcher dostává všechny služby označené tagem domainEventListener už při kompilaci DI kontejneru.
-	- App\Shared\Infrastructure\Event\SynchronousEventDispatcher:
-		arguments:
-			listeners: tagged(domainEventListener)
+	- App\Shared\Infrastructure\Event\SynchronousEventDispatcher(
+		listeners: tagged(domainEventListener)
+	)
 	# Transakční rozhraní používá jediný produkční adaptér nad Nette Database Explorerem.
 	- App\Shared\Infrastructure\Transaction\NetteTransaction:
 		autowired: [App\Shared\Application\Transaction\Transaction]
