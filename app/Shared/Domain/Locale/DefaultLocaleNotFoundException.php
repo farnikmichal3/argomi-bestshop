@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\Locale;
 
-use DomainException;
+use App\Shared\Domain\Exception\DomainException;
 
 /**
  * Označuje chybějící výchozí aktivní jazyk v konfiguraci obchodu.
+ *
+ * Jde o chybu konfigurace, nikoliv o běžné nenalezení požadovaného objektu.
  */
 final class DefaultLocaleNotFoundException extends DomainException
 {
