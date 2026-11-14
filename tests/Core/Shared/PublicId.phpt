@@ -57,5 +57,6 @@ for ($index = 0; $index < 20; $index++) {
 Assert::count(20, $generatedValues);
 
 echo "OK\n";
+?>
 --EXPECT--
 OK
