@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 2.9 · 14. 11. 2026  
+**Revize:** 3.0 · 14. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 14. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -41,6 +41,8 @@ app/
 │       └── Error5xx/
 ├── Shared/
 │   ├── Application/
+│   │   ├── Collection/
+│   │   │   └── DtoCollection.php
 │   │   ├── Event/
 │   │   │   ├── DomainEventListener.php
 │   │   │   └── EventDispatcher.php
@@ -132,7 +134,7 @@ Poznámky:
 | `Core` | Technické jádro aplikace, bootstrapovací a centrální aplikační mechanismy včetně aplikačního logování | Doménová logika konkrétního e-shop modulu |
 | `Modules` | Doménové schopnosti a jejich aplikační/infrastrukturní implementace | Prezentační vrstvy Front/Admin |
 | `Presentation` | Nette prezentační infrastruktura sdílená aplikací: error presentery, Latte rozšíření a frameworkové adaptéry | Doménové use-cases a obchodní pravidla |
-| `Shared` | Sdílené technické/doménové primitivy, které skutečně používá více modulů | Obecná odkládací složka pro kód bez vlastníka |
+| `Shared` | Stabilní a skutečně průřezové doménové a aplikační kontrakty a pomůcky, například typované kolekce DTO | Obecná odkládací složka nebo kód patřící jedinému modulu |
 | `UI` | Uživatelská rozhraní Front, Admin a sdílené UI komponenty/formuláře | Přímé vlastnictví doménových pravidel nebo databázových dotazů |
 
 ## 3. Moduly a jejich vlastnictví
@@ -227,6 +229,19 @@ assets/
 7. Moduly nesmí importovat nic z `UI`.
 8. Databázové cizí klíče mezi moduly jsou povoleny jen podle rozhodnutí popsaných v DATABASE; neznamenají povolení přímé aplikační závislosti.
 
+## 7. Aplikační kolekce DTO
+
+`Shared/Application/Collection/DtoCollection.php` je společná generická kolekce pro homogenní seznamy DTO, které se předávají mezi aplikačními částmi a veřejnými API modulů.
+
+- **Umístění:** aplikační vrstva, protože kolekce řeší předávání datových objektů. Nejde o doménovou kolekci s obchodními invarianty ani o infrastrukturní kolekci databázových řádků.
+- **Typování:** PHPStan šablona `T of object` zachovává konkrétní typ položek. Konstruktor přijímá očekávaný `class-string<T>` a ověřuje každou položku za běhu, takže nesoulad není skryt pouze v PHPDoc.
+- **Vstup:** `iterable` umožňuje předat pole, iterator i generátor. Při konstrukci se položky materializují do interního seznamu, čímž se zachová jejich pořadí a pozdější změna zdroje neovlivní členství kolekce.
+- **Neměnnost:** po vytvoření neexistuje metoda pro přidání, odebrání nebo nahrazení položek. Kolekce je strukturálně neměnná; samotné DTO musí být neměnné samostatně, ideálně jako `final readonly class`.
+- **Rozhraní:** `IteratorAggregate` podporuje `foreach`, `Countable` podporuje `count()`. Pomocné metody `isEmpty()`, `first()`, `get()` a `toArray()` mají přesné generické návratové typy. Chybějící index vyvolá `OutOfBoundsException`.
+- **Záměrná omezení:** kolekce neimplementuje `ArrayAccess`, nemá mutační metody a nevynucuje obchodní pravidla jako unikátnost nebo limit počtu prvků. Taková pravidla patří do doménové kolekce vlastněné konkrétním modulem.
+- **Použití:** modul definuje vlastní DTO ve své složce `Api/Dto`; kolekce je pouze typovaně obaluje. Nevytváří DTO, nezná `ActiveRow`, databázi ani Nette a neregistruje se v DI.
+- **Rozšiřování:** změny veřejných metod musí zachovat generické typování a strukturální neměnnost a musí být doprovázeny funkčními testy i aktualizací `ZAMER.md`.
+
 ## 7. Databázová a prezentační hranice
 
 - Repozitář modulu je jediným místem, kde se mapuje `ActiveRow` na typované DTO.
@@ -283,3 +298,4 @@ assets/
 | 14. 11. 2026 | v2.7: doplněna doménová událost, aplikační dispatcher a kontrakt posluchače; zaznamenána synchronní implementace a její registrace v DI podle F2-10. |
 
 | 14. 11. 2026 | v2.8: doplněna automatická registrace posluchačů doménových událostí přes Nette DI tag `domainEventListener`; dispatcher dostává seznam při kompilaci kontejneru podle F2-11. |\n
+| 14. 11. 2026 | v3.0: doplněna aplikační generická `DtoCollection<T>`, její umístění, typová kontrola, strukturální neměnnost, veřejné operace a pravidla rozšiřování podle F2-13. |
