@@ -115,5 +115,6 @@ Assert::exception(
 Assert::same(100, (new Money(100, $zeroDecimalCurrency))->minorAmount);
 
 echo "OK\n";
+?>
 --EXPECT--
 OK
