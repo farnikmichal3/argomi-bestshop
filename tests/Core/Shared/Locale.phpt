@@ -3,8 +3,6 @@ Locale normalizes supported language tags and rejects unsupported syntax
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Shared\Domain\Locale\InvalidLocaleException;
 use App\Shared\Domain\Locale\Locale;
 use Tester\Assert;
