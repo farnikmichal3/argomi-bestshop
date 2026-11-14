@@ -78,6 +78,14 @@ Assert::exception(
     OverflowException::class,
 );
 Assert::exception(
+    static fn () => (new Quantity(2))->multiply(PHP_INT_MIN),
+    OverflowException::class,
+);
+Assert::exception(
+    static fn () => (new Quantity(-2))->multiply(PHP_INT_MAX),
+    OverflowException::class,
+);
+Assert::exception(
     static fn () => Quantity::fromInteger(intdiv(PHP_INT_MAX, 1000) + 1),
     OverflowException::class,
 );
