@@ -352,10 +352,13 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-09** Test: výjimky (`category.parent_id`, `product_relation.related_product_id`)
 - `[PLÁN]` **F3-10** Základ repozitáře nad Explorer: mapování `ActiveRow` na DTO (dotazy pouze v repozitářích, žádné v presenterech)
 - `[PLÁN]` **F3-11** Typované `readonly` DTO pro entity vlny 1
-- `[PLÁN]` **F3-12** Implementace `Transaction` nad `Nette\Database\Connection`- `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
-- `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců- `[PLÁN]` **F3-15** Testovací databáze a bootstrap integračních testů
+- `[PLÁN]` **F3-12** Implementace `Transaction` nad `Nette\Database\Connection`
+- `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
+- `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců
+- `[PLÁN]` **F3-15** Testovací databáze a bootstrap integračních testů
 - `[K ÚPRAVĚ]` **F3-16** Bezpečný vývojový `db:reset`: zachovat kontroly databáze, účtu a dvojí potvrzení, ale doplnit explicitní kontrolu aplikačního prostředí před jakýmkoliv databázovým dotazem. Příkaz musí odmítnout produkční, neznámé nebo chybějící prostředí bez vedlejších účinků.
-- `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)- `[PLÁN]` **F3-19** Implementace hashe kombinace varianty (SHA-256) a test shody s SQL `SHA2(..., 256)`
+- `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
+- `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
 - `[PLÁN]` **F3-20** Diagram vztahů tabulek rozdělený po modulech
 - `[HOTOVO]` **F3-21** Oddělit databázové účty aplikace (`argomi_app`, pouze CRUD) a migrací (`argomi_migrator`, CRUD + DDL); oba účty mají přístup pouze k `argomi_bestshop` a přihlášení bylo ověřeno
 - `[HOTOVO]` **F3-22** Zásady zálohování a obnovy databáze (před migrací povinný dump/snapshot, rollback obnovením ze zálohy)
@@ -1197,12 +1200,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
 
-### v2.87 (14. 11. 2026)
 ### v2.88 (15. 11. 2026)
 - Zpřesněn základní bezpečnostní a architektonický plán podle nezávislé revize: explicitní prostředí pro destruktivní příkazy, ISO 4217 katalog a doménový limit `minorUnits`, hranice synchronních doménových posluchačů, Transactional Outbox s idempotentním workerem a jednotná politika bezpečného logování.
 - F2-03 a F3-16 vráceny k úpravě; doplněny kroky F2-17 až F2-20, F3-33 až F3-34 a F14-26. Aktualizovány `ZAMER.md` a `STRUKTURA.md`.
 - Souhrn: **114 hotovo**, **0 rozděláno**, **3 k úpravě**, **435 plán**, **2 zrušeno**.
 
+### v2.87 (14. 11. 2026)
 - Dokončen F2-14: pět nových testů Nette Tester pokrývá Money/Currency, Quantity, Locale, Clock a PublicId/ULID. Opraveny také dva starší testy logování, které po zapojení Nette Testeru do `check.bat` odhalily chybnou syntaxi a nesprávné očekávání.
 - Uživatel potvrdil, že všechny aktivní kontroly `check.bat` prošly: Nette Tester, PHPStan, PHP-CS-Fixer a Deptrac. Testovací sada je součástí lokálního i GitHub Actions kontrolního workflow.
 - F2: **14 hotovo**, **0 rozděláno**, **2 plán**. Celkový souhrn: **116 hotovo**, **0 rozděláno**, **1 k úpravě**, **428 plán**, **2 zrušeno**.
