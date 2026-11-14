@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.79 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.80 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -314,7 +314,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 8 z 16 kroků; jeden krok je rozpracován.
+_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 10 z 16 kroků; jeden krok je rozpracován.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
@@ -326,7 +326,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-08** `PublicId`: neměnný hodnotový objekt validující kanonický 26znakový ULID, rozhraní `PublicIdGenerator` a produkční generátor přes `symfony/uid` 7.4. Závislost je oddělena v infrastruktuře; Composer lock je aktualizován a verzován. Funkčně ověřeno generování, validace, rovnost, odmítání neplatných zápisů a registrace přes Nette DI. PHPStan, PHP-CS-Fixer a Deptrac prošly bez chyb.
 - `[HOTOVO]` **F2-09** Základ výjimek: implementovány společné typy `DomainException`, `NotFoundException` a `InvalidInputException`; specializované výjimky byly převedeny pouze při zachování jejich významu. `check.bat` potvrdil úspěšné PHPStan, PHP-CS-Fixer a Deptrac kontroly. Funkční test potvrdil dědičnost přes vlastní i nativní PHP výjimky a zachování samostatné větve `DefaultCurrencyNotFoundException` jako `RuntimeException`.
 - `[HOTOVO]` **F2-10** Rozhraní `DomainEvent`, kontrakt `DomainEventListener` a synchronní `EventDispatcher` jsou implementovány. Ověřeno filtrování posluchačů, zachování pořadí, opakované použití generátoru, propagace výjimek, prázdný dispatcher a registrace v Nette DI. Registrace posluchačů přes DI tagy navazuje ve F2-11.
-- `[PLÁN]` **F2-11** Registrace posluchačů událostí přes DI tagy
+- `[ROZDĚLÁNO]` **F2-11** Registrace posluchačů událostí přes DI tagy. Dispatcher přijímá služby označené `domainEventListener` pomocí `tagged()` při kompilaci Nette DI; čeká na lokální funkční ověření.
 - `[PLÁN]` **F2-12** Rozhraní `Transaction` (spuštění v transakci)
 - `[PLÁN]` **F2-13** Typované neměnné kolekce pro DTO
 - `[PLÁN]` **F2-14** Jednotkové testy: Money, Quantity, Locale, Clock, ULID
@@ -1159,6 +1159,9 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Zahájen F2-04: schválena pevná přesnost `Quantity` na tři desetinná místa, odpovídající množstevním sloupcům `DECIMAL(12,3)`. Implementován základní hodnotový objekt a výjimka pro neplatný desetinný vstup; probíhá lokální ověření.
 - Souhrn: **105 hotovo**, **1 rozděláno**, **1 k úpravě**, **438 plán**, **2 zrušeno**.
 
+
+### v2.80 (14. 11. 2026)
+- F2-11: zahájena registrace posluchačů přes DI tag `domainEventListener`; dispatcher přijímá tagované služby při kompilaci kontejneru.
 
 ### v2.79 (14. 11. 2026)
 - Dokončen F2-10: implementována doménová událost, aplikační kontrakty posluchače a dispatcheru a synchronní infrastrukturní dispatcher. Lokálně potvrzeny všechny aktivní kontroly přes `check.bat` (PHPStan, PHP-CS-Fixer, Deptrac) i funkční testy filtrování, pořadí, opakovaného dispatchování z generátoru, propagace výjimek, prázdného dispatcheru a registrace služby v Nette DI. Zastaralá cache DI kontejneru byla po vymazání obnovena a registrace následně úspěšně ověřena.
