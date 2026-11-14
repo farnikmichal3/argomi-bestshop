@@ -42,5 +42,6 @@ Assert::true($now >= $before);
 Assert::true($now <= $after);
 
 echo "OK\n";
+?>
 --EXPECT--
 OK
