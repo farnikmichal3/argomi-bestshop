@@ -22,8 +22,7 @@ Assert::same('1.250', (new Quantity(1250))->toDecimalString());
 Assert::same('0.001', (new Quantity(1))->toDecimalString());
 Assert::same('-1.250', (new Quantity(-1250))->toDecimalString());
 Assert::same('0.000', (new Quantity(0))->toDecimalString());
-Assert::same((string) PHP_INT_MIN, (new Quantity(PHP_INT_MIN))->milliUnits === PHP_INT_MIN ? (string) PHP_INT_MIN : '');
-Assert::same((string) PHP_INT_MIN, (new Quantity(PHP_INT_MIN))->toDecimalString() === '-9223372036854775.808' ? (string) PHP_INT_MIN : '');
+Assert::same('-9223372036854775.808', (new Quantity(PHP_INT_MIN))->toDecimalString());
 
 // Vstup je striktní: nepřevádíme čárku, exponent, mezery ani vyšší přesnost.
 foreach (['', '1,25', ' 1.25', '1.25 ', '.25', '1.', '1.0000', '1e3', '--1', '+', 'NaN'] as $invalidValue) {
