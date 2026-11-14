@@ -3,6 +3,8 @@ services:
 	- App\Core\Logging\SensitiveDataProcessor
 	- App\Core\Logging\LoggerFactory::createLogger(@App\Core\Logging\SensitiveDataProcessor, %logging.file%, %logging.maxFiles%, %logging.level%)
 	- App\Shared\Infrastructure\Console\DbResetCommand
+	# Synchronní dispatcher je jedinou produkční implementací EventDispatcher; posluchače doplní F2-11 přes DI tagy.
+	- App\\Shared\\Infrastructure\\Event\\SynchronousEventDispatcher
 	# Produkční hodiny jsou jedinou registrovanou implementací Clock; FrozenClock zůstává pouze pro testy.
 	- App\Shared\Infrastructure\Clock\SystemClock
 	# Generátor veřejných ULID je jedinou produkční implementací rozhraní PublicIdGenerator.
