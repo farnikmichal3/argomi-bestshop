@@ -3,8 +3,6 @@ PublicId validates canonical ULIDs and Symfony generator returns distinct valid 
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Shared\Domain\PublicId\InvalidPublicIdException;
 use App\Shared\Domain\PublicId\PublicId;
 use App\Shared\Domain\PublicId\PublicIdGenerator;
