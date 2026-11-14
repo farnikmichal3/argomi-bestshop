@@ -359,6 +359,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[K ÚPRAVĚ]` **F3-16** Bezpečný vývojový `db:reset`: zachovat kontroly databáze, účtu a dvojí potvrzení, ale doplnit explicitní kontrolu aplikačního prostředí před jakýmkoliv databázovým dotazem. Příkaz musí odmítnout produkční, neznámé nebo chybějící prostředí bez vedlejších účinků.
 - `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
 - `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
+- `[PLÁN]` **F3-19** Implementace hashe kombinace varianty (SHA-256) a test shody s SQL `SHA2(..., 256)`
 - `[PLÁN]` **F3-20** Diagram vztahů tabulek rozdělený po modulech
 - `[HOTOVO]` **F3-21** Oddělit databázové účty aplikace (`argomi_app`, pouze CRUD) a migrací (`argomi_migrator`, CRUD + DDL); oba účty mají přístup pouze k `argomi_bestshop` a přihlášení bylo ověřeno
 - `[HOTOVO]` **F3-22** Zásady zálohování a obnovy databáze (před migrací povinný dump/snapshot, rollback obnovením ze zálohy)
