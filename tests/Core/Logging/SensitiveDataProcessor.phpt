@@ -40,7 +40,7 @@ Assert::same(42, $result->context['user_id']);
 Assert::same('[REDACTED]', $result->context['credentials']['password']);
 Assert::same('[REDACTED]', $result->context['credentials']['access_token']);
 Assert::same('/reset?token=[REDACTED]', $result->context['url']);
-Assert::same('Bearer [REDACTED]', $result->context['authorization_header']);
+Assert::same('[REDACTED]', $result->context['authorization_header']);
 Assert::same(['class' => RuntimeException::class], $result->context['exception']);
 Assert::same('[object stdClass]', $result->context['object']);
 Assert::same('[REDACTED]', $result->extra['api_key']);
