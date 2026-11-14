@@ -49,5 +49,6 @@ Assert::same('[REDACTED]', $result->extra['api_key']);
 Assert::same('checkout', $result->extra['operation']);
 
 echo "OK\n";
+?>
 --EXPECT--
 OK
