@@ -327,7 +327,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-09** Základ výjimek: implementovány společné typy `DomainException`, `NotFoundException` a `InvalidInputException`; specializované výjimky byly převedeny pouze při zachování jejich významu. `check.bat` potvrdil úspěšné PHPStan, PHP-CS-Fixer a Deptrac kontroly. Funkční test potvrdil dědičnost přes vlastní i nativní PHP výjimky a zachování samostatné větve `DefaultCurrencyNotFoundException` jako `RuntimeException`.
 - `[HOTOVO]` **F2-10** Rozhraní `DomainEvent`, kontrakt `DomainEventListener` a synchronní `EventDispatcher` jsou implementovány. Ověřeno filtrování posluchačů, zachování pořadí, opakované použití generátoru, propagace výjimek, prázdný dispatcher a registrace v Nette DI. Registrace posluchačů přes DI tagy navazuje ve F2-11.
 - `[HOTOVO]` **F2-11** Registrace posluchačů událostí přes DI tagy. Dispatcher přijímá služby označené `domainEventListener` pomocí `tagged()` při kompilaci Nette DI. Funkčně ověřeno doručení události skutečně tagovanému posluchači, vyloučení netagovaných služeb a sdílení jediné instance přes `EventDispatcher` i `SynchronousEventDispatcher`; uživatel potvrdil čisté `check.bat` a odstranění dočasné testovací registrace.
-- `[ROZDĚLÁNO]` **F2-12** Rozhraní `Transaction` (spuštění v transakci). Aplikační kontrakt `run()` a infrastrukturní adaptér `NetteTransaction` jsou implementovány a registrovány v DI; dokumentace je aktualizována. Čeká na stažení a lokální funkční testy a aktivní kontroly.
+- `[ROZDĚLÁNO]` **F2-12** Rozhraní `Transaction` (spuštění v transakci). Aplikační kontrakt `run()` a infrastrukturní adaptér `NetteTransaction` jsou implementovány a registrovány v DI. Funkční testy na SQLite `:memory:` potvrdily návratovou hodnotu, commit, rollback i propagaci `Exception` a `Error`. Schválený kontrakt vnoření odpovídá Nette Database: vnořená volání sdílejí transakci bez savepointů; zachycená vnitřní výjimka nevrací vnitřní změny zpět. Čeká na doplnění testů tohoto chování, ověření DI a čisté aktivní kontroly.
 - `[PLÁN]` **F2-13** Typované neměnné kolekce pro DTO
 - `[PLÁN]` **F2-14** Jednotkové testy: Money, Quantity, Locale, Clock, ULID
 - `[PLÁN]` **F2-15** Architektonický test: `Shared` nezávisí na žádném modulu
@@ -1188,3 +1188,8 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokumentovány commit/rollback pravidla, vnořování transakcí a hranice databázové atomicity vůči externím vedlejším účinkům synchronních posluchačů událostí.
 - Implementace čeká na stažení do Laragonu, funkční ověření rollbacku/commitů/vnoření a čisté aktivní kontroly přes `check.bat`.
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
+
+
+### v2.83 (14. 11. 2026)
+- Upřesněn aplikační kontrakt transakcí: vnořená volání sdílejí jednu transakci bez savepointů; zachycená vnitřní výjimka sama nevrací vnitřní změny zpět.
+- Funkční test na izolované SQLite databázi v paměti potvrdil callback result, commit, rollback a propagaci `Exception` i `Error`. Test vnoření odhalil a doložil skutečné chování Nette Database 3.2.10; lokální DI a `check.bat` zůstávají k ověření.
