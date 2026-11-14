@@ -1,6 +1,8 @@
 # see https://doc.nette.org/en/configuring
 
 parameters:
+	app:
+		environment: null
 	logging:
 		file: %appDir%/../log/application.log
 		maxFiles: 30
