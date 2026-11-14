@@ -3,8 +3,6 @@ LoggerFactory writes structured JSON and sanitizes sensitive context before pers
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Core\Logging\LoggerFactory;
 use App\Core\Logging\SensitiveDataProcessor;
 use Tester\Assert;
