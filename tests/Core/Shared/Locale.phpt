@@ -42,5 +42,6 @@ foreach (['', 'c', 'abcd', 'en_US', 'en--US', 'en-US-extra', 'en-u-ca-gregory', 
 }
 
 echo "OK\n";
+?>
 --EXPECT--
 OK
