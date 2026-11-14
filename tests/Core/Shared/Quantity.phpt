@@ -3,8 +3,6 @@ Quantity uses exact thousandths, rejects imprecise input and protects integer bo
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Shared\Domain\Quantity\InvalidQuantityException;
 use App\Shared\Domain\Quantity\Quantity;
 use Tester\Assert;
