@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.38 · 14. 11. 2026
+**Revize:** 1.39 · 15. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -133,7 +133,11 @@ Pravidla:
 - Produkční adaptér `NetteTransaction` v `Shared/Infrastructure/Transaction` obaluje `Nette\Database\Explorer::transaction()`. Frameworková závislost zůstává výhradně v infrastruktuře.
 - Úspěšné dokončení callbacku znamená COMMIT. Výjimka nebo chyba znamená ROLLBACK; původní chyba se propaguje volajícímu. Callback nedostává Explorer ani databázové spojení.
 - Vnořená volání `Transaction::run()` jsou povolena, ale sdílejí jednu databázovou transakci a nevytvářejí savepointy. Pokud vnější callback zachytí výjimku z vnořeného volání, změny provedené uvnitř zůstávají součástí vnější transakce; samostatný rollback vnořené operace není garantován. Rollback nastane, pokud chyba opustí nejvyšší transakční callback. Aplikační kód nesmí ručně provádět `BEGIN`, `COMMIT` ani `ROLLBACK`.
-- Databázová transakce zajišťuje atomicitu databázových změn, nikoliv automatické vrácení vedlejších účinků mimo databázi. Synchronní posluchače doménových událostí mohou například odeslat e-mail nebo provést jinou externí operaci, kterou rollback databáze nevrátí. Transakční outbox ani automaticky transakční doručování událostí nejsou součástí tohoto kontraktu.
+- Databázová transakce zajišťuje atomicitu databázových změn, nikoliv automatické vrácení vedlejších účinků mimo databázi.
+- `SynchronousEventDispatcher` je určen pouze pro kritické interní posluchače, jejichž databázové změny patří do stejné aplikační transakce. Výjimka posluchače se propaguje a způsobí rollback nejvyšší transakce. Takový posluchač nesmí přímo volat externí API, odesílat e-mail/push zprávu, provádět platbu ani jiný nevratný vedlejší účinek.
+- Integrační a notifikační události se zapisují do Transactional Outbox ve stejné databázové transakci jako obchodní změna, která je vyvolala. Teprve po potvrzení transakce je zpracuje samostatný worker. Zápis do Outboxu proto nesmí být oddělen od transakce obchodní operace.
+- Doručování z Outboxu poskytuje nejméně jednou (at-least-once), nikoliv garantovaně právě jednou. Každá zpráva a její handler proto musí podporovat idempotentní zpracování; worker musí mít řízené opakování s prodlevou, evidenci pokusů a možnost bezpečného obnovení chybně zpracovatelných zpráv. Síťové volání nesmí probíhat uvnitř dlouho otevřené databázové transakce.
+- Outbox je spolehlivý záznam události a zdroj pravdy pro její doručení. Může navazovat na obecnou databázovou frontu, ale případné sdílení fyzické infrastruktury nesmí porušit atomický zápis Outbox záznamu spolu s obchodní změnou.
 
 Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
 
@@ -153,7 +157,8 @@ Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
 - Ceny pro CZK a EUR jsou explicitní ceny; běžný nákup se nesmí spoléhat na automatický kurzový přepočet.
 - Košík a objednávka používají jednu zvolenou měnu; měna objednávky se po vytvoření nemění.
 - Doménové rozhraní `CurrencyProvider` poskytuje výchozí a aktivní měny. Výchozí měna musí být nastavena a aktivní; pokud chybí, poskytovatel vyhodí `DefaultCurrencyNotFoundException` místo tichého použití náhradní měny.
-- Aktivní měny se načítají z tabulky `currency` a řadí podle `sort_order`, při shodě podle kódu. Doménový objekt `Currency` obsahuje pouze kód a počet desetinných míst; název a symbol zůstávají mimo peněžní výpočty.
+- Aktivní měny se načítají z tabulky `currency` a řadí podle `sort_order`, při shodě podle kódu. Doménový objekt `Currency` obsahuje pouze kód a počet desetinných míst; název a symbol zůstávají mimo peněžní výpočty. `minorUnits` je doménově omezeno na rozsah 0–4; technický rozsah databázového sloupce nesmí určovat doménové pravidlo.
+- Syntakticky správný třípísmenný kód ještě neprokazuje existenci měny v ISO 4217. Systém proto používá centrální, verzovaný seznam ověřených ISO 4217 měn v databázovém katalogu. Do katalogu lze přidat pouze měnu z tohoto seznamu; administrace smí měnu aktivovat/deaktivovat, nikoliv vytvořit libovolný třípísmenný kód. Aplikační vstupy se ověřují proti katalogu před vytvořením obchodní operace; `CurrencyProvider` poskytuje pouze měny povolené a aktivní pro daný obchod.
 - Demo data jsou součástí projektu a zůstávají i v produkční instalaci jako demonstrační obsah.
 - Produkční provoz musí bezpečně oddělit demo zákazníky/objednávky od reálných operací. Demo záznam nesmí spustit skutečnou platbu, expedici ani odeslání zákaznického e-mailu.
 
@@ -174,6 +179,11 @@ Závazná rozhodnutí:
 
 Bezpečnost se zavádí postupně podle ROADMAP; dokumentace nesmí tvrdit, že neimplementované prvky již fungují.
 
+### Prostředí a destruktivní nástroje
+- Aplikační prostředí (`development`, `testing`, `staging`, `production`) musí být určeno explicitní konfigurací; nesmí se odvozovat pouze z `debugMode`.
+- Destruktivní vývojové příkazy, zejména `db:reset`, musí nejprve ověřit explicitní allowlist prostředí a při neznámém, chybějícím nebo produkčním prostředí okamžitě skončit chybou ještě před databázovými dotazy a jakoukoliv změnou dat.
+- Kontrola prostředí je pouze jedna z nezávislých pojistek. Zachovávají se také kontroly názvu databáze, databázového účtu/oprávnění a explicitní potvrzení operátora. Debug režim nikdy není bezpečnostní oprávnění.
+
 Cílové zásady:
 - CSP s nonce a bez `unsafe-inline`, kde to architektura umožňuje.
 - CSRF ochrana formulářů a citlivých akcí.
@@ -187,7 +197,10 @@ Cílové zásady:
 - OAuth 2.0 jako budoucí rozšíření, nikoliv předpoklad první implementace.
 - Platební údaje karet neukládat; používat tokenizaci poskytovatele.
 - Nahrané soubory ukládat mimo webroot a kontrolovat na serveru.
-- Logy nesmí bezdůvodně obsahovat hesla, tokeny ani citlivé osobní údaje.
+- Logy nesmějí obsahovat hesla, tokeny, tajné klíče, platební autentizační údaje ani nepotřebné osobní údaje.
+- Logovací kontext se vytváří jako explicitní seznam povolených, minimálních a typovaných údajů. Nesmějí se logovat celé objekty zákazníka, objednávky, platby, HTTP requesty/response ani surové payloady externích poskytovatelů.
+- Texty doménových a aplikačních výjimek musí být bezpečné a nesmějí v sobě nést osobní údaje, tokeny ani jiné tajné hodnoty. Pro diagnostiku se používá typ výjimky, stabilní chybový kód, korelační identifikátor a bezpečný kontext.
+- `SensitiveDataProcessor` je obranná vrstva pro maskování známých citlivých klíčů a tokenových vzorů, nikoliv obecný detektor PII. Nelze spoléhat na automatické rozpoznání e-mailů, telefonů nebo osobních údajů ve volném textu; jejich předání do logu je zakázáno již na straně volajícího.
 
 ## 9. Provoz, zálohy a obnova
 
@@ -379,13 +392,15 @@ ArgoMi-BestShop nebude poskytovat systém instalovatelných pluginů třetích s
 
 ## 20. Logování a sledování chyb
 
-ArgoMi-BestShop bude používat jednotný standard logování a diagnostiky napříč moduly.
+ArgoMi-BestShop používá jednotný standard logování a diagnostiky napříč moduly. Podrobné bezpečnostní zásady jsou závazné pro všechny moduly a adaptéry.
 
-- **Tracy** bude sloužit pro vývojové prostředí, ladění a diagnostiku.
-- **Monolog** bude standardní aplikační vrstvou pro zapisování logů.
-- Logy budou strukturované a budou používat úrovně DEBUG, INFO, WARNING, ERROR a CRITICAL.
-- Do logů se nesmějí zapisovat hesla, přístupové tokeny, tajné klíče ani jiné citlivé údaje; citlivá data se musí před zápisem odstranit nebo maskovat.
-- **Sentry** lze doplnit později pro automatický sběr a hlášení chyb z produkčního prostředí.
+- **Tracy** slouží pro vývojové prostředí, ladění a diagnostiku.
+- **Monolog** je standardní aplikační vrstvou pro zapisování logů.
+- Logy jsou strukturované a používají úrovně DEBUG, INFO, WARNING, ERROR a CRITICAL.
+- Kontext logu je allowlist: pouze nezbytné, typované a bezpečné hodnoty. Celé doménové objekty, DTO, requesty, response, payloady platebních bran a neomezené serializace objektů se nezapisují.
+- Výjimky nesmějí v message ani v kontextu obsahovat PII, hesla, tokeny, tajné klíče nebo platební údaje. Původní výjimka se do logu nepředává automaticky; diagnostika používá bezpečný typ, stabilní kód a korelační ID.
+- `SensitiveDataProcessor` provádí další maskování známých citlivých klíčů a tokenových vzorů, včetně vnořených polí a objektů výjimek. Není však detektorem všech PII a nenahrazuje bezpečné vytváření kontextu.
+- **Sentry** lze doplnit později pro automatický sběr a hlášení chyb z produkčního prostředí; musí dodržovat stejnou politiku sanitizace a minimalizace údajů.
 
 
 ## 21. Strategie práce s větvemi v Gitu
@@ -454,11 +469,12 @@ Demo data a testovací operace musí být jednoznačně rozlišitelné od skute�
 Peníze se v doméně reprezentují neměnným hodnotovým objektem `Money`. Částka je vždy celočíselná hodnota v nejmenších jednotkách měny (minor units); desetinná aritmetika ani `float` se nepoužívají.
 
 - `Money` obsahuje celočíselnou částku v minor units a hodnotový objekt `Currency`.
-- `Currency` obsahuje třípísmenný velký ISO kód měny a počet desetinných míst (minor units).
+- `Currency` obsahuje syntakticky ověřený třípísmenný velký kód měny a počet desetinných míst (minor units) v rozsahu 0–4. Samotná syntaxe nezaručuje existenci kódu v ISO 4217; ověření existence a povolení měny zajišťuje centrální katalog ISO 4217 a aplikační `CurrencyProvider`.
+- Katalog ISO 4217 je verzovaný a spravovaný řízenými databázovými migracemi/seedy. Obchod může používat pouze měny z katalogu; aktivita měny je samostatné nastavení. Libovolný kód typu `XYZ` se nesmí stát obchodní měnou pouze proto, že odpovídá regexu.
 - Sčítání, odčítání a porovnávání jsou povoleny pouze pro stejnou měnu. Rozdílná měna vyvolá doménovou výjimku; automatický kurzový přepočet se neprovádí.
 - Násobení v základní implementaci `Money` přijímá pouze celočíselný faktor. Násobení desetinným množstvím a pravidla zaokrouhlování se doplní až ve spolupráci s hodnotovými objekty `Quantity` a `Percentage`.
 - Přetečení celočíselného rozsahu musí být explicitně odmítnuto výjimkou; nesmí dojít k tichému převodu na `float`.
-- `CurrencyProvider`, výběr výchozí a aktivní měny a načítání měn z databáze jsou samostatnou odpovědností navazující implementace F2-03.
+- `CurrencyProvider`, výběr výchozí a aktivní měny a načítání ověřených měn z databáze jsou samostatnou odpovědností F2-03 a navazujícího zpřesnění katalogu ISO 4217.
 - Běžný nákup nepřepočítává CZK a EUR automaticky. Košík a objednávka používají jednu zvolenou měnu a měna objednávky se po vytvoření nemění.
 
 
