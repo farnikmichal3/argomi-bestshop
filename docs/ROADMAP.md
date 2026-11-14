@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.84 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.85 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 114, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 430, zrušeno 2.
+Celkem **547 kroků**: hotovo 115, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 429, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 12 | 0 | 0 | 0 | 0 | 4 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 13 | 0 | 0 | 0 | 0 | 3 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -314,7 +314,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 10 z 16 kroků; jeden krok je rozpracován.
+_Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 13 z 16 kroků; tři kroky zůstávají naplánovány.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
@@ -328,7 +328,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-10** Rozhraní `DomainEvent`, kontrakt `DomainEventListener` a synchronní `EventDispatcher` jsou implementovány. Ověřeno filtrování posluchačů, zachování pořadí, opakované použití generátoru, propagace výjimek, prázdný dispatcher a registrace v Nette DI. Registrace posluchačů přes DI tagy navazuje ve F2-11.
 - `[HOTOVO]` **F2-11** Registrace posluchačů událostí přes DI tagy. Dispatcher přijímá služby označené `domainEventListener` pomocí `tagged()` při kompilaci Nette DI. Funkčně ověřeno doručení události skutečně tagovanému posluchači, vyloučení netagovaných služeb a sdílení jediné instance přes `EventDispatcher` i `SynchronousEventDispatcher`; uživatel potvrdil čisté `check.bat` a odstranění dočasné testovací registrace.
 - `[HOTOVO]` **F2-12** Rozhraní `Transaction` (spuštění v transakci). Aplikační kontrakt `run()` a infrastrukturní adaptér `NetteTransaction` jsou implementovány a registrovány v DI. Funkční test na SQLite `:memory:` úspěšně ověřil návratovou hodnotu callbacku, commit, rollback, propagaci původních instancí `Exception` a `Error` a chování vnořených volání bez savepointů (včetně rollbacku při selhání vnější transakce). Samostatný DI test potvrdil registraci rozhraní i adaptéru a sdílení jediné instance. Uživatel potvrdil čistý výsledek `check.bat` včetně PHPStan, PHP-CS-Fixer a Deptrac.
-- `[ROZDĚLÁNO]` **F2-13** Typované neměnné kolekce pro DTO. Rozhodnutí zapsáno do ZAMER.md (generická `DtoCollection<T>` v `Shared/Application/Collection`, runtime kontrola `class-string<T>`, materializace `iterable`, strukturální neměnnost a přesné operace). STRUKTURA.md popisuje umístění a pravidla. Následuje implementace a funkční ověření.
+- `[HOTOVO]` **F2-13** Typovaná neměnná kolekce DTO `Shared\\Application\\Collection\\DtoCollection<T>`. Generická PHPStan šablona zachovává typ položek; konstruktor ověřuje existenci očekávané třídy/rozhraní a runtime typ každé položky, přijímá `iterable` a materializuje jej do vlastního seznamu. Implementuje `IteratorAggregate` a `Countable`; poskytuje `count()`, `isEmpty()`, `first()`, `get()`, `toArray()` a `getIterator()`. Strukturální neměnnost, hranice použití a pravidla rozšiřování jsou popsány v `ZAMER.md` a `STRUKTURA.md`. Všech 21 funkčních kontrol prošlo a uživatel potvrdil čistý `check.bat` (PHPStan, PHP-CS-Fixer, Deptrac).
 - `[PLÁN]` **F2-14** Jednotkové testy: Money, Quantity, Locale, Clock, ULID
 - `[PLÁN]` **F2-15** Architektonický test: `Shared` nezávisí na žádném modulu
 - `[PLÁN]` **F2-16** Dokumentace: co do `Shared` patří a co ne
@@ -1189,6 +1189,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Implementace čeká na stažení do Laragonu, funkční ověření rollbacku/commitů/vnoření a čisté aktivní kontroly přes `check.bat`.
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
+
+### v2.85 (14. 11. 2026)
+- Dokončen F2-13: implementována generická strukturálně neměnná `DtoCollection<T>` v aplikační vrstvě Shared. Runtime kontroluje očekávaný typ i všechny položky; kolekce přijímá `iterable`, zachovává pořadí a nabízí přesně typované iterování a čtecí operace.
+- Funkční test obsahoval 21 úspěšných kontrol: prázdná/neprázdná kolekce, pořadí, iterace, generátor, nezávislost na vstupním i vráceném poli, ochrana přes iterátor, chybné typy a neplatné indexy. Uživatel potvrdil čistý `check.bat` (PHPStan, PHP-CS-Fixer, Deptrac).
+- Aktualizovány kanonické dokumenty `ZAMER.md` a `STRUKTURA.md`, včetně pravidel pro budoucí rozšiřování a opravy číslování kapitol.
+- F2: **13 hotovo**, **0 rozděláno**, **3 plán**. Celkový souhrn: **115 hotovo**, **0 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
 ### v2.84 (14. 11. 2026)
 - Dokončen F2-12: aplikační rozhraní `Transaction` a adaptér `NetteTransaction` jsou funkčně ověřeny na izolované SQLite databázi v paměti. Všech 12 kontrol potvrdilo návrat callbacku, commit, rollback, zachování a propagaci původních instancí `Exception` a `Error` i skutečné chování vnořených transakcí Nette Database 3.2.10 bez savepointů.
