@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.77 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.78 · 14. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **547 kroků**: hotovo 111, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 433, zrušeno 2.
+Celkem **547 kroků**: hotovo 111, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 432, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 16 | 9 | 0 | 0 | 0 | 0 | 7 | 0 |
+| F2 | Sdílené jádro (Shared) | 16 | 9 | 1 | 0 | 0 | 0 | 6 | 0 |
 | F3 | Databáze a migrace | 32 | 10 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -326,7 +326,7 @@ _Malá sada hodnotových objektů a rozhraní, na kterých stojí všechny modul
 - `[HOTOVO]` **F2-07** `Clock`: rozhraní pro aktuální čas v UTC, produkční `SystemClock` a testovací `FrozenClock` s metodami `setNow()` a `advance()`. Lokálně ověřeno přes `check.bat` (PHPStan, PHP-CS-Fixer a Deptrac bez chyb), funkčně ověřen převod do UTC, nastavení/posun testovacího času a registrace `Clock` v Nette DI, která vrací `SystemClock`.
 - `[HOTOVO]` **F2-08** `PublicId`: neměnný hodnotový objekt validující kanonický 26znakový ULID, rozhraní `PublicIdGenerator` a produkční generátor přes `symfony/uid` 7.4. Závislost je oddělena v infrastruktuře; Composer lock je aktualizován a verzován. Funkčně ověřeno generování, validace, rovnost, odmítání neplatných zápisů a registrace přes Nette DI. PHPStan, PHP-CS-Fixer a Deptrac prošly bez chyb.
 - `[HOTOVO]` **F2-09** Základ výjimek: implementovány společné typy `DomainException`, `NotFoundException` a `InvalidInputException`; specializované výjimky byly převedeny pouze při zachování jejich významu. `check.bat` potvrdil úspěšné PHPStan, PHP-CS-Fixer a Deptrac kontroly. Funkční test potvrdil dědičnost přes vlastní i nativní PHP výjimky a zachování samostatné větve `DefaultCurrencyNotFoundException` jako `RuntimeException`.
-- `[PLÁN]` **F2-10** Rozhraní `DomainEvent` a synchronní `EventDispatcher`
+- `[ROZDĚLÁNO]` **F2-10** Rozhraní `DomainEvent`, kontrakt `DomainEventListener` a synchronní `EventDispatcher`; registrace posluchačů přes DI tagy navazuje ve F2-11.
 - `[PLÁN]` **F2-11** Registrace posluchačů událostí přes DI tagy
 - `[PLÁN]` **F2-12** Rozhraní `Transaction` (spuštění v transakci)
 - `[PLÁN]` **F2-13** Typované neměnné kolekce pro DTO
@@ -1162,6 +1162,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Zahájen F2-04: schválena pevná přesnost `Quantity` na tři desetinná místa, odpovídající množstevním sloupcům `DECIMAL(12,3)`. Implementován základní hodnotový objekt a výjimka pro neplatný desetinný vstup; probíhá lokální ověření.
 - Souhrn: **105 hotovo**, **1 rozděláno**, **1 k úpravě**, **438 plán**, **2 zrušeno**.
 
+
+### v2.78 (14. 11. 2026)
+- Zahájen F2-10: přidáno rozhraní `DomainEvent`, aplikační `EventDispatcher` a `DomainEventListener`, synchronní infrastrukturní implementace a její registrace v Nette DI.
+- Schváleno pořadí posluchačů podle předaného iterovatelného seznamu; výjimky posluchačů se nepotlačují a předávají se volajícímu. Registrace posluchačů přes DI tagy zůstává navazujícím F2-11.
+- Implementace čeká na lokální ověření přes `check.bat` a funkční testy.
+- F2: **9 hotovo**, **1 rozděláno**, **6 plán**. Celkový souhrn: **111 hotovo**, **1 rozděláno**, **1 k úpravě**, **432 plán**, **2 zrušeno**.
 
 ### v2.77 (14. 11. 2026)
 - Dokončen F2-09: společná hierarchie doménových výjimek a specializované výjimky jsou implementovány a zdokumentovány. Zachována kompatibilita s nativními PHP `\DomainException` a `\InvalidArgumentException`; `DefaultCurrencyNotFoundException` zůstává samostatnou `RuntimeException`.
