@@ -297,6 +297,6 @@ assets/
 
 | 14. 11. 2026 | v2.7: doplněna doménová událost, aplikační dispatcher a kontrakt posluchače; zaznamenána synchronní implementace a její registrace v DI podle F2-10. |
 
-| 14. 11. 2026 | v2.8: doplněna automatická registrace posluchačů doménových událostí přes Nette DI tag `domainEventListener`; dispatcher dostává seznam při kompilaci kontejneru podle F2-11. |\n
+| 14. 11. 2026 | v2.8: doplněna automatická registrace posluchačů doménových událostí přes Nette DI tag `domainEventListener`; dispatcher dostává seznam při kompilaci kontejneru podle F2-11. |
 | 14. 11. 2026 | v3.1: dokončena dokumentace a implementace `DtoCollection<T>`; opraveno číslování navazujících kapitol. |
 | 14. 11. 2026 | v3.0: doplněna aplikační generická `DtoCollection<T>`, její umístění, typová kontrola, strukturální neměnnost, veřejné operace a pravidla rozšiřování podle F2-13. |
