@@ -512,3 +512,15 @@ Veřejné identifikátory se reprezentují vlastním neměnným hodnotovým obje
 - Zvolená větev Symfony 7.4 je LTS a vyžaduje PHP nejméně 8.2; projekt proto zachovává podporu PHP 8.3 a současně používá stejnou implementaci na vývojovém PHP 8.5. Vyšší hlavní verze knihovny se přijímají až po samostatném ověření kompatibility.
 - Závislost na `symfony/uid` je výhradně v infrastruktuře. Doménové API zůstává nezávislé na Symfony a umožňuje budoucí výměnu generátoru bez změny obchodní logiky.
 - ULID je lexikograficky řaditelný a obsahuje časovou složku; z veřejného identifikátoru proto lze odvodit přibližnou dobu jeho vytvoření. Není to autorizační prostředek, tajný token ani náhrada kontroly přístupu.
+
+
+## 33. Společná hierarchie doménových výjimek
+
+Sdílené doménové výjimky mají společné typy podle významu chyby, nikoliv podle technické vrstvy, ve které byla zachycena.
+
+- `App\Shared\Domain\Exception\DomainException` je abstraktní základ doménových výjimek a dědí z vestavěné PHP `\DomainException`. Konkrétní doménové výjimky tak zůstávají kompatibilní s obecným zachytáváním nativních doménových chyb.
+- `NotFoundException` je konkrétní rozšiřitelná výjimka pro situaci, kdy požadovaný doménový objekt nebo záznam nebyl nalezen. Sama neurčuje HTTP status ani prezentační chování.
+- `InvalidInputException` dědí z vestavěné PHP `\InvalidArgumentException`, aby zachovala sémantiku neplatného argumentu a kompatibilitu se stávajícím zachytáváním těchto chyb.
+- Specializované výjimky mohou dědit z odpovídajícího společného typu. Existující výjimky se převádějí pouze tehdy, pokud jejich význam odpovídá nové kategorii; nesmějí se mechanicky sjednotit za cenu změny chování.
+- Chyba chybějící konfigurace, například nenastavená výchozí měna nebo jazyk, není automaticky chybou nenalezeného doménového objektu. Její samostatná sémantika se zachovává.
+- Výjimky nejsou služby a neregistrují se v Nette DI. Mapování na HTTP odpovědi, formulářové chyby nebo jiné výstupy řeší příslušná aplikační a prezentační vrstva.
