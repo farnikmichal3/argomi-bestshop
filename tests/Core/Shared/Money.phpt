@@ -102,6 +102,14 @@ Assert::exception(
     static fn () => (new Money(PHP_INT_MAX, $czk))->multiply(2),
     OverflowException::class,
 );
+Assert::exception(
+    static fn () => (new Money(2, $czk))->multiply(PHP_INT_MIN),
+    OverflowException::class,
+);
+Assert::exception(
+    static fn () => (new Money(-2, $czk))->multiply(PHP_INT_MAX),
+    OverflowException::class,
+);
 
 // Měna bez desetinných míst je platná a částka zůstává celočíselná.
 Assert::same(100, (new Money(100, $zeroDecimalCurrency))->minorAmount);
