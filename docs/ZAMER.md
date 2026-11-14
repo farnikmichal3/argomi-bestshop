@@ -524,3 +524,16 @@ Sdílené doménové výjimky mají společné typy podle významu chyby, nikoli
 - Specializované výjimky mohou dědit z odpovídajícího společného typu. Existující výjimky se převádějí pouze tehdy, pokud jejich význam odpovídá nové kategorii; nesmějí se mechanicky sjednotit za cenu změny chování.
 - Chyba chybějící konfigurace, například nenastavená výchozí měna nebo jazyk, není automaticky chybou nenalezeného doménového objektu. Její samostatná sémantika se zachovává.
 - Výjimky nejsou služby a neregistrují se v Nette DI. Mapování na HTTP odpovědi, formulářové chyby nebo jiné výstupy řeší příslušná aplikační a prezentační vrstva.
+
+
+## 34. Doménové události a jejich synchronní doručování
+
+Doménové události slouží k volné komunikaci mezi moduly. Událost oznamuje skutečnost, která již nastala; není příkazem, který jinému modulu nařizuje provést konkrétní operaci.
+
+- `DomainEvent` je společné doménové rozhraní bez povinných metadat. Konkrétní událost nese pouze data potřebná k popisu dané skutečnosti a nezná dispatcher, posluchače ani infrastrukturu.
+- `EventDispatcher` je aplikační rozhraní `dispatch(DomainEvent): void`. Moduly používají pouze tento kontrakt a nejsou závislé na konkrétní implementaci doručování.
+- `DomainEventListener` je aplikační kontrakt posluchače. Metoda `supports()` určuje, zda posluchač danou událost zpracovává; `handle()` provede vlastní reakci.
+- `SynchronousEventDispatcher` je výchozí infrastrukturní implementace. Posluchače prochází synchronně v pořadí, ve kterém byly předány, a zavolá pouze ty, jejichž `supports()` vrátí `true`.
+- Výjimky z metod posluchače se nezachytávají ani nepotlačují. Přeruší doručování a předají se volajícímu; volající tak jednoznačně pozná, že zpracování události selhalo. Již provedené vedlejší účinky předchozích posluchačů tím nejsou automaticky vráceny zpět.
+- Produkční dispatcher se registruje v Nette DI jako jediná implementace `EventDispatcher`. Registrace konkrétních posluchačů pomocí DI tagů a jejich předání dispatcheru patří do navazujícího kroku F2-11.
+- Synchronní doručování nezajišťuje transakční atomicitu, opakování ani trvalé uložení událostí. Transakční pravidla se řeší samostatně; asynchronní/outbox zpracování není součástí tohoto základu.
