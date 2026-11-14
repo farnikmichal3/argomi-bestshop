@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 3.0 · 14. 11. 2026  
+**Revize:** 3.1 · 14. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 14. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -242,14 +242,14 @@ assets/
 - **Použití:** modul definuje vlastní DTO ve své složce `Api/Dto`; kolekce je pouze typovaně obaluje. Nevytváří DTO, nezná `ActiveRow`, databázi ani Nette a neregistruje se v DI.
 - **Rozšiřování:** změny veřejných metod musí zachovat generické typování a strukturální neměnnost a musí být doprovázeny funkčními testy i aktualizací `ZAMER.md`.
 
-## 7. Databázová a prezentační hranice
+## 8. Databázová a prezentační hranice
 
 - Repozitář modulu je jediným místem, kde se mapuje `ActiveRow` na typované DTO.
 - Presentery a UI komponenty neobsahují SQL ani přímé dotazy přes Explorer.
 - Objednávkové snapshoty nesmějí být při zobrazení zpětně závislé na aktuálním stavu katalogu.
 - Tabulky a překladová data mají jasného vlastníka; viz DATABASE a TRANSLATIONS.
 
-## 8. Přidání nového modulu – kontrolní seznam
+## 9. Přidání nového modulu – kontrolní seznam
 
 1. Popsat odpovědnost a hranice modulu.
 2. Vytvořit potřebné části Api, Domain, Application a Infrastructure.
@@ -262,14 +262,14 @@ assets/
 9. Přidat UI pouze do odpovídající oblasti.
 10. Aktualizovat dokumentaci a ROADMAP.
 
-## 9. Otevřené technické úkoly
+## 10. Otevřené technické úkoly
 
 - F1-34: prosadit databázi jako jediný zdroj všech překladových hodnot; žádné souborové katalogy ani runtime souborový fallback. Viz `TRANSLATIONS.md`.
 - Implementovat databázový seed/import systémových překladů bez souborových katalogů (F4).
 - `[PLÁN]` F1-37: Odstranit `OrmModel.php` a přímou závislost `nextras/orm`; před změnou znovu ověřit reference, poté aktualizovat Composer lock a spustit PHPStan/testy.
 - Vynucovat hranice modulů automatickými architektonickými testy.
 
-## 10. Historie
+## 11. Historie
 
 | 10. 11. 2026 | v1.3: aktualizován strom `Shared` podle skutečného repozitáře; odstraněna zastaralá reference na `OrmModel.php`, který byl odstraněn v F1-37. |
 | 10. 11. 2026 | v1.4: doplněno a ověřeno explicitní mapování presenterů `UI/Front` a `UI/Admin` podle Nette Application 3.3.1; zachováno obecné mapování pro `Presentation`. |
@@ -298,4 +298,5 @@ assets/
 | 14. 11. 2026 | v2.7: doplněna doménová událost, aplikační dispatcher a kontrakt posluchače; zaznamenána synchronní implementace a její registrace v DI podle F2-10. |
 
 | 14. 11. 2026 | v2.8: doplněna automatická registrace posluchačů doménových událostí přes Nette DI tag `domainEventListener`; dispatcher dostává seznam při kompilaci kontejneru podle F2-11. |\n
+| 14. 11. 2026 | v3.1: dokončena dokumentace a implementace `DtoCollection<T>`; opraveno číslování navazujících kapitol. |
 | 14. 11. 2026 | v3.0: doplněna aplikační generická `DtoCollection<T>`, její umístění, typová kontrola, strukturální neměnnost, veřejné operace a pravidla rozšiřování podle F2-13. |
