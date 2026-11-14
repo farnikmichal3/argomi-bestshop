@@ -551,7 +551,7 @@ Doménové události slouží k volné komunikaci mezi moduly. Událost oznamuje
 
 ## 35. Typované neměnné kolekce pro DTO
 
-Veřejná API modulů mohou vracet více DTO stejného typu. Pro tyto případy se používá společná generická kolekce `App\\Shared\\Application\\Collection\\DtoCollection<T>`. Cílem je sjednotit chování kolekcí, zachovat přesné typování položek a zabránit tomu, aby příjemce mohl měnit členství v kolekci.
+Veřejná API modulů mohou vracet více DTO stejného typu. Pro tyto případy se používá společná generická kolekce `App\Shared\Application\Collection\DtoCollection<T>`. Cílem je sjednotit chování kolekcí, zachovat přesné typování položek a zabránit tomu, aby příjemce mohl měnit členství v kolekci.
 
 ### Umístění a odpovědnost
 
