@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 3.1 · 14. 11. 2026  
+**Revize:** 3.2 · 15. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 14. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -185,7 +185,12 @@ Ne každá složka musí existovat hned. Vytváří se tehdy, když obsahuje sku
 - Překladové hodnoty se v modulech neukládají do souborů. Všechny hodnoty, včetně systémových výchozích textů, jsou výhradně v databázi. Moduly v kódu používají pouze stabilní klíče.
 
 ### Core/Logging
-Centrální aplikační logování přes Monolog. `LoggerFactory` vytváří JSON logger s denní rotací a limitem 30 souborů; soubory dostávají oprávnění `0600`. Limit 30 souborů je výchozí provozní nastavení, nikoliv konečné právní retenční pravidlo; jeho potvrzení nebo změna zůstává součástí F0-49. `SensitiveDataProcessor` před zápisem odstraňuje citlivé hodnoty z logovacích zpráv, kontextu a doplňkových údajů. Logy se ukládají do kořenového adresáře `log/`, mimo veřejný `www/` webroot. Tracy zůstává samostatnou diagnostickou vrstvou.
+Centrální aplikační logování přes Monolog. `LoggerFactory` vytváří JSON logger s denní rotací a limitem 30 souborů; soubory dostávají oprávnění `0600`. Limit 30 souborů je výchozí provozní nastavení, nikoliv konečné právní retenční pravidlo; jeho potvrzení nebo změna zůstává součástí F0-49. `SensitiveDataProcessor` před zápisem rekurzivně maskuje známé citlivé klíče, vybrané tokenové vzory a bezpečně redukuje objekty výjimek. Není obecným detektorem PII ve volném textu. Volající proto předává pouze explicitně povolený, minimální a bezpečný kontext; celé objekty, requesty/response, surové platební payloady a osobní údaje se nesmějí logovat. Texty výjimek jsou bezpečné a nesmějí obsahovat tajné ani osobní údaje. Logy se ukládají do kořenového adresáře `log/`, mimo veřejný `www/` webroot. Tracy zůstává samostatnou diagnostickou vrstvou.
+
+### Shared/Application/Event a Transactional Outbox
+`Shared/Application/Event/EventDispatcher` a `SynchronousEventDispatcher` slouží pouze pro kritické interní posluchače. Jejich zpracování probíhá v rámci stejné aplikační databázové transakce; výjimka se propaguje a vyvolá rollback nejvyšší transakce. Posluchače nesmějí provádět nevratné externí vedlejší účinky (HTTP/API, e-mail, push, platby ani expedici).
+
+Integrační a notifikační události se zapisují do Transactional Outbox atomicky spolu s obchodní změnou. Outbox zpracovává samostatný worker až po commitu. Doručování je nejméně jednou (at-least-once), proto zprávy a handlery vyžadují idempotenci, řízené opakování a evidenci chyb. Outbox je společný mechanismus; moduly definují pouze své typované události a handlery. Jeho přesné porty, persistence a napojení na obecnou databázovou frontu se doplní před implementací prvních externích vedlejších účinků.
 
 ## 5. Prezentační vrstvy
 
@@ -225,9 +230,11 @@ assets/
 3. `Domain` nesmí záviset na Nette UI, databázi ani konkrétním poskytovateli.
 4. `Infrastructure` implementuje porty a technické adaptéry; doménová pravidla do ní nepatří.
 5. `Shared` obsahuje pouze stabilní a skutečně průřezové prvky. Pokud prvek patří jednomu modulu, zůstává v něm.
-6. Komunikace mezi moduly probíhá synchronně přes veřejné fasády/DTO nebo asynchronně přes doménové události.
+6. Komunikace mezi moduly probíhá synchronně přes veřejné fasády/DTO nebo asynchronně přes doménové události. Kritické interní posluchače lze zpracovat synchronně v transakci; integrační a notifikační vedlejší účinky se doručují výhradně přes Transactional Outbox a worker.
 7. Moduly nesmí importovat nic z `UI`.
 8. Databázové cizí klíče mezi moduly jsou povoleny jen podle rozhodnutí popsaných v DATABASE; neznamenají povolení přímé aplikační závislosti.
+9. Synchronní posluchač doménové události nesmí provádět externí nevratné operace; integrační události se zapisují do Outboxu ve stejné transakci jako zdrojová změna.
+10. Moduly nesmějí obcházet centrální logovací politiku ani předávat do logu celé objekty, surové payloady nebo citlivé údaje.
 
 ## 7. Aplikační kolekce DTO
 
@@ -268,6 +275,9 @@ assets/
 - Implementovat databázový seed/import systémových překladů bez souborových katalogů (F4).
 - `[PLÁN]` F1-37: Odstranit `OrmModel.php` a přímou závislost `nextras/orm`; před změnou znovu ověřit reference, poté aktualizovat Composer lock a spustit PHPStan/testy.
 - Vynucovat hranice modulů automatickými architektonickými testy.
+- Dokončit rozlišení kritických synchronních událostí a integračních událostí přes Transactional Outbox.
+- Doplnit centrální katalog ISO 4217 a doménové omezení přesnosti měn.
+- Prosadit explicitní kontrolu aplikačního prostředí u destruktivních konzolových příkazů.
 
 ## 11. Historie
 
@@ -299,4 +309,5 @@ assets/
 
 | 14. 11. 2026 | v2.8: doplněna automatická registrace posluchačů doménových událostí přes Nette DI tag `domainEventListener`; dispatcher dostává seznam při kompilaci kontejneru podle F2-11. |
 | 14. 11. 2026 | v3.1: dokončena dokumentace a implementace `DtoCollection<T>`; opraveno číslování navazujících kapitol. |
+| 15. 11. 2026 | v3.2: doplněna závazná pravidla pro kritické synchronní události, Transactional Outbox, bezpečný logovací kontext a hranice modulů. |
 | 14. 11. 2026 | v3.0: doplněna aplikační generická `DtoCollection<T>`, její umístění, typová kontrola, strukturální neměnnost, veřejné operace a pravidla rozšiřování podle F2-13. |
