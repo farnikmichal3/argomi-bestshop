@@ -181,7 +181,7 @@ Bezpečnost se zavádí postupně podle ROADMAP; dokumentace nesmí tvrdit, že 
 
 ### Prostředí a destruktivní nástroje
 - Aplikační prostředí (`development`, `testing`, `staging`, `production`) musí být určeno explicitní konfigurací; nesmí se odvozovat pouze z `debugMode`.
-- Destruktivní vývojové příkazy, zejména `db:reset`, musí nejprve ověřit explicitní allowlist prostředí a při neznámém, chybějícím nebo produkčním prostředí okamžitě skončit chybou ještě před databázovými dotazy a jakoukoliv změnou dat.
+- Destruktivní vývojové příkazy, zejména `db:reset`, jsou standardně povoleny pouze v prostředí `development`. Prostředí `testing` lze povolit jen pro samostatnou izolovanou testovací databázi. Příkaz musí nejprve ověřit explicitní allowlist prostředí a při neznámém, chybějícím, stagingovém nebo produkčním prostředí okamžitě skončit chybou ještě před databázovými dotazy a jakoukoliv změnou dat.
 - Kontrola prostředí je pouze jedna z nezávislých pojistek. Zachovávají se také kontroly názvu databáze, databázového účtu/oprávnění a explicitní potvrzení operátora. Debug režim nikdy není bezpečnostní oprávnění.
 
 Cílové zásady:
