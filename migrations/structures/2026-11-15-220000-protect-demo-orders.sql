@@ -19,7 +19,7 @@ ALTER TABLE outbox_message
 DELIMITER $$
 
 -- Příznak lze nastavit při vytvoření objednávky. Později je neměnný;
--- jediná povolená změna 0 → 1 je označení dvou pevně určených demo objednávek.
+-- jediná povolená změna 0 → 1 je označení čtyř pevně určených demo objednávek.
 CREATE TRIGGER trg_shop_order_bu_demo_immutable
 BEFORE UPDATE ON shop_order
 FOR EACH ROW
