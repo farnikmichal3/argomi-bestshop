@@ -81,33 +81,46 @@ INSERT INTO shop_order
      prices_include_tax, subtotal_net_minor, adjustments_net_minor,
      tax_total_minor, grand_total_minor, billing_address, shipping_address,
      customer_note, placed_at, created_at)
-VALUES
-    ('01J9ZK3Q8M5N7V2R4T6X8B0F5H', '2026-000003', 1, 'jana.novakova@example.com',
-     'new', 'cs', 'CZK', 1, 42893, 0, 9007, 51900,
-     JSON_OBJECT(
-         'name', 'Jana Nováková', 'company', NULL, 'street', 'Příkladná 12',
-         'city', 'Ostrava', 'postal_code', '702 00', 'country_code', 'CZ',
-         'company_id', NULL, 'vat_id', NULL, 'phone', NULL
-     ),
-     JSON_OBJECT(
-         'name', 'Jana Nováková', 'company', NULL, 'street', 'Příkladná 12',
-         'city', 'Ostrava', 'postal_code', '702 00', 'country_code', 'CZ',
-         'company_id', NULL, 'vat_id', NULL, 'phone', NULL
-     ),
-     'Prosím o pečlivé zabalení.', NULL, '2026-11-05 10:12:00'),
-    ('01J9ZK3Q8M5N7V2R4T6X8B0G6J', '2026-000004', 2, 'john.smith@example.com',
-     'new', 'en', 'EUR', 1, 4288, 0, 900, 5188,
-     JSON_OBJECT(
-         'name', 'John Smith', 'company', NULL, 'street', 'Example Street 5',
-         'city', 'Praha', 'postal_code', '110 00', 'country_code', 'CZ',
-         'company_id', NULL, 'vat_id', NULL, 'phone', NULL
-     ),
-     JSON_OBJECT(
-         'name', 'John Smith', 'company', NULL, 'street', 'Example Street 5',
-         'city', 'Praha', 'postal_code', '110 00', 'country_code', 'CZ',
-         'company_id', NULL, 'vat_id', NULL, 'phone', NULL
-     ),
-     NULL, NULL, '2026-11-06 18:36:00');
+SELECT
+    '01J9ZK3Q8M5N7V2R4T6X8B0F5H', '2026-000003', 1, 'jana.novakova@example.com',
+    'new', 'cs', 'CZK', 1, 42893, 0, 9007, 51900,
+    JSON_OBJECT(
+        'name', 'Jana Nováková', 'company', NULL, 'street', 'Příkladná 12',
+        'city', 'Ostrava', 'postal_code', '702 00', 'country_code', 'CZ',
+        'company_id', NULL, 'vat_id', NULL, 'phone', NULL
+    ),
+    JSON_OBJECT(
+        'name', 'Jana Nováková', 'company', NULL, 'street', 'Příkladná 12',
+        'city', 'Ostrava', 'postal_code', '702 00', 'country_code', 'CZ',
+        'company_id', NULL, 'vat_id', NULL, 'phone', NULL
+    ),
+    'Prosím o pečlivé zabalení.', NULL, '2026-11-05 10:12:00'
+WHERE NOT EXISTS (
+    SELECT 1 FROM shop_order WHERE order_number = '2026-000003'
+);
+
+INSERT INTO shop_order
+    (public_id, order_number, customer_id, email, status, locale, currency,
+     prices_include_tax, subtotal_net_minor, adjustments_net_minor,
+     tax_total_minor, grand_total_minor, billing_address, shipping_address,
+     customer_note, placed_at, created_at)
+SELECT
+    '01J9ZK3Q8M5N7V2R4T6X8B0G6J', '2026-000004', 2, 'john.smith@example.com',
+    'new', 'en', 'EUR', 1, 4288, 0, 900, 5188,
+    JSON_OBJECT(
+        'name', 'John Smith', 'company', NULL, 'street', 'Example Street 5',
+        'city', 'Praha', 'postal_code', '110 00', 'country_code', 'CZ',
+        'company_id', NULL, 'vat_id', NULL, 'phone', NULL
+    ),
+    JSON_OBJECT(
+        'name', 'John Smith', 'company', NULL, 'street', 'Example Street 5',
+        'city', 'Praha', 'postal_code', '110 00', 'country_code', 'CZ',
+        'company_id', NULL, 'vat_id', NULL, 'phone', NULL
+    ),
+    NULL, NULL, '2026-11-06 18:36:00'
+WHERE NOT EXISTS (
+    SELECT 1 FROM shop_order WHERE order_number = '2026-000004'
+);
 
 INSERT INTO shop_order_item
     (shop_order_id, product_id, product_variant_id, sku, product_name,
@@ -122,7 +135,11 @@ SELECT
     ),
     1.000, 39900, 12000, 2100, 42893, 9007, 51900
 FROM shop_order AS o
-WHERE o.order_number = '2026-000003';
+WHERE o.order_number = '2026-000003'
+  AND NOT EXISTS (
+      SELECT 1 FROM shop_order_item AS existing
+      WHERE existing.shop_order_id = o.id AND existing.sku = 'TSHIRT-BK-M'
+  );
 
 INSERT INTO shop_order_item
     (shop_order_id, product_id, product_variant_id, sku, product_name,
@@ -138,7 +155,11 @@ SELECT
     ),
     2.000, 799, 0, 2100, 1321, 277, 1598
 FROM shop_order AS o
-WHERE o.order_number = '2026-000004';
+WHERE o.order_number = '2026-000004'
+  AND NOT EXISTS (
+      SELECT 1 FROM shop_order_item AS existing
+      WHERE existing.shop_order_id = o.id AND existing.sku = 'CABLE-CC-2M-BK'
+  );
 
 INSERT INTO shop_order_item
     (shop_order_id, product_id, product_variant_id, sku, product_name,
@@ -154,7 +175,11 @@ SELECT
     ),
     1.000, 3590, 0, 2100, 2967, 623, 3590
 FROM shop_order AS o
-WHERE o.order_number = '2026-000004';
+WHERE o.order_number = '2026-000004'
+  AND NOT EXISTS (
+      SELECT 1 FROM shop_order_item AS existing
+      WHERE existing.shop_order_id = o.id AND existing.sku = 'GAN-2X65-BK'
+  );
 
 INSERT INTO shop_order_item_option
     (shop_order_item_id, option_name, value_label, price_delta_minor)
@@ -164,21 +189,34 @@ FROM shop_order_item AS item
 INNER JOIN shop_order AS o
     ON o.id = item.shop_order_id
 WHERE o.order_number = '2026-000003'
-  AND item.sku = 'TSHIRT-BK-M';
+  AND item.sku = 'TSHIRT-BK-M'
+  AND NOT EXISTS (
+      SELECT 1 FROM shop_order_item_option AS existing
+      WHERE existing.shop_order_item_id = item.id
+        AND existing.option_name = 'Potisk'
+  );
 
 INSERT INTO shop_order_adjustment
     (shop_order_id, type, code, title, amount_net_minor,
      amount_tax_minor, amount_gross_minor, tax_rate_bp)
 SELECT id, 'shipping', 'courier', 'Kurýr', 9835, 2065, 11900, 2100
-FROM shop_order
-WHERE order_number = '2026-000003';
+FROM shop_order AS o
+WHERE o.order_number = '2026-000003'
+  AND NOT EXISTS (
+      SELECT 1 FROM shop_order_adjustment AS existing
+      WHERE existing.shop_order_id = o.id AND existing.code = 'courier'
+  );
 
 INSERT INTO shop_order_adjustment
     (shop_order_id, type, code, title, amount_net_minor,
      amount_tax_minor, amount_gross_minor, tax_rate_bp)
 SELECT id, 'shipping', 'pickup_point', 'Pickup point', 240, 50, 290, 2100
-FROM shop_order
-WHERE order_number = '2026-000004';
+FROM shop_order AS o
+WHERE o.order_number = '2026-000004'
+  AND NOT EXISTS (
+      SELECT 1 FROM shop_order_adjustment AS existing
+      WHERE existing.shop_order_id = o.id AND existing.code = 'pickup_point'
+  );
 
 -- Uzavření proběhne až po vložení všech částí účetního snapshotu.
 UPDATE shop_order
@@ -200,20 +238,38 @@ WHERE order_number = '2026-000004';
 INSERT INTO shop_order_status_history
     (shop_order_id, from_status, to_status, note, created_at)
 SELECT id, NULL, 'new', 'Demo objednávka vytvořena', '2026-11-05 10:15:00'
-FROM shop_order
-WHERE order_number = '2026-000003';
+FROM shop_order AS o
+WHERE o.order_number = '2026-000003'
+  AND NOT EXISTS (
+      SELECT 1 FROM shop_order_status_history AS existing
+      WHERE existing.shop_order_id = o.id
+        AND existing.to_status = 'new'
+        AND existing.created_at = '2026-11-05 10:15:00'
+  );
 
 INSERT INTO shop_order_status_history
     (shop_order_id, from_status, to_status, note, created_at)
 SELECT id, 'new', 'paid', 'Demo platba potvrzena', '2026-11-05 10:16:00'
-FROM shop_order
-WHERE order_number = '2026-000003';
+FROM shop_order AS o
+WHERE o.order_number = '2026-000003'
+  AND NOT EXISTS (
+      SELECT 1 FROM shop_order_status_history AS existing
+      WHERE existing.shop_order_id = o.id
+        AND existing.to_status = 'paid'
+        AND existing.created_at = '2026-11-05 10:16:00'
+  );
 
 INSERT INTO shop_order_status_history
     (shop_order_id, from_status, to_status, note, created_at)
 SELECT id, NULL, 'new', 'Demo objednávka vytvořena', '2026-11-06 18:40:00'
-FROM shop_order
-WHERE order_number = '2026-000004';
+FROM shop_order AS o
+WHERE o.order_number = '2026-000004'
+  AND NOT EXISTS (
+      SELECT 1 FROM shop_order_status_history AS existing
+      WHERE existing.shop_order_id = o.id
+        AND existing.to_status = 'new'
+        AND existing.created_at = '2026-11-06 18:40:00'
+  );
 
 -- Základní systémové texty pro katalog, košík a dokončení objednávky.
 INSERT INTO translation_message
