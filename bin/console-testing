@@ -1,0 +1,58 @@
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Nette\\Neon\\Neon;
+use LogicException;
+
+$configFile = dirname(__DIR__) . '/config/local.testing.neon';
+
+try {
+    if (!is_file($configFile)) {
+        throw new LogicException('Chybí config/local.testing.neon. Vytvoř jej podle přiloženého .example souboru.');
+    }
+
+    $config = Neon::decodeFile($configFile);
+    if (!is_array($config)) {
+        throw new LogicException('Testovací konfigurace není platná NEON struktura.');
+    }
+
+    $environment = $config['parameters']['app']['environment'] ?? null;
+    $databaseDsn = $config['database']['dsn'] ?? null;
+    $databaseUser = $config['database']['user'] ?? null;
+    $migrationDatabase = $config['dbal']['database'] ?? null;
+    $migrationUser = $config['dbal']['username'] ?? null;
+
+    if (
+        $environment !== 'testing'
+        || !is_string($databaseDsn)
+        || !preg_match('/(?:^|;)dbname=([^;]+)/i', $databaseDsn, $matches)
+        || $matches[1] !== 'argomi_bestshop_test'
+        || $databaseUser !== 'argomi_test_app'
+        || $migrationDatabase !== 'argomi_bestshop_test'
+        || $migrationUser !== 'argomi_test_migrator'
+    ) {
+        throw new LogicException(
+            'Testovací konzole odmítla konfiguraci: očekává environment=testing, '
+            . 'databázi argomi_bestshop_test a vyhrazené testovací účty.',
+        );
+    }
+
+    // Testovací konzole povoluje pouze migrace vpřed a pomocné příkazy.
+    // Zejména migrations:reset nesmí být dostupné, protože databázi maže.
+    $command = $argv[1] ?? 'list';
+    if (!in_array($command, ['migrations:continue', 'list', 'help', '--help', '--version'], true)) {
+        throw new LogicException(sprintf('Příkaz "%s" není v testovací konzoli povolen.', $command));
+    }
+
+    $bootstrap = new App\\Bootstrap('local.testing.neon');
+    $container = $bootstrap->bootWebApplication();
+    $application = $container->getByType(Contributte\\Console\\Application::class);
+
+    exit($application->run());
+} catch (LogicException $exception) {
+    fwrite(STDERR, $exception->getMessage() . PHP_EOL);
+    exit(1);
+}
