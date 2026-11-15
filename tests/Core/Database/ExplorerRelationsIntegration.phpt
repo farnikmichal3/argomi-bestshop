@@ -81,10 +81,10 @@ Assert::notNull($resolvedParent);
 Assert::same(2, (int) $resolvedParent->id);
 Assert::same([3, 4], $sortedIds($parentCategory->related('category', 'parent_id')));
 
-// Dvě FK ze stejné tabulky product_relation míří na product.
-// Bez určení FK je related() záměrně nejednoznačné a musí selhat explicitní výjimkou.
+// Vyhledání podle cílové tabulky "product" je nejednoznačné:
+// na produkt odkazuje více různých tabulek. Nette musí tuto nejednoznačnost odmítnout.
 Assert::exception(
-    static fn () => $product->related('product_relation'),
+    static fn () => $product->related('product'),
     AmbiguousReferenceKeyException::class,
 );
 
@@ -101,11 +101,20 @@ Assert::notNull($sourceProduct);
 Assert::notNull($relatedProduct);
 Assert::same(3, (int) $sourceProduct->id);
 Assert::same(2, (int) $relatedProduct->id);
+// Explicitní sloupec odstraní nejednoznačnost dvou FK ve stejné vazební tabulce.
 Assert::same([1], $sortedIds(
     $sourceProduct->related('product_relation', 'product_id'),
 ));
 Assert::same([1], $sortedIds(
     $relatedProduct->related('product_relation', 'related_product_id'),
+));
+
+// Tečková syntaxe je alternativní zápis stejného explicitního vztahu.
+Assert::same([1], $sortedIds(
+    $sourceProduct->related('product_relation.product_id'),
+));
+Assert::same([1], $sortedIds(
+    $relatedProduct->related('product_relation.related_product_id'),
 ));
 
 // M:N – produkt a kategorie jsou propojené přes junction tabulku product_category.
