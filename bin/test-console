@@ -7,5 +7,28 @@ require __DIR__ . '/../vendor/autoload.php';
 $bootstrap = new App\Bootstrap('local.testing.neon');
 $container = $bootstrap->bootWebApplication();
 
+$dbal = $container->getByType(Nextras\Dbal\IDbal::class);
+$identity = $dbal->query(
+    'SELECT DATABASE() AS database_name, CURRENT_USER() AS database_user',
+)[0] ?? [];
+
+$databaseName = $identity['database_name'] ?? null;
+$databaseUser = $identity['database_user'] ?? null;
+
+if (
+    $databaseName !== 'argomi_bestshop_test'
+    || !in_array($databaseUser, [
+        'argomi_test_migrator@localhost',
+        'argomi_test_migrator@127.0.0.1',
+    ], true)
+) {
+    fwrite(
+        STDERR,
+        "Test console refused to run: expected argomi_bestshop_test and the local argomi_test_migrator account.\n",
+    );
+
+    exit(1);
+}
+
 $application = $container->getByType(Contributte\Console\Application::class);
 exit($application->run());
