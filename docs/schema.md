@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – diagram databázového schématu
 
-**Revize:** 1.5 · 15. 11. 2026  
+**Revize:** 1.6 · 15. 11. 2026  
 **Autoritativní zdroj:** aktuální dopředné SQL migrace v `migrations/structures/`  
 **Databáze:** MySQL 8.x / InnoDB
 
@@ -37,6 +37,7 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 | `product_variant_attribute_value` | Přiřazuje variantě právě jednu hodnotu atributu. CHECK omezení vyžaduje právě jednu z enum, číselné nebo textové hodnoty; vazba na osu i použitou enum hodnotu je chráněna přes `ON DELETE RESTRICT`. |
 | `product_attribute_value` | Hodnota atributu na úrovni produktu, nikoli konkrétní varianty. |
 | `variant_price` / `variant_price_history` | Aktuální cena varianty a její historické body. Historie se nemaže spolu s variantou automaticky. |
+| `stock_item` / `stock_movement` | Aktuální stav zásoby varianty a neměnný skladový deník. Demo seed vytváří pro každou variantu s kladným počátečním stavem právě jeden příjem `demo_opening_balance`, jehož množství odpovídá `stock_item.quantity_on_hand`. |
 | `cart_item` | Položka košíku odkazuje na variantu a ukládá identitu produktu pro kontrolu složené vazby. |
 | `shop_order` | Objednávka uchovává účetní souhrny v minor units. `adjustments_net_minor` je čistý součet úprav; `grand_total_minor` musí odpovídat součtu mezisoučtu, čistých úprav a daně. `placed_at IS NOT NULL` uzavírá finanční snapshot. |
 | `shop_order_item` / `shop_order_item_option` | Historický nákupní snapshot. Hrubá částka řádku musí být součtem čisté částky a daně; po uzavření objednávky jsou položky i jejich volby neměnné. Snapshot nesmí být závislý na aktuálním názvu, ceně ani konfiguraci katalogu. |
@@ -307,6 +308,14 @@ flowchart LR
 - `migrations/structures/2026-11-15-160000-add-language-foreign-keys-to-locales.sql` – doplnění 11 chybějících FK `locale` → `language(code)`; povinné překlady používají `RESTRICT`, volitelné locale zákazníka `SET NULL`.
 - `migrations/structures/2026-11-15-170000-order-accounting-invariants.sql` – účetní invarianty objednávek: souhrnná čistá hodnota úprav, kontroly hrubých částek, agregované ověření při uzavření a neměnnost uzavřeného snapshotu.
 - `migrations/structures/2026-11-15-180000-archive-products-and-variants.sql` – archivace produktů a deaktivace variant, FK `ON DELETE RESTRICT` a databázové triggery zakazující fyzické mazání a neplatnou aktivaci variant.
+
+## 9. Demo data
+
+Demo seed rozšiřuje základní katalog a obchodní příklady, aniž by měnil strukturální schéma:
+
+- `migrations/dummy-data/2026-11-15-190000-complete-demo-data.sql` doplňuje české a anglické krátké i dlouhé popisy a SEO metadata tří demo produktů; vytváří úplné adresní a položkové snapshoty dvou dalších uzavřených objednávek; doplňuje snapshot zvolené produktové možnosti, dopravy a historie stavů; zakládá počáteční skladové příjmy a systémové texty pro katalog, košík a checkout.
+- `migrations/dummy-data/2026-11-15-200000-complete-demo-short-descriptions.sql` zpřesňuje dva krátké popisy tak, aby byly samostatně srozumitelné a splňovaly minimální délku ověřovanou testem.
+- `DemoDataIntegrity.phpt` ověřuje úplnost lokalizací, účetní a adresní snapshoty objednávek, skladové počáteční pohyby i systémové texty. `DatabaseProductRepositoryIntegration.phpt` ověřuje, že katalogový repozitář vrací aktuální demo texty.
 
 Při změně schématu se diagram aktualizuje ve stejném kroku jako příslušná migrace. Nikdy neupravuj historické migrace jen kvůli změně diagramu.
 
