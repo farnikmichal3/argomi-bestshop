@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.89 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.90 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 114, rozděláno 1, k úpravě 3, rozhodnout 0, blokováno 0, plán 434, zrušeno 2.
+Celkem **554 kroků**: hotovo 115, rozděláno 1, k úpravě 3, rozhodnout 0, blokováno 0, plán 433, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 13 | 0 | 1 | 0 | 0 | 6 | 0 |
-| F3 | Databáze a migrace | 34 | 9 | 1 | 1 | 0 | 0 | 22 | 1 |
+| F3 | Databáze a migrace | 34 | 10 | 1 | 1 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -373,8 +373,8 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-30** Demo data v dalším vydání: plné texty produktů, úplné snímky objednávek (atributy, adresy), počáteční pohyby skladu, další systémové texty
 - `[PLÁN]` **F3-31** Navrhnout a migrovat doménově rozdělené systémové překlady ze současné tabulky `translation_message`
 - `[PLÁN]` **F3-32** Navrhnout a implementovat explicitní označení demo dat a zákaz vedlejších efektů pro demo objednávky
-- `[ROZPRACOVÁNO]` **F3-33** Ochrana `DbResetCommand`: zavedena samostatná `DbResetEnvironmentPolicy`; `common.neon` má fail-closed výchozí hodnotu `app.environment: null`; příkaz odmítá vše kromě přesné hodnoty `development` ještě před prvním DB dotazem. Přidán test politiky pro chybějící, neznámé, testing, staging a production. Zbývá nastavit `parameters.app.environment: development` v lokálním `config/local.neon` a ověřit `check.bat` i chování příkazu.
-- `[PLÁN]` **F3-34** Databázová persistence Transactional Outbox: atomický zápis s obchodní transakcí, indexy a stavový model pro bezpečné vyzvednutí workerem
+- `[HOTOVO]` **F3-33** Ochrana `DbResetCommand`: zavedena samostatná `DbResetEnvironmentPolicy`; `common.neon` má fail-closed výchozí hodnotu `app.environment: null`; příkaz odmítá vše kromě přesné hodnoty `development` ještě před prvním DB dotazem. Negativní test politiky pokrývá chybějící, neznámé, testing, staging a production. Uživatel potvrdil čisté aktivní kontroly přes `check.bat` a bezpečné odmítnutí příkazu při `environment: null`.
+- `[ROZPRACOVÁNO]` **F3-34** Databázová persistence Transactional Outbox: přidána dopředná SQL migrace se samostatnou tabulkou `outbox_message`, unikátními identifikátory, JSON payloadem, stavovým modelem, lease tokenem, kontrolními omezeními a indexy pro dostupné zprávy a vypršené lease. Zbývá lokálně ověřit migraci na MySQL 8.4, doplnit testy databázových invariantů a ověřit atomický zápis s obchodní transakcí.
 
 ### F4: Překlady v databázi
 
@@ -1201,6 +1201,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
 
+### v2.90 (15. 11. 2026)
+- Dokončen F3-33: uživatel potvrdil čisté aktivní kontroly přes `check.bat`; ochrana `DbResetCommand` odmítá neexplicitní nebo neznámé prostředí před přístupem k databázi.
+- Zahájen F3-34: přidána dopředná migrace samostatné tabulky `outbox_message` s ULID identifikátorem, JSON payloadem, stavovým modelem, lease tokenem, CHECK omezeními a indexy pro claim i obnovu expirovaných lease.
+- Zapsáno rozhodnutí, že Outbox zůstává fyzicky oddělený od případné obecné databázové fronty. Lokální migrace, integrační testy a ověření atomického zápisu čekají na kontrolu.
+- Souhrn: **115 hotovo**, **1 rozpracováno**, **3 k úpravě**, **433 plán**, **2 zrušeno**.
 ### v2.89 (15. 11. 2026)
 - Zahájena implementace F3-33: explicitní fail-closed politika `app.environment`, povolen pouze přesný `development`, kontrola před prvním databázovým dotazem a samostatný test politiky.
 - Lokální ověření a nastavení `config/local.neon` zůstávají před označením kroku jako hotového.
