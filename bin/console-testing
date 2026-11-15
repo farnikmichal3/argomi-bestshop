@@ -11,7 +11,7 @@ try {
         throw new LogicException('Chybí config/local.testing.neon. Vytvoř jej podle přiloženého .example souboru.');
     }
 
-    $config = Nette\\Neon\\Neon::decodeFile($configFile);
+    $config = Nette\Neon\Neon::decodeFile($configFile);
     if (!is_array($config)) {
         throw new LogicException('Testovací konfigurace není platná NEON struktura.');
     }
@@ -24,21 +24,25 @@ try {
     $environment = is_array($appParameters) ? ($appParameters['environment'] ?? null) : null;
     $databaseDsn = is_array($database) ? ($database['dsn'] ?? null) : null;
     $databaseUser = is_array($database) ? ($database['user'] ?? null) : null;
+    $migrationHost = is_array($migration) ? ($migration['host'] ?? null) : null;
     $migrationDatabase = is_array($migration) ? ($migration['database'] ?? null) : null;
     $migrationUser = is_array($migration) ? ($migration['username'] ?? null) : null;
 
     if (
         $environment !== 'testing'
         || !is_string($databaseDsn)
-        || !preg_match('/(?:^|;)dbname=([^;]+)/i', $databaseDsn, $matches)
-        || $matches[1] !== 'argomi_bestshop_test'
+        || !preg_match('/(?:^|;)host=([^;]+)/i', $databaseDsn, $hostMatches)
+        || $hostMatches[1] !== '127.0.0.1'
+        || !preg_match('/(?:^|;)dbname=([^;]+)/i', $databaseDsn, $databaseMatches)
+        || $databaseMatches[1] !== 'argomi_bestshop_test'
         || $databaseUser !== 'argomi_test_app'
+        || $migrationHost !== '127.0.0.1'
         || $migrationDatabase !== 'argomi_bestshop_test'
         || $migrationUser !== 'argomi_test_migrator'
     ) {
         throw new LogicException(
             'Testovací konzole odmítla konfiguraci: očekává environment=testing, '
-            . 'databázi argomi_bestshop_test a vyhrazené testovací účty.',
+            . 'host 127.0.0.1, databázi argomi_bestshop_test a vyhrazené testovací účty.',
         );
     }
 
@@ -49,9 +53,9 @@ try {
         throw new LogicException(sprintf('Příkaz "%s" není v testovací konzoli povolen.', $command));
     }
 
-    $bootstrap = new App\\Bootstrap('local.testing.neon');
+    $bootstrap = new App\Bootstrap('local.testing.neon');
     $container = $bootstrap->bootWebApplication();
-    $application = $container->getByType(Contributte\\Console\\Application::class);
+    $application = $container->getByType(Contributte\Console\Application::class);
 
     exit($application->run());
 } catch (Throwable $exception) {
