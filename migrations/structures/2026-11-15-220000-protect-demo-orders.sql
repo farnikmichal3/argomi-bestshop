@@ -49,9 +49,15 @@ FOR EACH ROW
 BEGIN
     DECLARE v_is_demo TINYINT(1);
 
-    IF NEW.event_name LIKE 'order.%' AND NEW.shop_order_id IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'An order Outbox event must reference its shop order.';
+    IF NEW.event_name LIKE 'order.%' THEN
+        IF NEW.shop_order_id IS NULL
+            OR JSON_CONTAINS_PATH(NEW.payload, 'one', '$.orderId') <> 1
+            OR JSON_TYPE(JSON_EXTRACT(NEW.payload, '$.orderId')) <> 'INTEGER'
+            OR CAST(JSON_UNQUOTE(JSON_EXTRACT(NEW.payload, '$.orderId')) AS UNSIGNED) <> NEW.shop_order_id
+        THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'An order Outbox event must contain a matching orderId and shop_order_id.';
+        END IF;
     END IF;
 
     IF NEW.shop_order_id IS NOT NULL THEN
@@ -73,9 +79,15 @@ FOR EACH ROW
 BEGIN
     DECLARE v_is_demo TINYINT(1);
 
-    IF NEW.event_name LIKE 'order.%' AND NEW.shop_order_id IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'An order Outbox event must reference its shop order.';
+    IF NEW.event_name LIKE 'order.%' THEN
+        IF NEW.shop_order_id IS NULL
+            OR JSON_CONTAINS_PATH(NEW.payload, 'one', '$.orderId') <> 1
+            OR JSON_TYPE(JSON_EXTRACT(NEW.payload, '$.orderId')) <> 'INTEGER'
+            OR CAST(JSON_UNQUOTE(JSON_EXTRACT(NEW.payload, '$.orderId')) AS UNSIGNED) <> NEW.shop_order_id
+        THEN
+            SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'An order Outbox event must contain a matching orderId and shop_order_id.';
+        END IF;
     END IF;
 
     IF NEW.shop_order_id IS NOT NULL THEN
