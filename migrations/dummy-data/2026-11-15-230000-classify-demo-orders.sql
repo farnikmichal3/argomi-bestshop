@@ -17,7 +17,7 @@ BEGIN
     IF (
         SELECT COUNT(*)
         FROM shop_order
-        WHERE order_number IN ('2026-000003', '2026-000004')
+        WHERE order_number IN ('2026-000001', '2026-000002', '2026-000003', '2026-000004')
           AND is_demo = 1
           AND placed_at IS NOT NULL
     ) <> 2 THEN
