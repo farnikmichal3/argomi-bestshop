@@ -49,7 +49,7 @@ Assert::same(1, $czech->productId);
 Assert::same('cs', $czech->locale->getCode());
 Assert::same('Tričko s potiskem', $czech->name);
 Assert::same('tricko-s-potiskem', $czech->slug);
-Assert::same('Bavlněné tričko.', $czech->shortDescription);
+Assert::same('Bavlněné tričko s potiskem pro každý den', $czech->shortDescription);
 Assert::same('<p>Pohodlné tričko.</p>', $czech->description);
 Assert::same('Tričko', $czech->metaTitle);
 Assert::same('Popis', $czech->metaDescription);
