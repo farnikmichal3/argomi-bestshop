@@ -21,5 +21,5 @@ interface OutboxWriter
      *
      * @param array<string, mixed> $payload Data události bez tajných a citlivých údajů.
      */
-    public function record(string $eventName, array $payload): PublicId;
+    public function record(string $eventName, array $payload, ?int $shopOrderId = null): PublicId;
 }
