@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.21 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.22 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 142, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 409, zrušeno 2.
+Celkem **554 kroků**: hotovo 143, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 408, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 30 | 0 | 0 | 0 | 0 | 3 | 1 |
+| F3 | Databáze a migrace | 34 | 31 | 0 | 0 | 0 | 0 | 2 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -339,7 +339,7 @@ _Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí
 
 ### F3: Databáze a migrace
 
-_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 28 z 34 kroků; žádný krok není rozpracován ani k úpravě.
+_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 31 z 34 kroků; žádný krok není rozpracován ani k úpravě.
 
 - `[HOTOVO]` **F3-01** Počáteční schéma, základní data a demo data v časově značených Nextras migracích načtené v MySQL bez chyb
 - `[HOTOVO]` **F3-02** Nainstalovat Nextras Migrations a nastavit adresáře `structures`, `basic-data`, `dummy-data` (integrováno v Nette DI)
@@ -370,7 +370,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-27** Účetní invarianty objednávek v MySQL: `adjustments_net_minor` uchovává čistý součet úprav; `grand_total_minor = subtotal_net_minor + adjustments_net_minor + tax_total_minor`; `line_gross_minor = line_net_minor + line_tax_minor`. CHECK omezení chrání i draft objednávky, trigger ověřuje agregované součty při uzavření (`placed_at IS NOT NULL`) a další triggery zamykají objednávku a chrání její finanční snapshot, položky, úpravy i volby před změnami a smazáním. Integrační test `OrderAccountingIntegration.phpt` i kompletní `check.bat` uživatel potvrdil jako úspěšné.
 - `[HOTOVO]` **F3-28** Archivace místo fyzického mazání produktů a variant. Produkt se archivuje přes `product.status = 'archived'`; všechny jeho aktivní varianty se automaticky deaktivují (`is_active = 0`). FK `product_variant.product_id` používá `ON DELETE RESTRICT`; databázové triggery zakazují přímé mazání produktů i variant, vložení aktivní varianty k archivovanému produktu a opětovnou aktivaci jeho variant. Integrační test `ProductArchivalIntegration.phpt` ověřil celý životní cyklus, odmítnutí mazání a zachování záznamů; uživatel potvrdil úspěšný test i kompletní `check.bat`.
 - `[HOTOVO]` **F3-29** Integrační test `DefaultVariantSwitchIntegration.phpt` ověřuje unikátní generovaný klíč `(product_id, default_flag)`, odmítnutí druhé výchozí varianty, zachování původního stavu po chybě, rollback savepointu i bezpečné přepnutí v transakci. Uživatel potvrdil úspěšný samostatný test i kompletní `check.bat`.
-- `[PLÁN]` **F3-30** Demo data v dalším vydání: plné texty produktů, úplné snímky objednávek (atributy, adresy), počáteční pohyby skladu, další systémové texty
+- `[HOTOVO]` **F3-30** Demo data jsou úplná ve dvou jazycích: všech šest překladů tří produktů má krátký i dlouhý popis a SEO metadata; dvě nové uzavřené objednávky obsahují adresní a položkové snapshoty, volbu produktu, dopravu a historii stavů; pro každou variantu s kladnou počáteční zásobou existuje právě jeden odpovídající příjem `demo_opening_balance`; doplněno osm systémových textů v češtině i angličtině. `DemoDataIntegrity.phpt` a navazující `DatabaseProductRepositoryIntegration.phpt` prošly; uživatel potvrdil `All active checks passed.`
 - `[PLÁN]` **F3-31** Navrhnout a migrovat doménově rozdělené systémové překlady ze současné tabulky `translation_message`
 - `[PLÁN]` **F3-32** Navrhnout a implementovat explicitní označení demo dat a zákaz vedlejších efektů pro demo objednávky
 - `[HOTOVO]` **F3-33** Ochrana `DbResetCommand`: zavedena samostatná `DbResetEnvironmentPolicy`; `common.neon` má fail-closed výchozí hodnotu `app.environment: null`; příkaz odmítá vše kromě přesné hodnoty `development` ještě před prvním DB dotazem. Negativní test politiky pokrývá chybějící, neznámé, testing, staging a production. Uživatel potvrdil čisté aktivní kontroly přes `check.bat` a bezpečné odmítnutí příkazu při `environment: null`.
@@ -1209,6 +1209,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokončen F3-23 bez duplicitní implementace: existující GitHub Actions workflow již vytváří izolovanou databázi na `mysql:8.4`, aplikuje všechny dopředné migrace a vyžaduje MySQL integrační testy.
 - Ověřen poslední běh workflow #233 na commitu `79f0d771`: migrace i všechny následné kroky CI prošly. Schéma obsahuje `CHECK` nad `minor_units` a složený FK `iso4217_currency(code, minor_units)`; MySQL 8.4 obě omezení přijalo.
 - Nebyla měněna historická migrace ani přidáván zbytečný test/workflow. F3: **24 hotovo**, **0 rozděláno**, **9 plán**, **1 zrušeno**. Celkový souhrn: **136 hotovo**, **0 rozděláno**, **1 k úpravě**, **415 plán**, **2 zrušeno**.
+### v3.22 (15. 11. 2026)
+- Dokončen F3-30: doplněny úplné české a anglické texty a SEO metadata tří demo produktů, dvě úplné uzavřené demo objednávky s adresními a položkovými snapshoty, počáteční skladové příjmy a osm systémových textů v obou jazycích.
+- Nová opravná seed migrace doplnila dva krátké popisy. `DemoDataIntegrity.phpt` ověřuje počet a přesnost počátečních pohybů dynamicky podle kladných stavů `stock_item`; `DatabaseProductRepositoryIntegration.phpt` odpovídá novému kompletnímu textu produktu.
+- Uživatel potvrdil `All active checks passed.`. `docs/schema.md` aktualizováno na revizi 1.6 včetně pravidel skladového deníku a zdrojových demo migrací.
+- F3: **31 hotovo**, **0 rozděláno**, **2 plán**, **1 zrušeno**. Celkový souhrn: **143 hotovo**, **0 rozděláno**, **1 k úpravě**, **408 plán**, **2 zrušeno**.
+
 ### v3.21 (15. 11. 2026)
 - Dokončen F3-29: integrační test `DefaultVariantSwitchIntegration.phpt` ověřuje databázový unikátní index nad generovaným `default_flag`, zákaz dvou výchozích variant jednoho produktu, zachování stavu po neúspěšném pokusu, rollback savepointu a transakční přepnutí.
 - Uživatel potvrdil úspěšný samostatný test i kompletní `check.bat`; databázová struktura nevyžadovala novou migraci.
