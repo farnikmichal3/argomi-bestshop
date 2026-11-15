@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.08 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.09 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 130, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 419, zrušeno 2.
+Celkem **554 kroků**: hotovo 131, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 418, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 18 | 0 | 0 | 0 | 0 | 15 | 1 |
+| F3 | Databáze a migrace | 34 | 19 | 0 | 0 | 0 | 0 | 14 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -339,7 +339,7 @@ _Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí
 
 ### F3: Databáze a migrace
 
-_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 12 z 34 kroků; žádný krok není rozpracován ani k úpravě.
+_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 13 z 34 kroků; žádný krok není rozpracován ani k úpravě.
 
 - `[HOTOVO]` **F3-01** Počáteční schéma, základní data a demo data v časově značených Nextras migracích načtené v MySQL bez chyb
 - `[HOTOVO]` **F3-02** Nainstalovat Nextras Migrations a nastavit adresáře `structures`, `basic-data`, `dummy-data` (integrováno v Nette DI)
@@ -353,7 +353,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-10** První čtecí repozitář Catalog nad Nette Database Explorerem: `ProductRepository` a `DatabaseProductRepository`; dotazy zůstávají v repozitáři a `ActiveRow` neopouští persistence vrstvu. Fail-closed MySQL integrační test ověřuje vyhledání produktu podle ID/kódu, chybějící záznamy, časové údaje v UTC a překlady. Implementace je automaticky registrována přes konvenci `*Repository` a test ji úspěšně získává z Nette DI. Uživatel potvrdil úspěšné kompletní `check.bat`.
 - `[HOTOVO]` **F3-11** Typované `readonly` DTO `ProductDto` a `ProductTranslationDto` pro první katalogovou entitu a její překlady. Interní read-model DTO jsou správně umístěna v `Catalog/Application/Dto`, nikoli ve veřejném API; mapování kontroluje databázové typy a nepouští `ActiveRow` mimo persistence vrstvu. PHPStan, coding standard, Deptrac i integrační testy prošly v rámci uživatelem potvrzeného kompletního `check.bat`.
 - `[HOTOVO]` **F3-12** Doplněn fail-closed MySQL integrační test `TransactionIntegration.phpt` nad skutečnou testovací databází. Ověřuje registraci `Transaction` jako `NetteTransaction` v DI, návrat callbacku a commit, rollback i propagaci původních instancí `Exception` a `Error`, vnořené transakce se zachycenou i nezachycenou výjimkou a jejich skutečnou atomicitu bez savepointů. Test i kompletní `check.bat` byly uživatelem lokálně potvrzeny jako úspěšné; produkční adaptér zůstal beze změny.
-- `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
+- `[HOTOVO]` **F3-13** Tracy panel pro SQL dotazy ve vývoji: využit vestavěný `Nette\Bridges\DatabaseTracy\ConnectionPanel`, bez vlastního loggeru či další knihovny. Debug režim povoluje výhradně explicitní `app.environment: development`; diagnostický presenter kontroluje aktivní Tracy debug režim. Ověřena skutečná SQL diagnostická stránka (2 aktivní jazyky, 3 dotazy, 5,5 ms) a samostatné spuštění s `local.testing.neon`, kde Tracy panel nebyl aktivní a diagnostická URL vracela 404. Dočasný vstupní bod byl odstraněn.
 - `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců
 - `[PLÁN]` **F3-15** Testovací databáze a bootstrap integračních testů
 - `[HOTOVO]` **F3-16** Bezpečný vývojový `db:reset`: požadovaná explicitní fail-closed kontrola `app.environment` byla implementována a ověřena v rámci F3-33. Povoleno je pouze přesné prostředí `development`; kontrola proběhne před prvním databázovým dotazem. Výchozí `null`, produkční i neznámé prostředí jsou odmítnuty bez vedlejších účinků. Zachovány jsou kontroly databáze `argomi_bestshop`, migračního účtu a dvojí potvrzení. Nebyla přidávána duplicitní implementace ani test.
@@ -1204,6 +1204,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ### v2.98 (15. 11. 2026)
 - Dokončen F2-15: potvrzena a zdokumentována architektonická izolace `Shared` pomocí existujícího pravidla Deptrac. `composer arch` je součástí lokálních kontrol i GitHub Actions; nebyla přidána duplicitní kontrolní vrstva.
 - F2: **16 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **119 hotovo**, **0 rozděláno**, **2 k úpravě**, **429 plán**, **2 zrušeno**.
+
+### v3.09 (15. 11. 2026)
+- Dokončen F3-13: vestavěný `Nette\Bridges\DatabaseTracy\ConnectionPanel` zobrazuje SQL dotazy pouze při explicitním `app.environment: development`. `DebugModePolicy` fail-closed odmítá `testing`, `production`, chybějící i neznámé prostředí; diagnostický presenter navíc kontroluje Tracy debug režim.
+- V prohlížeči ověřena diagnostická stránka: 2 aktivní jazyky, 3 SQL dotazy a naměřený čas 5,5 ms. V samostatném spuštění s `local.testing.neon` Tracy panel nebyl aktivní a přímý přístup na diagnostickou URL skončil 404. Dočasný vstupní bod `www/testing.php` byl po ověření odstraněn.
+- PHPStan a test `DebugModePolicy.phpt` prošly; uživatel potvrdil funkční chování v development i blokaci v testing.
+- F3: **19 hotovo**, **0 rozděláno**, **0 k úpravě**, **14 plán**, **1 zrušeno**. Celkový souhrn: **131 hotovo**, **0 rozděláno**, **1 k úpravě**, **418 plán**, **2 zrušeno**.
 
 ### v3.08 (15. 11. 2026)
 - Dokončen F3-12: nový fail-closed MySQL integrační test `TransactionIntegration.phpt` ověřuje skutečnou registraci `Transaction` / `NetteTransaction` v Nette DI, commit, rollback, propagaci `Exception` a `Error` a vnořené transakce včetně sdílené atomicity bez savepointů.
