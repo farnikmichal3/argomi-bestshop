@@ -200,7 +200,7 @@ Centrální aplikační logování přes Monolog. `LoggerFactory` vytváří JSO
 ### Shared/Application/Event a Transactional Outbox
 `Shared/Application/Event/EventDispatcher` a `SynchronousEventDispatcher` slouží pouze pro kritické interní posluchače. Jejich zpracování probíhá v rámci stejné aplikační databázové transakce; výjimka se propaguje a vyvolá rollback nejvyšší transakce. Posluchače nesmějí provádět nevratné externí vedlejší účinky (HTTP/API, e-mail, push, platby ani expedici).
 
-Integrační a notifikační události se zapisují do Transactional Outbox atomicky spolu s obchodní změnou. Outbox zpracovává samostatný worker až po commitu. Doručování je nejméně jednou (at-least-once), proto zprávy a handlery vyžadují idempotenci, řízené opakování a evidenci chyb. Outbox je společný mechanismus; moduly definují pouze své typované události a handlery. Jeho přesné porty, persistence a napojení na obecnou databázovou frontu se doplní před implementací prvních externích vedlejších účinků.
+Integrační a notifikační události se zapisují do Transactional Outbox atomicky spolu s obchodní změnou. Outbox zpracovává samostatný worker až po commitu. Doručování je nejméně jednou (at-least-once), proto zprávy a handlery vyžadují idempotenci, řízené opakování a evidenci chyb. Databázový worker claimuje vždy jednu zprávu a okamžitě ji zpracuje, aby lease nezačal ubíhat u zpráv čekajících v lokální dávce. Outbox je společný mechanismus; moduly definují pouze své typované události a handlery. Persistence, aplikační kontrakty a CLI worker jsou implementovány ve Shared.
 
 ## 5. Prezentační vrstvy
 
