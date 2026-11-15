@@ -147,6 +147,9 @@ Pravidla:
 - Při dočasné chybě se zpráva vrací do `pending` s budoucím `available_at`; po vyčerpání limitu pokusů přechází do `dead`. Úspěšné zpracování přechází do `delivered`. Limit pokusů a retry prodlevy jsou politikou workeru, nikoliv pevně zakódovaným databázovým limitem.
 - Doručení je at-least-once. Pád po externím účinku a před potvrzením `delivered` může vyvolat opakování; idempotence handleru musí být založena na stabilním `message_id`. Externí volání nikdy neběží uvnitř dlouhé DB transakce.
 - Časové údaje Outboxu používají UTC a databázové `DATETIME(6)`. Writer výslovně předává UTC hodnoty `created_at` a `available_at`; nespoléhá na `CURRENT_TIMESTAMP`, protože výchozí hodnota DATETIME závisí na časovém pásmu DB session. Worker používá `UTC_TIMESTAMP(6)` pro porovnání lease a dostupnosti. Záznamy se automaticky nemažou; retence a archivace vyžadují samostatné rozhodnutí.
+- Aplikační `OutboxMessageHandler` zpracovává přesně jeden stabilní `eventName` a přijímá typovaný `OutboxMessage` se stabilním `messageId`, payloadem a číslem pokusu. Handlery se registrují přes DI tag `outboxMessageHandler`; pro jeden název události smí existovat právě jeden handler. Handler musí být idempotentní podle `messageId`.
+- `DatabaseOutboxWorker::runOnce()` zpracuje jednu omezenou dávku. Výchozí nastavení je nejvýše 8 pokusů, lease 300 sekund, exponenciální prodleva od 30 sekund do maxima 3600 sekund, výchozí dávka 10 a maximální dávka 100. Limity lze změnit konstruktorovou konfigurací. Selhání jedné zprávy neukončí zpracování ostatních zpráv v dávce.
+- Při vyčerpání pokusů nebo expiraci lease po posledním povoleném pokusu přejde zpráva do `dead`. Do `last_error` a logu se ukládá pouze typ výjimky; její text ani payload se nezaznamenávají, protože mohou obsahovat citlivá data. Záznamy Outboxu se automaticky nemažou.
 
 Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
 
