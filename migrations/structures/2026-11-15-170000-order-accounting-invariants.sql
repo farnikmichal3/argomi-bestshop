@@ -10,7 +10,74 @@
 
 ALTER TABLE shop_order
     ADD COLUMN adjustments_net_minor BIGINT NOT NULL DEFAULT 0
-        AFTER subtotal_net_minor,
+        AFTER subtotal_net_minor;
+
+-- Zachováme historické částky: čistá část úprav se dopočítá ze snapshotů.
+UPDATE shop_order AS o
+LEFT JOIN (
+    SELECT shop_order_id, SUM(amount_net_minor) AS adjustments_net_minor
+    FROM shop_order_adjustment
+    GROUP BY shop_order_id
+) AS a ON a.shop_order_id = o.id
+SET o.adjustments_net_minor = COALESCE(a.adjustments_net_minor, 0);
+
+-- Před instalací omezení ověříme již existující uzavřené objednávky.
+-- Neplatná historická data musí být opravena explicitně, ne tiše přepsána.
+DROP PROCEDURE IF EXISTS assert_existing_order_accounting;
+
+DELIMITER $
+
+CREATE PROCEDURE assert_existing_order_accounting()
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM shop_order AS o
+        WHERE o.placed_at IS NOT NULL
+          AND (
+              o.subtotal_net_minor <> (
+                  SELECT COALESCE(SUM(i.line_net_minor), 0)
+                  FROM shop_order_item AS i
+                  WHERE i.shop_order_id = o.id
+              )
+              OR o.adjustments_net_minor <> (
+                  SELECT COALESCE(SUM(a.amount_net_minor), 0)
+                  FROM shop_order_adjustment AS a
+                  WHERE a.shop_order_id = o.id
+              )
+              OR o.tax_total_minor <> (
+                  SELECT COALESCE(SUM(i.line_tax_minor), 0)
+                  FROM shop_order_item AS i
+                  WHERE i.shop_order_id = o.id
+              ) + (
+                  SELECT COALESCE(SUM(a.amount_tax_minor), 0)
+                  FROM shop_order_adjustment AS a
+                  WHERE a.shop_order_id = o.id
+              )
+              OR o.grand_total_minor <>
+                  o.subtotal_net_minor + o.adjustments_net_minor + o.tax_total_minor
+          )
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Existing placed orders violate the new accounting invariants.';
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM shop_order_item
+        WHERE line_gross_minor <> line_net_minor + line_tax_minor
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Existing order items contain inconsistent gross line amounts.';
+    END IF;
+END$
+
+CALL assert_existing_order_accounting()$
+
+DELIMITER ;
+
+DROP PROCEDURE assert_existing_order_accounting;
+
+ALTER TABLE shop_order
     ADD CONSTRAINT ck_shop_order_grand_total
         CHECK (
             grand_total_minor =
