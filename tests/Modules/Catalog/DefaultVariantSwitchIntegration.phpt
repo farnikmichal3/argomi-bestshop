@@ -60,14 +60,16 @@ try {
 
     // Databáze musí mít unikátní index nad generovaným příznakem výchozí varianty.
     $defaultIndex = $pdo->query(
-        "SELECT COUNT(*)
+        "SELECT NON_UNIQUE, GROUP_CONCAT(COLUMN_NAME ORDER BY SEQ_IN_INDEX SEPARATOR ',') AS indexed_columns
            FROM information_schema.STATISTICS
           WHERE TABLE_SCHEMA = DATABASE()
             AND TABLE_NAME = 'product_variant'
-            AND INDEX_NAME = 'uq_product_variant_single_default'",
-    )->fetchColumn();
+            AND INDEX_NAME = 'uq_product_variant_single_default'
+          GROUP BY NON_UNIQUE",
+    )->fetch();
 
-    Assert::same(1, (int) $defaultIndex);
+    Assert::same(0, (int) $defaultIndex['NON_UNIQUE']);
+    Assert::same('product_id,default_flag', $defaultIndex['indexed_columns']);
 
     $defaultColumn = $pdo->query(
         "SELECT EXTRA
