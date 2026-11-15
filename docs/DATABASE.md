@@ -242,7 +242,7 @@ Obě připojení musí mířit výhradně na `argomi_bestshop_test`. Hodnota `pa
 
 ### Migrace testovací databáze
 
-Pro migrace slouží samostatný vstupní bod `bin/console-testing`. Na rozdíl od běžného `bin/console` načítá výhradně `local.testing.neon` a před startem ověřuje prostředí, databázi i oba vyhrazené účty. Povoluje pouze `migrations:continue` a pomocné příkazy; destruktivní `migrations:reset` není přes tento vstupní bod dostupný.
+Pro migrace slouží samostatný vstupní bod `bin/console-testing`. Na rozdíl od běžného `bin/console` načítá výhradně `local.testing.neon` a před startem kontroluje prostředí, cílovou databázi, hostitele a jména obou vyhrazených účtů v konfiguraci. Povoluje pouze `migrations:continue` a pomocné příkazy; destruktivní `migrations:reset` není přes tento vstupní bod dostupný.
 
 Po vytvoření databáze a konfigurace spusť z kořene projektu:
 
@@ -265,7 +265,7 @@ Případně spusť celý projektový kontrolní skript `check.bat`, který krom�
 - Testovací databáze se nikdy nesmí zaměnit za vývojovou ani produkční databázi.
 - Testy se připojují aplikačním účtem s DML oprávněními; migrace používají samostatný účet s omezenými DDL oprávněními.
 - `tests/Support/IntegrationTestBootstrap.php` odmítne chybějící konfiguraci, pokud jsou integrační testy výslovně vyžadovány, a ověřuje prostředí, databázi i aplikační účet.
-- `bin/console-testing` odmítne jinou databázi, prostředí nebo účty a nepovoluje destruktivní příkaz `migrations:reset`.
+- `bin/console-testing` odmítne jinou databázi, prostředí, hostitele nebo jména účtů v konfiguraci a nepovoluje destruktivní příkaz `migrations:reset`.
 - Příkaz `db:reset` zůstává zakázán v prostředí `testing`; toto pravidlo se nemění.
 - Nikdy nepoužívej `migrations:reset` ani ruční mazání schématu jako náhradu za dopředné migrace. Pokud je třeba testovací databázi znovu vytvořit, proveď to samostatným, vědomým administrátorským postupem po ověření její identity.
 
