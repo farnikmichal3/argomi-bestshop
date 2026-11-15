@@ -3,10 +3,10 @@ Database tables use the approved primary-key and foreign-key naming conventions
 --FILE--
 <?php
 
-use App\\Bootstrap;
-use Nette\\Database\\Explorer;
-use Tester\\Assert;
-use Tester\\Environment;
+use App\Bootstrap;
+use Nette\Database\Explorer;
+use Tester\Assert;
+use Tester\Environment;
 
 $rootDir = dirname(__DIR__, 3);
 
@@ -144,6 +144,7 @@ $expectedExceptions = [
     'cart|locale|language|code',
     'shop_order|locale|language|code',
     'currency|code,minor_units|iso4217_currency|code,minor_units',
+    'product_variant_attribute_value|product_id,attribute_id|product_variant_axis|product_id,attribute_id',
 ];
 
 $actualExceptions = [];
@@ -177,7 +178,13 @@ foreach ($foreignKeys as $foreignKey) {
         continue;
     }
 
-    if ($targetColumns[0] === 'code') {
+    if ($targetColumns[0] !== 'id') {
+        // Některé složené FK odkazují na unikátní klíč tvořený doménovými sloupci,
+        // nikoli na id; v takovém případě zdroj kopíruje přesné názvy i pořadí cíle.
+        Assert::true(
+            count($targetColumns) > 1 && $sourceColumns === $targetColumns,
+            sprintf('FK %s → %s musí přesně kopírovat názvy složeného cílového klíče.', $sourceTable, $targetTable),
+        );
         $actualExceptions[] = $signature;
         continue;
     }
@@ -217,7 +224,7 @@ Assert::same(
     'Skutečné výjimky FK musí přesně odpovídat zdokumentovanému allowlistu; nové odchylky vyžadují rozhodnutí a dokumentaci.',
 );
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK
