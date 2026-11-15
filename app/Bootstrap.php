@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Core\Environment\DebugModePolicy;
 use App\Core\Module\ModuleRegistry;
 use LogicException;
 use Nette;
 use Nette\Bootstrap\Configurator;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
+use Nette\Neon\Neon;
 
 class Bootstrap
 {
     private readonly Configurator $configurator;
     private readonly string $rootDir;
+    private readonly DebugModePolicy $debugModePolicy;
 
 
     public function __construct(
@@ -26,6 +29,7 @@ class Bootstrap
 
         $this->rootDir = dirname(__DIR__);
         $this->configurator = new Configurator();
+        $this->debugModePolicy = new DebugModePolicy();
         $this->configurator->setTempDirectory($this->rootDir . '/temp');
     }
 
@@ -40,7 +44,15 @@ class Bootstrap
 
     public function initializeEnvironment(): void
     {
-        //$this->configurator->setDebugMode('secret@23.75.345.200'); // enable for your remote IP
+        $configDir = $this->rootDir . '/config';
+        $localConfig = Neon::decodeFile($configDir . '/' . $this->localConfigFile);
+        $parameters = is_array($localConfig) ? ($localConfig['parameters'] ?? null) : null;
+        $appParameters = is_array($parameters) ? ($parameters['app'] ?? null) : null;
+        $environment = is_array($appParameters) ? ($appParameters['environment'] ?? null) : null;
+
+        // Vývojový režim nesmí určovat IP adresa ani automatická detekce Nette.
+        // Povolen je pouze explicitní app.environment: development v lokální konfiguraci.
+        $this->configurator->setDebugMode($this->debugModePolicy->isEnabled($environment));
         $this->configurator->enableTracy($this->rootDir . '/log');
 
         $this->configurator->createRobotLoader()
