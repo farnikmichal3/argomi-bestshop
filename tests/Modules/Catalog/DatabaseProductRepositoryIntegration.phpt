@@ -3,6 +3,8 @@ Catalog product repository maps Explorer rows to typed DTOs
 --FILE--
 <?php
 
+use Tests\\Support\\IntegrationTestBootstrap;
+
 use App\Bootstrap;
 use App\Modules\Catalog\Application\ProductRepository;
 use App\Shared\Domain\Locale\Locale;
@@ -12,35 +14,16 @@ use Tester\Environment;
 $rootDir = dirname(__DIR__, 3);
 
 require $rootDir . '/vendor/autoload.php';
+require_once $rootDir . '/tests/Support/IntegrationTestBootstrap.php';
 
-if (!is_file($rootDir . '/config/local.testing.neon')) {
-    Environment::skip('Create config/local.testing.neon to run MySQL integration tests.');
-}
+$integration = IntegrationTestBootstrap::boot($rootDir);
+$container = $integration->container;
 
-$container = (new Bootstrap('local.testing.neon'))->bootWebApplication();
+/** @var Explorer $database */
+$database = $integration->database;
 
 /** @var ProductRepository $repository */
 $repository = $container->getByType(ProductRepository::class);
-
-// Test je výhradně read-only a smí běžet pouze proti vyhrazené testovací DB
-// pod aplikačním účtem, který nemá produkční oprávnění.
-$database = $container->getByType(\Nette\Database\Explorer::class);
-$identity = $database->getConnection()->getPdo()
-    ->query('SELECT DATABASE() AS database_name, CURRENT_USER() AS database_user')
-    ->fetch(PDO::FETCH_ASSOC);
-
-if (
-    !is_array($identity)
-    || ($identity['database_name'] ?? null) !== 'argomi_bestshop_test'
-    || !in_array($identity['database_user'] ?? null, [
-        'argomi_test_app@localhost',
-        'argomi_test_app@127.0.0.1',
-    ], true)
-) {
-    throw new RuntimeException(
-        'Catalog repository integration tests may run only against argomi_bestshop_test using argomi_test_app.',
-    );
-}
 
 // Demo seed obsahuje stabilní produkt a překlady, které používají i další
 // read-only integrační testy. Test proto nepotřebuje zapisovat vlastní data.
