@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.13 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.14 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 134, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 417, zrušeno 2.
+Celkem **554 kroků**: hotovo 135, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 416, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 22 | 0 | 0 | 0 | 0 | 11 | 1 |
+| F3 | Databáze a migrace | 34 | 23 | 0 | 0 | 0 | 0 | 10 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -360,7 +360,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
 - `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
 - `[HOTOVO]` **F3-19** Implementována deterministická kanonizace kombinace varianty a SHA-256 v Catalog (`VariantCombinationHash`). Jednotkové testy ověřují stabilní pořadí, typy hodnot, normalizaci čísel, UTF-8, escapování a odmítání neplatných vstupů; MySQL integrační test potvrzuje shodu PHP `hash()` se SQL `SHA2(..., 256)` na demo seed datech. Uživatel potvrdil oba samostatné testy i kompletní `check.bat`: 19 testů OK, PHPStan bez chyb, PHP-CS-Fixer 0 souborů k opravě a Deptrac 0 porušení.
-- `[PLÁN]` **F3-20** Diagram vztahů tabulek rozdělený po modulech
+- `[HOTOVO]` **F3-20** Vytvořen `docs/schema.md` s Mermaid diagramem všech 49 tabulek rozdělených podle vlastníka modulu a všech 61 fyzických cizích klíčů. Diagram zachycuje také složené FK, samovazbu kategorií, obě vazby produktových vztahů, měnový FK na ISO 4217 i samostatný Outbox bez obchodních FK. Zdrojem jsou aktuální strukturální migrace; `docs/DATABASE.md` na diagram odkazuje.
 - `[HOTOVO]` **F3-21** Oddělit databázové účty aplikace (`argomi_app`, pouze CRUD) a migrací (`argomi_migrator`, CRUD + DDL); oba účty mají přístup pouze k `argomi_bestshop` a přihlášení bylo ověřeno
 - `[HOTOVO]` **F3-22** Zásady zálohování a obnovy databáze (před migrací povinný dump/snapshot, rollback obnovením ze zálohy)
 - `[PLÁN]` **F3-23** CI: ověřit, že schéma prochází na verzi MySQL, kterou používáme (včetně `CHECK` u sloupců s cizím klíčem)
