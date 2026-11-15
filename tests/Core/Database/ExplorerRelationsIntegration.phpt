@@ -3,13 +3,11 @@ Nette Database Explorer resolves foreign-key relations and rejects ambiguous ref
 --FILE--
 <?php
 
-use Tests\\Support\\IntegrationTestBootstrap;
+use Tests\Support\IntegrationTestBootstrap;
 
-use App\Bootstrap;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Explorer;
 use Tester\Assert;
-use Tester\Environment;
 
 $rootDir = dirname(__DIR__, 3);
 
