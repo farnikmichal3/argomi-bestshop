@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – diagram databázového schématu
 
-**Revize:** 1.1 · 15. 11. 2026  
+**Revize:** 1.2 · 15. 11. 2026  
 **Autoritativní zdroj:** aktuální dopředné SQL migrace v `migrations/structures/`  
 **Databáze:** MySQL 8.x / InnoDB
 
@@ -8,7 +8,7 @@ Tento dokument vizualizuje skutečné tabulky a cizí klíče po aplikaci všech
 
 ## 1. Přehled tabulek podle vlastníka
 
-Schéma obsahuje **49 tabulek** a **61 cizích klíčů**. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
+Schéma obsahuje **49 tabulek** a **72 cizích klíčů**. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
 
 | Modul | Tabulek | Oblast |
 |---|---:|---|
@@ -70,6 +70,8 @@ Cizí klíče chrání referenční integritu. Volba mazací akce vyjadřuje ži
 | `ON DELETE SET NULL` | Volitelná vazba, jejíž ztráta nemá odstranit vlastní záznam (např. odpojení zákazníka od košíku či objednávky). |
 
 Závazné zvláštní případy:
+
+- Všech 13 sloupců `locale` odkazuje na `language(code)`. Povinné locale v překladových tabulkách (`unit_translation`, `translation_message`, `product_translation`, `category_translation`, `attribute_translation`, `attribute_value_translation`, `product_option_translation`, `product_option_value_translation`, `shipping_method_translation` a `payment_method_translation`) používá `ON DELETE RESTRICT`, takže jazyk nelze odstranit, dokud existují jeho překlady. `cart.locale` a `shop_order.locale` rovněž používají `RESTRICT`. Volitelné `customer.locale` používá `ON DELETE SET NULL`; odstranění jazyka tedy zákazníka zachová a pouze zruší jeho preferované locale.
 
 - `product_variant_attribute_value` → `product_variant_axis`: `RESTRICT`. Osa se nesmí odstranit, dokud je použita variantou.
 - `product_variant_attribute_value` → `attribute_value`: `RESTRICT`. Použitá enum hodnota se nesmí odstranit. Její překlady zůstávají závislými lokalizovanými daty a mohou být odstraněny kaskádou až po povoleném odstranění samotné hodnoty.
@@ -170,6 +172,17 @@ flowchart LR
   end
 
   unit_translation -->|unit_id → id| unit
+  unit_translation -->|locale → code| language
+  translation_message -->|locale → code| language
+  product_translation -->|locale → code| language
+  category_translation -->|locale → code| language
+  attribute_translation -->|locale → code| language
+  attribute_value_translation -->|locale → code| language
+  product_option_translation -->|locale → code| language
+  product_option_value_translation -->|locale → code| language
+  shipping_method_translation -->|locale → code| language
+  payment_method_translation -->|locale → code| language
+  customer -->|locale → code| language
   tax_rate -->|tax_class_id → id| tax_class
   product -->|tax_class_id → id| tax_class
   product_translation -->|product_id → id| product
@@ -247,6 +260,7 @@ flowchart LR
 - `migrations/structures/2026-11-15-130000-iso4217-currency-catalog.sql` – katalog ISO 4217 a složený FK měny.
 - `migrations/structures/2026-11-15-140000-normalize-iso4217-release-fk.sql` – přejmenování FK sloupce na `iso4217_catalog_release_id`.
 - `migrations/structures/2026-11-15-150000-protect-variant-attribute-values.sql` – ochrana hodnot variant před nepřímým smazáním osy nebo enum hodnoty pomocí `ON DELETE RESTRICT`.
+- `migrations/structures/2026-11-15-160000-add-language-foreign-keys-to-locales.sql` – doplnění 11 chybějících FK `locale` → `language(code)`; povinné překlady používají `RESTRICT`, volitelné locale zákazníka `SET NULL`.
 
 Při změně schématu se diagram aktualizuje ve stejném kroku jako příslušná migrace. Nikdy neupravuj historické migrace jen kvůli změně diagramu.
 
