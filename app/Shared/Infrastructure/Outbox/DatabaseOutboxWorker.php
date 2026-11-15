@@ -117,7 +117,7 @@ final class DatabaseOutboxWorker
                         !is_string($eventName)
                         || preg_match('/\\A[a-zA-Z0-9][a-zA-Z0-9._:-]{0,189}\\z/', $eventName) !== 1
                     ) {
-                        throw new \\InvalidArgumentException('Filtr Outbox událostí obsahuje neplatný identifikátor.');
+                        throw new \InvalidArgumentException('Filtr Outbox událostí obsahuje neplatný identifikátor.');
                     }
                 }
 
