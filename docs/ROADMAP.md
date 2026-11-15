@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.99 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.00 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 120, rozděláno 0, k úpravě 2, rozhodnout 0, blokováno 0, plán 428, zrušeno 2.
+Celkem **554 kroků**: hotovo 121, rozděláno 0, k úpravě 2, rozhodnout 0, blokováno 0, plán 427, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 20 | 17 | 0 | 0 | 0 | 0 | 3 | 0 |
+| F2 | Sdílené jádro (Shared) | 20 | 18 | 0 | 0 | 0 | 0 | 2 | 0 |
 | F3 | Databáze a migrace | 34 | 11 | 0 | 1 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -333,7 +333,7 @@ _Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí
 - `[HOTOVO]` **F2-15** Architektonická izolace `Shared`: Deptrac klasifikuje `App\\Shared\\` jako samostatnou vrstvu a povoluje jí pouze závislosti na externích knihovnách. Závislosti na `Core`, `Presentation`, `UI` i všech aplikačních modulech jsou zakázány. Kontrola je součástí `composer arch` a GitHub Actions; lokální `check.bat` potvrdil průchod všech aktivních kontrol.
 - `[HOTOVO]` **F2-16** Dokumentace pravidel `Shared`: vymezena kritéria průřezovosti, příklady povoleného a zakázaného obsahu, pravidlo výchozího vlastnictví modulu a zákaz závislostí na interních vrstvách aplikace. Podrobnosti jsou v `STRUKTURA.md` a shrnutí v `ZAMER.md`.
 - `[HOTOVO]` **F2-17** Katalog ISO 4217: verzovaná databázová evidence vydání SIX 2026-09-17 obsahuje 155 běžných měn s přesností 0–4; fondové, kovové a speciální kódy jsou vynechány. Složený cizí klíč vynucuje shodu kódu a přesnosti. Migrace, integrační test a všechny aktivní kontroly `check.bat` prošly.
-- `[PLÁN]` **F2-18** Pravidla doménových událostí: synchronní dispatcher pouze pro kritické interní posluchače; zákaz externích vedlejších účinků v synchronních listenerech
+- `[HOTOVO]` **F2-18** Pravidla doménových událostí: vymezeny kritické synchronní interní reakce, transakční odpovědnost aplikačního use-case, propagace výjimek a zákaz externích vedlejších účinků. Integrační zprávy vznikají explicitně v Transactional Outbox ve stejné transakci; worker je zpracuje až po commitu. Interní `DomainEvent` se automaticky neserializuje.
 - `[PLÁN]` **F2-19** Aplikační kontrakt Transactional Outbox: atomický zápis události ve stejné transakci jako zdrojová obchodní změna
 - `[PLÁN]` **F2-20** Kontrakt zpracování Outboxu: worker, at-least-once doručení, idempotence, retry/backoff, evidence chyb a bezpečné opakování
 
@@ -1204,6 +1204,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ### v2.98 (15. 11. 2026)
 - Dokončen F2-15: potvrzena a zdokumentována architektonická izolace `Shared` pomocí existujícího pravidla Deptrac. `composer arch` je součástí lokálních kontrol i GitHub Actions; nebyla přidána duplicitní kontrolní vrstva.
 - F2: **16 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **119 hotovo**, **0 rozděláno**, **2 k úpravě**, **429 plán**, **2 zrušeno**.
+
+### v3.00 (15. 11. 2026)
+- Dokončen F2-18: dokumentována hranice mezi synchronními interními doménovými událostmi a integračními zprávami Outboxu. Upřesněno, že transakci vlastní aplikační use-case, dispatcher transakci neřídí, výjimka musí opustit nejvyšší transakční callback a externí vedlejší účinky se provádějí až workerem po commitu.
+- Rozlišeno interní `DomainEvent` od explicitního Outbox `eventName` a payloadu; automatická serializace interních událostí je zakázána.
+- F2: **18 hotovo**, **0 rozděláno**, **2 plán**. Celkový souhrn: **121 hotovo**, **0 rozděláno**, **2 k úpravě**, **427 plán**, **2 zrušeno**.
 
 ### v2.99 (15. 11. 2026)
 - Dokončen F2-16: v `STRUKTURA.md` jsou stanovena konkrétní kritéria pro umístění kódu do `Shared`, příklady toho, co do něj patří a nepatří, pravidlo výchozího vlastnictví modulu a přesná hranice závislostí. `ZAMER.md` obsahuje stručné závazné shrnutí a odkaz na detailní pravidla.
