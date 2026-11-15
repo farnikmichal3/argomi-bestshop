@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.97 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.98 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 118, rozděláno 0, k úpravě 2, rozhodnout 0, blokováno 0, plán 430, zrušeno 2.
+Celkem **554 kroků**: hotovo 119, rozděláno 0, k úpravě 2, rozhodnout 0, blokováno 0, plán 429, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 20 | 15 | 0 | 0 | 0 | 0 | 5 | 0 |
+| F2 | Sdílené jádro (Shared) | 20 | 16 | 0 | 0 | 0 | 0 | 4 | 0 |
 | F3 | Databáze a migrace | 34 | 11 | 0 | 1 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -314,7 +314,7 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 15 z 20 kroků; pět kroků je naplánováno.
+_Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 16 z 20 kroků; čtyři kroky jsou naplánovány.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
@@ -330,7 +330,7 @@ _Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí
 - `[HOTOVO]` **F2-12** Rozhraní `Transaction` (spuštění v transakci). Aplikační kontrakt `run()` a infrastrukturní adaptér `NetteTransaction` jsou implementovány a registrovány v DI. Funkční test na SQLite `:memory:` úspěšně ověřil návratovou hodnotu callbacku, commit, rollback, propagaci původních instancí `Exception` a `Error` a chování vnořených volání bez savepointů (včetně rollbacku při selhání vnější transakce). Samostatný DI test potvrdil registraci rozhraní i adaptéru a sdílení jediné instance. Uživatel potvrdil čistý výsledek `check.bat` včetně PHPStan, PHP-CS-Fixer a Deptrac.
 - `[HOTOVO]` **F2-13** Typovaná neměnná kolekce DTO `Shared\Application\Collection\DtoCollection<T>`. Generická PHPStan šablona zachovává typ položek; konstruktor ověřuje existenci očekávané třídy/rozhraní a runtime typ každé položky, přijímá `iterable` a materializuje jej do vlastního seznamu. Implementuje `IteratorAggregate` a `Countable`; poskytuje `count()`, `isEmpty()`, `first()`, `get()`, `toArray()` a `getIterator()`. Strukturální neměnnost, hranice použití a pravidla rozšiřování jsou popsány v `ZAMER.md` a `STRUKTURA.md`. Všech 21 funkčních kontrol prošlo a uživatel potvrdil čistý `check.bat` (PHPStan, PHP-CS-Fixer, Deptrac).
 - `[HOTOVO]` **F2-14** Jednotkové testy: Money/Currency, Quantity, Locale, Clock a PublicId/ULID. Přidáno pět samostatných testů Nette Tester v `tests/Core/Shared/` a opraveny také dva starší testy logování, které odhalilo zapojení Testeru do kontrolního skriptu. Testy pokrývají běžné operace, neplatné vstupy, měnový nesoulad, přesnost tří desetinných míst, UTC, práci s časem, validaci ULID a ochranu proti celočíselnému přetečení. Uživatel potvrdil úspěšné dokončení všech aktivních kontrol přes `check.bat`, včetně Nette Testeru, PHPStan, PHP-CS-Fixer a Deptrac.
-- `[PLÁN]` **F2-15** Architektonický test: `Shared` nezávisí na žádném modulu
+- `[HOTOVO]` **F2-15** Architektonická izolace `Shared`: Deptrac klasifikuje `App\\Shared\\` jako samostatnou vrstvu a povoluje jí pouze závislosti na externích knihovnách. Závislosti na `Core`, `Presentation`, `UI` i všech aplikačních modulech jsou zakázány. Kontrola je součástí `composer arch` a GitHub Actions; lokální `check.bat` potvrdil průchod všech aktivních kontrol.
 - `[PLÁN]` **F2-16** Dokumentace: co do `Shared` patří a co ne
 - `[HOTOVO]` **F2-17** Katalog ISO 4217: verzovaná databázová evidence vydání SIX 2026-09-17 obsahuje 155 běžných měn s přesností 0–4; fondové, kovové a speciální kódy jsou vynechány. Složený cizí klíč vynucuje shodu kódu a přesnosti. Migrace, integrační test a všechny aktivní kontroly `check.bat` prošly.
 - `[PLÁN]` **F2-18** Pravidla doménových událostí: synchronní dispatcher pouze pro kritické interní posluchače; zákaz externích vedlejších účinků v synchronních listenerech
@@ -1200,6 +1200,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Implementace čeká na stažení do Laragonu, funkční ověření rollbacku/commitů/vnoření a čisté aktivní kontroly přes `check.bat`.
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
+
+### v2.98 (15. 11. 2026)
+- Dokončen F2-15: potvrzena a zdokumentována architektonická izolace `Shared` pomocí existujícího pravidla Deptrac. `composer arch` je součástí lokálních kontrol i GitHub Actions; nebyla přidána duplicitní kontrolní vrstva.
+- F2: **16 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **119 hotovo**, **0 rozděláno**, **2 k úpravě**, **429 plán**, **2 zrušeno**.
 
 ### v2.97 (15. 11. 2026)
 - Dokončeny F2-03 a F2-17: lokální migrace katalogu ISO 4217, jednotkové a MySQL integrační testy i všechny aktivní kontroly `check.bat` prošly.
