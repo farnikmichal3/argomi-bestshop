@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 137, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 414, zrušeno 2.
+Celkem **554 kroků**: hotovo 137, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 413, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 25 | 0 | 0 | 0 | 0 | 8 | 1 |
+| F3 | Databáze a migrace | 34 | 25 | 1 | 0 | 0 | 0 | 7 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -364,8 +364,8 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-21** Oddělit databázové účty aplikace (`argomi_app`, pouze CRUD) a migrací (`argomi_migrator`, CRUD + DDL); oba účty mají přístup pouze k `argomi_bestshop` a přihlášení bylo ověřeno
 - `[HOTOVO]` **F3-22** Zásady zálohování a obnovy databáze (před migrací povinný dump/snapshot, rollback obnovením ze zálohy)
 - `[HOTOVO]` **F3-23** CI ověřuje kompletní dopředné migrace na MySQL 8.4 v izolované testovací databázi. Ověřeno i souběžné použití `CHECK` a složeného FK nad `iso4217_currency(code, minor_units)`; omezení `ck_currency_minor_units` se vytvoří bez chyby. GitHub Actions běh #233 na commitu `79f0d771` skončil úspěšně.
-- `[PLÁN]` **F3-24** Test: smazání hodnoty atributu nebo osy variant nesmí potichu odebrat hodnoty variant (rozhodnout `CASCADE` a `RESTRICT`)
-- `[PLÁN]` **F3-25** Dokumentace schématu `docs/schema.md`: komentáře, pravidlo hashe varianty, pravidla cizích klíčů
+- `[HOTOVO]` **F3-24** Dopředná migrace a MySQL integrační test potvrzují, že smazání osy varianty ani použité enum hodnoty neodstraní přiřazení varianty; obě vazby používají `ON DELETE RESTRICT`.
+- `[ROZDĚLÁNO]` **F3-25** Dokumentace schématu `docs/schema.md`: významové komentáře tabulek, přesná kanonizace hashe varianty a pravidla cizích klíčů/mazacích akcí. Připravena revize 1.1; čeká na lokální kontrolu a potvrzení.
 - `[PLÁN]` **F3-26** Cizí klíč na `language(code)` u všech sloupců `locale` (dnes jen `cart` a `shop_order`)
 - `[PLÁN]` **F3-27** Kontroly součtů objednávky v databázi (`grand_total`, `line_gross`), případně sloupec `adjustments_net_minor`
 - `[PLÁN]` **F3-28** Pravidlo mazání: archivace místo mazání produktů a variant (`RESTRICT` u `product_variant.product_id`)
