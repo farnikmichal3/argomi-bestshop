@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – diagram databázového schématu
 
-**Revize:** 1.4 · 15. 11. 2026  
+**Revize:** 1.5 · 15. 11. 2026  
 **Autoritativní zdroj:** aktuální dopředné SQL migrace v `migrations/structures/`  
 **Databáze:** MySQL 8.x / InnoDB
 
@@ -33,7 +33,7 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 | `product` | Katalogový produkt; jeho identita je oddělena od konkrétních prodejných variant. Produkt se nemaže, ale archivuje změnou `status` na `archived`; databázový trigger odmítá přímé `DELETE` a při archivaci deaktivuje všechny aktivní varianty. |
 | `attribute` / `attribute_value` | Definice vlastnosti a její číselník. Enum hodnota patří právě jednomu atributu; překlady jsou závislá lokalizovaná data. |
 | `product_variant_axis` | Určuje, které atributy tvoří konfigurační osy variant konkrétního produktu. Dvojice produktu a atributu je unikátní. |
-| `product_variant` | Konkrétní prodejná varianta produktu. Kombinaci atributů identifikuje stabilní SHA-256 hash kanonického zápisu. Varianta se nemaže, ale deaktivuje přes `is_active = 0`; databáze odmítá přímé `DELETE`, aktivní variantu archivovaného produktu i opětovnou aktivaci varianty archivovaného produktu. |
+| `product_variant` | Konkrétní prodejná varianta produktu. Kombinaci atributů identifikuje stabilní SHA-256 hash kanonického zápisu. Varianta se nemaže, ale deaktivuje přes `is_active = 0`; databáze odmítá přímé `DELETE`, aktivní variantu archivovaného produktu i opětovnou aktivaci varianty archivovaného produktu. Výchozí varianta je označena `is_default`; generovaný `default_flag` a unikátní index `(product_id, default_flag)` dovolují nejvýše jednu výchozí variantu produktu. Přepnutí probíhá v jedné transakci: nejprve se dosavadní výchozí varianta uvolní a poté se nastaví nová. |
 | `product_variant_attribute_value` | Přiřazuje variantě právě jednu hodnotu atributu. CHECK omezení vyžaduje právě jednu z enum, číselné nebo textové hodnoty; vazba na osu i použitou enum hodnotu je chráněna přes `ON DELETE RESTRICT`. |
 | `product_attribute_value` | Hodnota atributu na úrovni produktu, nikoli konkrétní varianty. |
 | `variant_price` / `variant_price_history` | Aktuální cena varianty a její historické body. Historie se nemaže spolu s variantou automaticky. |
