@@ -128,6 +128,18 @@ try {
         Throwable::class,
     );
 
+    // Payload nesmí odkazovat na jinou objednávku než chráněný FK.
+    Assert::exception(
+        static fn () => $transaction->run(
+            static fn () => $writer->record(
+                'order.test.mismatched-order',
+                ['orderId' => $demoOrderId],
+                $liveOrderId,
+            ),
+        ),
+        Throwable::class,
+    );
+
     // Demo objednávka nesmí vložit provozní událost do Outboxu.
     Assert::exception(
         static fn () => $transaction->run(
