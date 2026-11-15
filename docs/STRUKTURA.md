@@ -225,7 +225,7 @@ Synchronní posluchač smí provést pouze krátkou, deterministickou interní r
 
 #### Integrační události a Transactional Outbox
 
-Integrační a notifikační zprávy určené pro zpracování mimo právě běžící use-case se zapisují do Transactional Outbox. Zápis Outbox zprávy musí proběhnout ve stejné databázové transakci jako zdrojová obchodní změna. `OutboxWriter` vlastní transakci nezačíná a odmítá zápis mimo aktivní PDO transakci. Aplikační use-case proto odpovídá za to, že obě změny sdílí jednu transakční hranici.
+Integrační a notifikační zprávy určené pro zpracování mimo právě běžící use-case se zapisují do Transactional Outbox. Zápis Outbox zprávy musí proběhnout ve stejné databázové transakci jako zdrojová obchodní změna. `OutboxWriter` vlastní transakci nezačíná a odmítá zápis mimo aktivní PDO transakci. Aplikační use-case proto odpovídá za to, že obě změny sdílí jednu transakční hranici. Události vztahující se k objednávce používají prefix `order.` a `OutboxWriter::record()` musí dostat explicitní `shopOrderId`; databáze ověřuje existenci objednávky a odmítá demo objednávky. Skladové pohyby vyvolané objednávkou používají `reference_type = 'shop_order'`; databázové triggery je odmítají pro demo objednávky. Všechny čtyři seedované ukázkové objednávky mají `shop_order.is_demo = 1` a tento příznak nelze později změnit.
 
 Doménová událost a Outbox zpráva nejsou automaticky totožné. Interní `DomainEvent` se nepřevádí ani neserializuje automaticky. Modul výslovně určí, zda a jaká integrační zpráva má vzniknout, zvolí její stabilní `eventName` a připraví explicitní serializovatelný payload. Tím zůstává interní model nezávislý na veřejném integračním formátu a citlivá či nadbytečná data se do zprávy nedostanou omylem.
 
