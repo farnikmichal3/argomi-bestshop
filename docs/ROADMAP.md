@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 119, rozděláno 0, k úpravě 2, rozhodnout 0, blokováno 0, plán 429, zrušeno 2.
+Celkem **554 kroků**: hotovo 120, rozděláno 0, k úpravě 2, rozhodnout 0, blokováno 0, plán 428, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 20 | 16 | 0 | 0 | 0 | 0 | 4 | 0 |
+| F2 | Sdílené jádro (Shared) | 20 | 17 | 0 | 0 | 0 | 0 | 3 | 0 |
 | F3 | Databáze a migrace | 34 | 11 | 0 | 1 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
