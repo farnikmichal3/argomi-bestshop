@@ -352,7 +352,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-09** Ověřeny výjimky a explicitní relace Nette Database Exploreru (`category.parent_id`, `product_relation.related_product_id` a další vícečetné/složené vazby) existujícím integračním testem `ExplorerRelationsIntegration.phpt`; nebyl vytvářen duplicitní test. Oba integrační testy i kompletní `check.bat` uživatel potvrdil jako úspěšné.
 - `[ROZDĚLÁNO]` **F3-10** První čtecí repozitář Catalog nad Explorer: `ProductRepository` a `DatabaseProductRepository`; mapování `ActiveRow` na DTO, dotazy pouze v repozitářích. Implementace a fail-closed integrační test jsou v repozitáři, lokální ověření čeká na uživatele.
 - `[ROZDĚLÁNO]` **F3-11** Typované `readonly` DTO pro první katalogovou entitu a její překlady: `ProductDto` a `ProductTranslationDto`; další entity vlny 1 budou následovat po ověření tohoto základu.
-- `[PLÁN]` **F3-12** Implementace `Transaction` nad `Nette\Database\Connection`
+- `[PLÁN]` **F3-12** Doplnit regresní ověření existujícího `Transaction` / `NetteTransaction` adaptéru. Produkční implementace přes sdílený `Nette\Database\Explorer` již existuje; nevytvářet druhý adaptér. Aktuální strom neobsahuje transakční test, proto ověřit a obnovit pokrytí commit/rollback, propagace `Exception` a `Error`, vnoření a DI.
 - `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
 - `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců
 - `[PLÁN]` **F3-15** Testovací databáze a bootstrap integračních testů
