@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.22 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.23 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 143, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 408, zrušeno 2.
+Celkem **554 kroků**: hotovo 144, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 407, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 31 | 0 | 0 | 0 | 0 | 2 | 1 |
+| F3 | Databáze a migrace | 34 | 32 | 0 | 0 | 0 | 0 | 1 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -371,7 +371,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-28** Archivace místo fyzického mazání produktů a variant. Produkt se archivuje přes `product.status = 'archived'`; všechny jeho aktivní varianty se automaticky deaktivují (`is_active = 0`). FK `product_variant.product_id` používá `ON DELETE RESTRICT`; databázové triggery zakazují přímé mazání produktů i variant, vložení aktivní varianty k archivovanému produktu a opětovnou aktivaci jeho variant. Integrační test `ProductArchivalIntegration.phpt` ověřil celý životní cyklus, odmítnutí mazání a zachování záznamů; uživatel potvrdil úspěšný test i kompletní `check.bat`.
 - `[HOTOVO]` **F3-29** Integrační test `DefaultVariantSwitchIntegration.phpt` ověřuje unikátní generovaný klíč `(product_id, default_flag)`, odmítnutí druhé výchozí varianty, zachování původního stavu po chybě, rollback savepointu i bezpečné přepnutí v transakci. Uživatel potvrdil úspěšný samostatný test i kompletní `check.bat`.
 - `[HOTOVO]` **F3-30** Demo data jsou úplná ve dvou jazycích: všech šest překladů tří produktů má krátký i dlouhý popis a SEO metadata; dvě nové uzavřené objednávky obsahují adresní a položkové snapshoty, volbu produktu, dopravu a historii stavů; pro každou variantu s kladnou počáteční zásobou existuje právě jeden odpovídající příjem `demo_opening_balance`; doplněno osm systémových textů v češtině i angličtině. `DemoDataIntegrity.phpt` a navazující `DatabaseProductRepositoryIntegration.phpt` prošly; uživatel potvrdil `All active checks passed.`
-- `[PLÁN]` **F3-31** Navrhnout a migrovat doménově rozdělené systémové překlady ze současné tabulky `translation_message`
+- `[HOTOVO]` **F3-31** Systémové překlady jsou rozděleny podle vlastníka do `catalog_message_translation`, `cart_message_translation` a `checkout_message_translation`. Dopředná migrace zachovala všech 18 záznamů, jejich ID, texty, metadata i NULL hashe; kontrola shody všech přenášených sloupců proběhla před odstraněním `translation_message`. Integrační test ověřuje počty 8/4/6, klíče, jazyky, ochranné příznaky, unikátní indexy a FK na `language`. Uživatel potvrdil úspěšnou migraci, samostatný integrační test i `All active checks passed.`
 - `[PLÁN]` **F3-32** Navrhnout a implementovat explicitní označení demo dat a zákaz vedlejších efektů pro demo objednávky
 - `[HOTOVO]` **F3-33** Ochrana `DbResetCommand`: zavedena samostatná `DbResetEnvironmentPolicy`; `common.neon` má fail-closed výchozí hodnotu `app.environment: null`; příkaz odmítá vše kromě přesné hodnoty `development` ještě před prvním DB dotazem. Negativní test politiky pokrývá chybějící, neznámé, testing, staging a production. Uživatel potvrdil čisté aktivní kontroly přes `check.bat` a bezpečné odmítnutí příkazu při `environment: null`.
 - `[HOTOVO]` **F3-34** Databázová persistence Transactional Outbox: dopředná migrace samostatné tabulky `outbox_message` byla úspěšně aplikována v lokálním prostředí. Aplikační `OutboxWriter` a `DatabaseOutboxWriter` vyžadují aktivní PDO transakci, používají sdílený Explorer, `Clock` a `PublicIdGenerator` a vlastní transakci nezahajují. Doplněny `OutboxMessage`, kontrakt `OutboxMessageHandler` a `DatabaseOutboxWorker`: bezpečný claim přes `FOR UPDATE SKIP LOCKED`, vždy po jedné zprávě bez předčasného spuštění lease dalších položek dávky, náhodný 128bitový lease token, zpracování mimo claim transakci, guarded dokončení/retry, exponenciální backoff, přechod do `dead` a evidence pouze typu výjimky. CLI příkaz `outbox:work` spouští jednu omezenou dávku pro periodické volání cronem. MySQL integrační test pokrývá doručení, retry/dead, obnovu expirovaného lease a ochranu proti opožděnému workeru. Uživatel následně potvrdil úspěšné opakované spuštění `check.bat` po změně strategie claimování. Nové řešení claimuje vždy jednu zprávu a ihned ji zpracuje, čímž zabraňuje vypršení lease u položek čekajících v lokální dávce.
@@ -1209,6 +1209,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokončen F3-23 bez duplicitní implementace: existující GitHub Actions workflow již vytváří izolovanou databázi na `mysql:8.4`, aplikuje všechny dopředné migrace a vyžaduje MySQL integrační testy.
 - Ověřen poslední běh workflow #233 na commitu `79f0d771`: migrace i všechny následné kroky CI prošly. Schéma obsahuje `CHECK` nad `minor_units` a složený FK `iso4217_currency(code, minor_units)`; MySQL 8.4 obě omezení přijalo.
 - Nebyla měněna historická migrace ani přidáván zbytečný test/workflow. F3: **24 hotovo**, **0 rozděláno**, **9 plán**, **1 zrušeno**. Celkový souhrn: **136 hotovo**, **0 rozděláno**, **1 k úpravě**, **415 plán**, **2 zrušeno**.
+### v3.23 (15. 11. 2026)
+- Dokončen F3-31: systémové překlady byly rozděleny do vlastnických tabulek Catalog, Cart a Checkout. Dopředná migrace zachovala všech 18 záznamů a všechna metadata; starou centrální tabulku odstranila až po úplné kontrole shody. Test ověřil počty 8/4/6, klíče, jazyky, ochranné příznaky, unikátní indexy a jazykové FK.
+- Aktualizovány `docs/schema.md` na revizi 1.7 a `docs/TRANSLATIONS.md` na revizi 1.4. Translation nyní vlastní společnou jazykovou infrastrukturu; systémové texty patří příslušným doménám.
+- Uživatel potvrdil `All active checks passed.`
+- F3: **32 hotovo**, **0 rozděláno**, **1 plán**, **1 zrušeno**. Celkový souhrn: **144 hotovo**, **0 rozděláno**, **1 k úpravě**, **407 plán**, **2 zrušeno**.
+
 ### v3.22 (15. 11. 2026)
 - Dokončen F3-30: doplněny úplné české a anglické texty a SEO metadata tří demo produktů, dvě úplné uzavřené demo objednávky s adresními a položkovými snapshoty, počáteční skladové příjmy a osm systémových textů v obou jazycích.
 - Nová opravná seed migrace doplnila dva krátké popisy. `DemoDataIntegrity.phpt` ověřuje počet a přesnost počátečních pohybů dynamicky podle kladných stavů `stock_item`; `DatabaseProductRepositoryIntegration.phpt` odpovídá novému kompletnímu textu produktu.
