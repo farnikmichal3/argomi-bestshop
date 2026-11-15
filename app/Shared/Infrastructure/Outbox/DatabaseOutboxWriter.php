@@ -13,7 +13,6 @@ use InvalidArgumentException;
 use JsonException;
 use LogicException;
 use Nette\Database\Explorer;
-use PDO;
 
 /**
  * Ukládá integrační události do databázové tabulky outbox_message.
@@ -38,15 +37,11 @@ final class DatabaseOutboxWriter implements OutboxWriter
     {
         $eventName = trim($eventName);
 
-        $eventNameLength = preg_match_all('/./us', $eventName);
-
-        if ($eventName === '' || $eventNameLength === false || $eventNameLength > 190) {
-            throw new InvalidArgumentException('Název Outbox události musí obsahovat 1 až 190 platných UTF-8 znaků.');
+        if (preg_match('/\A[a-zA-Z0-9][a-zA-Z0-9._:-]{0,189}\z/', $eventName) !== 1) {
+            throw new InvalidArgumentException('Název Outbox události musí být stabilní ASCII identifikátor o délce 1 až 190 znaků.');
         }
 
-        $nativeConnection = $this->database->getConnection()->getNativeConnection();
-
-        if (!($nativeConnection instanceof PDO) || !$nativeConnection->inTransaction()) {
+        if (!$this->database->getConnection()->getPdo()->inTransaction()) {
             throw new LogicException('Outbox událost lze zapsat pouze uvnitř aktivní databázové transakce.');
         }
 
