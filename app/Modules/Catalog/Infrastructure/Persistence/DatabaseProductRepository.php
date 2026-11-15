@@ -186,8 +186,10 @@ final class DatabaseProductRepository implements ProductRepository
     private function mapDateTime(mixed $value, string $field): DateTimeImmutable
     {
         if ($value instanceof DateTimeInterface) {
-            return DateTimeImmutable::createFromInterface($value)
-                ->setTimezone($this->utc);
+            // DATETIME nemá časové pásmo. Zachováme uložený čas na ciferníku
+            // a znovu jej interpretujeme jako UTC; pouhé setTimezone() by
+            // mohlo posunout hodnotu podle výchozí zóny PDO/PHP.
+            return new DateTimeImmutable($value->format('Y-m-d H:i:s.u'), $this->utc);
         }
 
         if (is_string($value)) {
