@@ -145,7 +145,7 @@ Pravidla:
 - Dokončení nebo naplánování retry smí worker zapsat pouze při shodě svého `lock_token` a platném lease. Tím se zabrání tomu, aby opožděný worker přepsal stav zprávy, kterou již převzal jiný worker.
 - Při dočasné chybě se zpráva vrací do `pending` s budoucím `available_at`; po vyčerpání limitu pokusů přechází do `dead`. Úspěšné zpracování přechází do `delivered`. Limit pokusů a retry prodlevy jsou politikou workeru, nikoliv pevně zakódovaným databázovým limitem.
 - Doručení je at-least-once. Pád po externím účinku a před potvrzením `delivered` může vyvolat opakování; idempotence handleru musí být založena na stabilním `message_id`. Externí volání nikdy neběží uvnitř dlouhé DB transakce.
-- Časové údaje Outboxu používají UTC a databázové `DATETIME(6)`. Záznamy se automaticky nemažou; retence a archivace vyžadují samostatné rozhodnutí.
+- Časové údaje Outboxu používají UTC a databázové `DATETIME(6)`. Writer výslovně předává UTC hodnoty `created_at` a `available_at`; nespoléhá na `CURRENT_TIMESTAMP`, protože výchozí hodnota DATETIME závisí na časovém pásmu DB session. Worker používá `UTC_TIMESTAMP(6)` pro porovnání lease a dostupnosti. Záznamy se automaticky nemažou; retence a archivace vyžadují samostatné rozhodnutí.
 
 Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
 
