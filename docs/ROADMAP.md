@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.91 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.92 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -374,7 +374,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-31** Navrhnout a migrovat doménově rozdělené systémové překlady ze současné tabulky `translation_message`
 - `[PLÁN]` **F3-32** Navrhnout a implementovat explicitní označení demo dat a zákaz vedlejších efektů pro demo objednávky
 - `[HOTOVO]` **F3-33** Ochrana `DbResetCommand`: zavedena samostatná `DbResetEnvironmentPolicy`; `common.neon` má fail-closed výchozí hodnotu `app.environment: null`; příkaz odmítá vše kromě přesné hodnoty `development` ještě před prvním DB dotazem. Negativní test politiky pokrývá chybějící, neznámé, testing, staging a production. Uživatel potvrdil čisté aktivní kontroly přes `check.bat` a bezpečné odmítnutí příkazu při `environment: null`.
-- `[ROZPRACOVÁNO]` **F3-34** Databázová persistence Transactional Outbox: dopředná migrace se samostatnou tabulkou `outbox_message` byla úspěšně aplikována v lokálním prostředí. `check.bat` prošel: Nette Tester 8 testů, PHPStan bez chyb, PHP-CS-Fixer bez oprav a Deptrac bez porušení. Zbývá doplnit testy databázových invariantů a ověřit atomický zápis s obchodní transakcí.
+- `[ROZPRACOVÁNO]` **F3-34** Databázová persistence Transactional Outbox: dopředná migrace se samostatnou tabulkou `outbox_message` byla úspěšně aplikována v lokálním prostředí. `check.bat` prošel: Nette Tester 8 testů, PHPStan bez chyb, PHP-CS-Fixer bez oprav a Deptrac bez porušení. Doplněn aplikační kontrakt `OutboxWriter` a `DatabaseOutboxWriter`, který vyžaduje aktivní PDO transakci, používá sdílený Explorer, `Clock` a `PublicIdGenerator` a vlastní transakci nezahajuje. Zbývá ověřit zápis/rollback integračními testy a implementovat bezpečné vyzvedávání a retry worker.
 
 ### F4: Překlady v databázi
 
@@ -1201,6 +1201,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
 
+### v2.92 (15. 11. 2026)
+- F3-34: přidán aplikační kontrakt `OutboxWriter` a produkční `DatabaseOutboxWriter`.
+- Writer validuje název události, serializuje payload vždy jako JSON objekt, generuje ULID a ukládá explicitní UTC časy s mikrosekundami.
+- Writer nezahajuje vlastní transakci a odmítá zápis, pokud sdílené PDO není v aktivní transakci. Tím vynucuje volání uvnitř obchodního `Transaction::run()`.
+- Doplněny DI registrace a dokumentace struktury, transakčního kontraktu a databázové persistence. Lokální PHPStan/testy ještě čekají na ověření uživatelem.
+- Souhrn beze změny: **115 hotovo**, **1 rozpracováno**, **3 k úpravě**, **433 plán**, **2 zrušeno**.
 ### v2.91 (15. 11. 2026)
 - Ověřena dopředná migrace F3-34 v lokálním prostředí: Nextras Migrations provedly jednu migraci bez chyby.
 - Uživatel potvrdil úspěšné `check.bat`: Nette Tester 8 testů OK, PHPStan bez chyb, PHP-CS-Fixer nalezl 0 souborů k opravě a Deptrac 0 porušení.
