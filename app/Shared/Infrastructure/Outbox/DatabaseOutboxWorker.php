@@ -103,31 +103,13 @@ final class DatabaseOutboxWorker
      */
     private function claim(int $batchSize, ?array $eventNames): array
     {
-        $result = $this->database->transaction(function () use ($batchSize): array {
-            // Zpráva, jejíž poslední povolený pokus skončil pádem workeru,
-            // už nesmí být znovu převzata. Po expiraci lease přejde do dead.
-            $this->database->query(
-                "UPDATE outbox_message
-                SET status = 'dead',
-                    dead_at = UTC_TIMESTAMP(6),
-                    locked_until = NULL,
-                    lock_token = NULL,
-                    last_error = ?
-                WHERE status = 'processing'
-                    AND locked_until <= UTC_TIMESTAMP(6)
-                    AND attempts >= ?",
-                'Lease expired after maximum attempts.',
-                $this->maxAttempts,
-            );
-
-            // SKIP LOCKED dovoluje souběžným workerům převzít různé zprávy
-            // bez čekání na řádky, které právě zamyká jiný worker.
+        $result = $this->database->transaction(function () use ($batchSize, $eventNames): array {
             if ($eventNames === []) {
                 return [];
             }
 
             $eventFilter = '';
-            $parameters = [$this->maxAttempts];
+            $eventParameters = [];
 
             if ($eventNames !== null) {
                 foreach ($eventNames as $eventName) {
@@ -140,10 +122,30 @@ final class DatabaseOutboxWorker
                 }
 
                 $eventFilter = ' AND event_name IN (' . implode(', ', array_fill(0, count($eventNames), '?')) . ')';
-                array_push($parameters, ...$eventNames);
+                $eventParameters = $eventNames;
             }
 
-            $parameters[] = $batchSize;
+            // Zpráva, jejíž poslední povolený pokus skončil pádem workeru,
+            // už nesmí být znovu převzata. Po expiraci lease přejde do dead.
+            $this->database->query(
+                "UPDATE outbox_message
+                SET status = 'dead',
+                    dead_at = UTC_TIMESTAMP(6),
+                    locked_until = NULL,
+                    lock_token = NULL,
+                    last_error = ?
+                WHERE status = 'processing'
+                    AND locked_until <= UTC_TIMESTAMP(6)
+                    AND attempts >= ?"
+                . $eventFilter,
+                'Lease expired after maximum attempts.',
+                $this->maxAttempts,
+                ...$eventParameters,
+            );
+
+            // SKIP LOCKED dovoluje souběžným workerům převzít různé zprávy
+            // bez čekání na řádky, které právě zamyká jiný worker.
+            $parameters = [$this->maxAttempts, ...$eventParameters, $batchSize];
 
             $rows = $this->database->query(
                 "SELECT id, message_id, event_name, payload, attempts
