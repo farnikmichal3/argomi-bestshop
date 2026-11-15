@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 3.7 · 15. 11. 2026  
+**Revize:** 3.8 · 15. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 15. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -198,9 +198,26 @@ Ne každá složka musí existovat hned. Vytváří se tehdy, když obsahuje sku
 Centrální aplikační logování přes Monolog. `LoggerFactory` vytváří JSON logger s denní rotací a limitem 30 souborů; soubory dostávají oprávnění `0600`. Limit 30 souborů je výchozí provozní nastavení, nikoliv konečné právní retenční pravidlo; jeho potvrzení nebo změna zůstává součástí F0-49. `SensitiveDataProcessor` před zápisem rekurzivně maskuje známé citlivé klíče, vybrané tokenové vzory a bezpečně redukuje objekty výjimek. Není obecným detektorem PII ve volném textu. Volající proto předává pouze explicitně povolený, minimální a bezpečný kontext; celé objekty, requesty/response, surové platební payloady a osobní údaje se nesmějí logovat. Texty výjimek jsou bezpečné a nesmějí obsahovat tajné ani osobní údaje. Logy se ukládají do kořenového adresáře `log/`, mimo veřejný `www/` webroot. Tracy zůstává samostatnou diagnostickou vrstvou.
 
 ### Shared/Application/Event a Transactional Outbox
-`Shared/Application/Event/EventDispatcher` a `SynchronousEventDispatcher` slouží pouze pro kritické interní posluchače. Jejich zpracování probíhá v rámci stejné aplikační databázové transakce; výjimka se propaguje a vyvolá rollback nejvyšší transakce. Posluchače nesmějí provádět nevratné externí vedlejší účinky (HTTP/API, e-mail, push, platby ani expedici).
 
-Integrační a notifikační události se zapisují do Transactional Outbox atomicky spolu s obchodní změnou. Outbox zpracovává samostatný worker až po commitu. Doručování je nejméně jednou (at-least-once), proto zprávy a handlery vyžadují idempotenci, řízené opakování a evidenci chyb. Databázový worker claimuje vždy jednu zprávu a okamžitě ji zpracuje, aby lease nezačal ubíhat u zpráv čekajících v lokální dávce. Outbox je společný mechanismus; moduly definují pouze své typované události a handlery. Persistence, aplikační kontrakty a CLI worker jsou implementovány ve Shared.
+#### Synchronní doménové události
+
+`DomainEvent` popisuje skutečnost, která již nastala. Konkrétní typy událostí a jejich význam vlastní příslušný modul; společné rozhraní ve `Shared` pouze umožňuje předání události bez znalosti konkrétního modulu.
+
+`EventDispatcher` a `SynchronousEventDispatcher` slouží výhradně pro kritické interní reakce, které musí být dokončeny jako součást právě prováděného aplikačního případu užití. Nejsou frontou, neukládají události a neposkytují asynchronní doručení, opakování ani transakční správu. Dispatcher volá podporující posluchače synchronně v registrovaném pořadí a výjimky záměrně nepolyká.
+
+Aplikační use-case vlastní transakční hranici prostřednictvím `Transaction::run()`. Pokud synchronní posluchač mění databázový stav, který musí být atomický se zdrojovou obchodní změnou, musí být dispatch proveden uvnitř této transakce a nad stejným databázovým připojením. Dispatcher sám transakci nezačíná ani negarantuje rollback. Výjimka posluchače se musí dostat až z nejvyššího transakčního callbacku; její zachycení uvnitř callbacku znamená, že transakční adaptér nemá důvod provést rollback. Vnořené transakční volání navíc nepoužívají savepointy.
+
+Synchronní posluchač smí provést pouze krátkou, deterministickou interní reakci potřebnou pro konzistenci daného use-case. Nesmí provádět externí ani nevratné vedlejší účinky: HTTP/API volání, odeslání e-mailu nebo push notifikace, skutečné platební operace, objednání dopravy či expedici. Nesmí ani čekat na externí systém. Tyto činnosti by mohly uspět, i když následná databázová transakce skončí rollbackem, nebo by mohly zbytečně prodlužovat transakci.
+
+#### Integrační události a Transactional Outbox
+
+Integrační a notifikační zprávy určené pro zpracování mimo právě běžící use-case se zapisují do Transactional Outbox. Zápis Outbox zprávy musí proběhnout ve stejné databázové transakci jako zdrojová obchodní změna. `OutboxWriter` vlastní transakci nezačíná a odmítá zápis mimo aktivní PDO transakci. Aplikační use-case proto odpovídá za to, že obě změny sdílí jednu transakční hranici.
+
+Doménová událost a Outbox zpráva nejsou automaticky totožné. Interní `DomainEvent` se nepřevádí ani neserializuje automaticky. Modul výslovně určí, zda a jaká integrační zpráva má vzniknout, zvolí její stabilní `eventName` a připraví explicitní serializovatelný payload. Tím zůstává interní model nezávislý na veřejném integračním formátu a citlivá či nadbytečná data se do zprávy nedostanou omylem.
+
+Outbox zpracovává samostatný worker až po commitu. Doručování je nejméně jednou (at-least-once), proto musí být handlery idempotentní podle identifikátoru zprávy a musí počítat s opakováním po chybě nebo vypršení lease. Worker používá řízené opakování a evidenci chyb; claimuje vždy jednu zprávu a okamžitě ji zpracuje, aby lease nezačal ubíhat u zpráv čekajících v lokální dávce.
+
+Outbox je společný mechanismus ve `Shared`; moduly vlastní své doménové události, rozhodnutí o vzniku integrační zprávy, stabilní názvy a payloady i konkrétní handlery. Persistence, aplikační kontrakty a CLI worker jsou implementovány ve `Shared`.
 
 ## 5. Prezentační vrstvy
 
@@ -357,3 +374,4 @@ Tato hranice je automaticky vynucována Deptrac pravidlem `Shared: [External]` a
 
 | 15. 11. 2026 | v3.6: doplněn verzovaný katalog ISO 4217, jeho databázové vynucení přesnosti a integrační test podle F2-03/F2-17. |
 | 15. 11. 2026 | v3.7: popsána závazná kritéria pro umístění kódu do Shared, příklady povoleného a zakázaného obsahu a přesná hranice závislostí podle F2-16. |
+| 15. 11. 2026 | v3.8: zpřesněno oddělení synchronních interních doménových událostí od integračních zpráv Outboxu, transakční odpovědnost use-case, propagace výjimek a zákaz externích vedlejších účinků v synchronních posluchačích podle F2-18. |
