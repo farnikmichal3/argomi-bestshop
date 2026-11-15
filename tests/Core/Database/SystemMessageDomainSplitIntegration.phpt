@@ -77,6 +77,22 @@ foreach ($expectedCounts as $table => $expectedCount) {
         sprintf('Unexpected columns in %s.', $table),
     );
 
+    $uniqueIndex = $pdo->prepare(
+        "SELECT INDEX_NAME, NON_UNIQUE, GROUP_CONCAT(COLUMN_NAME ORDER BY SEQ_IN_INDEX) AS indexed_columns
+           FROM information_schema.STATISTICS
+          WHERE TABLE_SCHEMA = DATABASE()
+            AND TABLE_NAME = ?
+            AND NON_UNIQUE = 0
+          GROUP BY INDEX_NAME
+         HAVING indexed_columns = 'locale,message_key'",
+    );
+    $uniqueIndex->execute([$table]);
+    Assert::same(
+        1,
+        count($uniqueIndex->fetchAll(PDO::FETCH_ASSOC)),
+        sprintf('%s must enforce uniqueness of (locale, message_key).', $table),
+    );
+
     $localeForeignKey = $pdo->prepare(
         "SELECT k.REFERENCED_TABLE_NAME, k.REFERENCED_COLUMN_NAME, r.DELETE_RULE
            FROM information_schema.KEY_COLUMN_USAGE k
