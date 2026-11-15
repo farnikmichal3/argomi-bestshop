@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – diagram databázového schématu
 
-**Revize:** 1.6 · 15. 11. 2026  
+**Revize:** 1.7 · 15. 11. 2026  
 **Autoritativní zdroj:** aktuální dopředné SQL migrace v `migrations/structures/`  
 **Databáze:** MySQL 8.x / InnoDB
 
@@ -8,20 +8,21 @@ Tento dokument vizualizuje skutečné tabulky a cizí klíče po aplikaci všech
 
 ## 1. Přehled tabulek podle vlastníka
 
-Schéma obsahuje **49 tabulek** a **72 cizích klíčů**. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
+Schéma obsahuje **51 tabulek** a **74 cizích klíčů**. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
 
 | Modul | Tabulek | Oblast |
 |---|---:|---|
-| Catalog | 21 | Produkty, kategorie, atributy, varianty, volby a produktové vztahy. Vlastní také jednotky a jejich překlady. |
+| Catalog | 22 | Produkty, kategorie, atributy, varianty, volby, produktové vztahy a katalogové systémové texty. Vlastní také jednotky a jejich překlady. |
 | Pricing | 6 | Měny, katalog ISO 4217, ceny variant, historie cen a ceny hodnot voleb. |
 | Tax | 2 | Daňové třídy a sazby. |
 | Inventory | 2 | Skladové položky a pohyby. |
 | Customer | 2 | Zákazníci a jejich adresy. |
 | Shipping | 3 | Způsoby dopravy, překlady a ceny dopravy. |
 | Payments | 2 | Platební metody a překlady. |
-| Cart | 3 | Košíky, položky košíku a zvolené možnosti. |
+| Cart | 4 | Košíky, položky košíku, zvolené možnosti a systémové texty košíku. |
 | Orders | 5 | Objednávky, položky, snapshoty voleb, úpravy a historie stavů. |
-| Translation | 2 | Jazyky a přechodná centrální tabulka systémových překladů. |
+| Checkout | 1 | Systémové texty průchodu objednávkou. |
+| Translation | 1 | Společný jazykový katalog a překladová infrastruktura. |
 | Shared | 1 | Technická tabulka Transactional Outbox; záměrně bez FK do obchodních tabulek. |
 
 ## 2. Význam tabulek a datové invarianty
@@ -38,6 +39,7 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 | `product_attribute_value` | Hodnota atributu na úrovni produktu, nikoli konkrétní varianty. |
 | `variant_price` / `variant_price_history` | Aktuální cena varianty a její historické body. Historie se nemaže spolu s variantou automaticky. |
 | `stock_item` / `stock_movement` | Aktuální stav zásoby varianty a neměnný skladový deník. Demo seed vytváří pro každou variantu s kladným počátečním stavem právě jeden příjem `demo_opening_balance`, jehož množství odpovídá `stock_item.quantity_on_hand`. |
+| `catalog_message_translation` / `cart_message_translation` / `checkout_message_translation` | Systémové texty vlastní příslušné domény. Každá tabulka uchovává stabilní `message_key` a jazykové znění; klíč je unikátní v rámci locale a tabulky. Společná tabulka `language` zůstává vlastnictvím infrastruktury Translation. |
 | `cart_item` | Položka košíku odkazuje na variantu a ukládá identitu produktu pro kontrolu složené vazby. |
 | `shop_order` | Objednávka uchovává účetní souhrny v minor units. `adjustments_net_minor` je čistý součet úprav; `grand_total_minor` musí odpovídat součtu mezisoučtu, čistých úprav a daně. `placed_at IS NOT NULL` uzavírá finanční snapshot. |
 | `shop_order_item` / `shop_order_item_option` | Historický nákupní snapshot. Hrubá částka řádku musí být součtem čisté částky a daně; po uzavření objednávky jsou položky i jejich volby neměnné. Snapshot nesmí být závislý na aktuálním názvu, ceně ani konfiguraci katalogu. |
@@ -74,7 +76,7 @@ Cizí klíče chrání referenční integritu. Volba mazací akce vyjadřuje ži
 
 Závazné zvláštní případy:
 
-- Všech 13 sloupců `locale` odkazuje na `language(code)`. Povinné locale v překladových tabulkách (`unit_translation`, `translation_message`, `product_translation`, `category_translation`, `attribute_translation`, `attribute_value_translation`, `product_option_translation`, `product_option_value_translation`, `shipping_method_translation` a `payment_method_translation`) používá `ON DELETE RESTRICT`, takže jazyk nelze odstranit, dokud existují jeho překlady. `cart.locale` a `shop_order.locale` rovněž používají `RESTRICT`. Volitelné `customer.locale` používá `ON DELETE SET NULL`; odstranění jazyka tedy zákazníka zachová a pouze zruší jeho preferované locale.
+- Všech 15 sloupců `locale` odkazuje na `language(code)`. Povinné locale v překladových tabulkách (`unit_translation`, `catalog_message_translation`, `cart_message_translation`, `checkout_message_translation`, `product_translation`, `category_translation`, `attribute_translation`, `attribute_value_translation`, `product_option_translation`, `product_option_value_translation`, `shipping_method_translation` a `payment_method_translation`) používá `ON DELETE RESTRICT`, takže jazyk nelze odstranit, dokud existují jeho překlady. `cart.locale` a `shop_order.locale` rovněž používají `RESTRICT`. Volitelné `customer.locale` používá `ON DELETE SET NULL`; odstranění jazyka tedy zákazníka zachová a pouze zruší jeho preferované locale.
 
 - `product_variant_attribute_value` → `product_variant_axis`: `RESTRICT`. Osa se nesmí odstranit, dokud je použita variantou.
 - `product_variant_attribute_value` → `attribute_value`: `RESTRICT`. Použitá enum hodnota se nesmí odstranit. Její překlady zůstávají závislými lokalizovanými daty a mohou být odstraněny kaskádou až po povoleném odstranění samotné hodnoty.
@@ -156,6 +158,7 @@ flowchart LR
     product_option_value_translation["product_option_value_translation"]
     product_relation["product_relation"]
     product_image["product_image"]
+    catalog_message_translation["catalog_message_translation"]
   end
   subgraph Pricing["Pricing"]
     direction TB
@@ -197,6 +200,11 @@ flowchart LR
     cart["cart"]
     cart_item["cart_item"]
     cart_item_option["cart_item_option"]
+    cart_message_translation["cart_message_translation"]
+  end
+  subgraph Checkout["Checkout"]
+    direction TB
+    checkout_message_translation["checkout_message_translation"]
   end
   subgraph Orders["Orders"]
     direction TB
@@ -209,7 +217,6 @@ flowchart LR
   subgraph Translation["Translation"]
     direction TB
     language["language"]
-    translation_message["translation_message"]
   end
   subgraph Shared["Shared"]
     direction TB
@@ -218,7 +225,9 @@ flowchart LR
 
   unit_translation -->|unit_id → id| unit
   unit_translation -->|locale → code| language
-  translation_message -->|locale → code| language
+  catalog_message_translation -->|locale → code| language
+  cart_message_translation -->|locale → code| language
+  checkout_message_translation -->|locale → code| language
   product_translation -->|locale → code| language
   category_translation -->|locale → code| language
   attribute_translation -->|locale → code| language
@@ -308,6 +317,7 @@ flowchart LR
 - `migrations/structures/2026-11-15-160000-add-language-foreign-keys-to-locales.sql` – doplnění 11 chybějících FK `locale` → `language(code)`; povinné překlady používají `RESTRICT`, volitelné locale zákazníka `SET NULL`.
 - `migrations/structures/2026-11-15-170000-order-accounting-invariants.sql` – účetní invarianty objednávek: souhrnná čistá hodnota úprav, kontroly hrubých částek, agregované ověření při uzavření a neměnnost uzavřeného snapshotu.
 - `migrations/structures/2026-11-15-180000-archive-products-and-variants.sql` – archivace produktů a deaktivace variant, FK `ON DELETE RESTRICT` a databázové triggery zakazující fyzické mazání a neplatnou aktivaci variant.
+- `migrations/structures/2026-11-15-210000-split-system-message-translations.sql` – rozdělení systémových textů do vlastnických tabulek Catalog, Cart a Checkout; převod zachovává ID i všechna data a starou tabulku odstraní až po úplné kontrole shody.
 
 ## 9. Demo data
 
