@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.43 · 15. 11. 2026
+**Revize:** 1.44 · 15. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -34,6 +34,7 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 - Každý obchod má vlastní instanci aplikace a vlastní databázi.
 - V první architektuře se nepoužívá `shop_id` ani multistore model.
 - Aplikace je modulární monolit; veřejná rozhraní modulů a pravidla závislostí jsou popsána v [STRUKTURA](STRUKTURA.md).
+- `Shared` je stabilní základní vrstva pouze pro skutečně průřezové doménové typy, aplikační kontrakty a jejich technické adaptéry. Neobsahuje obchodní logiku ani data vlastněná konkrétním modulem a nesmí záviset na žádné interní části aplikace; přesná kritéria a příklady stanoví [STRUKTURA](STRUKTURA.md).
 - Rozšiřitelnost se řeší přes interní rozhraní, adaptéry, nastavení a doménové události, ne načítáním libovolného cizího kódu do jádra.
 - Funkce určené pro všechny obchody patří do jádra. Externí poskytovatelé plateb, dopravy nebo vyhledávání se připojují přes adaptéry.
 - Platební integrace bude používat vlastní rozhraní `PaymentProvider`; konkrétní platební brána se vybere až před produkčním nasazením podle cílového trhu, podporovaných metod, poplatků a podmínek. Objednávkový proces nebude závislý na konkrétním poskytovateli.
@@ -369,6 +370,7 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 9. 11. 2026 | F0-54: Nette Database Explorer je jedinou databázovou vrstvou běžného aplikačního kódu; Nextras ORM bude odstraněno, zatímco Nextras Migrations/DBAL mohou zůstat pro migrace a testování. Kontrola PHP a NEON souborů potvrdila jako jedinou zbývající referenci `OrmModel.php`; jeho odstranění je vedeno ve F1-37. |
 
 | 13. 11. 2026 | F2-06: `Locale` používá omezenou podmnožinu BCP 47; `cs` a `en` jsou databázové základní jazyky, aktivní prefixy routeru se generují z DB a překladový fallback patří modulu Translation. |
+| 15. 11. 2026 | F2-16: stanovena kritéria pro umístění kódu do `Shared`; výchozím vlastníkem zůstává konkrétní modul a `Shared` smí záviset pouze na PHP a externích knihovnách. Podrobnosti a příklady jsou v `STRUKTURA.md`. |
 
 ## 17. Historie cen a pravidla pro slevy (Omnibus)
 
