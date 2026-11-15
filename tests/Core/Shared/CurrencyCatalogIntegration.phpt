@@ -3,15 +3,13 @@ ISO 4217 catalog constrains business currencies and preserves shop activation
 --FILE--
 <?php
 
-use Tests\\Support\\IntegrationTestBootstrap;
+use Tests\Support\IntegrationTestBootstrap;
 
 use App\Shared\Domain\Money\Currency;
 use App\Shared\Domain\Money\CurrencyProvider;
 use App\Shared\Infrastructure\Persistence\Money\DatabaseCurrencyProvider;
-use App\Bootstrap;
 use Nette\Database\Explorer;
 use Tester\Assert;
-use Tester\Environment;
 
 $rootDir = dirname(__DIR__, 3);
 
