@@ -53,7 +53,13 @@ class Bootstrap
         // Vývojový režim nesmí určovat IP adresa ani automatická detekce Nette.
         // Povolen je pouze explicitní app.environment: development v lokální konfiguraci.
         $this->configurator->setDebugMode($this->debugModePolicy->isEnabled($environment));
-        $this->configurator->enableTracy($this->rootDir . '/log');
+
+        $logDir = $this->rootDir . '/log';
+        if (!is_dir($logDir) && !mkdir($logDir, 0775, true) && !is_dir($logDir)) {
+            throw new LogicException(sprintf('Unable to create Tracy logging directory "%s".', $logDir));
+        }
+
+        $this->configurator->enableTracy($logDir);
 
         $this->configurator->createRobotLoader()
             ->addDirectory(__DIR__)
