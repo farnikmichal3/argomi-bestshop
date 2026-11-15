@@ -3,11 +3,11 @@ Nette Database Explorer resolves foreign-key relations and rejects ambiguous ref
 --FILE--
 <?php
 
-use App\\Bootstrap;
-use Nette\\Database\\Conventions\\AmbiguousReferenceKeyException;
-use Nette\\Database\\Explorer;
-use Tester\\Assert;
-use Tester\\Environment;
+use App\Bootstrap;
+use Nette\Database\Conventions\AmbiguousReferenceKeyException;
+use Nette\Database\Explorer;
+use Tester\Assert;
+use Tester\Environment;
 
 $rootDir = dirname(__DIR__, 3);
 
@@ -129,7 +129,7 @@ Assert::notNull($category);
 Assert::same('cables', $category->code);
 Assert::same([2], $sortedIds($category->related('product_category', 'category_id')));
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK
