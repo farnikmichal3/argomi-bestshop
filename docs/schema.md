@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – diagram databázového schématu
 
-**Revize:** 1.7 · 15. 11. 2026  
+**Revize:** 1.8 · 15. 11. 2026  
 **Autoritativní zdroj:** aktuální dopředné SQL migrace v `migrations/structures/`  
 **Databáze:** MySQL 8.x / InnoDB
 
@@ -8,7 +8,7 @@ Tento dokument vizualizuje skutečné tabulky a cizí klíče po aplikaci všech
 
 ## 1. Přehled tabulek podle vlastníka
 
-Schéma obsahuje **51 tabulek** a **74 cizích klíčů**. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
+Schéma obsahuje **51 tabulek** a **75 cizích klíčů**. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
 
 | Modul | Tabulek | Oblast |
 |---|---:|---|
@@ -23,7 +23,7 @@ Schéma obsahuje **51 tabulek** a **74 cizích klíčů**. Vlastnictví označuj
 | Orders | 5 | Objednávky, položky, snapshoty voleb, úpravy a historie stavů. |
 | Checkout | 1 | Systémové texty průchodu objednávkou. |
 | Translation | 1 | Společný jazykový katalog a překladová infrastruktura. |
-| Shared | 1 | Technická tabulka Transactional Outbox; záměrně bez FK do obchodních tabulek. |
+| Shared | 1 | Technická tabulka Transactional Outbox; nese volitelnou vazbu na objednávku pro ochranu demo dat. |
 
 ## 2. Význam tabulek a datové invarianty
 
@@ -41,11 +41,11 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 | `stock_item` / `stock_movement` | Aktuální stav zásoby varianty a neměnný skladový deník. Demo seed vytváří pro každou variantu s kladným počátečním stavem právě jeden příjem `demo_opening_balance`, jehož množství odpovídá `stock_item.quantity_on_hand`. |
 | `catalog_message_translation` / `cart_message_translation` / `checkout_message_translation` | Systémové texty vlastní příslušné domény. Každá tabulka uchovává stabilní `message_key` a jazykové znění; klíč je unikátní v rámci locale a tabulky. Společná tabulka `language` zůstává vlastnictvím infrastruktury Translation. |
 | `cart_item` | Položka košíku odkazuje na variantu a ukládá identitu produktu pro kontrolu složené vazby. |
-| `shop_order` | Objednávka uchovává účetní souhrny v minor units. `adjustments_net_minor` je čistý součet úprav; `grand_total_minor` musí odpovídat součtu mezisoučtu, čistých úprav a daně. `placed_at IS NOT NULL` uzavírá finanční snapshot. |
+| `shop_order` | Objednávka uchovává účetní souhrny v minor units. `adjustments_net_minor` je čistý součet úprav; `grand_total_minor` musí odpovídat součtu mezisoučtu, čistých úprav a daně. `placed_at IS NOT NULL` uzavírá finanční snapshot. `is_demo = 1` označuje demonstrační objednávku; její klasifikace je po založení neměnná a databáze nedovolí zařadit ji do provozního Outboxu. |
 | `shop_order_item` / `shop_order_item_option` | Historický nákupní snapshot. Hrubá částka řádku musí být součtem čisté částky a daně; po uzavření objednávky jsou položky i jejich volby neměnné. Snapshot nesmí být závislý na aktuálním názvu, ceně ani konfiguraci katalogu. |
 | `shop_order_adjustment` | Historická úprava objednávky (např. doprava nebo sleva); hrubá částka je součtem čisté částky a daně. Souhrn čistých úprav je uložen v `shop_order.adjustments_net_minor`. Po uzavření objednávky nelze úpravy měnit. |
 | `currency` / `iso4217_currency` | Obchodní měna je navázána na verzovaný katalog ISO 4217; složený FK vynucuje současnou shodu kódu a počtu minor units. |
-| `outbox_message` | Technická integrační zpráva s vlastním životním cyklem; záměrně nemá obchodní FK a její payload nesmí obsahovat tajné údaje. |
+| `outbox_message` | Technická integrační zpráva s vlastním životním cyklem. Volitelný `shop_order_id` odkazuje na objednávku; události `order.*` jej musí uvádět a databáze odmítá vazbu na demo objednávku. Payload nesmí obsahovat tajné údaje. |
 
 ## 3. Kanonizace kombinace varianty
 
@@ -297,6 +297,7 @@ flowchart LR
   shop_order_status_history -->|shop_order_id → id| shop_order
   iso4217_currency -->|iso4217_catalog_release_id → id| iso4217_catalog_release
   currency -->|code, minor_units → code, minor_units| iso4217_currency
+  outbox_message -->|shop_order_id → id| shop_order
 ```
 
 ## 7. Poznámky k interpretaci
@@ -304,8 +305,8 @@ flowchart LR
 - Diagram zahrnuje také složené cizí klíče, samovazbu `category.parent_id`, obě vazby `product_relation` na `product` a vazby měny/jazyka přes přirozené kódy.
 - Tabulka `currency` má složený FK `(code, minor_units)` do `iso4217_currency(code, minor_units)`; tím databáze vynucuje shodu kódu a přesnosti měny.
 - `iso4217_currency.iso4217_catalog_release_id` odkazuje na verzované vydání katalogu ISO 4217.
-- `outbox_message` nemá FK do obchodních tabulek. Outbox je technická integrační hranice; vazba na obchodní událost je vyjádřena stabilním názvem události a payloadem, nikoli databázovým FK.
-- Absence FK v diagramu neznamená absenci aplikačního vztahu. Diagram zobrazuje pouze fyzické databázové cizí klíče, nikoli logické vazby, které jsou záměrně bez FK.
+- `outbox_message.shop_order_id` je volitelný FK na `shop_order`. Každá událost s prefixem `order.` musí uvést ID objednávky; databázové triggery odmítnou demo objednávku. Ostatní typy Outbox zpráv mohou zůstat bez objednávkové vazby.
+- Diagram zobrazuje fyzické databázové cizí klíče; další logické vazby mohou být vyjádřeny pouze aplikačně.
 
 ## 8. Zdrojové migrace
 
@@ -318,13 +319,15 @@ flowchart LR
 - `migrations/structures/2026-11-15-170000-order-accounting-invariants.sql` – účetní invarianty objednávek: souhrnná čistá hodnota úprav, kontroly hrubých částek, agregované ověření při uzavření a neměnnost uzavřeného snapshotu.
 - `migrations/structures/2026-11-15-180000-archive-products-and-variants.sql` – archivace produktů a deaktivace variant, FK `ON DELETE RESTRICT` a databázové triggery zakazující fyzické mazání a neplatnou aktivaci variant.
 - `migrations/structures/2026-11-15-210000-split-system-message-translations.sql` – rozdělení systémových textů do vlastnických tabulek Catalog, Cart a Checkout; převod zachovává ID i všechna data a starou tabulku odstraní až po úplné kontrole shody.
+- `migrations/structures/2026-11-15-220000-protect-demo-orders.sql` – klasifikace demo objednávek, neměnnost příznaku a databázová ochrana Outboxu včetně FK na objednávku.
 
 ## 9. Demo data
 
-Demo seed rozšiřuje základní katalog a obchodní příklady, aniž by měnil strukturální schéma:
+Demo seed rozšiřuje základní katalog a obchodní příklady; samostatná seed migrace označuje všechny čtyři ukázkové objednávky:
 
 - `migrations/dummy-data/2026-11-15-190000-complete-demo-data.sql` doplňuje české a anglické krátké i dlouhé popisy a SEO metadata tří demo produktů; vytváří úplné adresní a položkové snapshoty dvou dalších uzavřených objednávek; doplňuje snapshot zvolené produktové možnosti, dopravy a historie stavů; zakládá počáteční skladové příjmy a systémové texty pro katalog, košík a checkout.
 - `migrations/dummy-data/2026-11-15-200000-complete-demo-short-descriptions.sql` zpřesňuje dva krátké popisy tak, aby byly samostatně srozumitelné a splňovaly minimální délku ověřovanou testem.
+- `migrations/dummy-data/2026-11-15-230000-classify-demo-orders.sql` označuje objednávky `2026-000001` až `2026-000004` jako demo a ověřuje jejich úplnost.
 - `DemoDataIntegrity.phpt` ověřuje úplnost lokalizací, účetní a adresní snapshoty objednávek, skladové počáteční pohyby i systémové texty. `DatabaseProductRepositoryIntegration.phpt` ověřuje, že katalogový repozitář vrací aktuální demo texty.
 
 Při změně schématu se diagram aktualizuje ve stejném kroku jako příslušná migrace. Nikdy neupravuj historické migrace jen kvůli změně diagramu.
