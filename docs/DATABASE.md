@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 1.4 · 15. 11. 2026  
+**Revize:** 1.5 · 15. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -104,6 +104,15 @@ Konkrétní označovací mechanismus (např. explicitní `is_demo`/origin flag n
 - Stav objednávky je řízen stavovým automatem v aplikační vrstvě.
 - FK a CHECK omezení se testují na přesné produkční verzi MySQL.
 
+### Bezpečné skládání SQL
+
+- Hodnoty předávané do SQL se vždy předávají jako parametrizované hodnoty; nesmějí se vkládat do SQL řetězce konkatenací ani interpolací.
+- Dynamické identifikátory (názvy tabulek, sloupců nebo řadicích výrazů) nelze bezpečně předat jako běžné SQL parametry. Musí pocházet z pevného aplikačního allowlistu a při vložení do SQL se musí escapovat databázovou vrstvou.
+- Pokud databázový příkaz vyžaduje dynamický SQL fragment, celý fragment musí být sestaven pouze z pevně definovaných aplikačních variant. Uživatelský vstup nesmí určovat SQL syntaxi, operátory, klauzule ani fragmenty.
+- Řazení, filtrování a další dynamické části dotazů se mapují na předem definované SQL varianty; nepoužívají se přímo hodnoty dodané klientem.
+- Přímé SQL je přípustné tam, kde databázová vrstva neposkytuje potřebnou operaci nebo kde je nutná specifická atomická databázová konstrukce. I v takovém případě musí být všechny hodnoty parametrizované a dynamické identifikátory validované allowlistem a escapované.
+- Testy bezpečnosti SQL musí ověřovat také odmítnutí neočekávaných hodnot a typů objektů; bezpečnostní validace musí proběhnout před první destruktivní operací.
+
 ## 6. Vlastnictví dat moduly
 
 | Datová oblast | Vlastník |
@@ -201,3 +210,4 @@ Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečné
 | 15. 11. 2026 | v1.3: popsán aplikační `OutboxWriter` a transakční guard produkční implementace `DatabaseOutboxWriter`. |
 | 15. 11. 2026 | v1.4: upřesněna konvence primárních klíčů a úplně zdokumentovány přirozené a pojmenovací výjimky cizích klíčů (F3-08). |
 | 15. 11. 2026 | Dopřednou migrací sjednocen název FK sloupce katalogu ISO 4217 na `iso4217_catalog_release_id` podle standardní konvence. |
+| 15. 11. 2026 | v1.5: doplněna pravidla bezpečného skládání SQL, parametrizace hodnot a allowlistu dynamických identifikátorů (F3-14). |
