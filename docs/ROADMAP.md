@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.02 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.03 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 123, rozděláno 0, k úpravě 2, rozhodnout 0, blokováno 0, plán 425, zrušeno 2.
+Celkem **554 kroků**: hotovo 124, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 425, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 11 | 0 | 1 | 0 | 0 | 21 | 1 |
+| F3 | Databáze a migrace | 34 | 12 | 0 | 0 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -356,7 +356,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
 - `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců
 - `[PLÁN]` **F3-15** Testovací databáze a bootstrap integračních testů
-- `[K ÚPRAVĚ]` **F3-16** Bezpečný vývojový `db:reset`: zachovat kontroly databáze, účtu a dvojí potvrzení, ale doplnit explicitní kontrolu aplikačního prostředí před jakýmkoliv databázovým dotazem. Příkaz musí odmítnout produkční, neznámé nebo chybějící prostředí bez vedlejších účinků.
+- `[HOTOVO]` **F3-16** Bezpečný vývojový `db:reset`: požadovaná explicitní fail-closed kontrola `app.environment` byla implementována a ověřena v rámci F3-33. Povoleno je pouze přesné prostředí `development`; kontrola proběhne před prvním databázovým dotazem. Výchozí `null`, produkční i neznámé prostředí jsou odmítnuty bez vedlejších účinků. Zachovány jsou kontroly databáze `argomi_bestshop`, migračního účtu a dvojí potvrzení. Nebyla přidávána duplicitní implementace ani test.
 - `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
 - `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
 - `[PLÁN]` **F3-19** Implementace hashe kombinace varianty (SHA-256) a test shody s SQL `SHA2(..., 256)`
@@ -1204,6 +1204,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ### v2.98 (15. 11. 2026)
 - Dokončen F2-15: potvrzena a zdokumentována architektonická izolace `Shared` pomocí existujícího pravidla Deptrac. `composer arch` je součástí lokálních kontrol i GitHub Actions; nebyla přidána duplicitní kontrolní vrstva.
 - F2: **16 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **119 hotovo**, **0 rozděláno**, **2 k úpravě**, **429 plán**, **2 zrušeno**.
+
+### v3.03 (15. 11. 2026)
+- Uzavřen F3-16: bezpečnostní požadavek na vývojový `db:reset` je již splněn implementací F3-33. Fail-closed kontrola prostředí probíhá před databázovým dotazem; následné kontroly databáze, migračního účtu a dvojí potvrzení zůstávají zachovány.
+- Nebyla přidávána duplicitní implementace ani test. Stav byl uzavřen na základě existující implementace a uživatelem potvrzených aktivních kontrol F3-33.
+- F2: **20 hotovo**, **0 rozděláno**, **0 plán**. F3: **12 hotovo**, **0 rozděláno**, **0 k úpravě**, **21 plán**, **1 zrušeno**. Celkový souhrn: **124 hotovo**, **0 rozděláno**, **1 k úpravě**, **425 plán**, **2 zrušeno**.
 
 ### v3.02 (15. 11. 2026)
 - Dokončen F2-20: ověřen kontrakt zpracování Transactional Outbox. Worker poskytuje at-least-once doručení, stabilní `messageId` napříč pokusy, exponenciální retry/backoff, limit pokusů, stav `dead`, evidenci chyb a ochranu lease tokenem.
