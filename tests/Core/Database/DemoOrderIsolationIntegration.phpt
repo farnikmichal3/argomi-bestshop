@@ -37,6 +37,7 @@ Assert::true($demoOrderId > 0, 'The demo order must be explicitly classified.');
 $liveOrderNumber = 'TEST-DEMO-ISOLATION';
 $liveOrderId = 0;
 $messageId = null;
+$stockMovementId = 0;
 
 try {
     $liveOrder = $database->table('shop_order')->insert([
@@ -57,6 +58,42 @@ try {
         'placed_at' => null,
     ]);
     $liveOrderId = (int) $liveOrder->id;
+
+    $demoVariantId = (int) $pdo->query(
+        'SELECT product_variant_id FROM shop_order_item WHERE shop_order_id = ' . $demoOrderId . ' LIMIT 1',
+    )->fetchColumn();
+
+    // Skladový pohyb běžné objednávky je povolen a explicitně odkazuje na objednávku.
+    $stockMovement = $database->table('stock_movement')->insert([
+        'product_variant_id' => $demoVariantId,
+        'delta' => -1.000,
+        'reason' => 'sale',
+        'reference_type' => 'shop_order',
+        'reference_id' => $liveOrderId,
+        'note' => 'Integration test',
+    ]);
+    $stockMovementId = (int) $stockMovement->id;
+
+    // Demo objednávka nesmí vytvářet skutečný skladový pohyb.
+    Assert::exception(
+        static fn () => $database->table('stock_movement')->insert([
+            'product_variant_id' => $demoVariantId,
+            'delta' => -1.000,
+            'reason' => 'sale',
+            'reference_type' => 'shop_order',
+            'reference_id' => $demoOrderId,
+            'note' => 'Must be rejected',
+        ]),
+        Throwable::class,
+    );
+
+    // Ani existující skladový pohyb nelze přesměrovat na demo objednávku.
+    Assert::exception(
+        static fn () => $database->table('stock_movement')
+            ->where('id', $stockMovementId)
+            ->update(['reference_id' => $demoOrderId]),
+        Throwable::class,
+    );
 
     // Běžná objednávka může emitovat událost; její Outbox záznam nese FK.
     $messageId = $transaction->run(
@@ -130,6 +167,12 @@ try {
     if ($messageId instanceof PublicId) {
         $database->table('outbox_message')
             ->where('message_id', $messageId->toString())
+            ->delete();
+    }
+
+    if ($stockMovementId > 0) {
+        $database->table('stock_movement')
+            ->where('id', $stockMovementId)
             ->delete();
     }
 
