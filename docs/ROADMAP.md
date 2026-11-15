@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 127, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 420, zrušeno 2.
+Celkem **554 kroků**: hotovo 129, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 420, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 15 | 2 | 0 | 0 | 0 | 16 | 1 |
+| F3 | Databáze a migrace | 34 | 17 | 0 | 0 | 0 | 0 | 16 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -350,8 +350,8 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-07** Ověřeny konvence Nette Database Exploreru `ref()` a `related()` na izolované MySQL testovací databázi. Integrační test pokrývá 1:N a N:1 překlady produktu, samovazbu kategorií, nejednoznačné a explicitně určené dvě FK `product_relation` a M:N vazbu přes `product_category`. Test je read-only a používá pouze `argomi_bestshop_test` s účtem `argomi_test_app`; `check.bat` prošel: 12 testů OK, PHPStan bez chyb, PHP-CS-Fixer 0 souborů k opravě a Deptrac 0 porušení.
 - `[HOTOVO]` **F3-08** Integrační test `SchemaConventionsIntegration.phpt` ověřuje na izolované MySQL testovací databázi primární klíče všech tabulek, jedinou schválenou výjimku přirozeného primárního klíče `iso4217_currency.code` a konvence všech cizích klíčů včetně přesného allowlistu přirozených a složených klíčů. Test je read-only a fail-closed pro databázi i účet.
 - `[HOTOVO]` **F3-09** Ověřeny výjimky a explicitní relace Nette Database Exploreru (`category.parent_id`, `product_relation.related_product_id` a další vícečetné/složené vazby) existujícím integračním testem `ExplorerRelationsIntegration.phpt`; nebyl vytvářen duplicitní test. Oba integrační testy i kompletní `check.bat` uživatel potvrdil jako úspěšné.
-- `[ROZDĚLÁNO]` **F3-10** První čtecí repozitář Catalog nad Explorer: `ProductRepository` a `DatabaseProductRepository`; mapování `ActiveRow` na DTO, dotazy pouze v repozitářích. Implementace a fail-closed integrační test jsou v repozitáři, lokální ověření čeká na uživatele.
-- `[ROZDĚLÁNO]` **F3-11** Typované `readonly` DTO pro první katalogovou entitu a její překlady: `ProductDto` a `ProductTranslationDto`; další entity vlny 1 budou následovat po ověření tohoto základu.
+- `[HOTOVO]` **F3-10** První čtecí repozitář Catalog nad Nette Database Explorerem: `ProductRepository` a `DatabaseProductRepository`; dotazy zůstávají v repozitáři a `ActiveRow` neopouští persistence vrstvu. Fail-closed MySQL integrační test ověřuje vyhledání produktu podle ID/kódu, chybějící záznamy, časové údaje v UTC a překlady. Implementace je automaticky registrována přes konvenci `*Repository` a test ji úspěšně získává z Nette DI. Uživatel potvrdil úspěšné kompletní `check.bat`.
+- `[HOTOVO]` **F3-11** Typované `readonly` DTO `ProductDto` a `ProductTranslationDto` pro první katalogovou entitu a její překlady. Interní read-model DTO jsou správně umístěna v `Catalog/Application/Dto`, nikoli ve veřejném API; mapování kontroluje databázové typy a nepouští `ActiveRow` mimo persistence vrstvu. PHPStan, coding standard, Deptrac i integrační testy prošly v rámci uživatelem potvrzeného kompletního `check.bat`.
 - `[PLÁN]` **F3-12** Doplnit regresní ověření existujícího `Transaction` / `NetteTransaction` adaptéru. Produkční implementace přes sdílený `Nette\Database\Explorer` již existuje; nevytvářet druhý adaptér. Aktuální strom neobsahuje transakční test, proto ověřit a obnovit pokrytí commit/rollback, propagace `Exception` a `Error`, vnoření a DI.
 - `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
 - `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců
@@ -1205,6 +1205,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokončen F2-15: potvrzena a zdokumentována architektonická izolace `Shared` pomocí existujícího pravidla Deptrac. `composer arch` je součástí lokálních kontrol i GitHub Actions; nebyla přidána duplicitní kontrolní vrstva.
 - F2: **16 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **119 hotovo**, **0 rozděláno**, **2 k úpravě**, **429 plán**, **2 zrušeno**.
 
+### v3.07 (15. 11. 2026)
+- Dokončeny F3-10 a F3-11: první čtecí repozitář katalogu a typované DTO produktu i překladů. Repozitář používá Nette Database Explorer, mapuje `ActiveRow` na DTO uvnitř persistence vrstvy a je automaticky registrován přes konvenci `*Repository` v Nette DI.
+- Fail-closed MySQL integrační test ověřuje produkt podle ID/kódu, nenalezené záznamy, UTC časové údaje a překlady. Po přesunu interních DTO do `Catalog/Application/Dto` Deptrac respektuje hranici CatalogApi/CatalogInternal; konfigurace architektury nebyla oslabena.
+- Uživatel potvrdil úspěšné kompletní `check.bat`: všechny aktivní kontroly prošly.
+- F3: **17 hotovo**, **0 rozděláno**, **0 k úpravě**, **16 plán**, **1 zrušeno**. Celkový souhrn: **129 hotovo**, **0 rozděláno**, **1 k úpravě**, **420 plán**, **2 zrušeno**.
 ### v3.05 (15. 11. 2026)
 - Dokončeny F3-08 a F3-09: integrační test `SchemaConventionsIntegration.phpt` ověřuje konvence primárních a cizích klíčů na izolované MySQL testovací databázi; existující `ExplorerRelationsIntegration.phpt` pokrývá výjimky a explicitní relace Nette Database Exploreru bez duplicitního testu.
 - Doplněna dopředná migrace pro sjednocení názvu FK `iso4217_currency.iso4217_catalog_release_id`; původní historická migrace zůstala beze změny. Aktualizována databázová dokumentace.
