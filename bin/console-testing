@@ -31,7 +31,7 @@ try {
     if (
         $environment !== 'testing'
         || !is_string($databaseDsn)
-        || !preg_match('/(?:^|;)host=([^;]+)/i', $databaseDsn, $hostMatches)
+        || !preg_match('/(?:^|[;:])host=([^;]+)/i', $databaseDsn, $hostMatches)
         || $hostMatches[1] !== '127.0.0.1'
         || !preg_match('/(?:^|;)dbname=([^;]+)/i', $databaseDsn, $databaseMatches)
         || $databaseMatches[1] !== 'argomi_bestshop_test'
