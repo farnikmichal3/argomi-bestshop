@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.92 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.93 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 115, rozděláno 1, k úpravě 3, rozhodnout 0, blokováno 0, plán 433, zrušeno 2.
+Celkem **554 kroků**: hotovo 116, rozděláno 0, k úpravě 3, rozhodnout 0, blokováno 0, plán 433, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 13 | 0 | 1 | 0 | 0 | 6 | 0 |
-| F3 | Databáze a migrace | 34 | 10 | 1 | 1 | 0 | 0 | 21 | 1 |
+| F3 | Databáze a migrace | 34 | 11 | 0 | 1 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -374,7 +374,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-31** Navrhnout a migrovat doménově rozdělené systémové překlady ze současné tabulky `translation_message`
 - `[PLÁN]` **F3-32** Navrhnout a implementovat explicitní označení demo dat a zákaz vedlejších efektů pro demo objednávky
 - `[HOTOVO]` **F3-33** Ochrana `DbResetCommand`: zavedena samostatná `DbResetEnvironmentPolicy`; `common.neon` má fail-closed výchozí hodnotu `app.environment: null`; příkaz odmítá vše kromě přesné hodnoty `development` ještě před prvním DB dotazem. Negativní test politiky pokrývá chybějící, neznámé, testing, staging a production. Uživatel potvrdil čisté aktivní kontroly přes `check.bat` a bezpečné odmítnutí příkazu při `environment: null`.
-- `[ROZPRACOVÁNO]` **F3-34** Databázová persistence Transactional Outbox: dopředná migrace se samostatnou tabulkou `outbox_message` byla úspěšně aplikována v lokálním prostředí. Aplikační `OutboxWriter` a `DatabaseOutboxWriter` vyžadují aktivní PDO transakci, používají sdílený Explorer, `Clock` a `PublicIdGenerator` a vlastní transakci nezahajují. Doplněny `OutboxMessage`, kontrakt `OutboxMessageHandler` a `DatabaseOutboxWorker`: bezpečný claim přes `FOR UPDATE SKIP LOCKED`, náhodný 128bitový lease token, zpracování mimo claim transakci, guarded dokončení/retry, exponenciální backoff, přechod do `dead` a evidence pouze typu výjimky. CLI příkaz `outbox:work` spouští jednu dávku pro periodické volání cronem. Přidán samostatný MySQL integrační test pro doručení, retry/dead, obnovu expirovaného lease a ochranu proti opožděnému workeru. Zbývá lokální ověření nového workeru a všech aktivních kontrol uživatelem; krok se neuzavře před úspěšným ověřením.
+- `[HOTOVO]` **F3-34** Databázová persistence Transactional Outbox: dopředná migrace samostatné tabulky `outbox_message` byla úspěšně aplikována v lokálním prostředí. Aplikační `OutboxWriter` a `DatabaseOutboxWriter` vyžadují aktivní PDO transakci, používají sdílený Explorer, `Clock` a `PublicIdGenerator` a vlastní transakci nezahajují. Doplněny `OutboxMessage`, kontrakt `OutboxMessageHandler` a `DatabaseOutboxWorker`: bezpečný claim přes `FOR UPDATE SKIP LOCKED`, vždy po jedné zprávě bez předčasného spuštění lease dalších položek dávky, náhodný 128bitový lease token, zpracování mimo claim transakci, guarded dokončení/retry, exponenciální backoff, přechod do `dead` a evidence pouze typu výjimky. CLI příkaz `outbox:work` spouští jednu omezenou dávku pro periodické volání cronem. MySQL integrační test pokrývá doručení, retry/dead, obnovu expirovaného lease a ochranu proti opožděnému workeru. Uživatel potvrdil `check.bat`: 10 testů OK, PHPStan bez chyb, PHP-CS-Fixer 0 souborů k opravě a Deptrac 0 porušení; GitHub Actions rovněž prošly.
 
 ### F4: Překlady v databázi
 
@@ -1200,6 +1200,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Implementace čeká na stažení do Laragonu, funkční ověření rollbacku/commitů/vnoření a čisté aktivní kontroly přes `check.bat`.
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
+
+### v2.93 (15. 11. 2026)
+- Dokončen F3-34 po úspěšném lokálním ověření writeru, workeru, integračních testů a všech aktivních kontrol; GitHub Actions prošly.
+- Worker nově claimuje vždy jednu zprávu a bezprostředně ji zpracuje, takže lease nezačíná běžet u dalších zpráv čekajících v dávce.
+- F3: **11 hotovo**, **0 rozděláno**, **1 k úpravě**, **21 plán**. Celkový souhrn: **116 hotovo**, **0 rozděláno**, **3 k úpravě**, **433 plán**, **2 zrušeno**.
 
 ### v2.92 (15. 11. 2026)
 - F3-34: přidán aplikační kontrakt `OutboxWriter` a produkční `DatabaseOutboxWriter`.
