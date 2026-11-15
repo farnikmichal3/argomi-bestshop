@@ -32,6 +32,7 @@ final class DatabaseOutboxWriter implements OutboxWriter
      * @throws InvalidArgumentException Pokud název události není platný.
      * @throws JsonException Pokud payload nelze bezpečně serializovat.
      * @throws LogicException Pokud není aktivní databázová transakce.
+     * @throws \\Nette\\Database\\Exception\\DriverException Pokud DB ochrana odmítne demo objednávku nebo chybějící vazbu.
      */
     public function record(string $eventName, array $payload, ?int $shopOrderId = null): PublicId
     {
