@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\\UI\\Admin\\Development\\SqlDiagnostics;
+namespace App\UI\Admin\Development\SqlDiagnostics;
 
-use Nette\\Application\\UI\\Presenter;
-use Nette\\Database\\Explorer;
-use Tracy\\Debugger;
+use Nette\Application\UI\Presenter;
+use Nette\Database\Explorer;
+use Tracy\Debugger;
 
 final class SqlDiagnosticsPresenter extends Presenter
 {
