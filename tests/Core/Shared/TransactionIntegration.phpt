@@ -1,17 +1,14 @@
 <?php
 
-use Tests\\Support\\IntegrationTestBootstrap;
-
 declare(strict_types=1);
 
 use App\Shared\Application\Outbox\OutboxWriter;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\PublicId\PublicId;
 use App\Shared\Infrastructure\Transaction\NetteTransaction;
-use App\Bootstrap;
 use Nette\Database\Explorer;
 use Tester\Assert;
-use Tester\Environment;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 
