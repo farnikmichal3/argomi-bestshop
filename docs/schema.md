@@ -44,7 +44,7 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 
 ## 3. Kanonizace kombinace varianty
 
-Kombinace atributů varianty se před výpočtem hashe převádí na jediný deterministický UTF-8 řetězec. Pravidla jsou implementována v `Catalog\\Domain\\Variant\\VariantCombinationHash` a jsou součástí kontraktu mezi aplikační a databázovou kontrolou:
+Kombinace atributů varianty se před výpočtem hashe převádí na jediný deterministický UTF-8 řetězec. Pravidla jsou implementována v `App\Modules\Catalog\Domain\Variant\VariantCombinationHash` a jsou součástí kontraktu mezi aplikační a databázovou kontrolou:
 
 1. Vstup musí obsahovat alespoň jeden atribut. Kód atributu odpovídá `^[a-z][a-z0-9_]*$`.
 2. Atributy se seřadí podle kódu binárním pořadím (`strcmp`), nezávisle na locale a pořadí vstupního pole.
