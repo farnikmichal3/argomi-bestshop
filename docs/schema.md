@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – diagram databázového schématu
 
-**Revize:** 1.8 · 15. 11. 2026  
+**Revize:** 1.9 · 15. 11. 2026  
 **Autoritativní zdroj:** aktuální dopředné SQL migrace v `migrations/structures/`  
 **Databáze:** MySQL 8.x / InnoDB
 
