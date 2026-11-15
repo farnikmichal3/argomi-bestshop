@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.12 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.13 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 133, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 417, zrušeno 2.
+Celkem **554 kroků**: hotovo 134, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 417, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 21 | 1 | 0 | 0 | 0 | 11 | 1 |
+| F3 | Databáze a migrace | 34 | 22 | 0 | 0 | 0 | 0 | 11 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -359,7 +359,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-16** Bezpečný vývojový `db:reset`: požadovaná explicitní fail-closed kontrola `app.environment` byla implementována a ověřena v rámci F3-33. Povoleno je pouze přesné prostředí `development`; kontrola proběhne před prvním databázovým dotazem. Výchozí `null`, produkční i neznámé prostředí jsou odmítnuty bez vedlejších účinků. Zachovány jsou kontroly databáze `argomi_bestshop`, migračního účtu a dvojí potvrzení. Nebyla přidávána duplicitní implementace ani test.
 - `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
 - `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
-- `[ROZDĚLÁNO]` **F3-19** Implementace deterministické kanonizace kombinace varianty a SHA-256 v Catalog (`VariantCombinationHash`); jednotkové testy pořadí, typů hodnot, UTF-8 a escapování; MySQL integrační test shody PHP `hash()` s SQL `SHA2(..., 256)` a ověření demo seedů. Čeká na lokální ověření.
+- `[HOTOVO]` **F3-19** Implementována deterministická kanonizace kombinace varianty a SHA-256 v Catalog (`VariantCombinationHash`). Jednotkové testy ověřují stabilní pořadí, typy hodnot, normalizaci čísel, UTF-8, escapování a odmítání neplatných vstupů; MySQL integrační test potvrzuje shodu PHP `hash()` se SQL `SHA2(..., 256)` na demo seed datech. Uživatel potvrdil oba samostatné testy i kompletní `check.bat`: 19 testů OK, PHPStan bez chyb, PHP-CS-Fixer 0 souborů k opravě a Deptrac 0 porušení.
 - `[PLÁN]` **F3-20** Diagram vztahů tabulek rozdělený po modulech
 - `[HOTOVO]` **F3-21** Oddělit databázové účty aplikace (`argomi_app`, pouze CRUD) a migrací (`argomi_migrator`, CRUD + DDL); oba účty mají přístup pouze k `argomi_bestshop` a přihlášení bylo ověřeno
 - `[HOTOVO]` **F3-22** Zásady zálohování a obnovy databáze (před migrací povinný dump/snapshot, rollback obnovením ze zálohy)
@@ -1204,6 +1204,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ### v2.98 (15. 11. 2026)
 - Dokončen F2-15: potvrzena a zdokumentována architektonická izolace `Shared` pomocí existujícího pravidla Deptrac. `composer arch` je součástí lokálních kontrol i GitHub Actions; nebyla přidána duplicitní kontrolní vrstva.
 - F2: **16 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **119 hotovo**, **0 rozděláno**, **2 k úpravě**, **429 plán**, **2 zrušeno**.
+
+### v3.13 (15. 11. 2026)
+- Dokončen F3-19: deterministická kanonizace kombinací variant a SHA-256 hash v Catalog. Jednotkový test pokrývá řazení, normalizaci čísel včetně záporné nuly, bool/enum/text, UTF-8, escapování a neplatné vstupy; MySQL integrační test potvrzuje shodu PHP SHA-256 s `SHA2(..., 256)` pro demo varianty.
+- Uživatel potvrdil oba samostatné testy a kompletní `check.bat`: Nette Tester 19 testů OK, PHPStan bez chyb, PHP-CS-Fixer 0 souborů k opravě a Deptrac 0 porušení.
+- F3: **22 hotovo**, **0 rozděláno**, **11 plán**, **1 zrušeno**. Celkový souhrn: **134 hotovo**, **0 rozděláno**, **1 k úpravě**, **417 plán**, **2 zrušeno**.
 
 ### v3.12 (15. 11. 2026)
 - Dokončen F3-15: sjednocený integrační bootstrap, oddělená testovací databáze a účty, dokumentace a izolovaná testovací konzole jsou ověřeny. GitHub Actions používá MySQL 8.4, aplikuje dopředné migrace výhradně na testovací databázi a vyžaduje integrační testy; následně spouští Composer audit, PHPStan, coding standard a Deptrac.
