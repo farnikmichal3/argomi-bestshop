@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního počátečního schématu  
-**Revize:** 1.1 · 8. 11. 2026  
+**Revize:** 1.2 · 15. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -11,6 +11,7 @@ Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nep�
 | Skupina | Soubor | Účel |
 |---|---|---|
 | structures | `migrations/structures/2026-11-04-200000-init.sql` | Počáteční databázové schéma |
+| structures | `migrations/structures/2026-11-15-120000-transactional-outbox.sql` | Samostatná persistence Transactional Outbox (F3-34) |
 | basic-data | `migrations/basic-data/2026-11-04-201000-basic-data.sql` | Základní číselníky a referenční data |
 | dummy-data | `migrations/dummy-data/2026-11-04-202000-demo-products.sql` | Demonstrační obsah a související ukázková data |
 
@@ -120,7 +121,38 @@ Současné schéma v1 obsahuje centrální tabulku `translation_message` vedle d
 
 Nové rozhodnutí stanoví, že systémové překlady mají být rozděleny podle domén/modulů a chráněny před úpravami administrátorem. Současná jediná `translation_message` proto není cílový stav. Přechod je popsán v [TRANSLATIONS](TRANSLATIONS.md) a musí být proveden novou dopřednou migrací. Historická migrace se nepřepisuje.
 
-## 8. Známé mezery a navazující práce
+## 8. Transactional Outbox
+
+Dopředná migrace `2026-11-15-120000-transactional-outbox.sql` přidává samostatnou tabulku `outbox_message`. Fyzicky nesdílí tabulku s budoucí obecnou databázovou frontou.
+
+| Sloupec | Význam |
+|---|---|
+| `id` | Interní celočíselný primární klíč |
+| `message_id` | Veřejný ULID (26 znaků), unikátní identifikátor pro idempotenci a korelaci |
+| `event_name` | Stabilní název/verze typu události |
+| `payload` | JSON objekt s daty události; bez tajných a citlivých údajů |
+| `status` | `pending`, `processing`, `delivered` nebo `dead` |
+| `attempts` | Počet převzetí workerem |
+| `available_at` | Nejbližší čas, kdy lze zprávu převzít nebo znovu zkusit |
+| `locked_until` / `lock_token` | Lease a náhodný 128bitový fencing token aktuálního workeru |
+| `created_at` | Čas vytvoření záznamu |
+| `delivered_at` / `dead_at` | Čas přechodu do koncového stavu |
+| `last_error` | Bezpečný stručný popis poslední chyby, bez stack trace a citlivých údajů |
+
+Časové sloupce používají DATETIME(6) a ukládají UTC. Tabulka má unikátní klíče pro `message_id` a aktivní `lock_token`, index pro dostupné zprávy (`status`, `available_at`, `id`) a index pro vypršené lease (`status`, `locked_until`, `id`). CHECK omezení vynucují JSON objekt, konzistenci lease a vzájemnou výlučnost koncových stavů.
+
+### Stavový model a bezpečné převzetí
+
+- Nový záznam začíná ve stavu `pending` s `attempts = 0` a `available_at` nastaveným na aktuální UTC čas.
+- Worker v krátké transakci vybírá dostupné `pending` záznamy a `processing` záznamy s vypršeným `locked_until` pomocí `SELECT ... FOR UPDATE SKIP LOCKED`. Nastaví nový `lock_token`, `locked_until` a zvýší `attempts`; transakci potvrdí před externím voláním.
+- Výsledek worker zapíše pouze při shodě `lock_token` a dosud platném lease. Worker, jehož lease vypršel nebo byl nahrazen, nesmí přepsat výsledek novějšího převzetí.
+- Dočasná chyba vrací zprávu do `pending` s budoucím `available_at`. Po vyčerpání konfigurovaného limitu pokusů přejde do `dead`. Úspěch přechází do `delivered`.
+- Externí volání nikdy neběží uvnitř dlouho otevřené databázové transakce. Pád po úspěšném externím účinku, ale před označením zprávy jako doručené, může způsobit opakování; proto je doručení at-least-once a handler musí být idempotentní podle `message_id`.
+- Záznamy se automaticky nemažou. Retence a archivace budou samostatným provozním rozhodnutím.
+
+Zápis do `outbox_message` musí používat stejný databázový connection a stejnou nejvyšší transakci jako obchodní změna. Samostatný commit Outbox záznamu není povolen. Tato migrace vytváří databázový základ; implementace aplikačního writeru, claim/retry workeru a integračních testů navazuje samostatnými kroky.
+
+## 9. Známé mezery a navazující práce
 
 - doplnit testovací databázi a integrační testy migrací,
 - ověřit všechny FK, CHECK a mazací strategie,
@@ -132,7 +164,7 @@ Nové rozhodnutí stanoví, že systémové překlady mají být rozděleny podl
 - navrhnout rozdělení systémových překladů do doménových tabulek,
 - ověřit všechny migrace na cílové verzi MySQL.
 
-## 9. Databázové účty a oprávnění
+## 10. Databázové účty a oprávnění
 
 Databáze `argomi_bestshop` používá `utf8mb4` a kolaci `utf8mb4_0900_ai_ci`. Pro lokální vývoj jsou vytvořeny dva samostatné účty, oba omezené na `localhost` a databázi `argomi_bestshop`:
 
@@ -143,7 +175,7 @@ Databáze `argomi_bestshop` používá `utf8mb4` a kolaci `utf8mb4_0900_ai_ci`. 
 
 Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečného úložiště. Nikdy se neukládají do repozitáře ani do dokumentace. Účty nemají globální oprávnění ani `GRANT OPTION`.
 
-## 10. Bezpečnost migrací a provozu
+## 11. Bezpečnost migrací a provozu
 
 - Migrace se spouští řízeně a jejich pořadí určuje Nextras Migrations.
 - Před produkční migrací musí existovat ověřená záloha databáze.
@@ -151,10 +183,11 @@ Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečné
 - Demo seed musí být idempotentní nebo mít jasně definované jednorázové chování.
 - Zálohy a obnova jsou provozní požadavek, ne pouze příkaz pro vývojáře.
 
-## 11. Historie
+## 12. Historie
 
 | Datum | Změna |
 |---|---|
 | 4. 11. 2026 | Vytvořeno počáteční schéma a seed data v SQL. |
 | 8. 11. 2026 | v1.0: dokumentována skutečná časově značená struktura migrací a 46 tabulek. |
 | 8. 11. 2026 | v1.1: popsány oddělené databázové účty `argomi_app` a `argomi_migrator` a jejich minimální oprávnění. |
+| 15. 11. 2026 | v1.2: doplněna migrace a stavový model samostatné tabulky `outbox_message` (F3-34). |
