@@ -359,7 +359,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-16** Bezpečný vývojový `db:reset`: požadovaná explicitní fail-closed kontrola `app.environment` byla implementována a ověřena v rámci F3-33. Povoleno je pouze přesné prostředí `development`; kontrola proběhne před prvním databázovým dotazem. Výchozí `null`, produkční i neznámé prostředí jsou odmítnuty bez vedlejších účinků. Zachovány jsou kontroly databáze `argomi_bestshop`, migračního účtu a dvojí potvrzení. Nebyla přidávána duplicitní implementace ani test.
 - `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
 - `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
-- `[PLÁN]` **F3-19** Implementace hashe kombinace varianty (SHA-256) a test shody s SQL `SHA2(..., 256)`
+- `[ROZDĚLÁNO]` **F3-19** Implementace deterministické kanonizace kombinace varianty a SHA-256 v Catalog (`VariantCombinationHash`); jednotkové testy pořadí, typů hodnot, UTF-8 a escapování; MySQL integrační test shody PHP `hash()` s SQL `SHA2(..., 256)` a ověření demo seedů. Čeká na lokální ověření.
 - `[PLÁN]` **F3-20** Diagram vztahů tabulek rozdělený po modulech
 - `[HOTOVO]` **F3-21** Oddělit databázové účty aplikace (`argomi_app`, pouze CRUD) a migrací (`argomi_migrator`, CRUD + DDL); oba účty mají přístup pouze k `argomi_bestshop` a přihlášení bylo ověřeno
 - `[HOTOVO]` **F3-22** Zásady zálohování a obnovy databáze (před migrací povinný dump/snapshot, rollback obnovením ze zálohy)
