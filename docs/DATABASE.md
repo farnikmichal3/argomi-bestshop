@@ -89,7 +89,8 @@ Konkrétní označovací mechanismus (např. explicitní `is_demo`/origin flag n
   - `product_relation.related_product_id` – druhá vazba z tabulky produktových vztahů na `product.id`;
   - `currency` – obchodní sloupec odkazující na přirozený klíč `currency.code` (používá se v cenových tabulkách, košíku a objednávce);
   - `locale` – jazykový kód odkazující na `language.code` (v tabulkách `cart` a `shop_order`);
-  - `currency(code, minor_units)` → `iso4217_currency(code, minor_units)` – složená vazba, která vynucuje současnou shodu kódu měny a její přesnosti.
+  - `currency(code, minor_units)` → `iso4217_currency(code, minor_units)` – složená vazba, která vynucuje současnou shodu kódu měny a její přesnosti;
+  - `product_variant_attribute_value(product_id, attribute_id)` → `product_variant_axis(product_id, attribute_id)` – vazba na složený unikátní klíč osy varianty; zdrojové a cílové sloupce mají shodné názvy i pořadí.
 - U složených cizích klíčů, které začínají odkazem na `id`, musí první zdrojový sloupec dodržet konvenci `<referenced_table>_id`; další sloupce vyjadřují doplňující část složené identity a jejich pořadí musí odpovídat cílovým sloupcům.
 - Peněžní částky jsou celočíselné minor units a vždy mají měnu.
 - Množství je desetinný typ; nepoužívat float.
