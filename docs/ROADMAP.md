@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.01 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.02 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 122, rozděláno 0, k úpravě 2, rozhodnout 0, blokováno 0, plán 426, zrušeno 2.
+Celkem **554 kroků**: hotovo 123, rozděláno 0, k úpravě 2, rozhodnout 0, blokováno 0, plán 425, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 20 | 19 | 0 | 0 | 0 | 0 | 1 | 0 |
+| F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 11 | 0 | 1 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -335,7 +335,7 @@ _Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí
 - `[HOTOVO]` **F2-17** Katalog ISO 4217: verzovaná databázová evidence vydání SIX 2026-09-17 obsahuje 155 běžných měn s přesností 0–4; fondové, kovové a speciální kódy jsou vynechány. Složený cizí klíč vynucuje shodu kódu a přesnosti. Migrace, integrační test a všechny aktivní kontroly `check.bat` prošly.
 - `[HOTOVO]` **F2-18** Pravidla doménových událostí: vymezeny kritické synchronní interní reakce, transakční odpovědnost aplikačního use-case, propagace výjimek a zákaz externích vedlejších účinků. Integrační zprávy vznikají explicitně v Transactional Outbox ve stejné transakci; worker je zpracuje až po commitu. Interní `DomainEvent` se automaticky neserializuje.
 - `[HOTOVO]` **F2-19** Aplikační kontrakt Transactional Outbox: `OutboxWriter` vymezuje aplikační zápis integrační zprávy; `DatabaseOutboxWriter` vyžaduje aktivní PDO transakci, používá sdílený Explorer a vlastní transakci nezahajuje. Integrační test ověřuje zápis mimo transakci, úspěšný commit i rollback Outbox záznamu při chybě zdrojové operace. Splněno implementací F3-34, bez duplicitní implementace.
-- `[PLÁN]` **F2-20** Kontrakt zpracování Outboxu: worker, at-least-once doručení, idempotence, retry/backoff, evidence chyb a bezpečné opakování
+- `[HOTOVO]` **F2-20** Kontrakt zpracování Outboxu: worker zajišťuje at-least-once doručení; handlery musí být idempotentní podle stabilního `messageId`. Ověřeny retry s exponenciálním backoffem, limit pokusů a přechod do `dead`, evidence chyb, chybějící i duplicitní handlery, obnova expirovaného lease a ochrana proti opožděnému workeru. Dokumentovány limity lease, idempotency key pro externí API a pravidla bezpečného opakování; všechny aktivní kontroly prošly.
 
 ### F3: Databáze a migrace
 
@@ -1204,6 +1204,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ### v2.98 (15. 11. 2026)
 - Dokončen F2-15: potvrzena a zdokumentována architektonická izolace `Shared` pomocí existujícího pravidla Deptrac. `composer arch` je součástí lokálních kontrol i GitHub Actions; nebyla přidána duplicitní kontrolní vrstva.
 - F2: **16 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **119 hotovo**, **0 rozděláno**, **2 k úpravě**, **429 plán**, **2 zrušeno**.
+
+### v3.02 (15. 11. 2026)
+- Dokončen F2-20: ověřen kontrakt zpracování Transactional Outbox. Worker poskytuje at-least-once doručení, stabilní `messageId` napříč pokusy, exponenciální retry/backoff, limit pokusů, stav `dead`, evidenci chyb a ochranu lease tokenem.
+- Rozšířený MySQL integrační test ověřuje retry, vyčerpání pokusů, chybějící a duplicitní handlery, expirovaný lease i ochranu proti opožděnému workeru. Dokumentace stanovuje idempotenci handlerů, idempotency key pro externí API a limity automatického opakování.
+- Uživatel potvrdil, že všechny aktivní kontroly prošly.
+- F2: **20 hotovo**, **0 rozděláno**, **0 plán**. Celkový souhrn: **123 hotovo**, **0 rozděláno**, **2 k úpravě**, **425 plán**, **2 zrušeno**.
 
 ### v3.01 (15. 11. 2026)
 - Dokončen F2-19: aplikační kontrakt Transactional Outbox a atomický zápis jsou již implementovány v rámci F3-34. Integrační test ověřuje zákaz zápisu mimo transakci, potvrzení při úspěchu i rollback při chybě.
