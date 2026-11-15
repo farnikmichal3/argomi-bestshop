@@ -16,6 +16,7 @@ $zeroDecimalCurrency = new Currency('JPY', 0);
 
 Assert::same('CZK', $czk->code);
 Assert::same(2, $czk->minorUnits);
+Assert::same(4, (new Currency('XYZ', 4))->minorUnits);
 Assert::true($czk->equals(new Currency('CZK', 2)));
 Assert::false($czk->equals(new Currency('CZK', 0)));
 Assert::false($czk->equals($eur));
