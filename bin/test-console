@@ -7,10 +7,10 @@ require __DIR__ . '/../vendor/autoload.php';
 $bootstrap = new App\Bootstrap('local.testing.neon');
 $container = $bootstrap->bootWebApplication();
 
-$dbal = $container->getByType(Nextras\Dbal\IDbal::class);
-$identity = $dbal->query(
+$connection = $container->getByType(Nextras\Dbal\Connection::class);
+$identity = $connection->query(
     'SELECT DATABASE() AS database_name, CURRENT_USER() AS database_user',
-)[0] ?? [];
+)->fetch() ?: [];
 
 $databaseName = $identity['database_name'] ?? null;
 $databaseUser = $identity['database_user'] ?? null;
