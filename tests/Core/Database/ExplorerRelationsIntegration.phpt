@@ -125,7 +125,16 @@ $productCategoryRows = $database->table('product')
     ?->related('product_category');
 
 Assert::notNull($productCategoryRows);
-Assert::same([3], $sortedIds($productCategoryRows));
+
+// U M:N vztahu ověřujeme cizí klíč kategorie, nikoli vlastní ID vazebního řádku.
+$relatedCategoryIds = [];
+
+foreach ($productCategoryRows as $productCategoryRow) {
+    $relatedCategoryIds[] = (int) $productCategoryRow->category_id;
+}
+
+sort($relatedCategoryIds);
+Assert::same([3], $relatedCategoryIds);
 
 $productCategory = $database->table('product_category')
     ->where('product_id', 2)
