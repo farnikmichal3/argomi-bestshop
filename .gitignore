@@ -8,6 +8,7 @@
 
 # Local configuration
 /config/local.neon
+/config/local.testing.neon
 
 # Generated assets
 /www/assets/
