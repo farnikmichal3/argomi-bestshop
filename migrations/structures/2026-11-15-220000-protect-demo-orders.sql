@@ -28,7 +28,7 @@ BEGIN
         AND NOT (
             OLD.is_demo = 0
             AND NEW.is_demo = 1
-            AND NEW.order_number IN ('2026-000003', '2026-000004')
+            AND NEW.order_number IN ('2026-000001', '2026-000002', '2026-000003', '2026-000004')
         )
     THEN
         SIGNAL SQLSTATE '45000'
