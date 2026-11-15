@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.11 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.12 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 132, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 416, zrušeno 2.
+Celkem **554 kroků**: hotovo 133, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 418, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 20 | 1 | 0 | 0 | 0 | 12 | 1 |
+| F3 | Databáze a migrace | 34 | 21 | 0 | 0 | 0 | 0 | 12 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -355,7 +355,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-12** Doplněn fail-closed MySQL integrační test `TransactionIntegration.phpt` nad skutečnou testovací databází. Ověřuje registraci `Transaction` jako `NetteTransaction` v DI, návrat callbacku a commit, rollback i propagaci původních instancí `Exception` a `Error`, vnořené transakce se zachycenou i nezachycenou výjimkou a jejich skutečnou atomicitu bez savepointů. Test i kompletní `check.bat` byly uživatelem lokálně potvrzeny jako úspěšné; produkční adaptér zůstal beze změny.
 - `[HOTOVO]` **F3-13** Tracy panel pro SQL dotazy ve vývoji: využit vestavěný `Nette\Bridges\DatabaseTracy\ConnectionPanel`, bez vlastního loggeru či další knihovny. Debug režim povoluje výhradně explicitní `app.environment: development`; diagnostický presenter kontroluje aktivní Tracy debug režim. Ověřena skutečná SQL diagnostická stránka (2 aktivní jazyky, 3 dotazy, 5,5 ms) a samostatné spuštění s `local.testing.neon`, kde Tracy panel nebyl aktivní a diagnostická URL vracela 404. Dočasný vstupní bod byl odstraněn.
 - `[HOTOVO]` **F3-14** Audit skládání SQL dokončen nad 57 PHP soubory aplikačního kódu a relevantními databázovými integračními testy. Nebylo nalezeno SQL injection přes konkatenaci uživatelského vstupu. Běžné dotazy používají Nette Database Explorer; přímé SQL v Outbox workeru je odůvodněno atomickým claimováním (`FOR UPDATE SKIP LOCKED`) a časovými/lease operacemi, přičemž hodnoty jsou parametrizované. `DbResetCommand` dynamicky skládá pouze DDL pro identifikátory escapované přes DBAL; nově před mazáním fail-closed validuje celý seznam objektů a povoluje pouze `BASE TABLE` a `VIEW`. Do `docs/DATABASE.md` doplněna závazná pravidla bezpečného skládání SQL. Regresní test `DbResetCommandSafety.phpt` ověřuje odmítnutí neočekávaného typu `PROCEDURE` ještě před jakýmkoli destruktivním příkazem. Uživatel potvrdil samostatný regresní test, kompletní `composer test` (17 testů OK) a čistý PHPStan.
-- `[ROZDĚLÁNO]` **F3-15** Testovací databáze a bootstrap integračních testů. Rozděleno na: `[HOTOVO]` **F3-15a** sjednocený testovací bootstrap a bezpečnostní kontrola DB (uživatel potvrdil celý `check.bat`); `[HOTOVO]` **F3-15b** vzorová konfigurace, oddělené testovací účty, dokumentace a izolovaný `bin/console-testing`; `[PLÁN]` **F3-15c** MySQL 8.4 v GitHub Actions a spuštění integračních testů v CI.
+- `[HOTOVO]` **F3-15** Testovací databáze a bootstrap integračních testů. Dokončeny všechny části: **F3-15a** sjednocený testovací bootstrap a bezpečnostní kontrola DB; **F3-15b** vzorová konfigurace, oddělené testovací účty, dokumentace a izolovaný `bin/console-testing`; **F3-15c** GitHub Actions s MySQL 8.4, povinnými integračními testy a kontrolami Composer audit, PHPStan, coding standard a Deptrac. CI úspěšně prošlo a uživatel následně potvrdil `All active checks passed.` také po lokálním `git pull`.
 - `[HOTOVO]` **F3-16** Bezpečný vývojový `db:reset`: požadovaná explicitní fail-closed kontrola `app.environment` byla implementována a ověřena v rámci F3-33. Povoleno je pouze přesné prostředí `development`; kontrola proběhne před prvním databázovým dotazem. Výchozí `null`, produkční i neznámé prostředí jsou odmítnuty bez vedlejších účinků. Zachovány jsou kontroly databáze `argomi_bestshop`, migračního účtu a dvojí potvrzení. Nebyla přidávána duplicitní implementace ani test.
 - `[HOTOVO]` **F3-17** Příkaz `db:migrate` pro nasazení (rozhodnuto automaticky v CI/CD pipeline přes `migrations:continue`)
 - `[HOTOVO]` **F3-18** Příkaz pro spuštění migrací z konzole (`php bin/console migrations:continue` přes Contributte Console)
@@ -1204,6 +1204,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ### v2.98 (15. 11. 2026)
 - Dokončen F2-15: potvrzena a zdokumentována architektonická izolace `Shared` pomocí existujícího pravidla Deptrac. `composer arch` je součástí lokálních kontrol i GitHub Actions; nebyla přidána duplicitní kontrolní vrstva.
 - F2: **16 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **119 hotovo**, **0 rozděláno**, **2 k úpravě**, **429 plán**, **2 zrušeno**.
+
+### v3.12 (15. 11. 2026)
+- Dokončen F3-15: sjednocený integrační bootstrap, oddělená testovací databáze a účty, dokumentace a izolovaná testovací konzole jsou ověřeny. GitHub Actions používá MySQL 8.4, aplikuje dopředné migrace výhradně na testovací databázi a vyžaduje integrační testy; následně spouští Composer audit, PHPStan, coding standard a Deptrac.
+- GitHub Actions běh prošel; po `git pull` uživatel potvrdil `All active checks passed.` také lokálně. Vývojová databáze nebyla CI použita.
+- F3: **21 hotovo**, **0 rozděláno**, **12 plán**, **1 zrušeno**. Celkový souhrn: **133 hotovo**, **0 rozděláno**, **1 k úpravě**, **418 plán**, **2 zrušeno**.
 
 ### v3.10 (15. 11. 2026)
 - Dokončen F3-14: audit bezpečného skládání SQL nad 57 PHP soubory aplikačního kódu a relevantními databázovými integračními testy nenašel SQL injection přes konkatenaci uživatelského vstupu.
