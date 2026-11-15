@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.41 · 15. 11. 2026
+**Revize:** 1.42 · 15. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -139,6 +139,7 @@ Pravidla:
 - Doručování z Outboxu poskytuje nejméně jednou (at-least-once), nikoliv garantovaně právě jednou. Každá zpráva a její handler proto musí podporovat idempotentní zpracování; worker musí mít řízené opakování s prodlevou, evidenci pokusů a možnost bezpečného obnovení chybně zpracovatelných zpráv. Síťové volání nesmí probíhat uvnitř dlouho otevřené databázové transakce.
 - Outbox je spolehlivý záznam události a zdroj pravdy pro její doručení. Může navazovat na obecnou databázovou frontu, ale případné sdílení fyzické infrastruktury nesmí porušit atomický zápis Outbox záznamu spolu s obchodní změnou.
 - Outbox používá vlastní tabulku `outbox_message`; nesdílí fyzickou tabulku s obecnou databázovou frontou. Pozdější sdílení worker infrastruktury je možné pouze při zachování samostatného Outbox záznamu a jeho transakční atomicity.
+- Aplikační kontrakt `OutboxWriter` zapisuje událost do Outboxu; produkční `DatabaseOutboxWriter` používá stejný sdílený Nette Database Explorer jako transakční adaptér. Writer nikdy nezahajuje ani nepotvrzuje vlastní transakci a před vložením vyžaduje aktivní PDO transakci. Obchodní use-case proto volá `OutboxWriter::record()` uvnitř `Transaction::run()`; chyba zápisu se propaguje a způsobí rollback obchodní změny.
 - Veřejný identifikátor zprávy je ULID (26 znaků); interní primární klíč zůstává celočíselný. Název události je stabilní identifikátor typu/verze a payload je JSON objekt. Payload nesmí obsahovat hesla, přístupové tokeny, platební údaje ani jiné citlivé hodnoty.
 - Stav zprávy je `pending`, `processing`, `delivered` nebo `dead`. Počet pokusů se zvyšuje při převzetí workerem; plánovaný čas dalšího pokusu určuje `available_at`.
 - Převzetí probíhá v krátké DB transakci přes `SELECT ... FOR UPDATE SKIP LOCKED`. Worker nastaví náhodný 128bitový `lock_token` a dobu platnosti lease (`locked_until`), zvýší počet pokusů a transakci potvrdí ještě před externím voláním.
