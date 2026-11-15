@@ -20,7 +20,7 @@ BEGIN
         WHERE order_number IN ('2026-000001', '2026-000002', '2026-000003', '2026-000004')
           AND is_demo = 1
           AND placed_at IS NOT NULL
-    ) <> 2 THEN
+    ) <> 4 THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'All four seeded demo orders must be classified as demo.';
     END IF;
