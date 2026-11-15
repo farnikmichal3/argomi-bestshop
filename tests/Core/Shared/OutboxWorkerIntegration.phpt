@@ -119,10 +119,10 @@ try {
     Assert::same(RuntimeException::class, $failedRow->last_error);
     Assert::null($failedRow->lock_token);
     Assert::null($failedRow->locked_until);
-    Assert::true($database->query(
+    Assert::same(1, (int) $database->query(
         'SELECT available_at > TIMESTAMPADD(SECOND, 4, UTC_TIMESTAMP(6)) AND available_at <= TIMESTAMPADD(SECOND, 5, UTC_TIMESTAMP(6)) AS retry_window FROM outbox_message WHERE message_id = ?',
         $failureId->toString(),
-    )->fetchField() == 1);
+    )->fetchField());
     Assert::same($failureId->toString(), $failureHandler->handledMessages[0]->messageId);
     Assert::same(1, $failureHandler->handledMessages[0]->attempt);
 
@@ -273,6 +273,55 @@ try {
     Assert::notNull($expiredRow);
     Assert::same('delivered', $expiredRow->status);
     Assert::same(2, (int) $expiredRow->attempts);
+
+    // Expirovaný poslední pokus se nesmí znovu doručit; claim jej rovnou uzavře jako dead.
+    $expiredFinalId = $createMessage('test.outbox.worker.expired-final-attempt');
+    $ids[] = $expiredFinalId;
+
+    $database->query(
+        "UPDATE outbox_message
+        SET status = 'processing',
+            attempts = 3,
+            lock_token = ?,
+            locked_until = TIMESTAMPADD(SECOND, -1, UTC_TIMESTAMP(6))
+        WHERE message_id = ?",
+        random_bytes(16),
+        $expiredFinalId->toString(),
+    );
+
+    $finalAttemptHandler = new class implements OutboxMessageHandler {
+        public bool $called = false;
+
+        public function eventName(): string
+        {
+            return 'test.outbox.worker.expired-final-attempt';
+        }
+
+        public function handle(OutboxMessage $message): void
+        {
+            $this->called = true;
+        }
+    };
+
+    $finalAttemptWorker = new DatabaseOutboxWorker(
+        $database,
+        [$finalAttemptHandler],
+        new NullLogger(),
+        maxAttempts: 3,
+    );
+
+    Assert::same(0, $finalAttemptWorker->runOnce(1));
+    Assert::false($finalAttemptHandler->called);
+
+    $expiredFinalRow = $database->table('outbox_message')
+        ->where('message_id', $expiredFinalId->toString())
+        ->fetch();
+
+    Assert::notNull($expiredFinalRow);
+    Assert::same('dead', $expiredFinalRow->status);
+    Assert::same(3, (int) $expiredFinalRow->attempts);
+    Assert::notNull($expiredFinalRow->dead_at);
+    Assert::same('Lease expired after maximum attempts.', $expiredFinalRow->last_error);
 
     // Simulace převzetí jiným workerem: původní token už nesmí potvrdit doručení.
     $staleId = $createMessage('test.outbox.worker.stale-lease');
