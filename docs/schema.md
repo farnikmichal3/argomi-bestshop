@@ -46,33 +46,7 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 
 Kombinace atributů varianty se před výpočtem hashe převádí na jediný deterministický UTF-8 řetězec. Pravidla jsou implementována v `Catalog\\Domain\\Variant\\VariantCombinationHash` a jsou součástí kontraktu mezi aplikační a databázovou kontrolou:
 
-1. Vstup musí obsahovat alespoň jeden atribut. Kód atributu odpovídá `^[a-z][a-z0-9_]*# ArgoMi-BestShop – diagram databázového schématu
-
-**Revize:** 1.0 · 15. 11. 2026  
-**Autoritativní zdroj:** aktuální dopředné SQL migrace v `migrations/structures/`  
-**Databáze:** MySQL 8.x / InnoDB
-
-Tento dokument vizualizuje skutečné tabulky a cizí klíče po aplikaci všech aktuálních strukturálních migrací. Není samostatným zdrojem pravdy: při rozporu mají přednost SQL migrace. Diagram je rozdělen do modulových skupin podle vlastnictví dat popsaného v [DATABASE.md](DATABASE.md).
-
-## 1. Přehled tabulek podle vlastníka
-
-Schéma obsahuje **49 tabulek** a **61 cizích klíčů**. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
-
-| Modul | Tabulek | Oblast |
-|---|---:|---|
-| Catalog | 21 | Produkty, kategorie, atributy, varianty, volby a produktové vztahy. Vlastní také jednotky a jejich překlady. |
-| Pricing | 6 | Měny, katalog ISO 4217, ceny variant, historie cen a ceny hodnot voleb. |
-| Tax | 2 | Daňové třídy a sazby. |
-| Inventory | 2 | Skladové položky a pohyby. |
-| Customer | 2 | Zákazníci a jejich adresy. |
-| Shipping | 3 | Způsoby dopravy, překlady a ceny dopravy. |
-| Payments | 2 | Platební metody a překlady. |
-| Cart | 3 | Košíky, položky košíku a zvolené možnosti. |
-| Orders | 5 | Objednávky, položky, snapshoty voleb, úpravy a historie stavů. |
-| Translation | 2 | Jazyky a přechodná centrální tabulka systémových překladů. |
-| Shared | 1 | Technická tabulka Transactional Outbox; záměrně bez FK do obchodních tabulek. |
-
-.
+1. Vstup musí obsahovat alespoň jeden atribut. Kód atributu odpovídá `^[a-z][a-z0-9_]*$`.
 2. Atributy se seřadí podle kódu binárním pořadím (`strcmp`), nezávisle na locale a pořadí vstupního pole.
 3. Každá položka má tvar `attribute_code=canonical_value`; položky se spojí znakem `;`.
 4. Hodnota se kanonizuje podle typu:
