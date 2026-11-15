@@ -3,12 +3,10 @@ Database tables use the approved primary-key and foreign-key naming conventions
 --FILE--
 <?php
 
-use Tests\\Support\\IntegrationTestBootstrap;
+use Tests\Support\IntegrationTestBootstrap;
 
-use App\Bootstrap;
 use Nette\Database\Explorer;
 use Tester\Assert;
-use Tester\Environment;
 
 $rootDir = dirname(__DIR__, 3);
 
@@ -20,6 +18,7 @@ $container = $integration->container;
 
 /** @var Explorer $database */
 $database = $integration->database;
+$pdo = $database->getConnection()->getPdo();
 
 // Načteme skutečné tabulky databáze, nikoli seznam odvozený z migračních souborů.
 $tables = $pdo->query(
