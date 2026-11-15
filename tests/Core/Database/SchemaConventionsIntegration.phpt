@@ -179,11 +179,20 @@ foreach ($foreignKeys as $foreignKey) {
     }
 
     if ($targetColumns[0] !== 'id') {
-        // Některé složené FK odkazují na unikátní klíč tvořený doménovými sloupci,
-        // nikoli na id; v takovém případě zdroj kopíruje přesné názvy i pořadí cíle.
+        // Kódy měny a jazyka jsou samostatné přirozené klíče. Ostatní
+        // povolené alternativní vazby musí přesně kopírovat složený cílový klíč.
+        $isCurrencyCodeReference = $targetTable === 'currency'
+            && $sourceColumns === ['currency']
+            && $targetColumns === ['code'];
+        $isLanguageCodeReference = $targetTable === 'language'
+            && $sourceColumns === ['locale']
+            && $targetColumns === ['code'];
+        $isMatchingCompositeReference = count($targetColumns) > 1
+            && $sourceColumns === $targetColumns;
+
         Assert::true(
-            count($targetColumns) > 1 && $sourceColumns === $targetColumns,
-            sprintf('FK %s → %s musí přesně kopírovat názvy složeného cílového klíče.', $sourceTable, $targetTable),
+            $isCurrencyCodeReference || $isLanguageCodeReference || $isMatchingCompositeReference,
+            sprintf('FK %s → %s neodpovídá žádné schválené přirozené/alternativní klíčové konvenci.', $sourceTable, $targetTable),
         );
         $actualExceptions[] = $signature;
         continue;
