@@ -3,8 +3,6 @@ DbResetCommand rejects unexpected database object types before changing the data
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Shared\Infrastructure\Console\DbResetCommand;
 use App\Shared\Infrastructure\Console\DbResetEnvironmentPolicy;
 use Nextras\Migrations\Entities\File;
