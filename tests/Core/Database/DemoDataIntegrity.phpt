@@ -114,7 +114,16 @@ $optionCount = (int) $pdo->query(
 )->fetchColumn();
 Assert::same(1, $optionCount, 'The T-shirt order must preserve its selected print option.');
 
-// Počáteční pohyby musí odpovídat množství založenému v demo stock_item.
+// Každá varianta s kladnou počáteční zásobou musí mít právě jeden příjem.
+$expectedOpeningMovementCount = (int) $pdo->query(
+    "SELECT COUNT(*)
+       FROM stock_item stock
+       INNER JOIN product_variant variant ON variant.id = stock.product_variant_id
+       INNER JOIN product product ON product.id = variant.product_id
+      WHERE product.code IN ('tshirt-printed', 'usb-c-cable', 'gan-charger')
+        AND stock.quantity_on_hand > 0",
+)->fetchColumn();
+
 $openingMovementCount = (int) $pdo->query(
     "SELECT COUNT(*)
        FROM stock_movement movement
@@ -123,7 +132,12 @@ $openingMovementCount = (int) $pdo->query(
       WHERE movement.reference_type = 'demo_opening_balance'
         AND product.code IN ('tshirt-printed', 'usb-c-cable', 'gan-charger')",
 )->fetchColumn();
-Assert::same(14, $openingMovementCount, 'Every demo variant with positive opening stock must have one receipt movement.');
+
+Assert::same(
+    $expectedOpeningMovementCount,
+    $openingMovementCount,
+    'Every demo variant with positive opening stock must have exactly one receipt movement.',
+);
 
 $stockMismatches = (int) $pdo->query(
     "SELECT COUNT(*)
