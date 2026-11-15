@@ -1206,6 +1206,7 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Zahájen F3-34: přidána dopředná migrace samostatné tabulky `outbox_message` s ULID identifikátorem, JSON payloadem, stavovým modelem, lease tokenem, CHECK omezeními a indexy pro claim i obnovu expirovaných lease.
 - Zapsáno rozhodnutí, že Outbox zůstává fyzicky oddělený od případné obecné databázové fronty. Lokální migrace, integrační testy a ověření atomického zápisu čekají na kontrolu.
 - Souhrn: **115 hotovo**, **1 rozpracováno**, **3 k úpravě**, **433 plán**, **2 zrušeno**.
+
 ### v2.89 (15. 11. 2026)
 - Zahájena implementace F3-33: explicitní fail-closed politika `app.environment`, povolen pouze přesný `development`, kontrola před prvním databázovým dotazem a samostatný test politiky.
 - Lokální ověření a nastavení `config/local.neon` zůstávají před označením kroku jako hotového.
