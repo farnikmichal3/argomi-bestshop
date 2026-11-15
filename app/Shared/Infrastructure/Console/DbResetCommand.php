@@ -105,7 +105,6 @@ final class DbResetCommand extends BaseCommand
             "SELECT TABLE_NAME AS table_name, TABLE_TYPE AS table_type
             FROM information_schema.TABLES
             WHERE TABLE_SCHEMA = DATABASE()
-                AND TABLE_TYPE IN ('BASE TABLE', 'VIEW')
             ORDER BY CASE WHEN TABLE_TYPE = 'VIEW' THEN 0 ELSE 1 END, TABLE_NAME",
         );
 
