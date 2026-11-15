@@ -9,10 +9,10 @@ use App\Shared\Domain\Clock\Clock;
 use App\Shared\Domain\PublicId\PublicId;
 use App\Shared\Domain\PublicId\PublicIdGenerator;
 use DateTimeZone;
+use InvalidArgumentException;
 use JsonException;
 use LogicException;
 use Nette\Database\Explorer;
-use InvalidArgumentException;
 
 /**
  * Ukládá integrační události do databázové tabulky outbox_message.
