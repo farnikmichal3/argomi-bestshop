@@ -26,6 +26,7 @@ CREATE TABLE outbox_message (
     UNIQUE KEY uq_outbox_lock_token (lock_token),
     KEY idx_outbox_available (status, available_at, id),
     KEY idx_outbox_expired_lease (status, locked_until, id),
+    CONSTRAINT ck_outbox_event_name_not_empty CHECK (CHAR_LENGTH(TRIM(event_name)) > 0),
     CONSTRAINT ck_outbox_payload_object CHECK (JSON_TYPE(payload) = 'OBJECT'),
     CONSTRAINT ck_outbox_processing_attempt CHECK (status <> 'processing' OR attempts > 0),
     CONSTRAINT ck_outbox_lock_state CHECK (
