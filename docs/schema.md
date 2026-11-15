@@ -38,14 +38,14 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 | `product_variant_attribute_value` | Přiřazuje variantě právě jednu hodnotu atributu. CHECK omezení vyžaduje právě jednu z enum, číselné nebo textové hodnoty; vazba na osu i použitou enum hodnotu je chráněna přes `ON DELETE RESTRICT`. |
 | `product_attribute_value` | Hodnota atributu na úrovni produktu, nikoli konkrétní varianty. |
 | `variant_price` / `variant_price_history` | Aktuální cena varianty a její historické body. Historie se nemaže spolu s variantou automaticky. |
-| `stock_item` / `stock_movement` | Aktuální stav zásoby varianty a neměnný skladový deník. Demo seed vytváří pro každou variantu s kladným počátečním stavem právě jeden příjem `demo_opening_balance`, jehož množství odpovídá `stock_item.quantity_on_hand`. |
+| `stock_item` / `stock_movement` | Aktuální stav zásoby varianty a neměnný skladový deník. Demo seed vytváří pro každou variantu s kladným počátečním stavem právě jeden příjem `demo_opening_balance`, jehož množství odpovídá `stock_item.quantity_on_hand`. Pohyby navázané přes `reference_type = 'shop_order'` jsou databázově zakázány pro demo objednávky. |
 | `catalog_message_translation` / `cart_message_translation` / `checkout_message_translation` | Systémové texty vlastní příslušné domény. Každá tabulka uchovává stabilní `message_key` a jazykové znění; klíč je unikátní v rámci locale a tabulky. Společná tabulka `language` zůstává vlastnictvím infrastruktury Translation. |
 | `cart_item` | Položka košíku odkazuje na variantu a ukládá identitu produktu pro kontrolu složené vazby. |
 | `shop_order` | Objednávka uchovává účetní souhrny v minor units. `adjustments_net_minor` je čistý součet úprav; `grand_total_minor` musí odpovídat součtu mezisoučtu, čistých úprav a daně. `placed_at IS NOT NULL` uzavírá finanční snapshot. `is_demo = 1` označuje demonstrační objednávku; její klasifikace je po založení neměnná a databáze nedovolí zařadit ji do provozního Outboxu. |
 | `shop_order_item` / `shop_order_item_option` | Historický nákupní snapshot. Hrubá částka řádku musí být součtem čisté částky a daně; po uzavření objednávky jsou položky i jejich volby neměnné. Snapshot nesmí být závislý na aktuálním názvu, ceně ani konfiguraci katalogu. |
 | `shop_order_adjustment` | Historická úprava objednávky (např. doprava nebo sleva); hrubá částka je součtem čisté částky a daně. Souhrn čistých úprav je uložen v `shop_order.adjustments_net_minor`. Po uzavření objednávky nelze úpravy měnit. |
 | `currency` / `iso4217_currency` | Obchodní měna je navázána na verzovaný katalog ISO 4217; složený FK vynucuje současnou shodu kódu a počtu minor units. |
-| `outbox_message` | Technická integrační zpráva s vlastním životním cyklem. Volitelný `shop_order_id` odkazuje na objednávku; události `order.*` jej musí uvádět a databáze odmítá vazbu na demo objednávku. Payload nesmí obsahovat tajné údaje. |
+| `outbox_message` | Technická integrační zpráva s vlastním životním cyklem. Volitelný `shop_order_id` odkazuje na objednávku; události `order.*` jej musí uvádět a databáze odmítá vazbu na demo objednávku. Stejná ochrana platí pro skladové pohyby s `reference_type = 'shop_order'`. Payload nesmí obsahovat tajné údaje. |
 
 ## 3. Kanonizace kombinace varianty
 
@@ -319,7 +319,7 @@ flowchart LR
 - `migrations/structures/2026-11-15-170000-order-accounting-invariants.sql` – účetní invarianty objednávek: souhrnná čistá hodnota úprav, kontroly hrubých částek, agregované ověření při uzavření a neměnnost uzavřeného snapshotu.
 - `migrations/structures/2026-11-15-180000-archive-products-and-variants.sql` – archivace produktů a deaktivace variant, FK `ON DELETE RESTRICT` a databázové triggery zakazující fyzické mazání a neplatnou aktivaci variant.
 - `migrations/structures/2026-11-15-210000-split-system-message-translations.sql` – rozdělení systémových textů do vlastnických tabulek Catalog, Cart a Checkout; převod zachovává ID i všechna data a starou tabulku odstraní až po úplné kontrole shody.
-- `migrations/structures/2026-11-15-220000-protect-demo-orders.sql` – klasifikace demo objednávek, neměnnost příznaku a databázová ochrana Outboxu včetně FK na objednávku.
+- `migrations/structures/2026-11-15-220000-protect-demo-orders.sql` – klasifikace demo objednávek, neměnnost příznaku, FK Outboxu a databázové triggery blokující provozní Outbox události i skladové pohyby demo objednávek.
 
 ## 9. Demo data
 
@@ -328,7 +328,8 @@ Demo seed rozšiřuje základní katalog a obchodní příklady; samostatná see
 - `migrations/dummy-data/2026-11-15-190000-complete-demo-data.sql` doplňuje české a anglické krátké i dlouhé popisy a SEO metadata tří demo produktů; vytváří úplné adresní a položkové snapshoty dvou dalších uzavřených objednávek; doplňuje snapshot zvolené produktové možnosti, dopravy a historie stavů; zakládá počáteční skladové příjmy a systémové texty pro katalog, košík a checkout.
 - `migrations/dummy-data/2026-11-15-200000-complete-demo-short-descriptions.sql` zpřesňuje dva krátké popisy tak, aby byly samostatně srozumitelné a splňovaly minimální délku ověřovanou testem.
 - `migrations/dummy-data/2026-11-15-230000-classify-demo-orders.sql` označuje objednávky `2026-000001` až `2026-000004` jako demo a ověřuje jejich úplnost.
-- `DemoDataIntegrity.phpt` ověřuje úplnost lokalizací, účetní a adresní snapshoty objednávek, skladové počáteční pohyby i systémové texty. `DatabaseProductRepositoryIntegration.phpt` ověřuje, že katalogový repozitář vrací aktuální demo texty.
+- `DemoDataIntegrity.phpt` ověřuje úplnost lokalizací, účetní a adresní snapshoty objednávek, označení demo objednávek, skladové počáteční pohyby i systémové texty.
+- `DemoOrderIsolationIntegration.phpt` ověřuje zákaz provozních Outbox událostí a skladových pohybů pro demo objednávky, neměnnost klasifikace a zachování běžného objednávkového provozu. `DatabaseProductRepositoryIntegration.phpt` ověřuje, že katalogový repozitář vrací aktuální demo texty.
 
 Při změně schématu se diagram aktualizuje ve stejném kroku jako příslušná migrace. Nikdy neupravuj historické migrace jen kvůli změně diagramu.
 
