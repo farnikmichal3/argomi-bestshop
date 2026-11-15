@@ -3,9 +3,9 @@ A product can switch its single default variant transactionally
 --FILE--
 <?php
 
-use Nette\\Database\\Explorer;
-use Tester\\Assert;
-use Tests\\Support\\IntegrationTestBootstrap;
+use Nette\Database\Explorer;
+use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 
@@ -159,7 +159,7 @@ try {
     }
 }
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK
