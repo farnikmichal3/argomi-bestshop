@@ -84,7 +84,7 @@ Konkrétní označovací mechanismus (např. explicitní `is_demo`/origin flag n
 
 - Tabulky jsou v jednotném čísle, anglicky, `snake_case`.
 - Běžné tabulky používají primární klíč `id`. Katalogová tabulka, jejíž neměnný přirozený klíč pochází z autoritativního externího standardu, může mít tento přirozený klíč přímo jako primární klíč; výjimka musí být výslovně zdokumentována. Konkrétně `iso4217_currency.code` je primárním klíčem podle třípísmenného kódu ISO 4217. Přidání umělého `id` by zde nepřineslo doménovou hodnotu.
-- Cizí klíče odkazující na primární klíč `id` se standardně pojmenovávají `<referenced_table>_id`. Výjimky musí být explicitně zdokumentovány a pokryty integračním testem:
+- Cizí klíče odkazující na primární klíč `id` se standardně pojmenovávají `<referenced_table>_id`; platí to i pro vazby uvnitř referenčních katalogů (např. `iso4217_currency.iso4217_catalog_release_id` → `iso4217_catalog_release.id`). Výjimky musí být explicitně zdokumentovány a pokryty integračním testem:
   - `category.parent_id` – samovazba kategorie;
   - `product_relation.related_product_id` – druhá vazba z tabulky produktových vztahů na `product.id`;
   - `currency` – obchodní sloupec odkazující na přirozený klíč `currency.code` (používá se v cenových tabulkách, košíku a objednávce);
@@ -200,3 +200,4 @@ Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečné
 | 15. 11. 2026 | v1.2: doplněna migrace a stavový model samostatné tabulky `outbox_message` (F3-34). |
 | 15. 11. 2026 | v1.3: popsán aplikační `OutboxWriter` a transakční guard produkční implementace `DatabaseOutboxWriter`. |
 | 15. 11. 2026 | v1.4: upřesněna konvence primárních klíčů a úplně zdokumentovány přirozené a pojmenovací výjimky cizích klíčů (F3-08). |
+| 15. 11. 2026 | Dopřednou migrací sjednocen název FK sloupce katalogu ISO 4217 na `iso4217_catalog_release_id` podle standardní konvence. |
