@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 1.3 · 15. 11. 2026  
+**Revize:** 1.4 · 15. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -83,8 +83,14 @@ Konkrétní označovací mechanismus (např. explicitní `is_demo`/origin flag n
 ## 5. Databázové konvence
 
 - Tabulky jsou v jednotném čísle, anglicky, `snake_case`.
-- Tabulky používají primární klíč `id`.
-- Cizí klíče se pojmenovávají `<table>_id`; výjimky musí být explicitně zdokumentovány.
+- Běžné tabulky používají primární klíč `id`. Katalogová tabulka, jejíž neměnný přirozený klíč pochází z autoritativního externího standardu, může mít tento přirozený klíč přímo jako primární klíč; výjimka musí být výslovně zdokumentována. Konkrétně `iso4217_currency.code` je primárním klíčem podle třípísmenného kódu ISO 4217. Přidání umělého `id` by zde nepřineslo doménovou hodnotu.
+- Cizí klíče odkazující na primární klíč `id` se standardně pojmenovávají `<referenced_table>_id`. Výjimky musí být explicitně zdokumentovány a pokryty integračním testem:
+  - `category.parent_id` – samovazba kategorie;
+  - `product_relation.related_product_id` – druhá vazba z tabulky produktových vztahů na `product.id`;
+  - `currency` – obchodní sloupec odkazující na přirozený klíč `currency.code` (používá se v cenových tabulkách, košíku a objednávce);
+  - `locale` – jazykový kód odkazující na `language.code` (v tabulkách `cart` a `shop_order`);
+  - `currency(code, minor_units)` → `iso4217_currency(code, minor_units)` – složená vazba, která vynucuje současnou shodu kódu měny a její přesnosti.
+- U složených cizích klíčů, které začínají odkazem na `id`, musí první zdrojový sloupec dodržet konvenci `<referenced_table>_id`; další sloupce vyjadřují doplňující část složené identity a jejich pořadí musí odpovídat cílovým sloupcům.
 - Peněžní částky jsou celočíselné minor units a vždy mají měnu.
 - Množství je desetinný typ; nepoužívat float.
 - Časové údaje jsou v UTC.
@@ -192,3 +198,4 @@ Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečné
 | 8. 11. 2026 | v1.1: popsány oddělené databázové účty `argomi_app` a `argomi_migrator` a jejich minimální oprávnění. |
 | 15. 11. 2026 | v1.2: doplněna migrace a stavový model samostatné tabulky `outbox_message` (F3-34). |
 | 15. 11. 2026 | v1.3: popsán aplikační `OutboxWriter` a transakční guard produkční implementace `DatabaseOutboxWriter`. |
+| 15. 11. 2026 | v1.4: upřesněna konvence primárních klíčů a úplně zdokumentovány přirozené a pojmenovací výjimky cizích klíčů (F3-08). |
