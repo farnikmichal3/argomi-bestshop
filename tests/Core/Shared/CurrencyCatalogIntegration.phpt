@@ -46,6 +46,16 @@ $release = $database->table('iso4217_catalog_release')->where('id', 1)->fetch();
 Assert::notNull($release);
 Assert::same('2026-09-17', $release->version);
 Assert::same('2026-09-17', $release->published_at->format('Y-m-d'));
+Assert::same(
+    155,
+    (int) $database->getConnection()->getPdo()
+        ->query('SELECT COUNT(*) FROM iso4217_currency')
+        ->fetchColumn(),
+);
+
+$leadingZeroNumericCode = $database->table('iso4217_currency')->where('code', 'ALL')->fetch();
+Assert::notNull($leadingZeroNumericCode);
+Assert::same('008', $leadingZeroNumericCode->numeric_code);
 
 $czkCatalogEntry = $database->table('iso4217_currency')->where('code', 'CZK')->fetch();
 Assert::notNull($czkCatalogEntry);
