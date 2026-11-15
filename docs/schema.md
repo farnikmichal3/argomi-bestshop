@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – diagram databázového schématu
 
-**Revize:** 1.2 · 15. 11. 2026  
+**Revize:** 1.3 · 15. 11. 2026  
 **Autoritativní zdroj:** aktuální dopředné SQL migrace v `migrations/structures/`  
 **Databáze:** MySQL 8.x / InnoDB
 
@@ -38,7 +38,9 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 | `product_attribute_value` | Hodnota atributu na úrovni produktu, nikoli konkrétní varianty. |
 | `variant_price` / `variant_price_history` | Aktuální cena varianty a její historické body. Historie se nemaže spolu s variantou automaticky. |
 | `cart_item` | Položka košíku odkazuje na variantu a ukládá identitu produktu pro kontrolu složené vazby. |
-| `shop_order_item` / `shop_order_item_option` | Historický nákupní snapshot. Nesmí být závislý na aktuálním názvu, ceně ani konfiguraci katalogu. |
+| `shop_order` | Objednávka uchovává účetní souhrny v minor units. `adjustments_net_minor` je čistý součet úprav; `grand_total_minor` musí odpovídat součtu mezisoučtu, čistých úprav a daně. `placed_at IS NOT NULL` uzavírá finanční snapshot. |
+| `shop_order_item` / `shop_order_item_option` | Historický nákupní snapshot. Hrubá částka řádku musí být součtem čisté částky a daně; po uzavření objednávky jsou položky i jejich volby neměnné. Snapshot nesmí být závislý na aktuálním názvu, ceně ani konfiguraci katalogu. |
+| `shop_order_adjustment` | Historická úprava objednávky (např. doprava nebo sleva); hrubá částka je součtem čisté částky a daně. Souhrn čistých úprav je uložen v `shop_order.adjustments_net_minor`. Po uzavření objednávky nelze úpravy měnit. |
 | `currency` / `iso4217_currency` | Obchodní měna je navázána na verzovaný katalog ISO 4217; složený FK vynucuje současnou shodu kódu a počtu minor units. |
 | `outbox_message` | Technická integrační zpráva s vlastním životním cyklem; záměrně nemá obchodní FK a její payload nesmí obsahovat tajné údaje. |
 
@@ -82,7 +84,49 @@ Závazné zvláštní případy:
 
 Před změnou mazací akce se musí posoudit celý řetězec navazujících FK a obchodní význam dat. Kaskáda je vhodná pro čistě odvozená/dependentní data, nikoli pro hodnoty variant, cenovou historii, skladové pohyby nebo objednávkové snapshoty. Změny existujícího schématu se provádějí výhradně novou dopřednou migrací; historické migrace se nepřepisují.
 
-## 5. Vztahy tabulek po modulech
+## 5. Účetní invarianty objednávek
+
+Finanční hodnoty objednávky se ukládají jako celočíselné částky v minor units. Databáze chrání lokální aritmetické vztahy pomocí `CHECK` a agregované vztahy i životní cyklus snapshotu pomocí triggerů.
+
+### 5.1. Výpočet souhrnů
+
+Pro každou položku objednávky platí:
+
+\[
+line\_gross\_minor = line\_net\_minor + line\_tax\_minor
+\]
+
+Pro objednávku platí:
+
+\[
+adjustments\_net\_minor = \sum shop\_order\_adjustment.amount\_net\_minor
+\]
+
+\[
+grand\_total\_minor = subtotal\_net\_minor + adjustments\_net\_minor + tax\_total\_minor
+\]
+
+`tax_total_minor` zahrnuje daň z položek i daň z úprav. Hrubá částka každé úpravy je samostatně kontrolována jako součet její čisté částky a daně (`amount_gross_minor = amount_net_minor + amount_tax_minor`).
+
+### 5.2. Kontrola při uzavření objednávky
+
+Přechod `placed_at` z `NULL` na neprázdnou hodnotu představuje uzavření účetního snapshotu. Při tomto přechodu databázový trigger ověřuje agregované součty položek a úprav proti souhrnům objednávky. Nekonzistentní objednávku nelze uzavřít.
+
+`CHECK` omezení souhrnu `grand_total_minor` platí i pro draft objednávky; nejde pouze o kontrolu při uzavření. `CHECK` omezení hrubé částky položky obdobně platí pro každý řádek bez ohledu na stav objednávky.
+
+### 5.3. Neměnnost po uzavření
+
+Po `placed_at IS NOT NULL` databáze odmítá:
+- změnu finančních souhrnů, měny, režimu `prices_include_tax` a času uzavření;
+- vložení, změnu nebo odstranění položek objednávky;
+- vložení, změnu nebo odstranění úprav objednávky;
+- vložení, změnu nebo odstranění snapshotů voleb položek;
+- odstranění uzavřené objednávky.
+
+Triggery na podřízených tabulkách zamykají nadřazenou objednávku pomocí `SELECT ... FOR UPDATE` před kontrolou jejího stavu. Tím serializují souběžné změny položek, úprav a voleb s uzavřením objednávky. Změny nefinančních údajů objednávky, například stavu nebo kontaktního e-mailu, zůstávají povolené, pokud nemění uzavřený účetní snapshot.
+
+Agregace napříč tabulkami nelze v MySQL vyjádřit běžným `CHECK`; proto jsou ověřovány při uzavření triggerem. Lokální aritmetické invarianty zůstávají v `CHECK` omezeních, aby chránily i drafty.
+## 6. Vztahy tabulek po modulech
 
 Šipka vede od tabulky obsahující cizí klíč k odkazované tabulce. Popisek uvádí dvojici zdrojových a cílových sloupců ve stejném pořadí; u složených FK jsou uvedeny všechny sloupce. Vazby mezi různými subgrafy jsou záměrné a zobrazují skutečné databázové FK přes hranice vlastnických modulů.
 
@@ -245,7 +289,7 @@ flowchart LR
   currency -->|code, minor_units → code, minor_units| iso4217_currency
 ```
 
-## 6. Poznámky k interpretaci
+## 7. Poznámky k interpretaci
 
 - Diagram zahrnuje také složené cizí klíče, samovazbu `category.parent_id`, obě vazby `product_relation` na `product` a vazby měny/jazyka přes přirozené kódy.
 - Tabulka `currency` má složený FK `(code, minor_units)` do `iso4217_currency(code, minor_units)`; tím databáze vynucuje shodu kódu a přesnosti měny.
@@ -253,7 +297,7 @@ flowchart LR
 - `outbox_message` nemá FK do obchodních tabulek. Outbox je technická integrační hranice; vazba na obchodní událost je vyjádřena stabilním názvem události a payloadem, nikoli databázovým FK.
 - Absence FK v diagramu neznamená absenci aplikačního vztahu. Diagram zobrazuje pouze fyzické databázové cizí klíče, nikoli logické vazby, které jsou záměrně bez FK.
 
-## 7. Zdrojové migrace
+## 8. Zdrojové migrace
 
 - `migrations/structures/2026-11-04-200000-init.sql` – počáteční schéma.
 - `migrations/structures/2026-11-15-120000-transactional-outbox.sql` – `outbox_message`.
@@ -261,6 +305,7 @@ flowchart LR
 - `migrations/structures/2026-11-15-140000-normalize-iso4217-release-fk.sql` – přejmenování FK sloupce na `iso4217_catalog_release_id`.
 - `migrations/structures/2026-11-15-150000-protect-variant-attribute-values.sql` – ochrana hodnot variant před nepřímým smazáním osy nebo enum hodnoty pomocí `ON DELETE RESTRICT`.
 - `migrations/structures/2026-11-15-160000-add-language-foreign-keys-to-locales.sql` – doplnění 11 chybějících FK `locale` → `language(code)`; povinné překlady používají `RESTRICT`, volitelné locale zákazníka `SET NULL`.
+- `migrations/structures/2026-11-15-170000-order-accounting-invariants.sql` – účetní invarianty objednávek: souhrnná čistá hodnota úprav, kontroly hrubých částek, agregované ověření při uzavření a neměnnost uzavřeného snapshotu.
 
 Při změně schématu se diagram aktualizuje ve stejném kroku jako příslušná migrace. Nikdy neupravuj historické migrace jen kvůli změně diagramu.
 
