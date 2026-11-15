@@ -77,7 +77,7 @@ final class VariantCombinationHash
     {
         if (
             !is_string($value)
-            || !preg_match('/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]{1,6})?$/D', $value)
+            || !preg_match('/^-?(?:0|[1-9][0-9]{0,13})(?:\.[0-9]{1,6})?$/D', $value)
         ) {
             throw new InvalidArgumentException(sprintf('Číselná hodnota atributu %s musí být desetinný řetězec s nejvýše šesti místy.', $code));
         }
