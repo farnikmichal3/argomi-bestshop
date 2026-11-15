@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.3 · 10. 11. 2026
+**Revize:** 1.4 · 15. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -70,19 +70,15 @@ Role a oprávnění spravuje Identity. Modul Translation poskytuje kontrolní bo
 
 ## 6. Databázové úložiště
 
-Současné schéma v1 obsahuje:
-- doménové překladové tabulky (např. `product_translation`, `category_translation`, `shipping_method_translation`, `payment_method_translation`),
-- centrální tabulku `translation_message` pro systémové texty.
+Obsahové překlady zůstávají v tabulkách vlastnických domén (např. `product_translation`, `category_translation`, `shipping_method_translation` a `payment_method_translation`). Systémové texty jsou rovněž fyzicky rozdělené podle vlastníka:
 
-Tabulka `translation_message` je současným databázovým úložištěm systémových textů. Není dovoleno ji obcházet souborovými katalogy. Případné budoucí rozdělení systémových tabulek podle domén je možné pouze novou dopřednou migrací, která zachová všechna data. Historický soubor `2026-11-04-200000-init.sql` se nemění.
+- Catalog: `catalog_message_translation`,
+- Cart: `cart_message_translation`,
+- Checkout: `checkout_message_translation`.
 
-Před případnou migrací:
-1. inventarizovat klíče a jejich domény,
-2. navrhnout cílové tabulky nebo bezpečné doménové rozdělení,
-3. navrhnout vazbu systémových hodnot a vlastních překladů,
-4. zajistit unikátnost klíče v rámci domény a jazyka,
-5. připravit převod dat bez ztráty a kontrolu počtu i obsahu,
-6. odstranit staré úložiště až novou dopřednou migrací.
+Každá tabulka zachovává společný kontrakt: `id`, `message_key`, `locale`, `message_text`, `source`, `is_customized`, `default_hash`, `is_outdated`, `updated_at` a `updated_by`. Sloupec `domain` není potřeba, protože vlastnictví vyjadřuje samotná tabulka. Unikátní index `(locale, message_key)` brání duplicitě klíče v rámci jazyka a vlastnické domény; `locale` odkazuje na `language(code)` s `ON DELETE RESTRICT`.
+
+Modul Translation vlastní společnou infrastrukturu a tabulku `language`, nikoli centrální úložiště všech systémových textů. Doménové moduly vlastní své systémové klíče a jejich jazykové hodnoty. Starou tabulku `translation_message` odstranila dopředná migrace `2026-11-15-210000-split-system-message-translations.sql` až po kontrole počtu a NULL-safe shody všech přenášených sloupců. Zachována byla všechna ID i data včetně NULL hodnot `default_hash`. Historická migrace `2026-11-04-200000-init.sql` zůstává beze změny; runtime souborový fallback neexistuje.
 
 ## 7. Import a aktualizace systémových textů
 
