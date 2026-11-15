@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.96 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.97 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,13 +48,13 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 116, rozděláno 2, k úpravě 2, rozhodnout 0, blokováno 0, plán 432, zrušeno 2.
+Celkem **554 kroků**: hotovo 118, rozděláno 0, k úpravě 2, rozhodnout 0, blokováno 0, plán 430, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F2 | Sdílené jádro (Shared) | 20 | 13 | 2 | 0 | 0 | 0 | 5 | 0 |
+| F2 | Sdílené jádro (Shared) | 20 | 15 | 0 | 0 | 0 | 0 | 5 | 0 |
 | F3 | Databáze a migrace | 34 | 11 | 0 | 1 | 0 | 0 | 21 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
@@ -314,11 +314,11 @@ _Technické zázemí, nástroje kvality kódu a základní kostra projektu._ Hot
 
 ### F2: Sdílené jádro (Shared)
 
-_Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 13 z 20 kroků; dva kroky jsou rozpracované a pět je naplánováno.
+_Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí všechny moduly. Bez znalosti jednotlivých modulů._ Hotovo 15 z 20 kroků; pět kroků je naplánováno.
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; existující struktura je verzovaná v repozitáři.
 - `[HOTOVO]` **F2-02** `Money`: částka v nejmenších jednotkách plus měna, sčítání, odčítání, celočíselné násobení, porovnání a výjimka při různých měnách. Ověřeno lokálně přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
-- `[ROZDĚLÁNO]` **F2-03** `Currency`: omezen `minorUnits` na rozsah 0–4; syntaktická validace zůstává v hodnotovém objektu, existenci kódu a správnou přesnost vynucuje katalog ISO 4217 přes databázový cizí klíč. `CurrencyProvider` vrací pouze aktivní obchodní měny. Čeká na lokální ověření migrace a integračního testu.
+- `[HOTOVO]` **F2-03** `Currency` a `CurrencyProvider`: `minorUnits` je omezeno na rozsah 0–4; syntaktická validace zůstává v hodnotovém objektu, existenci kódu a správnou přesnost vynucuje katalog ISO 4217 přes databázový složený cizí klíč. `CurrencyProvider` poskytuje výchozí a aktivní obchodní měny. Jednotkové i MySQL integrační testy a všechny aktivní kontroly `check.bat` prošly.
 - `[HOTOVO]` **F2-04** `Quantity`: neměnný hodnotový objekt s pevnou přesností tří desetinných míst, interně celočíselné tisíciny, vstup přes desetinný řetězec bez zaokrouhlování, aritmetika s kontrolou přetečení a bez `float`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; jednotkové testy jsou plánovány ve F2-14.
 - `[HOTOVO]` **F2-05** `Percentage`: neměnný hodnotový objekt s podepsaným integerem v bazických bodech (1 bp = 0,01 %), striktním desetinným vstupem s nejvýše dvěma místy, formátováním, porovnáním a kontrolou rovnosti. Povoleny záporné i nad 100% sazby; bez `float`, automatického zaokrouhlování a výpočtů nad `Money`. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb.
 - `[HOTOVO]` **F2-06** `Locale`: neměnný jazykový identifikátor, `LocaleProvider` (výchozí a aktivní jazyky), databázový poskytovatel a dynamické jazykové routování. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb; v prohlížeči ověřeno přesměrování `/`, aktivní jazykové prefixy a dynamické přidání `/de` bez změny PHP kódu.
@@ -332,7 +332,7 @@ _Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí
 - `[HOTOVO]` **F2-14** Jednotkové testy: Money/Currency, Quantity, Locale, Clock a PublicId/ULID. Přidáno pět samostatných testů Nette Tester v `tests/Core/Shared/` a opraveny také dva starší testy logování, které odhalilo zapojení Testeru do kontrolního skriptu. Testy pokrývají běžné operace, neplatné vstupy, měnový nesoulad, přesnost tří desetinných míst, UTC, práci s časem, validaci ULID a ochranu proti celočíselnému přetečení. Uživatel potvrdil úspěšné dokončení všech aktivních kontrol přes `check.bat`, včetně Nette Testeru, PHPStan, PHP-CS-Fixer a Deptrac.
 - `[PLÁN]` **F2-15** Architektonický test: `Shared` nezávisí na žádném modulu
 - `[PLÁN]` **F2-16** Dokumentace: co do `Shared` patří a co ne
-- `[ROZDĚLÁNO]` **F2-17** Katalog ISO 4217: přidána verzovaná databázová evidence vydání SIX 2026-09-17 a 155 běžných měn s přesností 0–4; fondové, kovové a speciální kódy jsou vynechány. Složený cizí klíč vynucuje shodu kódu a přesnosti. Čeká na lokální migraci a integrační test.
+- `[HOTOVO]` **F2-17** Katalog ISO 4217: verzovaná databázová evidence vydání SIX 2026-09-17 obsahuje 155 běžných měn s přesností 0–4; fondové, kovové a speciální kódy jsou vynechány. Složený cizí klíč vynucuje shodu kódu a přesnosti. Migrace, integrační test a všechny aktivní kontroly `check.bat` prošly.
 - `[PLÁN]` **F2-18** Pravidla doménových událostí: synchronní dispatcher pouze pro kritické interní posluchače; zákaz externích vedlejších účinků v synchronních listenerech
 - `[PLÁN]` **F2-19** Aplikační kontrakt Transactional Outbox: atomický zápis události ve stejné transakci jako zdrojová obchodní změna
 - `[PLÁN]` **F2-20** Kontrakt zpracování Outboxu: worker, at-least-once doručení, idempotence, retry/backoff, evidence chyb a bezpečné opakování
@@ -1200,6 +1200,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Implementace čeká na stažení do Laragonu, funkční ověření rollbacku/commitů/vnoření a čisté aktivní kontroly přes `check.bat`.
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
+
+### v2.97 (15. 11. 2026)
+- Dokončeny F2-03 a F2-17: lokální migrace katalogu ISO 4217, jednotkové a MySQL integrační testy i všechny aktivní kontroly `check.bat` prošly.
+- `Currency` odděluje syntaktickou validaci od existence ISO kódu; databázový katalog vynucuje existenci měny a správnou přesnost 0–4, zatímco obchodní aktivita zůstává samostatná. `CurrencyProvider` poskytuje výchozí a aktivní měny.
+- F2: **15 hotovo**, **0 rozděláno**, **5 plán**. Celkový souhrn: **118 hotovo**, **0 rozděláno**, **2 k úpravě**, **430 plán**, **2 zrušeno**.
 
 ### v2.96 (15. 11. 2026)
 - Zahájena revize F2-03 a F2-17: `Currency` nyní přijímá pouze přesnost 0–4; přidán verzovaný katalog 155 běžných měn podle vydání SIX z 17. 9. 2026.
