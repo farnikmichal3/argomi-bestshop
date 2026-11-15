@@ -3,12 +3,11 @@ Catalog product repository maps Explorer rows to typed DTOs
 --FILE--
 <?php
 
-use Tests\Support\IntegrationTestBootstrap;
-
 use App\Modules\Catalog\Application\ProductRepository;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Database\Explorer;
 use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 
