@@ -33,7 +33,7 @@ final class DatabaseOutboxWriter implements OutboxWriter
      * @throws JsonException Pokud payload nelze bezpečně serializovat.
      * @throws LogicException Pokud není aktivní databázová transakce.
      */
-    public function record(string $eventName, array $payload): PublicId
+    public function record(string $eventName, array $payload, ?int $shopOrderId = null): PublicId
     {
         $eventName = trim($eventName);
 
@@ -54,6 +54,7 @@ final class DatabaseOutboxWriter implements OutboxWriter
         $this->database->table('outbox_message')->insert([
             'message_id' => $messageId->toString(),
             'event_name' => $eventName,
+            'shop_order_id' => $shopOrderId,
             'payload' => $payloadJson,
             'available_at' => $createdAt,
             'created_at' => $createdAt,
