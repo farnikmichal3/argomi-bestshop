@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.05 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.06 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 127, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 422, zrušeno 2.
+Celkem **554 kroků**: hotovo 127, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 420, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 15 | 0 | 0 | 0 | 0 | 18 | 1 |
+| F3 | Databáze a migrace | 34 | 15 | 2 | 0 | 0 | 0 | 16 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -350,8 +350,8 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[HOTOVO]` **F3-07** Ověřeny konvence Nette Database Exploreru `ref()` a `related()` na izolované MySQL testovací databázi. Integrační test pokrývá 1:N a N:1 překlady produktu, samovazbu kategorií, nejednoznačné a explicitně určené dvě FK `product_relation` a M:N vazbu přes `product_category`. Test je read-only a používá pouze `argomi_bestshop_test` s účtem `argomi_test_app`; `check.bat` prošel: 12 testů OK, PHPStan bez chyb, PHP-CS-Fixer 0 souborů k opravě a Deptrac 0 porušení.
 - `[HOTOVO]` **F3-08** Integrační test `SchemaConventionsIntegration.phpt` ověřuje na izolované MySQL testovací databázi primární klíče všech tabulek, jedinou schválenou výjimku přirozeného primárního klíče `iso4217_currency.code` a konvence všech cizích klíčů včetně přesného allowlistu přirozených a složených klíčů. Test je read-only a fail-closed pro databázi i účet.
 - `[HOTOVO]` **F3-09** Ověřeny výjimky a explicitní relace Nette Database Exploreru (`category.parent_id`, `product_relation.related_product_id` a další vícečetné/složené vazby) existujícím integračním testem `ExplorerRelationsIntegration.phpt`; nebyl vytvářen duplicitní test. Oba integrační testy i kompletní `check.bat` uživatel potvrdil jako úspěšné.
-- `[PLÁN]` **F3-10** Základ repozitáře nad Explorer: mapování `ActiveRow` na DTO (dotazy pouze v repozitářích, žádné v presenterech)
-- `[PLÁN]` **F3-11** Typované `readonly` DTO pro entity vlny 1
+- `[ROZDĚLÁNO]` **F3-10** První čtecí repozitář Catalog nad Explorer: `ProductRepository` a `DatabaseProductRepository`; mapování `ActiveRow` na DTO, dotazy pouze v repozitářích. Implementace a fail-closed integrační test jsou v repozitáři, lokální ověření čeká na uživatele.
+- `[ROZDĚLÁNO]` **F3-11** Typované `readonly` DTO pro první katalogovou entitu a její překlady: `ProductDto` a `ProductTranslationDto`; další entity vlny 1 budou následovat po ověření tohoto základu.
 - `[PLÁN]` **F3-12** Implementace `Transaction` nad `Nette\Database\Connection`
 - `[PLÁN]` **F3-13** Tracy panel pro SQL dotazy ve vývoji
 - `[PLÁN]` **F3-14** Kontrola, že žádný dotaz neskládá SQL z řetězců
