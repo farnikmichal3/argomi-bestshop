@@ -8,8 +8,7 @@ final readonly class DbResetEnvironmentPolicy
 {
     public function __construct(
         private ?string $environment,
-    ) {
-    }
+    ) {}
 
     public function isAllowed(): bool
     {
