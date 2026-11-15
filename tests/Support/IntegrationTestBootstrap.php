@@ -34,6 +34,8 @@ final class IntegrationTestBootstrap
         'argomi_test_app@127.0.0.1',
     ];
 
+    private const CI_DATABASE_USER = 'argomi_test_app@%';
+
 
     public static function boot(string $rootDir): IntegrationTestContext
     {
@@ -70,7 +72,7 @@ final class IntegrationTestBootstrap
         if (
             !is_array($identity)
             || ($identity['database_name'] ?? null) !== self::DATABASE_NAME
-            || !in_array($identity['database_user'] ?? null, self::DATABASE_USERS, true)
+            || !self::isAllowedDatabaseUser($identity['database_user'] ?? null)
         ) {
             throw new RuntimeException(
                 'MySQL integration tests may run only against argomi_bestshop_test using argomi_test_app.',
@@ -78,6 +80,21 @@ final class IntegrationTestBootstrap
         }
 
         return new IntegrationTestContext($container, $database);
+    }
+
+
+    /**
+     * Lokální účty jsou omezené na loopback; GitHub Actions používá
+     * dočasný MySQL service container a účet omezený životností tohoto běhu.
+     */
+    private static function isAllowedDatabaseUser(mixed $databaseUser): bool
+    {
+        if (in_array($databaseUser, self::DATABASE_USERS, true)) {
+            return true;
+        }
+
+        return getenv('GITHUB_ACTIONS') === 'true'
+            && $databaseUser === self::CI_DATABASE_USER;
     }
 
 
