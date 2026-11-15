@@ -93,7 +93,7 @@ final class DatabaseOutboxWorker
      */
     private function claim(int $batchSize): array
     {
-        return $this->database->transaction(function () use ($batchSize): array {
+        $result = $this->database->transaction(function () use ($batchSize): array {
             // Zpráva, jejíž poslední povolený pokus skončil pádem workeru,
             // už nesmí být znovu převzata. Po expiraci lease přejde do dead.
             $this->database->query(
@@ -131,9 +131,25 @@ final class DatabaseOutboxWorker
             $claimedMessages = [];
 
             foreach ($rows as $row) {
+                $idValue = $row->id;
+                $attemptValue = $row->attempts;
+                $payloadValue = $row->payload;
+                $messageIdValue = $row->message_id;
+                $eventNameValue = $row->event_name;
+
+                if (
+                    (!is_int($idValue) && !is_string($idValue))
+                    || (!is_int($attemptValue) && !is_string($attemptValue))
+                    || !is_string($payloadValue)
+                    || !is_string($messageIdValue)
+                    || !is_string($eventNameValue)
+                ) {
+                    throw new LogicException('Databáze vrátila neplatný tvar Outbox zprávy.');
+                }
+
                 $lockToken = random_bytes(16);
-                $id = (int) $row->id;
-                $attempt = (int) $row->attempts + 1;
+                $id = (int) $idValue;
+                $attempt = (int) $attemptValue + 1;
 
                 $updated = $this->database->query(
                     "UPDATE outbox_message
@@ -153,7 +169,7 @@ final class DatabaseOutboxWorker
                     continue;
                 }
 
-                $decodedPayload = json_decode((string) $row->payload, false, 512, JSON_THROW_ON_ERROR);
+                $decodedPayload = json_decode($payloadValue, false, 512, JSON_THROW_ON_ERROR);
 
                 if (!is_object($decodedPayload)) {
                     throw new LogicException('Payload Outbox zprávy není JSON objekt.');
@@ -166,8 +182,8 @@ final class DatabaseOutboxWorker
                     $id,
                     $lockToken,
                     new OutboxMessage(
-                        (string) $row->message_id,
-                        (string) $row->event_name,
+                        $messageIdValue,
+                        $eventNameValue,
                         $payload,
                         $attempt,
                     ),
@@ -176,6 +192,19 @@ final class DatabaseOutboxWorker
 
             return $claimedMessages;
         });
+
+        if (!is_array($result)) {
+            throw new LogicException('Outbox claim nevrátil seznam zpráv.');
+        }
+
+        foreach ($result as $claimedMessage) {
+            if (!$claimedMessage instanceof ClaimedOutboxMessage) {
+                throw new LogicException('Outbox claim vrátil neplatnou položku.');
+            }
+        }
+
+        /** @var list<ClaimedOutboxMessage> $result */
+        return $result;
     }
 
     private function process(ClaimedOutboxMessage $claimedMessage): void
@@ -209,7 +238,7 @@ final class DatabaseOutboxWorker
 
     private function markDelivered(ClaimedOutboxMessage $claimedMessage): bool
     {
-        return $this->database->transaction(function () use ($claimedMessage): bool {
+        $result = $this->database->transaction(function () use ($claimedMessage): bool {
             $result = $this->database->query(
                 "UPDATE outbox_message
                 SET status = 'delivered',
@@ -227,6 +256,12 @@ final class DatabaseOutboxWorker
 
             return $result->getRowCount() === 1;
         });
+
+        if (!is_bool($result)) {
+            throw new LogicException('Potvrzení Outbox zprávy nevrátilo boolean výsledek.');
+        }
+
+        return $result;
     }
 
     private function scheduleRetry(ClaimedOutboxMessage $claimedMessage, Throwable $exception): void
@@ -275,6 +310,10 @@ final class DatabaseOutboxWorker
 
             return $result->getRowCount() === 1;
         });
+
+        if (!is_bool($updated)) {
+            throw new LogicException('Naplánování Outbox retry nevrátilo boolean výsledek.');
+        }
 
         $context = [
             'message_id' => $message->messageId,
