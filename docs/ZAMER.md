@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.42 · 15. 11. 2026
+**Revize:** 1.43 · 15. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -150,6 +150,7 @@ Pravidla:
 - Aplikační `OutboxMessageHandler` zpracovává přesně jeden stabilní `eventName` a přijímá typovaný `OutboxMessage` se stabilním `messageId`, payloadem a číslem pokusu. Handlery se registrují přes DI tag `outboxMessageHandler`; pro jeden název události smí existovat právě jeden handler. Handler musí být idempotentní podle `messageId`.
 - `DatabaseOutboxWorker::runOnce()` zpracuje jednu omezenou dávku. Výchozí nastavení je nejvýše 8 pokusů, lease 300 sekund, exponenciální prodleva od 30 sekund do maxima 3600 sekund, výchozí dávka 10 a maximální dávka 100. Limity lze změnit konstruktorovou konfigurací. Selhání jedné zprávy neukončí zpracování ostatních zpráv v dávce.
 - Při vyčerpání pokusů nebo expiraci lease po posledním povoleném pokusu přejde zpráva do `dead`. Do `last_error` a logu se ukládá pouze typ výjimky; její text ani payload se nezaznamenávají, protože mohou obsahovat citlivá data. Záznamy Outboxu se automaticky nemažou.
+- Jednorázové dávkové spuštění zajišťuje CLI příkaz `php bin/console outbox:work --limit=10`. Systémový cron může tento příkaz periodicky spouštět; worker sám neobsahuje nekonečnou smyčku a po dokončení dávky skončí.
 
 Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
 
