@@ -159,18 +159,20 @@ Assert::same(0, $stockMismatches, 'Opening stock movements must represent the se
 // Systémové texty jsou dostupné v obou základních jazycích.
 $systemTranslations = (int) $pdo->query(
     "SELECT COUNT(*)
-       FROM translation_message
-      WHERE (domain, message_key) IN (
-          ('catalog', 'button.view_details'),
-          ('catalog', 'stock.in_stock'),
-          ('catalog', 'stock.out_of_stock'),
-          ('cart', 'empty.title'),
-          ('cart', 'empty.message'),
-          ('checkout', 'button.place_order'),
-          ('checkout', 'confirmation.title'),
-          ('checkout', 'confirmation.message')
-      )
-        AND locale IN ('cs', 'en')
+       FROM (
+           SELECT locale, message_key, message_text
+             FROM catalog_message_translation
+            WHERE message_key IN ('button.view_details', 'stock.in_stock', 'stock.out_of_stock')
+           UNION ALL
+           SELECT locale, message_key, message_text
+             FROM cart_message_translation
+            WHERE message_key IN ('empty.title', 'empty.message')
+           UNION ALL
+           SELECT locale, message_key, message_text
+             FROM checkout_message_translation
+            WHERE message_key IN ('button.place_order', 'confirmation.title', 'confirmation.message')
+       ) system_translations
+      WHERE locale IN ('cs', 'en')
         AND CHAR_LENGTH(TRIM(message_text)) > 0",
 )->fetchColumn();
 Assert::same(16, $systemTranslations, 'All seeded system messages must have Czech and English values.');
