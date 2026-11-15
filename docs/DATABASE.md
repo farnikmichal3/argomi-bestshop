@@ -188,7 +188,7 @@ Databáze `argomi_bestshop` používá `utf8mb4` a kolaci `utf8mb4_0900_ai_ci`. 
 | Účet | Oprávnění nad `argomi_bestshop.*` | Účel |
 |---|---|---|
 | `argomi_app` | `SELECT`, `INSERT`, `UPDATE`, `DELETE` | Běžný provoz aplikace; bez oprávnění měnit schéma |
-| `argomi_migrator` | `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `ALTER`, `DROP`, `INDEX`, `REFERENCES` | Spouštění databázových migrací |
+| `argomi_migrator` | `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `ALTER`, `DROP`, `INDEX`, `REFERENCES`, `CREATE ROUTINE`, `ALTER ROUTINE`, `EXECUTE`, `TRIGGER` | Spouštění databázových migrací |
 
 Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečného úložiště. Nikdy se neukládají do repozitáře ani do dokumentace. Účty nemají globální oprávnění ani `GRANT OPTION`.
 
@@ -201,7 +201,7 @@ Integrační testy používají samostatnou MySQL databázi `argomi_bestshop_tes
 | Účet | Oprávnění nad `argomi_bestshop_test.*` | Účel |
 |---|---|---|
 | `argomi_test_app` | `SELECT`, `INSERT`, `UPDATE`, `DELETE` | Aplikační dotazy v integračních testech |
-| `argomi_test_migrator` | `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `ALTER`, `DROP`, `INDEX`, `REFERENCES` | Aplikace databázových migrací |
+| `argomi_test_migrator` | `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `ALTER`, `DROP`, `INDEX`, `REFERENCES`, `CREATE ROUTINE`, `ALTER ROUTINE`, `EXECUTE`, `TRIGGER` | Aplikace databázových migrací |
 
 Oba účty se vytvářejí pouze pro hostitele `127.0.0.1`; testovací konfigurace se k MySQL připojuje přes tento host. Hesla generuj samostatně a ukládej pouze do lokální konfigurace nebo bezpečného úložiště. Následující SQL spusť pod administrátorským MySQL účtem; nahraď oba zástupné řetězce silnými vlastními hesly:
 
@@ -220,7 +220,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE
     ON argomi_bestshop_test.*
     TO 'argomi_test_app'@'127.0.0.1';
 
-GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, INDEX, REFERENCES
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, INDEX, REFERENCES,
+    CREATE ROUTINE, ALTER ROUTINE, EXECUTE, TRIGGER
     ON argomi_bestshop_test.*
     TO 'argomi_test_migrator'@'127.0.0.1';
 ```
