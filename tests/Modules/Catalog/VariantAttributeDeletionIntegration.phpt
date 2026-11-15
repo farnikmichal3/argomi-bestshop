@@ -95,7 +95,7 @@ try {
         $deleteAxisError = $exception;
     }
 
-    if (!$deleteAxisError instanceof \\PDOException) {
+    if (!$deleteAxisError instanceof \PDOException) {
         throw new RuntimeException('Deleting an axis used by a variant must be rejected.');
     }
 
@@ -112,7 +112,7 @@ try {
         $deleteValueError = $exception;
     }
 
-    if (!$deleteValueError instanceof \\PDOException) {
+    if (!$deleteValueError instanceof \PDOException) {
         throw new RuntimeException('Deleting an enum value used by a variant must be rejected.');
     }
 
@@ -135,7 +135,7 @@ try {
     }
 }
 
-echo "OK\n";
+echo "OK\\n";
 ?>
 --EXPECT--
 OK
