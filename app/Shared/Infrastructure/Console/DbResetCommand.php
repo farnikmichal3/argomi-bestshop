@@ -108,19 +108,37 @@ final class DbResetCommand extends BaseCommand
             ORDER BY CASE WHEN TABLE_TYPE = 'VIEW' THEN 0 ELSE 1 END, TABLE_NAME",
         );
 
+        // Nejdříve ověříme celý seznam. Neočekávaný typ nebo neúplná metadata
+        // musí zastavit reset ještě před odstraněním prvního databázového objektu.
+        $validatedObjects = [];
+
+        foreach ($objects as $object) {
+            $tableName = $object['table_name'] ?? null;
+            $tableType = $object['table_type'] ?? null;
+
+            if (
+                !is_string($tableName)
+                || $tableName === ''
+                || !is_string($tableType)
+                || !in_array($tableType, ['BASE TABLE', 'VIEW'], true)
+            ) {
+                $io->error('Reset odmítnut. Databáze vrátila neočekávaný typ nebo neúplná metadata objektu.');
+
+                return Command::FAILURE;
+            }
+
+            $validatedObjects[] = [
+                'identifier' => $this->dbal->escapeIdentifier($tableName),
+                'type' => $tableType,
+            ];
+        }
+
         $this->dbal->exec('SET FOREIGN_KEY_CHECKS = 0');
 
         try {
-            foreach ($objects as $object) {
-                $tableName = $object['table_name'] ?? null;
-                $tableType = $object['table_type'] ?? null;
-
-                if (!is_string($tableName) || !is_string($tableType)) {
-                    throw new \RuntimeException('Databáze vrátila neočekávaný seznam objektů.');
-                }
-
-                $identifier = $this->dbal->escapeIdentifier($tableName);
-                $statement = $tableType === 'VIEW'
+            foreach ($validatedObjects as $object) {
+                $identifier = $object['identifier'];
+                $statement = $object['type'] === 'VIEW'
                     ? "DROP VIEW IF EXISTS $identifier"
                     : "DROP TABLE IF EXISTS $identifier";
 
