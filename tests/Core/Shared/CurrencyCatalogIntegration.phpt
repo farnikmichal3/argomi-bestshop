@@ -3,6 +3,8 @@ ISO 4217 catalog constrains business currencies and preserves shop activation
 --FILE--
 <?php
 
+use Tests\\Support\\IntegrationTestBootstrap;
+
 use App\Shared\Domain\Money\Currency;
 use App\Shared\Domain\Money\CurrencyProvider;
 use App\Shared\Infrastructure\Persistence\Money\DatabaseCurrencyProvider;
@@ -14,30 +16,13 @@ use Tester\Environment;
 $rootDir = dirname(__DIR__, 3);
 
 require $rootDir . '/vendor/autoload.php';
+require_once $rootDir . '/tests/Support/IntegrationTestBootstrap.php';
 
-if (!is_file($rootDir . '/config/local.testing.neon')) {
-    Environment::skip('Create config/local.testing.neon to run MySQL integration tests.');
-}
-
-$container = (new Bootstrap('local.testing.neon'))->bootWebApplication();
+$integration = IntegrationTestBootstrap::boot($rootDir);
+$container = $integration->container;
 
 /** @var Explorer $database */
-$database = $container->getByType(Explorer::class);
-
-$identity = $database->getConnection()->getPdo()
-    ->query('SELECT DATABASE() AS database_name, CURRENT_USER() AS database_user')
-    ->fetch(PDO::FETCH_ASSOC);
-
-if (
-    !is_array($identity)
-    || ($identity['database_name'] ?? null) !== 'argomi_bestshop_test'
-    || !in_array($identity['database_user'] ?? null, [
-        'argomi_test_app@localhost',
-        'argomi_test_app@127.0.0.1',
-    ], true)
-) {
-    throw new RuntimeException('Currency catalog integration tests may run only against argomi_bestshop_test using argomi_test_app.');
-}
+$database = $integration->database;
 
 $provider = new DatabaseCurrencyProvider($database);
 Assert::type(CurrencyProvider::class, $provider);
