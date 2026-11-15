@@ -4,7 +4,6 @@ Variant combination canonicalization is deterministic and rejects ambiguous valu
 <?php
 
 use App\Modules\Catalog\Domain\Variant\VariantCombinationHash;
-use InvalidArgumentException;
 use Tester\Assert;
 
 require __DIR__ . '/../../../vendor/autoload.php';
@@ -29,7 +28,7 @@ Assert::same(
 );
 
 Assert::same(
-    'amount=0;negative=0.125',
+    'amount=0;negative=-0.125',
     VariantCombinationHash::canonicalize([
         'negative' => ['type' => 'number', 'value' => '-0.125000'],
         'amount' => ['type' => 'number', 'value' => '-0.000'],
