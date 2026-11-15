@@ -79,13 +79,23 @@ final class DatabaseOutboxWorker
 
         $this->assertNoActiveTransaction();
 
-        $messages = $this->claim($batchSize);
+        // Každou zprávu claimujeme až těsně před jejím zpracováním.
+        // Kdybychom claimnuli celou dávku najednou, lease pozdějších zpráv
+        // by mohl vypršet ještě během zpracování předchozích handlerů.
+        $processed = 0;
 
-        foreach ($messages as $claimedMessage) {
-            $this->process($claimedMessage);
+        for ($i = 0; $i < $batchSize; $i++) {
+            $messages = $this->claim(1);
+
+            if ($messages === []) {
+                break;
+            }
+
+            $this->process($messages[0]);
+            $processed++;
         }
 
-        return count($messages);
+        return $processed;
     }
 
     /**
