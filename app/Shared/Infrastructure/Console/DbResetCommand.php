@@ -33,8 +33,8 @@ final class DbResetCommand extends BaseCommand
         IDriver $driver,
         IConfiguration $config,
         private readonly IDbal $dbal,
+        IPrinter $printer,
         private readonly DbResetEnvironmentPolicy $environmentPolicy,
-        ?IPrinter $printer = null,
     ) {
         parent::__construct($driver, $config, $printer);
     }
