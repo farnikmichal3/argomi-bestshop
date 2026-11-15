@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 140, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 410, zrušeno 2.
+Celkem **554 kroků**: hotovo 140, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 411, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -1214,7 +1214,7 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Účetní model stanoví `line_gross_minor = line_net_minor + line_tax_minor` a `grand_total_minor = subtotal_net_minor + adjustments_net_minor + tax_total_minor`; `tax_total_minor` zahrnuje daň z položek i úprav. `placed_at IS NOT NULL` uzavírá účetní snapshot. Po uzavření jsou chráněny finanční souhrny, měna a daňový režim, položky, jejich volby i úpravy; nefinanční změny objednávky zůstávají povolené.
 - MySQL integrační test `OrderAccountingIntegration.phpt` ověřil uzavření konzistentní objednávky, odmítnutí nekonzistentních součtů, ochranu draftů pomocí `CHECK` a neměnnost uzavřeného snapshotu. Uživatel potvrdil `All active checks passed.`
 - `docs/schema.md` aktualizováno na revizi 1.3; doplněny účetní invarianty objednávek a zdrojová migrace.
-- F3: **28 hotovo**, **0 rozděláno**, **5 plán**, **1 zrušeno**. Celkový souhrn: **140 hotovo**, **0 rozděláno**, **1 k úpravě**, **410 plán**, **2 zrušeno**.
+- F3: **28 hotovo**, **0 rozděláno**, **5 plán**, **1 zrušeno**. Celkový souhrn: **140 hotovo**, **0 rozděláno**, **1 k úpravě**, **411 plán**, **2 zrušeno**.
 ### v3.18 (15. 11. 2026)
 - Dokončen F3-26: dopředná migrace doplnila 11 chybějících cizích klíčů ze sloupců `locale` na `language(code)`. Všech 13 locale vazeb je nyní chráněno; povinné překlady a `cart`/`shop_order` používají `ON DELETE RESTRICT`, volitelné `customer.locale` používá `ON DELETE SET NULL`.
 - Integrační test ověřuje všech 13 FK v `information_schema`, odmítnutí odstranění používaného jazyka a zachování zákazníka při nastavení `locale` na `NULL`. Uživatel potvrdil úspěšnou lokální migraci i `All active checks passed.`
