@@ -75,6 +75,22 @@ try {
     Assert::same($liveOrderId, (int) $message->shop_order_id);
     Assert::same('pending', $message->status);
 
+    // Ani dodatečné přesměrování existující zprávy na demo objednávku není možné.
+    Assert::exception(
+        static fn () => $database->table('outbox_message')
+            ->where('message_id', $messageId->toString())
+            ->update(['shop_order_id' => $demoOrderId]),
+        Throwable::class,
+    );
+
+    // Objednávková zpráva nesmí ztratit vazbu na objednávku.
+    Assert::exception(
+        static fn () => $database->table('outbox_message')
+            ->where('message_id', $messageId->toString())
+            ->update(['event_name' => 'order.test.missing-link', 'shop_order_id' => null]),
+        Throwable::class,
+    );
+
     // Demo objednávka nesmí vložit provozní událost do Outboxu.
     Assert::exception(
         static fn () => $transaction->run(
