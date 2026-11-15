@@ -372,6 +372,7 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 13. 11. 2026 | F2-06: `Locale` používá omezenou podmnožinu BCP 47; `cs` a `en` jsou databázové základní jazyky, aktivní prefixy routeru se generují z DB a překladový fallback patří modulu Translation. |
 | 15. 11. 2026 | F2-16: stanovena kritéria pro umístění kódu do `Shared`; výchozím vlastníkem zůstává konkrétní modul a `Shared` smí záviset pouze na PHP a externích knihovnách. Podrobnosti a příklady jsou v `STRUKTURA.md`. |
 | 15. 11. 2026 | F2-18: synchronní doménové události slouží pouze pro krátké kritické interní reakce; transakci vlastní aplikační use-case a výjimka musí opustit nejvyšší transakční callback, aby nastal rollback. Externí a notifikační účinky se zapisují jako explicitní integrační zprávy do Transactional Outbox ve stejné transakci; worker je zpracuje až po commitu. Interní `DomainEvent` se automaticky neserializuje do Outboxu. Podrobnosti jsou v `STRUKTURA.md`. |
+| 15. 11. 2026 | F2-20: Outbox doručuje at-least-once; handler deduplikuje podle stabilního `messageId`, databázový účinek ukládá atomicky s deduplikačním záznamem a externím API předává idempotency key, pokud jej podporuje. Handler musí skončit před vypršením lease; `dead` zprávy se bez samostatného auditovatelného provozního zásahu automaticky neobnovují. Podrobnosti jsou v `STRUKTURA.md`. |
 
 ## 17. Historie cen a pravidla pro slevy (Omnibus)
 
