@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 1.6 · 15. 11. 2026  
+**Revize:** 1.7 · 15. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -260,6 +260,14 @@ composer run test
 
 Případně spusť celý projektový kontrolní skript `check.bat`, který kromě testů ověřuje i další statické a architektonické kontroly.
 
+### GitHub Actions
+
+Workflow `.github/workflows/composer.yml` spouští integrační testy nad dočasnou službou `mysql:8.4`. V každém běhu vytvoří novou databázi `argomi_bestshop_test`, aplikační a migrační účet, vygeneruje ignorovanou lokální konfiguraci, provede dopředné migrace přes `bin/console-testing` a následně spustí testy.
+
+Kvůli síťovému přístupu runneru k service containeru používá CI účty s hostitelským vzorem `%`. Toto nastavení platí pouze pro jednorázový MySQL kontejner daného běhu; hesla jsou testovací a databáze se po dokončení jobu zahodí. `IntegrationTestBootstrap` přijme účet `argomi_test_app@%` pouze při explicitním prostředí GitHub Actions (`GITHUB_ACTIONS=true`). Lokální konfigurace nadále používá účty omezené na `localhost` nebo `127.0.0.1`.
+
+CI nastavuje `TEST_DATABASE_REQUIRED=1`, takže integrační testy nesmějí být přeskočeny kvůli chybějící konfiguraci nebo databázi. Selhání vytvoření DB, migrací či připojení proto ukončí workflow chybou.
+
 ### Bezpečnostní hranice
 
 - Testovací databáze se nikdy nesmí zaměnit za vývojovou ani produkční databázi.
@@ -290,3 +298,4 @@ Případně spusť celý projektový kontrolní skript `check.bat`, který krom�
 | 15. 11. 2026 | Dopřednou migrací sjednocen název FK sloupce katalogu ISO 4217 na `iso4217_catalog_release_id` podle standardní konvence. |
 | 15. 11. 2026 | v1.5: doplněna pravidla bezpečného skládání SQL, parametrizace hodnot a allowlistu dynamických identifikátorů (F3-14). |
 | 15. 11. 2026 | v1.6: zdokumentována izolovaná testovací databáze, oddělené účty a bezpečný vstupní bod pro dopředné migrace (F3-15b). |
+| 15. 11. 2026 | v1.7: popsáno povinné spuštění MySQL integračních testů nad izolovanou MySQL 8.4 službou v GitHub Actions (F3-15c). |
