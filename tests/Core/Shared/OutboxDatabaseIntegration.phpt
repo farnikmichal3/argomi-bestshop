@@ -89,8 +89,15 @@ try {
     Assert::same(123, $payload->orderId);
     Assert::same('ok', $payload->nested->value);
 
-    Assert::same('2026-11-15 11:34:56.123456', $committedRow->created_at);
-    Assert::same('2026-11-15 11:34:56.123456', $committedRow->available_at);
+    Assert::same(
+        '2026-11-15 11:34:56.123456',
+        $committedRow->created_at->format('Y-m-d H:i:s.u'),
+    );
+
+    Assert::same(
+        '2026-11-15 11:34:56.123456',
+        $committedRow->available_at->format('Y-m-d H:i:s.u'),
+    );
 
     $rolledBackId = null;
 

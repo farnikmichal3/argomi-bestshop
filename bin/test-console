@@ -10,10 +10,10 @@ $container = $bootstrap->bootWebApplication();
 $connection = $container->getByType(Nextras\Dbal\Connection::class);
 $identity = $connection->query(
     'SELECT DATABASE() AS database_name, CURRENT_USER() AS database_user',
-)->fetch() ?: [];
+)->fetch();
 
-$databaseName = $identity['database_name'] ?? null;
-$databaseUser = $identity['database_user'] ?? null;
+$databaseName = $identity?->database_name;
+$databaseUser = $identity?->database_user;
 
 if (
     $databaseName !== 'argomi_bestshop_test'
