@@ -36,7 +36,7 @@ $productTranslations = (int) $pdo->query(
 Assert::same(6, $productTranslations, 'All three demo products must have complete cs/en descriptions and SEO metadata.');
 
 $orders = $pdo->query(
-    "SELECT id, order_number, currency, locale, placed_at,
+    "SELECT id, order_number, currency, locale, placed_at, is_demo,
             adjustments_net_minor, subtotal_net_minor, tax_total_minor, grand_total_minor,
             JSON_CONTAINS_PATH(billing_address, 'all',
                 '$.name', '$.street', '$.city', '$.postal_code', '$.country_code') AS billing_complete,
@@ -60,6 +60,7 @@ foreach ($orders as $order) {
     Assert::same($expected[0], $order['currency']);
     Assert::same($expected[1], $order['locale']);
     Assert::notSame(null, $order['placed_at'], 'Demo order must be closed only after its snapshots are complete.');
+    Assert::same(1, (int) $order['is_demo'], 'Every explicitly seeded demo order must be classified as demo.');
     Assert::same(1, (int) $order['billing_complete'], 'Billing address snapshot must contain all required address fields.');
     Assert::same(1, (int) $order['shipping_complete'], 'Shipping address snapshot must contain all required address fields.');
     Assert::same($expected[2], (int) $order['subtotal_net_minor']);
@@ -103,6 +104,15 @@ foreach ($orders as $order) {
         (int) $adjustmentTotals['gross_total'],
     );
 }
+
+// Všechny čtyři objednávky z obou generací demo seedu musí být označeny.
+$classifiedDemoOrders = (int) $pdo->query(
+    "SELECT COUNT(*)
+       FROM shop_order
+      WHERE order_number IN ('2026-000001', '2026-000002', '2026-000003', '2026-000004')
+        AND is_demo = 1",
+)->fetchColumn();
+Assert::same(4, $classifiedDemoOrders, 'All seeded sample orders must be explicitly classified as demo.');
 
 // Volby produktu jsou uloženy jako součást historického snapshotu, nikoli odkaz na aktuální katalog.
 $optionCount = (int) $pdo->query(
