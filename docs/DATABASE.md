@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 1.7 · 15. 11. 2026  
+**Revize:** 1.8 · 15. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -171,7 +171,7 @@ Zápis do `outbox_message` musí používat stejný databázový connection a st
 ## 9. Známé mezery a navazující práce
 
 - ověřit všechny FK, CHECK a mazací strategie,
-- vytvořit diagramy schématu podle modulů,
+- `[HOTOVO]` vytvořit diagramy schématu podle modulů – viz [schema.md](schema.md), který zachycuje 49 tabulek a 61 fyzických FK podle aktuálních migrací,
 - doplnit testy součtů objednávek a snapshotů,
 - dokončit pravidla archivace produktů/variant,
 - doplnit úplné demo snapshoty a další vlny produktů,
