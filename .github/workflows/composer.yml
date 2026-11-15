@@ -131,6 +131,11 @@ jobs:
             charset: utf8mb4
           NEON
 
+      - name: Configure MySQL routine and trigger creation
+        run: |
+          mysql --protocol=TCP --host=127.0.0.1 --port=3306 --user=root --password=ci-root-password \
+              -e "SET GLOBAL log_bin_trust_function_creators = 1;"
+
       - name: Apply forward migrations to the isolated test database
         run: php bin/console-testing migrations:continue
 
