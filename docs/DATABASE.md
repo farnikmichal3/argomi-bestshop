@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 1.8 · 15. 11. 2026  
+**Revize:** 1.9 · 15. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -12,6 +12,8 @@ Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nep�
 |---|---|---|
 | structures | `migrations/structures/2026-11-04-200000-init.sql` | Počáteční databázové schéma |
 | structures | `migrations/structures/2026-11-15-120000-transactional-outbox.sql` | Samostatná persistence Transactional Outbox (F3-34) |
+| structures | `migrations/structures/2026-11-15-220000-protect-demo-orders.sql` | Označení demo objednávek a ochrana Outboxu/skladu (F3-32) |
+| dummy-data | `migrations/dummy-data/2026-11-15-230000-classify-demo-orders.sql` | Označení čtyř demo objednávek (F3-32) |
 | basic-data | `migrations/basic-data/2026-11-04-201000-basic-data.sql` | Základní číselníky a referenční data |
 | dummy-data | `migrations/dummy-data/2026-11-04-202000-demo-products.sql` | Demonstrační obsah a související ukázková data |
 
@@ -78,7 +80,7 @@ Každý demo záznam, který může vyvolat vedlejší efekt, musí být rozpozn
 - testovací webhook nebo opakované zpracování nemůže proměnit demo objednávku ve skutečnou transakci,
 - demo data lze bezpečně zobrazovat a vysvětlovat v administraci.
 
-Konkrétní označovací mechanismus (např. explicitní `is_demo`/origin flag nebo vyhrazený stav) musí být navržen v příslušném modulu a otestován. Nelze spoléhat pouze na text názvu nebo e-mailovou adresu.
+Objednávky používají explicitní `shop_order.is_demo`. Příznak se po vytvoření nemění; databázová migrace a seed označují všechny čtyři historické demo objednávky. Provozní události `order.*` musí nést `shop_order_id`; databáze odmítá demo objednávku v Outboxu i skladový pohyb s `reference_type = 'shop_order'`. Demo zákaznické notifikace a další externí operace musí být navázány na objednávkovou událost a zpracovány až po databázové kontrole. Nelze spoléhat pouze na text názvu nebo e-mailovou adresu.
 
 ## 5. Databázové konvence
 
@@ -145,7 +147,7 @@ Dopředná migrace `2026-11-15-120000-transactional-outbox.sql` přidává samos
 |---|---|
 | `id` | Interní celočíselný primární klíč |
 | `message_id` | Veřejný ULID (26 znaků), unikátní identifikátor pro idempotenci a korelaci |
-| `event_name` | Stabilní název/verze typu události |
+| `event_name` | Stabilní název/verze typu události; objednávkové události používají prefix `order.` |\n| `shop_order_id` | Volitelný FK na objednávku; pro `order.*` povinný a demo objednávky jsou databázově odmítnuty |
 | `payload` | JSON objekt s daty události; bez tajných a citlivých údajů |
 | `status` | `pending`, `processing`, `delivered` nebo `dead` |
 | `attempts` | Počet převzetí workerem |
@@ -166,16 +168,16 @@ Dopředná migrace `2026-11-15-120000-transactional-outbox.sql` přidává samos
 - Externí volání nikdy neběží uvnitř dlouho otevřené databázové transakce. Pád po úspěšném externím účinku, ale před označením zprávy jako doručené, může způsobit opakování; proto je doručení at-least-once a handler musí být idempotentní podle `message_id`.
 - Záznamy se automaticky nemažou. Retence a archivace budou samostatným provozním rozhodnutím.
 
-Zápis do `outbox_message` musí používat stejný databázový connection a stejnou nejvyšší transakci jako obchodní změna. Samostatný commit Outbox záznamu není povolen. Aplikační kontrakt `OutboxWriter` a produkční `DatabaseOutboxWriter` jsou implementovány. Writer používá `Clock` pro explicitní UTC čas a `PublicIdGenerator` pro ULID; payload vždy serializuje jako JSON objekt. Před vložením ověřuje `PDO::inTransaction()` a mimo aktivní transakci vyhodí `LogicException`. Vlastní transakci nezahajuje. Claim/retry worker, testovací databáze a integrační testy atomicity navazují samostatnými kroky.
+Zápis do `outbox_message` musí používat stejný databázový connection a stejnou nejvyšší transakci jako obchodní změna. `OutboxWriter::record()` přijímá volitelné `shopOrderId`; události `order.*` jej musí předat. Databázový FK a triggery odmítají demo objednávky při vložení i aktualizaci Outbox zprávy. Skladové triggery obdobně odmítají `stock_movement` s `reference_type = 'shop_order'` pro demo objednávku. Počáteční skladové příjmy `demo_opening_balance` tím nejsou dotčeny. Samostatný commit Outbox záznamu není povolen. Aplikační kontrakt `OutboxWriter` a produkční `DatabaseOutboxWriter` jsou implementovány. Writer používá `Clock` pro explicitní UTC čas a `PublicIdGenerator` pro ULID; payload vždy serializuje jako JSON objekt. Před vložením ověřuje `PDO::inTransaction()` a mimo aktivní transakci vyhodí `LogicException`. Vlastní transakci nezahajuje. Claim/retry worker, testovací databáze a integrační testy atomicity navazují samostatnými kroky.
 
 ## 9. Známé mezery a navazující práce
 
 - ověřit všechny FK, CHECK a mazací strategie,
-- `[HOTOVO]` vytvořit diagramy schématu podle modulů – viz [schema.md](schema.md), který zachycuje 49 tabulek a 61 fyzických FK podle aktuálních migrací,
+- `[HOTOVO]` vytvořit diagramy schématu podle modulů – viz [schema.md](schema.md), který zachycuje 51 tabulek a 75 fyzických FK podle aktuálních migrací,
 - doplnit testy součtů objednávek a snapshotů,
 - dokončit pravidla archivace produktů/variant,
 - doplnit úplné demo snapshoty a další vlny produktů,
-- doplnit explicitní bezpečné rozlišení demo objednávek,
+- `[HOTOVO]` doplnit explicitní bezpečné rozlišení demo objednávek a ochranu provozního Outboxu/skladových pohybů (F3-32),
 - navrhnout rozdělení systémových překladů do doménových tabulek,
 - ověřit všechny migrace na cílové verzi MySQL.
 
@@ -298,4 +300,4 @@ CI nastavuje `TEST_DATABASE_REQUIRED=1`, takže integrační testy nesmějí bý
 | 15. 11. 2026 | Dopřednou migrací sjednocen název FK sloupce katalogu ISO 4217 na `iso4217_catalog_release_id` podle standardní konvence. |
 | 15. 11. 2026 | v1.5: doplněna pravidla bezpečného skládání SQL, parametrizace hodnot a allowlistu dynamických identifikátorů (F3-14). |
 | 15. 11. 2026 | v1.6: zdokumentována izolovaná testovací databáze, oddělené účty a bezpečný vstupní bod pro dopředné migrace (F3-15b). |
-| 15. 11. 2026 | v1.7: popsáno povinné spuštění MySQL integračních testů nad izolovanou MySQL 8.4 službou v GitHub Actions (F3-15c). |
+| 15. 11. 2026 | v1.7: popsáno povinné spuštění MySQL integračních testů nad izolovanou MySQL 8.4 službou v GitHub Actions (F3-15c). |\n| 15. 11. 2026 | v1.9: doplněno explicitní označení demo objednávek a databázová ochrana Outboxu i skladových pohybů (F3-32). |
