@@ -10,6 +10,8 @@ services:
 	)
 	# Transakční adaptér se automaticky zpřístupní přes jediné implementované rozhraní Transaction.
 	- App\Shared\Infrastructure\Transaction\NetteTransaction
+	# Outbox writer zapisuje pouze do již aktivní transakce volající obchodní operace.
+	- App\Shared\Infrastructure\Outbox\DatabaseOutboxWriter
 	# Produkční hodiny jsou jedinou registrovanou implementací Clock; FrozenClock zůstává pouze pro testy.
 	- App\Shared\Infrastructure\Clock\SystemClock
 	# Generátor veřejných ULID je jedinou registrovanou implementací rozhraní PublicIdGenerator.
