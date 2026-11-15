@@ -160,7 +160,7 @@ INSERT INTO shop_order_item
      options_unit_total_minor, tax_rate_bp, line_net_minor, line_tax_minor,
      line_gross_minor)
 SELECT
-    o.id, 2, 8, 'CABLE-CC-2M-BK', 'USB-C cable', 'Black / 2 m / USB-C to USB-C',
+    @demo_order_4_id, 2, 8, 'CABLE-CC-2M-BK', 'USB-C cable', 'Black / 2 m / USB-C to USB-C',
     JSON_OBJECT(
         'length_m', JSON_OBJECT('value', 2, 'unit', 'm'),
         'c_connectors', JSON_OBJECT('value', 2),
@@ -180,7 +180,7 @@ INSERT INTO shop_order_item
      options_unit_total_minor, tax_rate_bp, line_net_minor, line_tax_minor,
      line_gross_minor)
 SELECT
-    o.id, 3, 13, 'GAN-2X65-BK', 'GaN charger', 'Black / 65 W / 2 ports',
+    @demo_order_4_id, 3, 13, 'GAN-2X65-BK', 'GaN charger', 'Black / 65 W / 2 ports',
     JSON_OBJECT(
         'slots', JSON_OBJECT('value', 2),
         'power_w', JSON_OBJECT('value', 65, 'unit', 'W'),
@@ -247,7 +247,7 @@ WHERE order_number = '2026-000004';
 
 INSERT INTO shop_order_status_history
     (shop_order_id, from_status, to_status, note, created_at)
-SELECT id, NULL, 'new', 'Demo objednávka vytvořena', '2026-11-05 10:15:00'
+SELECT @demo_order_3_id, NULL, 'new', 'Demo objednávka vytvořena', '2026-11-05 10:15:00'
 FROM DUAL
 WHERE @demo_order_3_id IS NOT NULL
   AND NOT EXISTS (
@@ -259,7 +259,7 @@ WHERE @demo_order_3_id IS NOT NULL
 
 INSERT INTO shop_order_status_history
     (shop_order_id, from_status, to_status, note, created_at)
-SELECT id, 'new', 'paid', 'Demo platba potvrzena', '2026-11-05 10:16:00'
+SELECT @demo_order_3_id, 'new', 'paid', 'Demo platba potvrzena', '2026-11-05 10:16:00'
 FROM DUAL
 WHERE @demo_order_3_id IS NOT NULL
   AND NOT EXISTS (
@@ -271,7 +271,7 @@ WHERE @demo_order_3_id IS NOT NULL
 
 INSERT INTO shop_order_status_history
     (shop_order_id, from_status, to_status, note, created_at)
-SELECT id, NULL, 'new', 'Demo objednávka vytvořena', '2026-11-06 18:40:00'
+SELECT @demo_order_4_id, NULL, 'new', 'Demo objednávka vytvořena', '2026-11-06 18:40:00'
 FROM DUAL
 WHERE @demo_order_4_id IS NOT NULL
   AND NOT EXISTS (
