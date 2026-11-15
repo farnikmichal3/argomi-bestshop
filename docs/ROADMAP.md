@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.06 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.08 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 129, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 420, zrušeno 2.
+Celkem **554 kroků**: hotovo 130, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 419, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 17 | 0 | 0 | 0 | 0 | 16 | 1 |
+| F3 | Databáze a migrace | 34 | 18 | 0 | 0 | 0 | 0 | 15 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -1204,6 +1204,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ### v2.98 (15. 11. 2026)
 - Dokončen F2-15: potvrzena a zdokumentována architektonická izolace `Shared` pomocí existujícího pravidla Deptrac. `composer arch` je součástí lokálních kontrol i GitHub Actions; nebyla přidána duplicitní kontrolní vrstva.
 - F2: **16 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **119 hotovo**, **0 rozděláno**, **2 k úpravě**, **429 plán**, **2 zrušeno**.
+
+### v3.08 (15. 11. 2026)
+- Dokončen F3-12: nový fail-closed MySQL integrační test `TransactionIntegration.phpt` ověřuje skutečnou registraci `Transaction` / `NetteTransaction` v Nette DI, commit, rollback, propagaci `Exception` a `Error` a vnořené transakce včetně sdílené atomicity bez savepointů.
+- Uživatel potvrdil úspěšný samostatný integrační test i kompletní `check.bat`: všechny aktivní kontroly prošly. Produkční transakční adaptér nebylo nutné měnit.
+- F3: **18 hotovo**, **0 rozděláno**, **0 k úpravě**, **15 plán**, **1 zrušeno**. Celkový souhrn: **130 hotovo**, **0 rozděláno**, **1 k úpravě**, **419 plán**, **2 zrušeno**.
 
 ### v3.07 (15. 11. 2026)
 - Dokončeny F3-10 a F3-11: první čtecí repozitář katalogu a typované DTO produktu i překladů. Repozitář používá Nette Database Explorer, mapuje `ActiveRow` na DTO uvnitř persistence vrstvy a je automaticky registrován přes konvenci `*Repository` v Nette DI.
