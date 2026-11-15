@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Domain\Variant;
+namespace App\\Modules\\Catalog\\Domain\\Variant;
 
 use InvalidArgumentException;
 
@@ -15,7 +15,7 @@ use InvalidArgumentException;
 final class VariantCombinationHash
 {
     /**
-     * @param array<string, array{type: 'enum'|'number'|'text'|'bool', value: string|bool}> $attributes
+     * @param array<string, mixed> $attributes
      */
     public static function create(array $attributes): string
     {
@@ -23,7 +23,7 @@ final class VariantCombinationHash
     }
 
     /**
-     * @param array<string, array{type: 'enum'|'number'|'text'|'bool', value: string|bool}> $attributes
+     * @param array<string, mixed> $attributes
      */
     public static function canonicalize(array $attributes): string
     {
@@ -37,8 +37,12 @@ final class VariantCombinationHash
         $parts = [];
 
         foreach ($attributes as $code => $attribute) {
-            if (!preg_match('/^[a-z][a-z0-9_]*$/D', $code)) {
+            if (preg_match('/^[a-z][a-z0-9_]*$/D', $code) !== 1) {
                 throw new InvalidArgumentException('Kód atributu musí být malé ASCII písmeno následované malými písmeny, číslicemi nebo podtržítkem.');
+            }
+
+            if (!is_array($attribute)) {
+                throw new InvalidArgumentException(sprintf('Atribut %s musí být předán jako struktura typu a hodnoty.', $code));
             }
 
             $type = $attribute['type'] ?? null;
@@ -77,7 +81,7 @@ final class VariantCombinationHash
     {
         if (
             !is_string($value)
-            || !preg_match('/^-?(?:0|[1-9][0-9]{0,13})(?:\.[0-9]{1,6})?$/D', $value)
+            || preg_match('/^-?(?:0|[1-9][0-9]{0,13})(?:\\.[0-9]{1,6})?$/D', $value) !== 1
         ) {
             throw new InvalidArgumentException(sprintf('Číselná hodnota atributu %s musí být desetinný řetězec s nejvýše šesti místy.', $code));
         }
