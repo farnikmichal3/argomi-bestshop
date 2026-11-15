@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 3.8 · 15. 11. 2026  
+**Revize:** 3.9 · 15. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 15. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -215,7 +215,15 @@ Integrační a notifikační zprávy určené pro zpracování mimo právě bě�
 
 Doménová událost a Outbox zpráva nejsou automaticky totožné. Interní `DomainEvent` se nepřevádí ani neserializuje automaticky. Modul výslovně určí, zda a jaká integrační zpráva má vzniknout, zvolí její stabilní `eventName` a připraví explicitní serializovatelný payload. Tím zůstává interní model nezávislý na veřejném integračním formátu a citlivá či nadbytečná data se do zprávy nedostanou omylem.
 
-Outbox zpracovává samostatný worker až po commitu. Doručování je nejméně jednou (at-least-once), proto musí být handlery idempotentní podle identifikátoru zprávy a musí počítat s opakováním po chybě nebo vypršení lease. Worker používá řízené opakování a evidenci chyb; claimuje vždy jednu zprávu a okamžitě ji zpracuje, aby lease nezačal ubíhat u zpráv čekajících v lokální dávce.
+Outbox zpracovává samostatný worker až po commitu. Doručování je nejméně jednou (at-least-once), nikoliv exactly-once: pád po provedení vedlejšího účinku, ale před potvrzením `delivered`, může způsobit opětovné zavolání handleru. Worker proto nesmí slibovat jediné provedení účinku; stabilní `messageId` zůstává při všech pokusech stejný a `attempt` označuje pořadí konkrétního pokusu.
+
+Každý handler musí být idempotentní podle `messageId`. Při databázovém účinku musí deduplikační záznam a vlastní změna vzniknout v jedné databázové transakci: unikátní omezení nad `messageId` zabrání souběžnému nebo opakovanému provedení a záznam úspěšného zpracování se potvrdí atomicky s obchodní změnou. Při externím API se má `messageId` předat jako idempotency key, pokud jej poskytovatel podporuje. Pokud jej nepodporuje, handler musí počítat s nejednoznačným výsledkem a zajistit následné ověření či reconciliaci; pouhá kontrola před voláním externí služby závodní situaci neřeší.
+
+Lease workeru má výchozí délku 300 sekund a automaticky se neprodlužuje. Handler i jeho externí volání proto musí mít striktní časové limity kratší než nakonfigurovaný lease, s rezervou pro potvrzení zprávy. Pokud zpracování lease překročí, jiný worker může zprávu převzít ještě během běhu původního handleru. Ochranný token zabrání starému workeru potvrdit cizí lease, ale nezruší již provedený externí účinek; idempotence handleru je proto nezbytná i při souběhu.
+
+Worker používá řízené exponenciální opakování, maximální počet pokusů a stav `dead`. Ukládá pouze typ výjimky, nikoliv její text nebo payload. Chybějící handler je chyba konfigurace zpracovaná jako selhání zprávy; po vyčerpání pokusů skončí zpráva ve stavu `dead`. Duplicitní registrace handleru pro stejný `eventName` je odmítnuta při sestavení workeru. CLI `outbox:work` spouští pouze omezenou dávku a pro pravidelné zpracování se volá plánovačem/cronem.
+
+Zprávy ve stavu `dead` se automaticky znovu nezařazují. Projekt zatím neposkytuje operaci pro jejich ruční opětovné zařazení; případný budoucí nástroj musí být samostatně navržen jako auditovatelný provozní zásah a nesmí mazat původní identitu zprávy ani obcházet idempotenci.
 
 Outbox je společný mechanismus ve `Shared`; moduly vlastní své doménové události, rozhodnutí o vzniku integrační zprávy, stabilní názvy a payloady i konkrétní handlery. Persistence, aplikační kontrakty a CLI worker jsou implementovány ve `Shared`.
 
