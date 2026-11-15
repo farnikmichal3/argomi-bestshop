@@ -89,7 +89,10 @@ try {
         maxRetryDelaySeconds: 20,
     );
 
-    Assert::same(2, $worker->runOnce(2));
+    Assert::same(2, $worker->runOnce(2, [
+        'test.outbox.worker.failure',
+        'test.outbox.worker.success',
+    ]));
 
     $failedRow = $database->table('outbox_message')
         ->where('message_id', $failureId->toString())
@@ -129,7 +132,7 @@ try {
         $failureId->toString(),
     );
 
-    Assert::same(1, $worker->runOnce(1));
+    Assert::same(1, $worker->runOnce(1, ['test.outbox.worker.failure']));
 
     $retriedRow = $database->table('outbox_message')
         ->where('message_id', $failureId->toString())
@@ -198,7 +201,7 @@ try {
         maxAttempts: 1,
     );
 
-    Assert::same(1, $missingHandlerWorker->runOnce(1));
+    Assert::same(1, $missingHandlerWorker->runOnce(1, ['test.outbox.worker.missing-handler']));
     $missingHandlerRow = $database->table('outbox_message')
         ->where('message_id', $missingHandlerId->toString())
         ->fetch();
@@ -244,7 +247,7 @@ try {
         new NullLogger(),
     );
 
-    Assert::same(1, $expiredWorker->runOnce(1));
+    Assert::same(1, $expiredWorker->runOnce(1, ['test.outbox.worker.expired-lease']));
     Assert::notNull($expiredHandler->handledMessage);
     Assert::same(2, $expiredHandler->handledMessage->attempt);
 
@@ -292,7 +295,7 @@ try {
         maxAttempts: 3,
     );
 
-    Assert::same(0, $finalAttemptWorker->runOnce(1));
+    Assert::same(0, $finalAttemptWorker->runOnce(1, ['test.outbox.worker.expired-final-attempt']));
     Assert::false($finalAttemptHandler->called);
 
     $expiredFinalRow = $database->table('outbox_message')
@@ -334,7 +337,7 @@ try {
     };
 
     $staleWorker = new DatabaseOutboxWorker($database, [$staleHandler], new NullLogger());
-    Assert::same(1, $staleWorker->runOnce(1));
+    Assert::same(1, $staleWorker->runOnce(1, ['test.outbox.worker.stale-lease']));
 
     $staleRow = $database->table('outbox_message')
         ->where('message_id', $staleId->toString())
