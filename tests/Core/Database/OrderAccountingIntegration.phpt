@@ -208,6 +208,13 @@ try {
 
     $expectRejected(
         static fn () => $pdo->prepare(
+            'UPDATE shop_order SET grand_total_minor = 1 WHERE id = ?',
+        )->execute([$badOrderId]),
+        'The grand total CHECK must also protect draft orders.',
+    );
+
+    $expectRejected(
+        static fn () => $pdo->prepare(
             'UPDATE shop_order
              SET subtotal_net_minor = 99,
                  adjustments_net_minor = 0,
