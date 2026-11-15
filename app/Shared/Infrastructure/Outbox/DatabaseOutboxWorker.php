@@ -77,6 +77,8 @@ final class DatabaseOutboxWorker
             throw new \InvalidArgumentException(sprintf('Velikost dávky musí být v rozsahu 1 až %d.', self::MAX_BATCH_SIZE));
         }
 
+        $this->assertNoActiveTransaction();
+
         $messages = $this->claim($batchSize);
 
         foreach ($messages as $claimedMessage) {
@@ -188,10 +190,13 @@ final class DatabaseOutboxWorker
 
             $handler->handle($message);
         } catch (Throwable $exception) {
+            $this->assertNoActiveTransaction();
             $this->scheduleRetry($claimedMessage, $exception);
 
             return;
         }
+
+        $this->assertNoActiveTransaction();
 
         if (!$this->markDelivered($claimedMessage)) {
             $this->logger->notice('Outbox lease expired before successful delivery could be acknowledged.', [
@@ -204,22 +209,24 @@ final class DatabaseOutboxWorker
 
     private function markDelivered(ClaimedOutboxMessage $claimedMessage): bool
     {
-        $result = $this->database->query(
-            "UPDATE outbox_message
-            SET status = 'delivered',
-                delivered_at = UTC_TIMESTAMP(6),
-                locked_until = NULL,
-                lock_token = NULL,
-                last_error = NULL
-            WHERE id = ?
-                AND status = 'processing'
-                AND lock_token = ?
-                AND locked_until > UTC_TIMESTAMP(6)",
-            $claimedMessage->id,
-            $claimedMessage->lockToken,
-        );
+        return $this->database->transaction(function () use ($claimedMessage): bool {
+            $result = $this->database->query(
+                "UPDATE outbox_message
+                SET status = 'delivered',
+                    delivered_at = UTC_TIMESTAMP(6),
+                    locked_until = NULL,
+                    lock_token = NULL,
+                    last_error = NULL
+                WHERE id = ?
+                    AND status = 'processing'
+                    AND lock_token = ?
+                    AND locked_until > UTC_TIMESTAMP(6)",
+                $claimedMessage->id,
+                $claimedMessage->lockToken,
+            );
 
-        return $result->getRowCount() === 1;
+            return $result->getRowCount() === 1;
+        });
     }
 
     private function scheduleRetry(ClaimedOutboxMessage $claimedMessage, Throwable $exception): void
@@ -233,32 +240,41 @@ final class DatabaseOutboxWorker
         // Zprávy externích knihoven mohou obsahovat tokeny či osobní údaje.
         $errorType = substr($exception::class, 0, 1000);
 
-        $result = $this->database->query(
-            "UPDATE outbox_message
-            SET status = ?,
-                available_at = CASE
-                    WHEN ? = 'pending' THEN TIMESTAMPADD(SECOND, ?, UTC_TIMESTAMP(6))
-                    ELSE available_at
-                END,
-                dead_at = CASE
-                    WHEN ? = 'dead' THEN UTC_TIMESTAMP(6)
-                    ELSE NULL
-                END,
-                locked_until = NULL,
-                lock_token = NULL,
-                last_error = ?
-            WHERE id = ?
-                AND status = 'processing'
-                AND lock_token = ?
-                AND locked_until > UTC_TIMESTAMP(6)",
-            $nextStatus,
+        $updated = $this->database->transaction(function () use (
             $nextStatus,
             $retryDelay,
-            $nextStatus,
             $errorType,
-            $claimedMessage->id,
-            $claimedMessage->lockToken,
-        );
+            $claimedMessage,
+        ): bool {
+            $result = $this->database->query(
+                "UPDATE outbox_message
+                SET status = ?,
+                    available_at = CASE
+                        WHEN ? = 'pending' THEN TIMESTAMPADD(SECOND, ?, UTC_TIMESTAMP(6))
+                        ELSE available_at
+                    END,
+                    dead_at = CASE
+                        WHEN ? = 'dead' THEN UTC_TIMESTAMP(6)
+                        ELSE NULL
+                    END,
+                    locked_until = NULL,
+                    lock_token = NULL,
+                    last_error = ?
+                WHERE id = ?
+                    AND status = 'processing'
+                    AND lock_token = ?
+                    AND locked_until > UTC_TIMESTAMP(6)",
+                $nextStatus,
+                $nextStatus,
+                $retryDelay,
+                $nextStatus,
+                $errorType,
+                $claimedMessage->id,
+                $claimedMessage->lockToken,
+            );
+
+            return $result->getRowCount() === 1;
+        });
 
         $context = [
             'message_id' => $message->messageId,
@@ -268,13 +284,24 @@ final class DatabaseOutboxWorker
             'next_status' => $nextStatus,
         ];
 
-        if ($result->getRowCount() !== 1) {
+        if (!$updated) {
             $this->logger->notice('Outbox lease expired before failure could be recorded.', $context);
 
             return;
         }
 
         $this->logger->warning('Outbox message handler failed.', $context);
+    }
+
+    /**
+     * Worker nesmí běžet uvnitř cizí transakce; jinak by commit claimu
+     * nemusel nastat před voláním handleru. Handler musí své transakce uzavřít.
+     */
+    private function assertNoActiveTransaction(): void
+    {
+        if ($this->database->getConnection()->getPdo()->inTransaction()) {
+            throw new LogicException('Outbox worker nesmí pokračovat uvnitř již aktivní databázové transakce.');
+        }
     }
 
     private function retryDelay(int $attempt): int
