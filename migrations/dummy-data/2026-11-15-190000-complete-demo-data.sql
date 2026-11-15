@@ -122,24 +122,37 @@ WHERE NOT EXISTS (
     SELECT 1 FROM shop_order WHERE order_number = '2026-000004'
 );
 
+SET @demo_order_3_id = (
+    SELECT id FROM shop_order WHERE order_number = '2026-000003'
+);
+SET @demo_order_4_id = (
+    SELECT id FROM shop_order WHERE order_number = '2026-000004'
+);
+
 INSERT INTO shop_order_item
     (shop_order_id, product_id, product_variant_id, sku, product_name,
      variant_label, attributes_snapshot, quantity, base_unit_price_minor,
      options_unit_total_minor, tax_rate_bp, line_net_minor, line_tax_minor,
      line_gross_minor)
 SELECT
-    o.id, 1, 2, 'TSHIRT-BK-M', 'Tričko s potiskem', 'Černá / M',
+    @demo_order_3_id, 1, 2, 'TSHIRT-BK-M', 'Tričko s potiskem', 'Černá / M',
     JSON_OBJECT(
         'color', JSON_OBJECT('code', 'black', 'label', 'Černá'),
         'size', JSON_OBJECT('code', 'm', 'label', 'M')
     ),
     1.000, 39900, 12000, 2100, 42893, 9007, 51900
-FROM shop_order AS o
-WHERE o.order_number = '2026-000003'
+FROM DUAL
+WHERE @demo_order_3_id IS NOT NULL
   AND NOT EXISTS (
       SELECT 1 FROM shop_order_item AS existing
-      WHERE existing.shop_order_id = o.id AND existing.sku = 'TSHIRT-BK-M'
+      WHERE existing.shop_order_id = @demo_order_3_id AND existing.sku = 'TSHIRT-BK-M'
   );
+
+SET @demo_order_3_item_id = (
+    SELECT id FROM shop_order_item
+    WHERE shop_order_id = @demo_order_3_id AND sku = 'TSHIRT-BK-M'
+    LIMIT 1
+);
 
 INSERT INTO shop_order_item
     (shop_order_id, product_id, product_variant_id, sku, product_name,
@@ -154,11 +167,11 @@ SELECT
         'color', JSON_OBJECT('code', 'black', 'label', 'Black')
     ),
     2.000, 799, 0, 2100, 1321, 277, 1598
-FROM shop_order AS o
-WHERE o.order_number = '2026-000004'
+FROM DUAL
+WHERE @demo_order_4_id IS NOT NULL
   AND NOT EXISTS (
       SELECT 1 FROM shop_order_item AS existing
-      WHERE existing.shop_order_id = o.id AND existing.sku = 'CABLE-CC-2M-BK'
+      WHERE existing.shop_order_id = @demo_order_4_id AND existing.sku = 'CABLE-CC-2M-BK'
   );
 
 INSERT INTO shop_order_item
@@ -174,48 +187,45 @@ SELECT
         'color', JSON_OBJECT('code', 'black', 'label', 'Black')
     ),
     1.000, 3590, 0, 2100, 2967, 623, 3590
-FROM shop_order AS o
-WHERE o.order_number = '2026-000004'
+FROM DUAL
+WHERE @demo_order_4_id IS NOT NULL
   AND NOT EXISTS (
       SELECT 1 FROM shop_order_item AS existing
-      WHERE existing.shop_order_id = o.id AND existing.sku = 'GAN-2X65-BK'
+      WHERE existing.shop_order_id = @demo_order_4_id AND existing.sku = 'GAN-2X65-BK'
   );
 
 INSERT INTO shop_order_item_option
     (shop_order_item_id, option_name, value_label, price_delta_minor)
 SELECT
-    item.id, 'Potisk', 'Vlastní potisk', 12000
-FROM shop_order_item AS item
-INNER JOIN shop_order AS o
-    ON o.id = item.shop_order_id
-WHERE o.order_number = '2026-000003'
-  AND item.sku = 'TSHIRT-BK-M'
+    @demo_order_3_item_id, 'Potisk', 'Vlastní potisk', 12000
+FROM DUAL
+WHERE @demo_order_3_item_id IS NOT NULL
   AND NOT EXISTS (
       SELECT 1 FROM shop_order_item_option AS existing
-      WHERE existing.shop_order_item_id = item.id
+      WHERE existing.shop_order_item_id = @demo_order_3_item_id
         AND existing.option_name = 'Potisk'
   );
 
 INSERT INTO shop_order_adjustment
     (shop_order_id, type, code, title, amount_net_minor,
      amount_tax_minor, amount_gross_minor, tax_rate_bp)
-SELECT id, 'shipping', 'courier', 'Kurýr', 9835, 2065, 11900, 2100
-FROM shop_order AS o
-WHERE o.order_number = '2026-000003'
+SELECT @demo_order_3_id, 'shipping', 'courier', 'Kurýr', 9835, 2065, 11900, 2100
+FROM DUAL
+WHERE @demo_order_3_id IS NOT NULL
   AND NOT EXISTS (
       SELECT 1 FROM shop_order_adjustment AS existing
-      WHERE existing.shop_order_id = o.id AND existing.code = 'courier'
+      WHERE existing.shop_order_id = @demo_order_3_id AND existing.code = 'courier'
   );
 
 INSERT INTO shop_order_adjustment
     (shop_order_id, type, code, title, amount_net_minor,
      amount_tax_minor, amount_gross_minor, tax_rate_bp)
-SELECT id, 'shipping', 'pickup_point', 'Pickup point', 240, 50, 290, 2100
-FROM shop_order AS o
-WHERE o.order_number = '2026-000004'
+SELECT @demo_order_4_id, 'shipping', 'pickup_point', 'Pickup point', 240, 50, 290, 2100
+FROM DUAL
+WHERE @demo_order_4_id IS NOT NULL
   AND NOT EXISTS (
       SELECT 1 FROM shop_order_adjustment AS existing
-      WHERE existing.shop_order_id = o.id AND existing.code = 'pickup_point'
+      WHERE existing.shop_order_id = @demo_order_4_id AND existing.code = 'pickup_point'
   );
 
 -- Uzavření proběhne až po vložení všech částí účetního snapshotu.
@@ -238,11 +248,11 @@ WHERE order_number = '2026-000004';
 INSERT INTO shop_order_status_history
     (shop_order_id, from_status, to_status, note, created_at)
 SELECT id, NULL, 'new', 'Demo objednávka vytvořena', '2026-11-05 10:15:00'
-FROM shop_order AS o
-WHERE o.order_number = '2026-000003'
+FROM DUAL
+WHERE @demo_order_3_id IS NOT NULL
   AND NOT EXISTS (
       SELECT 1 FROM shop_order_status_history AS existing
-      WHERE existing.shop_order_id = o.id
+      WHERE existing.shop_order_id = @demo_order_3_id
         AND existing.to_status = 'new'
         AND existing.created_at = '2026-11-05 10:15:00'
   );
@@ -250,11 +260,11 @@ WHERE o.order_number = '2026-000003'
 INSERT INTO shop_order_status_history
     (shop_order_id, from_status, to_status, note, created_at)
 SELECT id, 'new', 'paid', 'Demo platba potvrzena', '2026-11-05 10:16:00'
-FROM shop_order AS o
-WHERE o.order_number = '2026-000003'
+FROM DUAL
+WHERE @demo_order_3_id IS NOT NULL
   AND NOT EXISTS (
       SELECT 1 FROM shop_order_status_history AS existing
-      WHERE existing.shop_order_id = o.id
+      WHERE existing.shop_order_id = @demo_order_3_id
         AND existing.to_status = 'paid'
         AND existing.created_at = '2026-11-05 10:16:00'
   );
@@ -262,11 +272,11 @@ WHERE o.order_number = '2026-000003'
 INSERT INTO shop_order_status_history
     (shop_order_id, from_status, to_status, note, created_at)
 SELECT id, NULL, 'new', 'Demo objednávka vytvořena', '2026-11-06 18:40:00'
-FROM shop_order AS o
-WHERE o.order_number = '2026-000004'
+FROM DUAL
+WHERE @demo_order_4_id IS NOT NULL
   AND NOT EXISTS (
       SELECT 1 FROM shop_order_status_history AS existing
-      WHERE existing.shop_order_id = o.id
+      WHERE existing.shop_order_id = @demo_order_4_id
         AND existing.to_status = 'new'
         AND existing.created_at = '2026-11-06 18:40:00'
   );
