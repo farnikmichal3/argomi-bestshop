@@ -288,4 +288,5 @@ Případně spusť celý projektový kontrolní skript `check.bat`, který krom�
 | 15. 11. 2026 | v1.3: popsán aplikační `OutboxWriter` a transakční guard produkční implementace `DatabaseOutboxWriter`. |
 | 15. 11. 2026 | v1.4: upřesněna konvence primárních klíčů a úplně zdokumentovány přirozené a pojmenovací výjimky cizích klíčů (F3-08). |
 | 15. 11. 2026 | Dopřednou migrací sjednocen název FK sloupce katalogu ISO 4217 na `iso4217_catalog_release_id` podle standardní konvence. |
-| 15. 11. 2026 | v1.5: doplněna pravidla bezpečného skládání SQL, parametrizace hodnot a allowlistu dynamických identifikátorů (F3-14). |\n| 15. 11. 2026 | v1.6: zdokumentována izolovaná testovací databáze, oddělené účty a bezpečný vstupní bod pro dopředné migrace (F3-15b). |
+| 15. 11. 2026 | v1.5: doplněna pravidla bezpečného skládání SQL, parametrizace hodnot a allowlistu dynamických identifikátorů (F3-14). |
+| 15. 11. 2026 | v1.6: zdokumentována izolovaná testovací databáze, oddělené účty a bezpečný vstupní bod pro dopředné migrace (F3-15b). |
