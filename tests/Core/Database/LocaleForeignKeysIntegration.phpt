@@ -57,7 +57,9 @@ $expected = [
     'product_translation' => ['language', 'code', 'RESTRICT'],
     'shipping_method_translation' => ['language', 'code', 'RESTRICT'],
     'shop_order' => ['language', 'code', 'RESTRICT'],
-    'translation_message' => ['language', 'code', 'RESTRICT'],
+    'cart_message_translation' => ['language', 'code', 'RESTRICT'],
+    'catalog_message_translation' => ['language', 'code', 'RESTRICT'],
+    'checkout_message_translation' => ['language', 'code', 'RESTRICT'],
     'unit_translation' => ['language', 'code', 'RESTRICT'],
 ];
 
@@ -82,10 +84,10 @@ try {
     $insertCustomer->execute([$publicId, $email, $languageCode]);
 
     $insertMessage = $pdo->prepare(
-        'INSERT INTO translation_message (domain, message_key, locale, message_text)
-         VALUES (?, ?, ?, ?)',
+        'INSERT INTO catalog_message_translation (message_key, locale, message_text)
+         VALUES (?, ?, ?)',
     );
-    $insertMessage->execute(['f3_26_test', $token, $languageCode, 'Test']);
+    $insertMessage->execute([$token, $languageCode, 'Test']);
 
     $deleteLanguageError = null;
 
@@ -103,9 +105,9 @@ try {
     Assert::same('23000', (string) $deleteLanguageError->getCode());
 
     $deleteMessage = $pdo->prepare(
-        'DELETE FROM translation_message WHERE domain = ? AND message_key = ? AND locale = ?',
+        'DELETE FROM catalog_message_translation WHERE message_key = ? AND locale = ?',
     );
-    $deleteMessage->execute(['f3_26_test', $token, $languageCode]);
+    $deleteMessage->execute([$token, $languageCode]);
 
     $deleteLanguage = $pdo->prepare('DELETE FROM language WHERE code = ?');
     $deleteLanguage->execute([$languageCode]);
