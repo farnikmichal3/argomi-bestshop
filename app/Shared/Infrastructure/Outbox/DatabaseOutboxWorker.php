@@ -71,7 +71,7 @@ final class DatabaseOutboxWorker
      * Vrací počet převzatých zpráv. Selhání handleru jedné zprávy neukončí
      * zpracování dalších zpráv v dávce.
      */
-    public function runOnce(int $batchSize = self::DEFAULT_BATCH_SIZE): int
+    public function runOnce(int $batchSize = self::DEFAULT_BATCH_SIZE, ?array $eventNames = null): int
     {
         if ($batchSize < 1 || $batchSize > self::MAX_BATCH_SIZE) {
             throw new \InvalidArgumentException(sprintf('Velikost dávky musí být v rozsahu 1 až %d.', self::MAX_BATCH_SIZE));
@@ -85,7 +85,7 @@ final class DatabaseOutboxWorker
         $processed = 0;
 
         for ($i = 0; $i < $batchSize; $i++) {
-            $messages = $this->claim(1);
+            $messages = $this->claim(1, $eventNames);
 
             if ($messages === []) {
                 break;
@@ -101,7 +101,7 @@ final class DatabaseOutboxWorker
     /**
      * @return list<ClaimedOutboxMessage>
      */
-    private function claim(int $batchSize): array
+    private function claim(int $batchSize, ?array $eventNames): array
     {
         $result = $this->database->transaction(function () use ($batchSize): array {
             // Zpráva, jejíž poslední povolený pokus skončil pádem workeru,
@@ -122,6 +122,27 @@ final class DatabaseOutboxWorker
 
             // SKIP LOCKED dovoluje souběžným workerům převzít různé zprávy
             // bez čekání na řádky, které právě zamyká jiný worker.
+            if ($eventNames === []) {
+                return [];
+            }
+
+            $eventFilter = '';
+            $parameters = [$this->maxAttempts, $batchSize];
+
+            if ($eventNames !== null) {
+                foreach ($eventNames as $eventName) {
+                    if (
+                        !is_string($eventName)
+                        || preg_match('/\\A[a-zA-Z0-9][a-zA-Z0-9._:-]{0,189}\\z/', $eventName) !== 1
+                    ) {
+                        throw new \\InvalidArgumentException('Filtr Outbox událostí obsahuje neplatný identifikátor.');
+                    }
+                }
+
+                $eventFilter = ' AND event_name IN (' . implode(', ', array_fill(0, count($eventNames), '?')) . ')';
+                array_push($parameters, ...$eventNames);
+            }
+
             $rows = $this->database->query(
                 "SELECT id, message_id, event_name, payload, attempts
                 FROM outbox_message
@@ -130,12 +151,13 @@ final class DatabaseOutboxWorker
                         (status = 'pending' AND available_at <= UTC_TIMESTAMP(6))
                         OR
                         (status = 'processing' AND locked_until <= UTC_TIMESTAMP(6))
-                    )
+                    )"
+                . $eventFilter
+                . "
                 ORDER BY id
                 LIMIT ?
                 FOR UPDATE SKIP LOCKED",
-                $this->maxAttempts,
-                $batchSize,
+                ...$parameters,
             )->fetchAll();
 
             $claimedMessages = [];
