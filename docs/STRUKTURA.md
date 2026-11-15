@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 3.6 · 15. 11. 2026  
+**Revize:** 3.7 · 15. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 15. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -246,6 +246,39 @@ assets/
 9. Synchronní posluchač doménové události nesmí provádět externí nevratné operace; integrační události se zapisují do Outboxu ve stejné transakci jako zdrojová změna.
 10. Moduly nesmějí obcházet centrální logovací politiku ani předávat do logu celé objekty, surové payloady nebo citlivé údaje.
 
+### 6.1 Co patří do Shared a co ne
+
+\`Shared\` není obecná složka pro kód, který se zrovna nehodí jinam. Je to stabilní základní vrstva, kterou mohou používat všechny moduly, aniž by Shared znalo jejich konkrétní implementaci.
+
+**Do Shared patří pouze prvky, které splňují obě podmínky:**
+- mají skutečně průřezový význam a jejich odpovědnost není vlastnictvím jediného obchodního modulu;
+- jejich kontrakt je obecný, stabilní a použitelný bez znalosti konkrétního modulu.
+
+Typicky sem patří:
+- obecné doménové hodnotové objekty a typy s významem napříč obchodem, například \`Money\`, \`Currency\`, \`Quantity\`, \`Percentage\`, \`Locale\` a \`PublicId\`;
+- obecné aplikační kontrakty, například \`Clock\`, \`Transaction\`, \`EventDispatcher\`, kontrakty Transactional Outbox a typovaná \`DtoCollection<T>\`;
+- technické implementace těchto společných kontraktů, například systémové hodiny, transakční adaptér, databázové poskytovatele společných systémových hodnot a infrastruktura Outboxu;
+- společná hierarchie výjimek, pokud vyjadřuje obecnou kategorii chyby a nepřebírá význam konkrétní domény.
+
+**Do Shared nepatří:**
+- entity, agregáty, value objecty a obchodní invarianty vlastněné konkrétním modulem;
+- use-cases, aplikační fasády, služby a repozitáře řešící konkrétní obchodní schopnost;
+- DTO, události, handlery a validační pravidla specifická pro jeden modul — ty zůstávají v jeho \`Api\`, \`Application\` nebo \`Domain\`;
+- persistence a databázové modely konkrétního modulu, jeho tabulky ani mapování jeho obchodních dat;
+- prezentační komponenty, formuláře, presentery, Latte helpery a pravidla Front/Admin;
+- pomocné třídy přesunuté do Shared pouze kvůli pohodlnému importu nebo očekávanému budoucímu použití.
+
+**Rozhodovací pravidla při umisťování nového kódu:**
+1. Výchozím vlastníkem je konkrétní modul. Do Shared se kód přesouvá až tehdy, když je doložena jeho opakovaná potřeba napříč nezávislými moduly nebo jde o skutečně základní průřezový kontrakt.
+2. Samotná podobnost dvou implementací není důvodem ke sdílení. Nejprve se ověří, zda mají stejný význam, invarianty a důvod ke změně.
+3. Shared nesmí obsahovat podmínky, větvení ani konfiguraci podle názvů konkrétních modulů.
+4. Obecný mechanismus může být ve Shared, ale konkrétní obsah a reakce vlastní modul. Například Shared poskytuje dispatcher a Outbox; moduly vlastní své události a handlery.
+5. Pokud prvek začne vyžadovat znalost konkrétního modulu, přesune se do jeho vlastnictví nebo se jeho kontrakt zobecní bez úniku modulových detailů.
+
+**Závislosti Shared jsou jednosměrně omezené:** kód v \`App\\Shared\\...\` smí používat pouze externí knihovny a PHP. Nesmí importovat \`App\\Modules\\...\`, \`App\\Core\\...\`, \`App\\Presentation\\...\`, \`App\\UI\\...\` ani \`App\\Bootstrap\`. Platí to pro všechny vrstvy Shared včetně Infrastructure; použití externího adaptéru (například Nette Database nebo Symfony UID) je dovoleno, závislost na interní aplikační vrstvě nikoliv. Moduly a ostatní povolené vrstvy mohou Shared používat podle pravidel v \`deptrac.yaml\`.
+
+Tato hranice je automaticky vynucována Deptrac pravidlem \`Shared: [External]\` a kontrolou \`composer arch\`. Dokumentace pravidlo vysvětluje; nenahrazuje automatickou kontrolu.
+
 ## 7. Aplikační kolekce DTO
 
 `Shared/Application/Collection/DtoCollection.php` je společná generická kolekce pro homogenní seznamy DTO, které se předávají mezi aplikačními částmi a veřejnými API modulů.
@@ -323,3 +356,4 @@ assets/
 | 14. 11. 2026 | v3.0: doplněna aplikační generická `DtoCollection<T>`, její umístění, typová kontrola, strukturální neměnnost, veřejné operace a pravidla rozšiřování podle F2-13. |
 
 | 15. 11. 2026 | v3.6: doplněn verzovaný katalog ISO 4217, jeho databázové vynucení přesnosti a integrační test podle F2-03/F2-17. |
+| 15. 11. 2026 | v3.7: popsána závazná kritéria pro umístění kódu do Shared, příklady povoleného a zakázaného obsahu a přesná hranice závislostí podle F2-16. |
