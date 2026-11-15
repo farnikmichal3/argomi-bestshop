@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Nette\\Neon\\Neon;
-use LogicException;
-
 $configFile = dirname(__DIR__) . '/config/local.testing.neon';
 
 try {
@@ -14,16 +11,21 @@ try {
         throw new LogicException('Chybí config/local.testing.neon. Vytvoř jej podle přiloženého .example souboru.');
     }
 
-    $config = Neon::decodeFile($configFile);
+    $config = Nette\\Neon\\Neon::decodeFile($configFile);
     if (!is_array($config)) {
         throw new LogicException('Testovací konfigurace není platná NEON struktura.');
     }
 
-    $environment = $config['parameters']['app']['environment'] ?? null;
-    $databaseDsn = $config['database']['dsn'] ?? null;
-    $databaseUser = $config['database']['user'] ?? null;
-    $migrationDatabase = $config['dbal']['database'] ?? null;
-    $migrationUser = $config['dbal']['username'] ?? null;
+    $parameters = $config['parameters'] ?? null;
+    $appParameters = is_array($parameters) ? ($parameters['app'] ?? null) : null;
+    $database = $config['database'] ?? null;
+    $migration = $config['dbal'] ?? null;
+
+    $environment = is_array($appParameters) ? ($appParameters['environment'] ?? null) : null;
+    $databaseDsn = is_array($database) ? ($database['dsn'] ?? null) : null;
+    $databaseUser = is_array($database) ? ($database['user'] ?? null) : null;
+    $migrationDatabase = is_array($migration) ? ($migration['database'] ?? null) : null;
+    $migrationUser = is_array($migration) ? ($migration['username'] ?? null) : null;
 
     if (
         $environment !== 'testing'
@@ -52,7 +54,7 @@ try {
     $application = $container->getByType(Contributte\\Console\\Application::class);
 
     exit($application->run());
-} catch (LogicException $exception) {
+} catch (Throwable $exception) {
     fwrite(STDERR, $exception->getMessage() . PHP_EOL);
     exit(1);
 }
