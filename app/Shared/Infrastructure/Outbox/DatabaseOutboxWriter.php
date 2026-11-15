@@ -37,8 +37,10 @@ final class DatabaseOutboxWriter implements OutboxWriter
     {
         $eventName = trim($eventName);
 
-        if ($eventName === '' || strlen($eventName) > 190) {
-            throw new InvalidArgumentException('Název Outbox události musí obsahovat 1 až 190 bajtů.');
+        $eventNameLength = preg_match_all('/./us', $eventName);
+
+        if ($eventName === '' || $eventNameLength === false || $eventNameLength > 190) {
+            throw new InvalidArgumentException('Název Outbox události musí obsahovat 1 až 190 platných UTF-8 znaků.');
         }
 
         if (!$this->database->getConnection()->getPdo()->inTransaction()) {
