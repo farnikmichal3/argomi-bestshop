@@ -127,7 +127,7 @@ final class DatabaseOutboxWorker
             }
 
             $eventFilter = '';
-            $parameters = [$this->maxAttempts, $batchSize];
+            $parameters = [$this->maxAttempts];
 
             if ($eventNames !== null) {
                 foreach ($eventNames as $eventName) {
@@ -142,6 +142,8 @@ final class DatabaseOutboxWorker
                 $eventFilter = ' AND event_name IN (' . implode(', ', array_fill(0, count($eventNames), '?')) . ')';
                 array_push($parameters, ...$eventNames);
             }
+
+            $parameters[] = $batchSize;
 
             $rows = $this->database->query(
                 "SELECT id, message_id, event_name, payload, attempts
