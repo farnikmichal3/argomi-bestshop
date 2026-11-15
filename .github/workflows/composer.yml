@@ -1,4 +1,4 @@
-name: Composer
+name: Composer and MySQL
 
 on:
   push:
@@ -7,7 +7,11 @@ on:
     paths:
       - '**.php'
       - 'app/**'
+      - 'bin/**'
+      - 'config/**'
+      - 'migrations/**'
       - 'tests/**'
+      - 'docs/DATABASE.md'
       - 'composer.json'
       - 'composer.lock'
       - 'phpstan.neon'
@@ -20,7 +24,11 @@ on:
     paths:
       - '**.php'
       - 'app/**'
+      - 'bin/**'
+      - 'config/**'
+      - 'migrations/**'
       - 'tests/**'
+      - 'docs/DATABASE.md'
       - 'composer.json'
       - 'composer.lock'
       - 'phpstan.neon'
@@ -38,9 +46,23 @@ concurrency:
 
 jobs:
   quality:
-    name: PHP quality checks
+    name: PHP quality checks (MySQL 8.4)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root-password
+          MYSQL_ROOT_HOST: '%'
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --protocol=tcp -h 127.0.0.1 -uroot -pci-root-password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
 
     steps:
       - name: Checkout repository
@@ -50,6 +72,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
+          extensions: mysqli, pdo_mysql
           tools: composer:v2
           coverage: none
 
@@ -64,7 +87,55 @@ jobs:
       - name: Audit Composer dependencies
         run: composer audit
 
-      - name: Run automated tests
+      - name: Create isolated integration-test database and accounts
+        run: |
+          mysql --protocol=TCP --host=127.0.0.1 --port=3306 --user=root --password=ci-root-password <<'SQL'
+          CREATE DATABASE argomi_bestshop_test
+              CHARACTER SET utf8mb4
+              COLLATE utf8mb4_0900_ai_ci;
+
+          CREATE USER 'argomi_test_app'@'%'
+              IDENTIFIED BY 'ci-test-app-password';
+
+          CREATE USER 'argomi_test_migrator'@'%'
+              IDENTIFIED BY 'ci-test-migrator-password';
+
+          GRANT SELECT, INSERT, UPDATE, DELETE
+              ON argomi_bestshop_test.*
+              TO 'argomi_test_app'@'%';
+
+          GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, INDEX, REFERENCES
+              ON argomi_bestshop_test.*
+              TO 'argomi_test_migrator'@'%';
+          SQL
+
+      - name: Create isolated test configuration
+        run: |
+          cat > config/local.testing.neon <<'NEON'
+          parameters:
+            app:
+              environment: testing
+
+          database:
+            dsn: 'mysql:host=127.0.0.1;dbname=argomi_bestshop_test;charset=utf8mb4'
+            user: argomi_test_app
+            password: 'ci-test-app-password'
+
+          dbal:
+            driver: mysqli
+            host: 127.0.0.1
+            username: argomi_test_migrator
+            password: 'ci-test-migrator-password'
+            database: argomi_bestshop_test
+            charset: utf8mb4
+          NEON
+
+      - name: Apply forward migrations to the isolated test database
+        run: php bin/console-testing migrations:continue
+
+      - name: Run automated tests (MySQL integration tests required)
+        env:
+          TEST_DATABASE_REQUIRED: '1'
         run: composer test
 
       - name: Run PHPStan
