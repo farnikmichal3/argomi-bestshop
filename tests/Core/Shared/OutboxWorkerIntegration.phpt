@@ -152,7 +152,7 @@ try {
         'UPDATE outbox_message SET available_at = TIMESTAMPADD(SECOND, -1, UTC_TIMESTAMP(6)) WHERE message_id = ?',
         $failureId->toString(),
     );
-    Assert::same(1, $worker->runOnce(1));
+    Assert::same(1, $worker->runOnce(1, ['test.outbox.worker.failure']));
 
     $deadRow = $database->table('outbox_message')
         ->where('message_id', $failureId->toString())
