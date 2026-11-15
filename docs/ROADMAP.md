@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 2.90 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 2.91 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -374,7 +374,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[PLÁN]` **F3-31** Navrhnout a migrovat doménově rozdělené systémové překlady ze současné tabulky `translation_message`
 - `[PLÁN]` **F3-32** Navrhnout a implementovat explicitní označení demo dat a zákaz vedlejších efektů pro demo objednávky
 - `[HOTOVO]` **F3-33** Ochrana `DbResetCommand`: zavedena samostatná `DbResetEnvironmentPolicy`; `common.neon` má fail-closed výchozí hodnotu `app.environment: null`; příkaz odmítá vše kromě přesné hodnoty `development` ještě před prvním DB dotazem. Negativní test politiky pokrývá chybějící, neznámé, testing, staging a production. Uživatel potvrdil čisté aktivní kontroly přes `check.bat` a bezpečné odmítnutí příkazu při `environment: null`.
-- `[ROZPRACOVÁNO]` **F3-34** Databázová persistence Transactional Outbox: přidána dopředná SQL migrace se samostatnou tabulkou `outbox_message`, unikátními identifikátory, JSON payloadem, stavovým modelem, lease tokenem, kontrolními omezeními a indexy pro dostupné zprávy a vypršené lease. Zbývá lokálně ověřit migraci na MySQL 8.4, doplnit testy databázových invariantů a ověřit atomický zápis s obchodní transakcí.
+- `[ROZPRACOVÁNO]` **F3-34** Databázová persistence Transactional Outbox: dopředná migrace se samostatnou tabulkou `outbox_message` byla úspěšně aplikována v lokálním prostředí. `check.bat` prošel: Nette Tester 8 testů, PHPStan bez chyb, PHP-CS-Fixer bez oprav a Deptrac bez porušení. Zbývá doplnit testy databázových invariantů a ověřit atomický zápis s obchodní transakcí.
 
 ### F4: Překlady v databázi
 
@@ -1201,6 +1201,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
 
+### v2.91 (15. 11. 2026)
+- Ověřena dopředná migrace F3-34 v lokálním prostředí: Nextras Migrations provedly jednu migraci bez chyby.
+- Uživatel potvrdil úspěšné `check.bat`: Nette Tester 8 testů OK, PHPStan bez chyb, PHP-CS-Fixer nalezl 0 souborů k opravě a Deptrac 0 porušení.
+- F3-34 zůstává rozpracovaný; navazuje testování databázových invariantů a implementace aplikačního writeru/workeru s ověřením transakční atomicity.
+- Souhrn beze změny: **115 hotovo**, **1 rozpracováno**, **3 k úpravě**, **433 plán**, **2 zrušeno**.
 ### v2.90 (15. 11. 2026)
 - Dokončen F3-33: uživatel potvrdil čisté aktivní kontroly přes `check.bat`; ochrana `DbResetCommand` odmítá neexplicitní nebo neznámé prostředí před přístupem k databázi.
 - Zahájen F3-34: přidána dopředná migrace samostatné tabulky `outbox_message` s ULID identifikátorem, JSON payloadem, stavovým modelem, lease tokenem, CHECK omezeními a indexy pro claim i obnovu expirovaných lease.
