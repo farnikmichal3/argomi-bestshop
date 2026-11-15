@@ -49,7 +49,10 @@ $expected = [
     'attribute_translation' => ['language', 'code', 'RESTRICT'],
     'attribute_value_translation' => ['language', 'code', 'RESTRICT'],
     'cart' => ['language', 'code', 'RESTRICT'],
+    'cart_message_translation' => ['language', 'code', 'RESTRICT'],
+    'catalog_message_translation' => ['language', 'code', 'RESTRICT'],
     'category_translation' => ['language', 'code', 'RESTRICT'],
+    'checkout_message_translation' => ['language', 'code', 'RESTRICT'],
     'customer' => ['language', 'code', 'SET NULL'],
     'payment_method_translation' => ['language', 'code', 'RESTRICT'],
     'product_option_translation' => ['language', 'code', 'RESTRICT'],
@@ -57,9 +60,6 @@ $expected = [
     'product_translation' => ['language', 'code', 'RESTRICT'],
     'shipping_method_translation' => ['language', 'code', 'RESTRICT'],
     'shop_order' => ['language', 'code', 'RESTRICT'],
-    'cart_message_translation' => ['language', 'code', 'RESTRICT'],
-    'catalog_message_translation' => ['language', 'code', 'RESTRICT'],
-    'checkout_message_translation' => ['language', 'code', 'RESTRICT'],
     'unit_translation' => ['language', 'code', 'RESTRICT'],
 ];
 
