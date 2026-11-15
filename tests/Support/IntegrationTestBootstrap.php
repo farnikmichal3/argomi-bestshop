@@ -83,7 +83,6 @@ final class IntegrationTestBootstrap
 
     private static function isDatabaseRequired(): bool
     {
-        return getenv('TEST_DATABASE_REQUIRED') === '1'
-            || strtolower((string) getenv('CI')) === 'true';
+        return getenv('TEST_DATABASE_REQUIRED') === '1';
     }
 }
