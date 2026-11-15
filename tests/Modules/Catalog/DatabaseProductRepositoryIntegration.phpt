@@ -50,9 +50,9 @@ Assert::same('cs', $czech->locale->getCode());
 Assert::same('Tričko s potiskem', $czech->name);
 Assert::same('tricko-s-potiskem', $czech->slug);
 Assert::same('Bavlněné tričko s potiskem pro každý den', $czech->shortDescription);
-Assert::same('<p>Pohodlné tričko.</p>', $czech->description);
-Assert::same('Tričko', $czech->metaTitle);
-Assert::same('Popis', $czech->metaDescription);
+Assert::same('<p>Pohodlné bavlněné tričko pro každodenní nošení. Konkrétní varianta určuje barvu a velikost.</p><ul><li>Materiál: bavlna</li><li>Barvy: černá a bílá</li><li>Velikosti: S, M a L</li><li>Hmotnost varianty přibližně 180 až 200 g</li></ul><p>Pro zachování potisku perte tričko naruby podle pokynů na štítku.</p>', $czech->description);
+Assert::same('Bavlněné tričko s potiskem | ArgoMi', $czech->metaTitle);
+Assert::same('Pohodlné bavlněné tričko v černé nebo bílé barvě a velikostech S až L. Vyberte si variantu a vlastní potisk.', $czech->metaDescription);
 Assert::same(null, $repository->findTranslation(1, Locale::fromString('de')));
 
 $translations = $repository->findTranslations(1);
