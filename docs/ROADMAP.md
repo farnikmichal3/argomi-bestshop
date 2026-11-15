@@ -339,7 +339,7 @@ _Malá sada hodnotových objektů a aplikačních kontraktů, na kterých stojí
 
 ### F3: Databáze a migrace
 
-_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 9 z 34 kroků; jeden krok je rozpracován a jeden je k úpravě.
+_Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._ Hotovo 12 z 34 kroků; žádný krok není rozpracován ani k úpravě.
 
 - `[HOTOVO]` **F3-01** Počáteční schéma, základní data a demo data v časově značených Nextras migracích načtené v MySQL bez chyb
 - `[HOTOVO]` **F3-02** Nainstalovat Nextras Migrations a nastavit adresáře `structures`, `basic-data`, `dummy-data` (integrováno v Nette DI)
