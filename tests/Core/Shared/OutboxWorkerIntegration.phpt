@@ -68,6 +68,9 @@ try {
     $ids[] = $successId;
 
     $failureHandler = new class implements OutboxMessageHandler {
+        /** @var list<OutboxMessage> */
+        public array $handledMessages = [];
+
         public function eventName(): string
         {
             return 'test.outbox.worker.failure';
@@ -75,6 +78,7 @@ try {
 
         public function handle(OutboxMessage $message): void
         {
+            $this->handledMessages[] = $message;
             throw new RuntimeException('This exception text must not be stored in the Outbox.');
         }
     };
@@ -97,7 +101,7 @@ try {
         $database,
         [$failureHandler, $successHandler],
         new NullLogger(),
-        maxAttempts: 2,
+        maxAttempts: 3,
         leaseSeconds: 60,
         baseRetryDelaySeconds: 5,
         maxRetryDelaySeconds: 20,
@@ -115,6 +119,12 @@ try {
     Assert::same(RuntimeException::class, $failedRow->last_error);
     Assert::null($failedRow->lock_token);
     Assert::null($failedRow->locked_until);
+    Assert::true($database->query(
+        'SELECT available_at > TIMESTAMPADD(SECOND, 4, UTC_TIMESTAMP(6)) AND available_at <= TIMESTAMPADD(SECOND, 5, UTC_TIMESTAMP(6)) AS retry_window FROM outbox_message WHERE message_id = ?',
+        $failureId->toString(),
+    )->fetchField() == 1);
+    Assert::same($failureId->toString(), $failureHandler->handledMessages[0]->messageId);
+    Assert::same(1, $failureHandler->handledMessages[0]->attempt);
 
     $successRow = $database->table('outbox_message')
         ->where('message_id', $successId->toString())
@@ -139,16 +149,82 @@ try {
 
     Assert::same(1, $worker->runOnce(1));
 
+    $retriedRow = $database->table('outbox_message')
+        ->where('message_id', $failureId->toString())
+        ->fetch();
+
+    Assert::notNull($retriedRow);
+    Assert::same('pending', $retriedRow->status);
+    Assert::same(2, (int) $retriedRow->attempts);
+    Assert::true($database->query(
+        'SELECT available_at > TIMESTAMPADD(SECOND, 9, UTC_TIMESTAMP(6)) AND available_at <= TIMESTAMPADD(SECOND, 10, UTC_TIMESTAMP(6)) AS retry_window FROM outbox_message WHERE message_id = ?',
+        $failureId->toString(),
+    )->fetchField() == 1);
+    Assert::same($failureId->toString(), $failureHandler->handledMessages[1]->messageId);
+    Assert::same(2, $failureHandler->handledMessages[1]->attempt);
+
+    $database->query(
+        'UPDATE outbox_message SET available_at = TIMESTAMPADD(SECOND, -1, UTC_TIMESTAMP(6)) WHERE message_id = ?',
+        $failureId->toString(),
+    );
+    Assert::same(1, $worker->runOnce(1));
+
     $deadRow = $database->table('outbox_message')
         ->where('message_id', $failureId->toString())
         ->fetch();
 
     Assert::notNull($deadRow);
     Assert::same('dead', $deadRow->status);
-    Assert::same(2, (int) $deadRow->attempts);
+    Assert::same(3, (int) $deadRow->attempts);
     Assert::notNull($deadRow->dead_at);
     Assert::null($deadRow->lock_token);
     Assert::null($deadRow->locked_until);
+    Assert::same($failureId->toString(), $failureHandler->handledMessages[2]->messageId);
+    Assert::same(3, $failureHandler->handledMessages[2]->attempt);
+
+    // Duplicitní handler pro stejný eventName je odmítnut už při sestavení workeru.
+    $duplicateHandler = new class implements OutboxMessageHandler {
+        public function eventName(): string
+        {
+            return 'test.outbox.worker.duplicate';
+        }
+
+        public function handle(OutboxMessage $message): void {}
+    };
+
+    $duplicateRejected = false;
+
+    try {
+        new DatabaseOutboxWorker(
+            $database,
+            [$duplicateHandler, $duplicateHandler],
+            new NullLogger(),
+        );
+    } catch (LogicException) {
+        $duplicateRejected = true;
+    }
+
+    Assert::true($duplicateRejected);
+
+    // Chybějící handler je bezpečně evidován jako selhání a po limitu přejde do dead.
+    $missingHandlerId = $createMessage('test.outbox.worker.missing-handler');
+    $ids[] = $missingHandlerId;
+    $missingHandlerWorker = new DatabaseOutboxWorker(
+        $database,
+        [],
+        new NullLogger(),
+        maxAttempts: 1,
+    );
+
+    Assert::same(1, $missingHandlerWorker->runOnce(1));
+    $missingHandlerRow = $database->table('outbox_message')
+        ->where('message_id', $missingHandlerId->toString())
+        ->fetch();
+
+    Assert::notNull($missingHandlerRow);
+    Assert::same('dead', $missingHandlerRow->status);
+    Assert::same(1, (int) $missingHandlerRow->attempts);
+    Assert::same(LogicException::class, $missingHandlerRow->last_error);
 
     // Expirovaný processing lease lze bezpečně převzít novým workerem.
     $expiredId = $createMessage('test.outbox.worker.expired-lease');
