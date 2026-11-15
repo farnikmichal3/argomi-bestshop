@@ -139,7 +139,7 @@ Dopředná migrace `2026-11-15-120000-transactional-outbox.sql` přidává samos
 | `delivered_at` / `dead_at` | Čas přechodu do koncového stavu |
 | `last_error` | Bezpečný stručný popis poslední chyby, bez stack trace a citlivých údajů |
 
-Časové sloupce používají DATETIME(6) a ukládají UTC. Tabulka má unikátní klíče pro `message_id` a aktivní `lock_token`, index pro dostupné zprávy (`status`, `available_at`, `id`) a index pro vypršené lease (`status`, `locked_until`, `id`). CHECK omezení vynucují JSON objekt, konzistenci lease a vzájemnou výlučnost koncových stavů.
+Časové sloupce používají DATETIME(6) a ukládají UTC. Aplikační writer musí při vložení výslovně dodat UTC hodnoty `created_at` a `available_at`; nespoléháme na `CURRENT_TIMESTAMP`, jehož výsledek u DATETIME závisí na časovém pásmu DB session. Worker porovnává termíny s `UTC_TIMESTAMP(6)`. Tabulka má unikátní klíče pro `message_id` a aktivní `lock_token`, index pro dostupné zprávy (`status`, `available_at`, `id`) a index pro vypršené lease (`status`, `locked_until`, `id`). CHECK omezení vynucují JSON objekt, konzistenci lease a vzájemnou výlučnost koncových stavů.
 
 ### Stavový model a bezpečné převzetí
 
