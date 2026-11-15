@@ -96,7 +96,11 @@ try {
     Assert::same(1876, (int) $placed['grand_total_minor']);
     Assert::notSame(null, $placed['placed_at']);
 
-    $expectRejected = static function (callable $operation, string $message): void {
+    $expectRejected = static function (
+        callable $operation,
+        string $message,
+        string $expectedSqlState = '45000',
+    ): void {
         $exception = null;
 
         try {
@@ -106,7 +110,7 @@ try {
         }
 
         Assert::type(PDOException::class, $exception, $message);
-        Assert::same('45000', (string) $exception->getCode(), $message);
+        Assert::same($expectedSqlState, (string) $exception->getCode(), $message);
     };
 
     $expectRejected(
@@ -211,6 +215,7 @@ try {
             'UPDATE shop_order SET grand_total_minor = 1 WHERE id = ?',
         )->execute([$badOrderId]),
         'The grand total CHECK must also protect draft orders.',
+        'HY000',
     );
 
     $expectRejected(
