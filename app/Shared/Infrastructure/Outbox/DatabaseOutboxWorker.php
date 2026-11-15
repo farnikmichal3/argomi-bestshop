@@ -71,6 +71,9 @@ final class DatabaseOutboxWorker
      * Vrací počet převzatých zpráv. Selhání handleru jedné zprávy neukončí
      * zpracování dalších zpráv v dávce.
      */
+    /**
+     * @param list<string>|null $eventNames Omezení na konkrétní názvy událostí; null zpracuje všechny.
+     */
     public function runOnce(int $batchSize = self::DEFAULT_BATCH_SIZE, ?array $eventNames = null): int
     {
         if ($batchSize < 1 || $batchSize > self::MAX_BATCH_SIZE) {
@@ -99,6 +102,10 @@ final class DatabaseOutboxWorker
     }
 
     /**
+     * @return list<ClaimedOutboxMessage>
+     */
+    /**
+     * @param list<string>|null $eventNames Omezení na konkrétní názvy událostí; null zpracuje všechny.
      * @return list<ClaimedOutboxMessage>
      */
     private function claim(int $batchSize, ?array $eventNames): array
