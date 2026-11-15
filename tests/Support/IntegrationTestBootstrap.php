@@ -83,6 +83,8 @@ final class IntegrationTestBootstrap
 
     private static function isDatabaseRequired(): bool
     {
+        // CI začne vyžadovat DB až po přidání MySQL service do workflow F3-15c.
+        // Obecné CI=true nestačí, protože ostatní workflow zatím MySQL nepřipravují.
         return getenv('TEST_DATABASE_REQUIRED') === '1';
     }
 }
