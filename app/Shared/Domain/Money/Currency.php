@@ -9,7 +9,9 @@ use InvalidArgumentException;
 /**
  * Neměnná definice měny potřebná pro přesné peněžní výpočty.
  *
- * Uchovává pouze stabilní ISO kód a počet nejmenších desetinných jednotek.
+ * Uchovává syntakticky ověřený kód a počet nejmenších desetinných jednotek.
+ * Skutečnou registraci kódu a jeho přesnost ověřuje centrální katalog ISO 4217
+ * v infrastruktuře; tento hodnotový objekt zůstává nezávislý na databázi.
  * Název a symbol měny patří do prezentační/konfigurační vrstvy, nikoliv do VO.
  */
 final readonly class Currency
@@ -20,12 +22,13 @@ final readonly class Currency
     ) {
         // Třípísmenný kód držíme ve standardním velkém zápisu, aby šel bezpečně porovnávat.
         if (preg_match('/\A[A-Z]{3}\z/', $this->code) !== 1) {
-            throw new InvalidArgumentException('Currency code must be a three-letter uppercase ISO code.');
+            throw new InvalidArgumentException('Currency code must be three uppercase letters.');
         }
 
-        // Databázový sloupec TINYINT UNSIGNED určuje rozsah 0 až 255.
-        if ($this->minorUnits < 0 || $this->minorUnits > 255) {
-            throw new InvalidArgumentException('Currency minor units must be between 0 and 255.');
+        // ISO 4217 používá pro běžné měny přesnost od nuly do čtyř míst.
+        // Zda kód skutečně existuje a zda k němu přesnost patří, hlídá katalog.
+        if ($this->minorUnits < 0 || $this->minorUnits > 4) {
+            throw new InvalidArgumentException('Currency minor units must be between 0 and 4.');
         }
     }
 
