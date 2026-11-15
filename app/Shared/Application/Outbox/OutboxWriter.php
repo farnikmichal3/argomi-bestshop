@@ -20,6 +20,7 @@ interface OutboxWriter
      * Payload je vždy serializován jako JSON objekt, nikoliv JSON pole.
      *
      * @param array<string, mixed> $payload Data události bez tajných a citlivých údajů.
+     * @param int|null $shopOrderId Objednávka pro události order.*; databáze odmítne demo objednávky.
      */
     public function record(string $eventName, array $payload, ?int $shopOrderId = null): PublicId;
 }
