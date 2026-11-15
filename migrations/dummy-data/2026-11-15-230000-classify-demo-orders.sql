@@ -5,7 +5,7 @@
 
 UPDATE shop_order
 SET is_demo = 1
-WHERE order_number IN ('2026-000003', '2026-000004')
+WHERE order_number IN ('2026-000001', '2026-000002', '2026-000003', '2026-000004')
   AND is_demo = 0;
 
 DROP PROCEDURE IF EXISTS assert_demo_order_classification;
@@ -22,7 +22,7 @@ BEGIN
           AND placed_at IS NOT NULL
     ) <> 2 THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Both complete demo orders must be classified as demo.';
+            SET MESSAGE_TEXT = 'All four seeded demo orders must be classified as demo.';
     END IF;
 END$$
 
