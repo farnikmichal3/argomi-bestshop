@@ -24,7 +24,6 @@ $executedStatements = [];
 /** @var list<string> $escapedIdentifiers */
 $escapedIdentifiers = [];
 
-/** @var IDbal $dbal */
 $dbal = new class($executedStatements, $escapedIdentifiers) implements IDbal {
     /** @var list<list<array<string, mixed>>> */
     private array $responses;
