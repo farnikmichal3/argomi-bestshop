@@ -177,7 +177,7 @@ Zápis do `outbox_message` musí používat stejný databázový connection a st
 - doplnit testy součtů objednávek a snapshotů,
 - dokončit pravidla archivace produktů/variant,
 - doplnit úplné demo snapshoty a další vlny produktů,
-- `[HOTOVO]` doplnit explicitní bezpečné rozlišení demo objednávek a ochranu provozního Outboxu/skladových pohybů (F3-32),
+- `[ROZDĚLÁNO]` doplnit explicitní bezpečné rozlišení demo objednávek a ochranu provozního Outboxu/skladových pohybů (F3-32); implementace čeká na lokální integrační ověření,
 - navrhnout rozdělení systémových překladů do doménových tabulek,
 - ověřit všechny migrace na cílové verzi MySQL.
 
