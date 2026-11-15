@@ -248,22 +248,22 @@ assets/
 
 ### 6.1 Co patří do Shared a co ne
 
-\`Shared\` není obecná složka pro kód, který se zrovna nehodí jinam. Je to stabilní základní vrstva, kterou mohou používat všechny moduly, aniž by Shared znalo jejich konkrétní implementaci.
+`Shared` není obecná složka pro kód, který se zrovna nehodí jinam. Je to stabilní základní vrstva, kterou mohou používat všechny moduly, aniž by Shared znalo jejich konkrétní implementaci.
 
 **Do Shared patří pouze prvky, které splňují obě podmínky:**
 - mají skutečně průřezový význam a jejich odpovědnost není vlastnictvím jediného obchodního modulu;
 - jejich kontrakt je obecný, stabilní a použitelný bez znalosti konkrétního modulu.
 
 Typicky sem patří:
-- obecné doménové hodnotové objekty a typy s významem napříč obchodem, například \`Money\`, \`Currency\`, \`Quantity\`, \`Percentage\`, \`Locale\` a \`PublicId\`;
-- obecné aplikační kontrakty, například \`Clock\`, \`Transaction\`, \`EventDispatcher\`, kontrakty Transactional Outbox a typovaná \`DtoCollection<T>\`;
+- obecné doménové hodnotové objekty a typy s významem napříč obchodem, například `Money`, `Currency`, `Quantity`, `Percentage`, `Locale` a `PublicId`;
+- obecné aplikační kontrakty, například `Clock`, `Transaction`, `EventDispatcher`, kontrakty Transactional Outbox a typovaná `DtoCollection<T>`;
 - technické implementace těchto společných kontraktů, například systémové hodiny, transakční adaptér, databázové poskytovatele společných systémových hodnot a infrastruktura Outboxu;
 - společná hierarchie výjimek, pokud vyjadřuje obecnou kategorii chyby a nepřebírá význam konkrétní domény.
 
 **Do Shared nepatří:**
 - entity, agregáty, value objecty a obchodní invarianty vlastněné konkrétním modulem;
 - use-cases, aplikační fasády, služby a repozitáře řešící konkrétní obchodní schopnost;
-- DTO, události, handlery a validační pravidla specifická pro jeden modul — ty zůstávají v jeho \`Api\`, \`Application\` nebo \`Domain\`;
+- DTO, události, handlery a validační pravidla specifická pro jeden modul — ty zůstávají v jeho `Api`, `Application` nebo `Domain`;
 - persistence a databázové modely konkrétního modulu, jeho tabulky ani mapování jeho obchodních dat;
 - prezentační komponenty, formuláře, presentery, Latte helpery a pravidla Front/Admin;
 - pomocné třídy přesunuté do Shared pouze kvůli pohodlnému importu nebo očekávanému budoucímu použití.
@@ -275,9 +275,9 @@ Typicky sem patří:
 4. Obecný mechanismus může být ve Shared, ale konkrétní obsah a reakce vlastní modul. Například Shared poskytuje dispatcher a Outbox; moduly vlastní své události a handlery.
 5. Pokud prvek začne vyžadovat znalost konkrétního modulu, přesune se do jeho vlastnictví nebo se jeho kontrakt zobecní bez úniku modulových detailů.
 
-**Závislosti Shared jsou jednosměrně omezené:** kód v \`App\\Shared\\...\` smí používat pouze externí knihovny a PHP. Nesmí importovat \`App\\Modules\\...\`, \`App\\Core\\...\`, \`App\\Presentation\\...\`, \`App\\UI\\...\` ani \`App\\Bootstrap\`. Platí to pro všechny vrstvy Shared včetně Infrastructure; použití externího adaptéru (například Nette Database nebo Symfony UID) je dovoleno, závislost na interní aplikační vrstvě nikoliv. Moduly a ostatní povolené vrstvy mohou Shared používat podle pravidel v \`deptrac.yaml\`.
+**Závislosti Shared jsou jednosměrně omezené:** kód v `App\Shared\...` smí používat pouze externí knihovny a PHP. Nesmí importovat `App\Modules\...`, `App\Core\...`, `App\Presentation\...`, `App\UI\...` ani `App\Bootstrap`. Platí to pro všechny vrstvy Shared včetně Infrastructure; použití externího adaptéru (například Nette Database nebo Symfony UID) je dovoleno, závislost na interní aplikační vrstvě nikoliv. Moduly a ostatní povolené vrstvy mohou Shared používat podle pravidel v `deptrac.yaml`.
 
-Tato hranice je automaticky vynucována Deptrac pravidlem \`Shared: [External]\` a kontrolou \`composer arch\`. Dokumentace pravidlo vysvětluje; nenahrazuje automatickou kontrolu.
+Tato hranice je automaticky vynucována Deptrac pravidlem `Shared: [External]` a kontrolou `composer arch`. Dokumentace pravidlo vysvětluje; nenahrazuje automatickou kontrolu.
 
 ## 7. Aplikační kolekce DTO
 
