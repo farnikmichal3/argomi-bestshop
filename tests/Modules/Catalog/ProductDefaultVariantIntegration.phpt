@@ -138,6 +138,10 @@ try {
          GROUP BY NON_UNIQUE",
     )->fetch(PDO::FETCH_ASSOC);
 
+    if (!is_array($index)) {
+        throw new RuntimeException('The unique default-variant index must exist.');
+    }
+
     Assert::same(0, (int) $index['NON_UNIQUE']);
     Assert::same('product_id,default_flag', $index['columns_list']);
 
@@ -149,10 +153,13 @@ try {
            AND COLUMN_NAME = 'default_flag'",
     )->fetchColumn();
 
-    Assert::same(
-        'if((`is_default` = 1),1,NULL)',
-        strtolower((string) $generatedExpression),
-    );
+    $normalizedExpression = strtolower(str_replace(
+        ['`', ' '],
+        '',
+        (string) $generatedExpression,
+    ));
+
+    Assert::same('if((is_default=1),1,null)', $normalizedExpression);
 } finally {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
