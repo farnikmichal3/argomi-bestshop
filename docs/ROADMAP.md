@@ -4,12 +4,6 @@ Verze dokumentu 2.96 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, 
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
-### v2.96 (15. 11. 2026)
-- Zahájena revize F2-03 a F2-17: `Currency` nyní přijímá pouze přesnost 0–4; přidán verzovaný katalog 155 běžných měn podle vydání SIX z 17. 9. 2026.
-- Databázový složený cizí klíč vynucuje, že obchodní měna existuje v ISO katalogu a používá jeho přesnost. Aktivita měny zůstává samostatným nastavením obchodu.
-- Doplněny jednotkové a MySQL integrační testy; lokální migrace a kontrolní sada čekají na ověření.
-- F2: **13 hotovo**, **2 rozděláno**, **5 plán**. Celkový souhrn: **116 hotovo**, **2 rozděláno**, **2 k úpravě**, **432 plán**, **2 zrušeno**.
-
 ## 1. Jak s plánem pracovat
 
 ### Stavy kroků
@@ -1206,6 +1200,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Implementace čeká na stažení do Laragonu, funkční ověření rollbacku/commitů/vnoření a čisté aktivní kontroly přes `check.bat`.
 - F2: **11 hotovo**, **1 rozděláno**, **4 plán**. Celkový souhrn: **113 hotovo**, **1 rozděláno**, **1 k úpravě**, **429 plán**, **2 zrušeno**.
 
+
+### v2.96 (15. 11. 2026)
+- Zahájena revize F2-03 a F2-17: `Currency` nyní přijímá pouze přesnost 0–4; přidán verzovaný katalog 155 běžných měn podle vydání SIX z 17. 9. 2026.
+- Databázový složený cizí klíč vynucuje, že obchodní měna existuje v ISO katalogu a používá jeho přesnost. Aktivita měny zůstává samostatným nastavením obchodu.
+- Doplněny jednotkové a MySQL integrační testy; lokální migrace a kontrolní sada čekají na ověření.
+- F2: **13 hotovo**, **2 rozděláno**, **5 plán**. Celkový souhrn: **116 hotovo**, **2 rozděláno**, **2 k úpravě**, **432 plán**, **2 zrušeno**.
 
 ### v2.95 (15. 11. 2026)
 - Dokončen F3-34: uživatel potvrdil úspěšné `check.bat` po změně workeru na postupné claimování jednotlivých zpráv.
