@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.15 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.16 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 136, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 415, zrušeno 2.
+Celkem **554 kroků**: hotovo 137, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 414, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 24 | 0 | 0 | 0 | 0 | 9 | 1 |
+| F3 | Databáze a migrace | 34 | 25 | 0 | 0 | 0 | 0 | 8 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -1209,6 +1209,13 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokončen F3-23 bez duplicitní implementace: existující GitHub Actions workflow již vytváří izolovanou databázi na `mysql:8.4`, aplikuje všechny dopředné migrace a vyžaduje MySQL integrační testy.
 - Ověřen poslední běh workflow #233 na commitu `79f0d771`: migrace i všechny následné kroky CI prošly. Schéma obsahuje `CHECK` nad `minor_units` a složený FK `iso4217_currency(code, minor_units)`; MySQL 8.4 obě omezení přijalo.
 - Nebyla měněna historická migrace ani přidáván zbytečný test/workflow. F3: **24 hotovo**, **0 rozděláno**, **9 plán**, **1 zrušeno**. Celkový souhrn: **136 hotovo**, **0 rozděláno**, **1 k úpravě**, **415 plán**, **2 zrušeno**.
+### v3.16 (15. 11. 2026)
+- Dokončen F3-24: dopředná migrace mění obě rizikové vazby v `product_variant_attribute_value` z `ON DELETE CASCADE` na `ON DELETE RESTRICT`. Mazání osy varianty ani použité enum hodnoty tak nemůže potichu odstranit obchodní data varianty; překlady enum hodnot zůstávají samostatně na `CASCADE`.
+- Migrace byla lokálně úspěšně provedena na MySQL 8.4. Ověřený výpis `SHOW CREATE TABLE` potvrzuje obě omezení `RESTRICT`. Integrační test ověřuje odmítnutí obou mazání a zachování obou přiřazení; uživatel potvrdil úspěšný samostatný test i kompletní `check.bat`.
+- GitHub Actions běh #238 na commitu `645d9ce` skončil úspěšně.
+- F3: **25 hotovo**, **0 rozděláno**, **8 plán**, **1 zrušeno**. Celkový souhrn: **137 hotovo**, **0 rozděláno**, **1 k úpravě**, **414 plán**, **2 zrušeno**.
+
+
 ### v3.13 (15. 11. 2026)
 - Dokončen F3-19: deterministická kanonizace kombinací variant a SHA-256 hash v Catalog. Jednotkový test pokrývá řazení, normalizaci čísel včetně záporné nuly, bool/enum/text, UTF-8, escapování a neplatné vstupy; MySQL integrační test potvrzuje shodu PHP SHA-256 s `SHA2(..., 256)` pro demo varianty.
 - Uživatel potvrdil oba samostatné testy a kompletní `check.bat`: Nette Tester 19 testů OK, PHPStan bez chyb, PHP-CS-Fixer 0 souborů k opravě a Deptrac 0 porušení.
