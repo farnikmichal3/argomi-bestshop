@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 1.2 · 15. 11. 2026  
+**Revize:** 1.3 · 15. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -150,7 +150,7 @@ Dopředná migrace `2026-11-15-120000-transactional-outbox.sql` přidává samos
 - Externí volání nikdy neběží uvnitř dlouho otevřené databázové transakce. Pád po úspěšném externím účinku, ale před označením zprávy jako doručené, může způsobit opakování; proto je doručení at-least-once a handler musí být idempotentní podle `message_id`.
 - Záznamy se automaticky nemažou. Retence a archivace budou samostatným provozním rozhodnutím.
 
-Zápis do `outbox_message` musí používat stejný databázový connection a stejnou nejvyšší transakci jako obchodní změna. Samostatný commit Outbox záznamu není povolen. Tato migrace vytváří databázový základ; implementace aplikačního writeru, claim/retry workeru a integračních testů navazuje samostatnými kroky.
+Zápis do `outbox_message` musí používat stejný databázový connection a stejnou nejvyšší transakci jako obchodní změna. Samostatný commit Outbox záznamu není povolen. Aplikační kontrakt `OutboxWriter` a produkční `DatabaseOutboxWriter` jsou implementovány. Writer používá `Clock` pro explicitní UTC čas a `PublicIdGenerator` pro ULID; payload vždy serializuje jako JSON objekt. Před vložením ověřuje `PDO::inTransaction()` a mimo aktivní transakci vyhodí `LogicException`. Vlastní transakci nezahajuje. Claim/retry worker, testovací databáze a integrační testy atomicity navazují samostatnými kroky.
 
 ## 9. Známé mezery a navazující práce
 
@@ -191,3 +191,4 @@ Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečné
 | 8. 11. 2026 | v1.0: dokumentována skutečná časově značená struktura migrací a 46 tabulek. |
 | 8. 11. 2026 | v1.1: popsány oddělené databázové účty `argomi_app` a `argomi_migrator` a jejich minimální oprávnění. |
 | 15. 11. 2026 | v1.2: doplněna migrace a stavový model samostatné tabulky `outbox_message` (F3-34). |
+| 15. 11. 2026 | v1.3: popsán aplikační `OutboxWriter` a transakční guard produkční implementace `DatabaseOutboxWriter`. |
