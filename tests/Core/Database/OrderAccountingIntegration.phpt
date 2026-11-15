@@ -18,7 +18,7 @@ $integration = IntegrationTestBootstrap::boot($rootDir);
 $database = $integration->database;
 $pdo = $database->getConnection()->getPdo();
 
-$token = bin2hex(random_bytes(8));
+$token = bin2hex(random_bytes(4));
 $orderNumber = 'F3-27-' . strtoupper($token);
 $publicId = strtoupper(bin2hex(random_bytes(13)));
 
@@ -59,7 +59,7 @@ try {
             (shop_order_item_id, option_name, value_label, price_delta_minor)
          VALUES (?, ?, ?, ?)',
     );
-    $insertOption->execute([$itemId, 'Gift wrap', 'Yes', 50]);
+    $insertOption->execute([$itemId, 'Gift wrap', 'Yes', 0]);
     $optionId = (int) $pdo->lastInsertId();
 
     $insertAdjustment = $pdo->prepare(
