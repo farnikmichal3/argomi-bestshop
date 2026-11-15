@@ -12,7 +12,9 @@ final class SqlDiagnosticsPresenter extends Presenter
 {
     public function __construct(
         private readonly Explorer $database,
-    ) {}
+    ) {
+        parent::__construct();
+    }
 
     protected function startup(): void
     {
