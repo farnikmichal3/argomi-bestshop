@@ -9,7 +9,6 @@ use App\Shared\Domain\PublicId\PublicId;
 use Nette\Database\Explorer;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
-use Throwable;
 
 $rootDir = dirname(__DIR__, 3);
 
