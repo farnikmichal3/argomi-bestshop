@@ -12,6 +12,8 @@ services:
 	- App\Shared\Infrastructure\Transaction\NetteTransaction
 	# Outbox writer zapisuje pouze do již aktivní transakce volající obchodní operace.
 	- App\Shared\Infrastructure\Outbox\DatabaseOutboxWriter
+	# Worker zpracovává pouze zprávy převzaté s platným lease; handlery se registrují tagem outboxMessageHandler.
+	- App\Shared\Infrastructure\Outbox\DatabaseOutboxWorker(handlers: tagged(outboxMessageHandler))
 	# Produkční hodiny jsou jedinou registrovanou implementací Clock; FrozenClock zůstává pouze pro testy.
 	- App\Shared\Infrastructure\Clock\SystemClock
 	# Generátor veřejných ULID je jedinou registrovanou implementací rozhraní PublicIdGenerator.
