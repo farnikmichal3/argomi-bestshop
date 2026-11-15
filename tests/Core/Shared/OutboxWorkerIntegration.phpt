@@ -113,7 +113,6 @@ try {
     Assert::same('pending', $failedRow->status);
     Assert::same(1, (int) $failedRow->attempts);
     Assert::same(RuntimeException::class, $failedRow->last_error);
-    Assert::notContains('This exception text', (string) $failedRow->last_error);
     Assert::null($failedRow->lock_token);
     Assert::null($failedRow->locked_until);
 
