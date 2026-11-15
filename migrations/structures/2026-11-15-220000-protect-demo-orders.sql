@@ -91,4 +91,45 @@ BEGIN
     END IF;
 END$$
 
+
+-- Skladový deník používá reference_type = 'shop_order' pro pohyby vyvolané
+-- objednávkou. Počáteční seed pohyby demo_opening_balance zůstávají povolené.
+DELIMITER $$
+
+CREATE TRIGGER trg_stock_movement_bi_demo_order
+BEFORE INSERT ON stock_movement
+FOR EACH ROW
+BEGIN
+    IF NEW.reference_type = 'shop_order'
+        AND NEW.reference_id IS NOT NULL
+        AND EXISTS (
+            SELECT 1
+            FROM shop_order
+            WHERE id = NEW.reference_id
+              AND is_demo = 1
+        )
+    THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Demo orders cannot create operational stock movements.';
+    END IF;
+END$$
+
+CREATE TRIGGER trg_stock_movement_bu_demo_order
+BEFORE UPDATE ON stock_movement
+FOR EACH ROW
+BEGIN
+    IF NEW.reference_type = 'shop_order'
+        AND NEW.reference_id IS NOT NULL
+        AND EXISTS (
+            SELECT 1
+            FROM shop_order
+            WHERE id = NEW.reference_id
+              AND is_demo = 1
+        )
+    THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Demo orders cannot create operational stock movements.';
+    END IF;
+END$$
+
 DELIMITER ;
