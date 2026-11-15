@@ -95,12 +95,11 @@ try {
         $deleteAxisError = $exception;
     }
 
-    Assert::type(
-        \PDOException::class,
-        $deleteAxisError,
-        'Deleting an axis used by a variant must be rejected.',
-    );
-    Assert::same('23000', $deleteAxisError->getCode());
+    if (!$deleteAxisError instanceof \\PDOException) {
+        throw new RuntimeException('Deleting an axis used by a variant must be rejected.');
+    }
+
+    Assert::same('23000', (string) $deleteAxisError->getCode());
 
     $deleteValueError = null;
 
@@ -113,12 +112,11 @@ try {
         $deleteValueError = $exception;
     }
 
-    Assert::type(
-        \PDOException::class,
-        $deleteValueError,
-        'Deleting an enum value used by a variant must be rejected.',
-    );
-    Assert::same('23000', $deleteValueError->getCode());
+    if (!$deleteValueError instanceof \\PDOException) {
+        throw new RuntimeException('Deleting an enum value used by a variant must be rejected.');
+    }
+
+    Assert::same('23000', (string) $deleteValueError->getCode());
 
     $remainingAssignments = $pdo->prepare(
         'SELECT COUNT(*) FROM product_variant_attribute_value
