@@ -45,7 +45,7 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 | `shop_order_item` / `shop_order_item_option` | Historický nákupní snapshot. Hrubá částka řádku musí být součtem čisté částky a daně; po uzavření objednávky jsou položky i jejich volby neměnné. Snapshot nesmí být závislý na aktuálním názvu, ceně ani konfiguraci katalogu. |
 | `shop_order_adjustment` | Historická úprava objednávky (např. doprava nebo sleva); hrubá částka je součtem čisté částky a daně. Souhrn čistých úprav je uložen v `shop_order.adjustments_net_minor`. Po uzavření objednávky nelze úpravy měnit. |
 | `currency` / `iso4217_currency` | Obchodní měna je navázána na verzovaný katalog ISO 4217; složený FK vynucuje současnou shodu kódu a počtu minor units. |
-| `outbox_message` | Technická integrační zpráva s vlastním životním cyklem. Volitelný `shop_order_id` odkazuje na objednávku; události `order.*` jej musí uvádět a databáze odmítá vazbu na demo objednávku. Stejná ochrana platí pro skladové pohyby s `reference_type = 'shop_order'`. Payload nesmí obsahovat tajné údaje. |
+| `outbox_message` | Technická integrační zpráva s vlastním životním cyklem. Volitelný `shop_order_id` odkazuje na objednávku; události `order.*` jej musí uvádět a JSON `payload.orderId` musí přesně odpovídat FK; databáze odmítá vazbu na demo objednávku. Stejná ochrana platí pro skladové pohyby s `reference_type = 'shop_order'`. Payload nesmí obsahovat tajné údaje. |
 
 ## 3. Kanonizace kombinace varianty
 
