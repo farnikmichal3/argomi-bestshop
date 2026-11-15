@@ -3,7 +3,7 @@ Transactional Outbox worker claims, delivers, retries and protects lease ownersh
 --FILE--
 <?php
 
-use Tests\\Support\\IntegrationTestBootstrap;
+use Tests\Support\IntegrationTestBootstrap;
 
 use App\Shared\Application\Outbox\OutboxMessage;
 use App\Shared\Application\Outbox\OutboxMessageHandler;
@@ -11,11 +11,9 @@ use App\Shared\Application\Outbox\OutboxWriter;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\PublicId\PublicId;
 use App\Shared\Infrastructure\Outbox\DatabaseOutboxWorker;
-use App\Bootstrap;
 use Nette\Database\Explorer;
 use Psr\Log\NullLogger;
 use Tester\Assert;
-use Tester\Environment;
 
 $rootDir = dirname(__DIR__, 3);
 
