@@ -3,10 +3,9 @@ Database tables use the approved primary-key and foreign-key naming conventions
 --FILE--
 <?php
 
-use Tests\Support\IntegrationTestBootstrap;
-
 use Nette\Database\Explorer;
 use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 
