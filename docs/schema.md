@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – diagram databázového schématu
 
-**Revize:** 1.3 · 15. 11. 2026  
+**Revize:** 1.4 · 15. 11. 2026  
 **Autoritativní zdroj:** aktuální dopředné SQL migrace v `migrations/structures/`  
 **Databáze:** MySQL 8.x / InnoDB
 
@@ -30,10 +30,10 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 
 | Tabulka | Význam a důležité pravidlo |
 |---|---|
-| `product` | Katalogový produkt; jeho identita je oddělena od konkrétních prodejných variant. |
+| `product` | Katalogový produkt; jeho identita je oddělena od konkrétních prodejných variant. Produkt se nemaže, ale archivuje změnou `status` na `archived`; databázový trigger odmítá přímé `DELETE` a při archivaci deaktivuje všechny aktivní varianty. |
 | `attribute` / `attribute_value` | Definice vlastnosti a její číselník. Enum hodnota patří právě jednomu atributu; překlady jsou závislá lokalizovaná data. |
 | `product_variant_axis` | Určuje, které atributy tvoří konfigurační osy variant konkrétního produktu. Dvojice produktu a atributu je unikátní. |
-| `product_variant` | Konkrétní prodejná varianta produktu. Kombinaci atributů identifikuje stabilní SHA-256 hash kanonického zápisu. |
+| `product_variant` | Konkrétní prodejná varianta produktu. Kombinaci atributů identifikuje stabilní SHA-256 hash kanonického zápisu. Varianta se nemaže, ale deaktivuje přes `is_active = 0`; databáze odmítá přímé `DELETE`, aktivní variantu archivovaného produktu i opětovnou aktivaci varianty archivovaného produktu. |
 | `product_variant_attribute_value` | Přiřazuje variantě právě jednu hodnotu atributu. CHECK omezení vyžaduje právě jednu z enum, číselné nebo textové hodnoty; vazba na osu i použitou enum hodnotu je chráněna přes `ON DELETE RESTRICT`. |
 | `product_attribute_value` | Hodnota atributu na úrovni produktu, nikoli konkrétní varianty. |
 | `variant_price` / `variant_price_history` | Aktuální cena varianty a její historické body. Historie se nemaže spolu s variantou automaticky. |
@@ -78,7 +78,7 @@ Závazné zvláštní případy:
 - `product_variant_attribute_value` → `product_variant_axis`: `RESTRICT`. Osa se nesmí odstranit, dokud je použita variantou.
 - `product_variant_attribute_value` → `attribute_value`: `RESTRICT`. Použitá enum hodnota se nesmí odstranit. Její překlady zůstávají závislými lokalizovanými daty a mohou být odstraněny kaskádou až po povoleném odstranění samotné hodnoty.
 - `product_variant_attribute_value` → `product_variant`: `CASCADE` zůstává zachováno pro odstranění celé varianty; chráněna jsou její jednotlivá přiřazení před nepřímým smazáním osy nebo hodnoty.
-- `product_variant` → `product`: odstranění produktu může odstranit jeho varianty; samostatné reference z cen, skladu, košíku a dalších obchodních záznamů však mohou odstranění omezit dalšími FK.
+- `product_variant` → `product`: FK používá `ON DELETE RESTRICT`; produkt ani jeho varianty se fyzicky nemažou. Produkt se archivuje přes `product.status = 'archived'`, což automaticky deaktivuje všechny jeho aktivní varianty (`is_active = 0`). Databázové triggery odmítají přímé mazání produktu i varianty, vložení aktivní varianty k archivovanému produktu a opětovnou aktivaci varianty archivovaného produktu. Historické vazby a záznamy tak zůstávají zachovány.
 - `category.parent_id`: `RESTRICT`, aby odstranění rodičovské kategorie nezanechalo osiřelou hierarchii.
 - Ceny a skladové záznamy používají `RESTRICT` vůči variantě; historické obchodní záznamy se nesmějí ztratit pouhou změnou katalogu.
 
@@ -306,6 +306,7 @@ flowchart LR
 - `migrations/structures/2026-11-15-150000-protect-variant-attribute-values.sql` – ochrana hodnot variant před nepřímým smazáním osy nebo enum hodnoty pomocí `ON DELETE RESTRICT`.
 - `migrations/structures/2026-11-15-160000-add-language-foreign-keys-to-locales.sql` – doplnění 11 chybějících FK `locale` → `language(code)`; povinné překlady používají `RESTRICT`, volitelné locale zákazníka `SET NULL`.
 - `migrations/structures/2026-11-15-170000-order-accounting-invariants.sql` – účetní invarianty objednávek: souhrnná čistá hodnota úprav, kontroly hrubých částek, agregované ověření při uzavření a neměnnost uzavřeného snapshotu.
+- `migrations/structures/2026-11-15-180000-archive-products-and-variants.sql` – archivace produktů a deaktivace variant, FK `ON DELETE RESTRICT` a databázové triggery zakazující fyzické mazání a neplatnou aktivaci variant.
 
 Při změně schématu se diagram aktualizuje ve stejném kroku jako příslušná migrace. Nikdy neupravuj historické migrace jen kvůli změně diagramu.
 
