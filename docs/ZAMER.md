@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.40 · 15. 11. 2026
+**Revize:** 1.41 · 15. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -137,7 +137,14 @@ Pravidla:
 - `SynchronousEventDispatcher` je určen pouze pro kritické interní posluchače, jejichž databázové změny patří do stejné aplikační transakce. Výjimka posluchače se propaguje a způsobí rollback nejvyšší transakce. Takový posluchač nesmí přímo volat externí API, odesílat e-mail/push zprávu, provádět platbu ani jiný nevratný vedlejší účinek.
 - Integrační a notifikační události se zapisují do Transactional Outbox ve stejné databázové transakci jako obchodní změna, která je vyvolala. Teprve po potvrzení transakce je zpracuje samostatný worker. Zápis do Outboxu proto nesmí být oddělen od transakce obchodní operace.
 - Doručování z Outboxu poskytuje nejméně jednou (at-least-once), nikoliv garantovaně právě jednou. Každá zpráva a její handler proto musí podporovat idempotentní zpracování; worker musí mít řízené opakování s prodlevou, evidenci pokusů a možnost bezpečného obnovení chybně zpracovatelných zpráv. Síťové volání nesmí probíhat uvnitř dlouho otevřené databázové transakce.
-- Outbox je spolehlivý záznam události a zdroj pravdy pro její doručení. Může navazovat na obecnou databázovou frontu, ale případné sdílení fyzické infrastruktury nesmí porušit atomický zápis Outbox záznamu spolu s obchodní změnou.
+- Outbox je spolehlivý záznam události a zdroj pravdy pro její doručení. Může navazovat na obecnou databázovou frontu, ale případné sdílení fyzické infrastruktury nesmí porušit atomický zápis Outbox záznamu spolu s obchodní změnou.- Outbox používá vlastní tabulku `outbox_message`; nesdílí fyzickou tabulku s obecnou databázovou frontou. Pozdější sdílení worker infrastruktury je možné pouze při zachování samostatného Outbox záznamu a jeho transakční atomicity.
+- Veřejný identifikátor zprávy je ULID (26 znaků); interní primární klíč zůstává celočíselný. Název události je stabilní identifikátor typu/verze a payload je JSON objekt. Payload nesmí obsahovat hesla, přístupové tokeny, platební údaje ani jiné citlivé hodnoty.
+- Stav zprávy je `pending`, `processing`, `delivered` nebo `dead`. Počet pokusů se zvyšuje při převzetí workerem; plánovaný čas dalšího pokusu určuje `available_at`.
+- Převzetí probíhá v krátké DB transakci přes `SELECT ... FOR UPDATE SKIP LOCKED`. Worker nastaví náhodný 128bitový `lock_token` a dobu platnosti lease (`locked_until`), zvýší počet pokusů a transakci potvrdí ještě před externím voláním.
+- Dokončení nebo naplánování retry smí worker zapsat pouze při shodě svého `lock_token` a platném lease. Tím se zabrání tomu, aby opožděný worker přepsal stav zprávy, kterou již převzal jiný worker.
+- Při dočasné chybě se zpráva vrací do `pending` s budoucím `available_at`; po vyčerpání limitu pokusů přechází do `dead`. Úspěšné zpracování přechází do `delivered`. Limit pokusů a retry prodlevy jsou politikou workeru, nikoliv pevně zakódovaným databázovým limitem.
+- Doručení je at-least-once. Pád po externím účinku a před potvrzením `delivered` může vyvolat opakování; idempotence handleru musí být založena na stabilním `message_id`. Externí volání nikdy neběží uvnitř dlouhé DB transakce.
+- Časové údaje Outboxu používají UTC a databázové `DATETIME(6)`. Záznamy se automaticky nemažou; retence a archivace vyžadují samostatné rozhodnutí.
 
 Přesný stav tabulek a migrací je v [DATABASE](DATABASE.md).
 
