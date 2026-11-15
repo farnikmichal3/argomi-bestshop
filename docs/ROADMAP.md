@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.03 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.04 · 15. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,14 +48,14 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 124, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 425, zrušeno 2.
+Celkem **554 kroků**: hotovo 125, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 424, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | F0 | Rozhodnutí a dokumentace | 54 | 54 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
-| F3 | Databáze a migrace | 34 | 12 | 0 | 0 | 0 | 0 | 21 | 1 |
+| F3 | Databáze a migrace | 34 | 13 | 0 | 0 | 0 | 0 | 20 | 1 |
 | F4 | Překlady v databázi | 29 | 0 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -347,7 +347,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 - `[ZRUŠENO]` **F3-04** Opravit chyby `001` (žádné nebyly)
 - `[HOTOVO]` **F3-05** Rozhodnout, zda `001` rozdělit na migrace po modulech (rozhodnuto ponechat monolit pro vlnu 1, dále inkrementálně)
 - `[HOTOVO]` **F3-06** Spustit základní a demo seed migrace: proběhlo bez chyb (ověřil autor)
-- `[PLÁN]` **F3-07** Ověřit konvence Exploreru (`ref()`, `related()`) na reálné databázi
+- `[HOTOVO]` **F3-07** Ověřeny konvence Nette Database Exploreru `ref()` a `related()` na izolované MySQL testovací databázi. Integrační test pokrývá 1:N a N:1 překlady produktu, samovazbu kategorií, nejednoznačné a explicitně určené dvě FK `product_relation` a M:N vazbu přes `product_category`. Test je read-only a používá pouze `argomi_bestshop_test` s účtem `argomi_test_app`; `check.bat` prošel: 12 testů OK, PHPStan bez chyb, PHP-CS-Fixer 0 souborů k opravě a Deptrac 0 porušení.
 - `[PLÁN]` **F3-08** Test: každá tabulka má `id` a cizí klíče odpovídají konvenci
 - `[PLÁN]` **F3-09** Test: výjimky (`category.parent_id`, `product_relation.related_product_id`)
 - `[PLÁN]` **F3-10** Základ repozitáře nad Explorer: mapování `ActiveRow` na DTO (dotazy pouze v repozitářích, žádné v presenterech)
@@ -1204,6 +1204,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 ### v2.98 (15. 11. 2026)
 - Dokončen F2-15: potvrzena a zdokumentována architektonická izolace `Shared` pomocí existujícího pravidla Deptrac. `composer arch` je součástí lokálních kontrol i GitHub Actions; nebyla přidána duplicitní kontrolní vrstva.
 - F2: **16 hotovo**, **0 rozděláno**, **4 plán**. Celkový souhrn: **119 hotovo**, **0 rozděláno**, **2 k úpravě**, **429 plán**, **2 zrušeno**.
+
+### v3.04 (15. 11. 2026)
+- Dokončen F3-07: integrační test ověřil `ref()` a `related()` na reálné MySQL testovací databázi včetně vícenásobných cizích klíčů a M:N vazby. Opraveno očekávání testu tak, aby ověřovalo `category_id` vazebního řádku, nikoli jeho vlastní primární ID.
+- Uživatel potvrdil úspěšné kompletní `check.bat`: Nette Tester 12 testů OK, PHPStan bez chyb, PHP-CS-Fixer 0 souborů k opravě a Deptrac 0 porušení.
+- F3: **13 hotovo**, **0 rozděláno**, **0 k úpravě**, **20 plán**, **1 zrušeno**. Celkový souhrn: **125 hotovo**, **0 rozděláno**, **1 k úpravě**, **424 plán**, **2 zrušeno**.
 
 ### v3.03 (15. 11. 2026)
 - Uzavřen F3-16: bezpečnostní požadavek na vývojový `db:reset` je již splněn implementací F3-33. Fail-closed kontrola prostředí probíhá před databázovým dotazem; následné kontroly databáze, migračního účtu a dvojí potvrzení zůstávají zachovány.
