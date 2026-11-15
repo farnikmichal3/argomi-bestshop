@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 1.9 · 15. 11. 2026  
+**Revize:** 2.0 · 15. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -177,7 +177,6 @@ Zápis do `outbox_message` musí používat stejný databázový connection a st
 - doplnit testy součtů objednávek a snapshotů,
 - dokončit pravidla archivace produktů/variant,
 - doplnit úplné demo snapshoty a další vlny produktů,
-- `[ROZDĚLÁNO]` doplnit explicitní bezpečné rozlišení demo objednávek a ochranu provozního Outboxu/skladových pohybů (F3-32); implementace čeká na lokální integrační ověření,
 - navrhnout rozdělení systémových překladů do doménových tabulek,
 - ověřit všechny migrace na cílové verzi MySQL.
 
@@ -301,4 +300,6 @@ CI nastavuje `TEST_DATABASE_REQUIRED=1`, takže integrační testy nesmějí bý
 | 15. 11. 2026 | Dopřednou migrací sjednocen název FK sloupce katalogu ISO 4217 na `iso4217_catalog_release_id` podle standardní konvence. |
 | 15. 11. 2026 | v1.5: doplněna pravidla bezpečného skládání SQL, parametrizace hodnot a allowlistu dynamických identifikátorů (F3-14). |
 | 15. 11. 2026 | v1.6: zdokumentována izolovaná testovací databáze, oddělené účty a bezpečný vstupní bod pro dopředné migrace (F3-15b). |
-| 15. 11. 2026 | v1.7: popsáno povinné spuštění MySQL integračních testů nad izolovanou MySQL 8.4 službou v GitHub Actions (F3-15c). |\n| 15. 11. 2026 | v1.9: doplněno explicitní označení demo objednávek a databázová ochrana Outboxu i skladových pohybů (F3-32). |
+| 15. 11. 2026 | v1.7: popsáno povinné spuštění MySQL integračních testů nad izolovanou MySQL 8.4 službou v GitHub Actions (F3-15c). |
+| 15. 11. 2026 | v1.9: doplněno explicitní označení demo objednávek a databázová ochrana Outboxu i skladových pohybů (F3-32). |
+| 15. 11. 2026 | v2.0: F3-32 lokálně ověřen; obě migrace aplikovány, integrační ochrany a aktivní kontroly prošly. |
