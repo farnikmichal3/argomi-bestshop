@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 1.5 · 15. 11. 2026  
+**Revize:** 1.6 · 15. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -170,7 +170,6 @@ Zápis do `outbox_message` musí používat stejný databázový connection a st
 
 ## 9. Známé mezery a navazující práce
 
-- doplnit testovací databázi a integrační testy migrací,
 - ověřit všechny FK, CHECK a mazací strategie,
 - vytvořit diagramy schématu podle modulů,
 - doplnit testy součtů objednávek a snapshotů,
@@ -191,7 +190,86 @@ Databáze `argomi_bestshop` používá `utf8mb4` a kolaci `utf8mb4_0900_ai_ci`. 
 
 Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečného úložiště. Nikdy se neukládají do repozitáře ani do dokumentace. Účty nemají globální oprávnění ani `GRANT OPTION`.
 
-## 11. Bezpečnost migrací a provozu
+## 11. Testovací databáze a integrační testy
+
+Integrační testy používají samostatnou MySQL databázi `argomi_bestshop_test`. Nesmí sdílet databázi ani přihlašovací účty s lokálním vývojem (`argomi_bestshop`) nebo produkcí.
+
+### Oddělené účty
+
+| Účet | Oprávnění nad `argomi_bestshop_test.*` | Účel |
+|---|---|---|
+| `argomi_test_app` | `SELECT`, `INSERT`, `UPDATE`, `DELETE` | Aplikační dotazy v integračních testech |
+| `argomi_test_migrator` | `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `ALTER`, `DROP`, `INDEX`, `REFERENCES` | Aplikace databázových migrací |
+
+Oba účty se vytvářejí pouze pro hostitele `127.0.0.1`; testovací konfigurace se k MySQL připojuje přes tento host. Hesla generuj samostatně a ukládej pouze do lokální konfigurace nebo bezpečného úložiště. Následující SQL spusť pod administrátorským MySQL účtem; nahraď oba zástupné řetězce silnými vlastními hesly:
+
+```sql
+CREATE DATABASE argomi_bestshop_test
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_0900_ai_ci;
+
+CREATE USER 'argomi_test_app'@'127.0.0.1'
+    IDENTIFIED BY 'REPLACE_WITH_STRONG_TEST_APP_PASSWORD';
+
+CREATE USER 'argomi_test_migrator'@'127.0.0.1'
+    IDENTIFIED BY 'REPLACE_WITH_STRONG_TEST_MIGRATOR_PASSWORD';
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+    ON argomi_bestshop_test.*
+    TO 'argomi_test_app'@'127.0.0.1';
+
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, INDEX, REFERENCES
+    ON argomi_bestshop_test.*
+    TO 'argomi_test_migrator'@'127.0.0.1';
+```
+
+Účty nemají globální oprávnění ani `GRANT OPTION`. Aplikační účet nemůže měnit schéma. Migrační účet má potřebná DDL oprávnění pouze nad testovací databází.
+
+### Lokální konfigurace
+
+Vzor je verzovaný v `config/local.testing.neon.example`; skutečný soubor `config/local.testing.neon` je ignorovaný Gitem. V PowerShellu vytvoř kopii:
+
+```powershell
+Copy-Item config/local.testing.neon.example config/local.testing.neon
+```
+
+V kopii dosaď hesla vytvořená v předchozím kroku. Konfigurace obsahuje dvě nezávislá připojení:
+
+- `database:` – Nette Database Explorer a aplikační integrační testy; účet `argomi_test_app`;
+- `dbal:` – Nextras DBAL používaný Nextras Migrations; účet `argomi_test_migrator`.
+
+Obě připojení musí mířit výhradně na `argomi_bestshop_test`. Hodnota `parameters.app.environment` musí být přesně `testing`. Společný testovací bootstrap navíc kontroluje skutečnou databázi a aplikačního uživatele po navázání spojení.
+
+### Migrace testovací databáze
+
+Pro migrace slouží samostatný vstupní bod `bin/console-testing`. Na rozdíl od běžného `bin/console` načítá výhradně `local.testing.neon` a před startem ověřuje prostředí, databázi i oba vyhrazené účty. Povoluje pouze `migrations:continue` a pomocné příkazy; destruktivní `migrations:reset` není přes tento vstupní bod dostupný.
+
+Po vytvoření databáze a konfigurace spusť z kořene projektu:
+
+```powershell
+php bin/console-testing migrations:continue
+```
+
+Konfigurace projektu má explicitně zapnuté skupiny `structures`, `basic-data` i `dummy-data`. Demo seed je součástí testovacího prostředí záměrně: katalogový integrační test ověřuje stabilní demonstrační produkt a jeho český i anglický překlad. Testovací databáze proto musí být naplněna všemi třemi skupinami.
+
+### Spuštění testů
+
+```powershell
+composer run test
+```
+
+Případně spusť celý projektový kontrolní skript `check.bat`, který kromě testů ověřuje i další statické a architektonické kontroly.
+
+### Bezpečnostní hranice
+
+- Testovací databáze se nikdy nesmí zaměnit za vývojovou ani produkční databázi.
+- Testy se připojují aplikačním účtem s DML oprávněními; migrace používají samostatný účet s omezenými DDL oprávněními.
+- `tests/Support/IntegrationTestBootstrap.php` odmítne chybějící konfiguraci, pokud jsou integrační testy výslovně vyžadovány, a ověřuje prostředí, databázi i aplikační účet.
+- `bin/console-testing` odmítne jinou databázi, prostředí nebo účty a nepovoluje destruktivní příkaz `migrations:reset`.
+- Příkaz `db:reset` zůstává zakázán v prostředí `testing`; toto pravidlo se nemění.
+- Nikdy nepoužívej `migrations:reset` ani ruční mazání schématu jako náhradu za dopředné migrace. Pokud je třeba testovací databázi znovu vytvořit, proveď to samostatným, vědomým administrátorským postupem po ověření její identity.
+
+## 12. Bezpečnost migrací a provozu
 
 - Migrace se spouští řízeně a jejich pořadí určuje Nextras Migrations.
 - Před produkční migrací musí existovat ověřená záloha databáze.
@@ -199,7 +277,7 @@ Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečné
 - Demo seed musí být idempotentní nebo mít jasně definované jednorázové chování.
 - Zálohy a obnova jsou provozní požadavek, ne pouze příkaz pro vývojáře.
 
-## 12. Historie
+## 13. Historie
 
 | Datum | Změna |
 |---|---|
@@ -210,4 +288,4 @@ Hesla jsou generována MySQL a patří pouze do lokální konfigurace/bezpečné
 | 15. 11. 2026 | v1.3: popsán aplikační `OutboxWriter` a transakční guard produkční implementace `DatabaseOutboxWriter`. |
 | 15. 11. 2026 | v1.4: upřesněna konvence primárních klíčů a úplně zdokumentovány přirozené a pojmenovací výjimky cizích klíčů (F3-08). |
 | 15. 11. 2026 | Dopřednou migrací sjednocen název FK sloupce katalogu ISO 4217 na `iso4217_catalog_release_id` podle standardní konvence. |
-| 15. 11. 2026 | v1.5: doplněna pravidla bezpečného skládání SQL, parametrizace hodnot a allowlistu dynamických identifikátorů (F3-14). |
+| 15. 11. 2026 | v1.5: doplněna pravidla bezpečného skládání SQL, parametrizace hodnot a allowlistu dynamických identifikátorů (F3-14). |\n| 15. 11. 2026 | v1.6: zdokumentována izolovaná testovací databáze, oddělené účty a bezpečný vstupní bod pro dopředné migrace (F3-15b). |
