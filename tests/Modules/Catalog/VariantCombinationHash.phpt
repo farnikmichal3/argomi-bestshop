@@ -56,6 +56,7 @@ $invalidInputs = [
     ['Bad-Code' => ['type' => 'enum', 'value' => 'black']],
     ['color' => ['type' => 'enum', 'value' => '']],
     ['length' => ['type' => 'number', 'value' => '1.0000001']],
+    ['length' => ['type' => 'number', 'value' => '100000000000000']],
     ['length' => ['type' => 'number', 'value' => '1,25']],
     ['length' => ['type' => 'number', 'value' => 1.25]],
     ['enabled' => ['type' => 'bool', 'value' => '1']],
