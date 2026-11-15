@@ -17,8 +17,13 @@ class Bootstrap
     private readonly string $rootDir;
 
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly string $localConfigFile = 'local.neon',
+    ) {
+        if (basename($localConfigFile) !== $localConfigFile || !str_ends_with($localConfigFile, '.neon')) {
+            throw new LogicException('Local configuration must be a NEON file name without a directory path.');
+        }
+
         $this->rootDir = dirname(__DIR__);
         $this->configurator = new Configurator();
         $this->configurator->setTempDirectory($this->rootDir . '/temp');
@@ -49,7 +54,7 @@ class Bootstrap
         $configDir = $this->rootDir . '/config';
         $this->configurator->addConfig($configDir . '/common.neon');
         $this->configurator->addConfig($configDir . '/services.neon');
-        $this->configurator->addConfig($configDir . '/local.neon');
+        $this->configurator->addConfig($configDir . '/' . $this->localConfigFile);
 
         $this->configurator->onCompile[] = static function (Configurator $configurator, Compiler $compiler): void {
             foreach (ModuleRegistry::MODULES as $module) {
