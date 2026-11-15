@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – databáze
 
-**Stav:** dokumentace aktuálního počátečního schématu  
+**Stav:** dokumentace aktuálního schématu a dopředných migrací  
 **Revize:** 1.2 · 15. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
@@ -134,7 +134,7 @@ Dopředná migrace `2026-11-15-120000-transactional-outbox.sql` přidává samos
 | `status` | `pending`, `processing`, `delivered` nebo `dead` |
 | `attempts` | Počet převzetí workerem |
 | `available_at` | Nejbližší čas, kdy lze zprávu převzít nebo znovu zkusit |
-| `locked_until` / `lock_token` | Lease a náhodný 128bitový fencing token aktuálního workeru |
+| `locked_until` / `lock_token` | Lease a náhodný 128bitový lease token aktuálního workeru |
 | `created_at` | Čas vytvoření záznamu |
 | `delivered_at` / `dead_at` | Čas přechodu do koncového stavu |
 | `last_error` | Bezpečný stručný popis poslední chyby, bez stack trace a citlivých údajů |
