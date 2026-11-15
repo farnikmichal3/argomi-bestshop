@@ -33,7 +33,7 @@ Assert::exception(
     InvalidArgumentException::class,
 );
 Assert::exception(
-    static fn () => new Currency('CZK', 256),
+    static fn () => new Currency('CZK', 5),
     InvalidArgumentException::class,
 );
 
