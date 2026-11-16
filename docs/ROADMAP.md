@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.27 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.28 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 146, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 405, zrušeno 2.
+Celkem **554 kroků**: hotovo 146, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 401, zrušeno 5.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 146, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 1 | 0 | 0 | 0 | 0 | 28 | 0 |
+| F4 | Překlady v databázi | 29 | 1 | 1 | 0 | 0 | 0 | 24 | 3 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -378,10 +378,10 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 
 ### F4: Překlady v databázi
 
-_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 0 z 29 kroků; 1 rozpracováno.
+_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 1 z 29 kroků; 1 rozpracováno; 3 zrušeno.
 
 - `[HOTOVO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap. Lokální `check.bat` i GitHub Actions (MySQL 8.4, migrace, integrační testy, PHPStan, coding standard a Deptrac) úspěšně prošly.
-- `[PLÁN]` **F4-02** `MessageStore`: načtení domény a jazyka jedním dotazem
+- `[ROZDĚLÁNO]` **F4-02** `MessageStore`: typovaný čtecí kontrakt, katalog zpráv a databázový adaptér načítající jednu doménu a jazyk jediným dotazem; čeká na lokální ověření.
 - `[PLÁN]` **F4-03** Cache domén (Nette Cache) a zneplatnění po uložení
 - `[PLÁN]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm
 - `[PLÁN]` **F4-05** Formátování ICU MessageFormat přes `intl`
@@ -391,8 +391,8 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[PLÁN]` **F4-09** Pomocník pro překlad entit (překladová řádka se zálohou na výchozí jazyk)
 - `[PLÁN]` **F4-10** Formátování peněz a čísel (`NumberFormatter`) podle jazyka
 - `[PLÁN]` **F4-11** `UnitFormatter`: symbol a název s množným číslem
-- `[PLÁN]` **F4-12** Struktura souborů s výchozími texty modulu (`Resources/translations`)
-- `[PLÁN]` **F4-13** Importér výchozích textů do `translation_message`
+- `[ZRUŠENO]` **F4-12** Struktura souborů s výchozími texty modulu (`Resources/translations`). Zrušeno kvůli závaznému DB-only pravidlu: runtime ani verzované souborové katalogy se nezavádějí; výchozí texty budou dodávány databázovými migracemi/seedy.
+- `[PLÁN]` **F4-13** Databázový importér výchozích systémových textů do tabulek vlastnických domén; žádná centrální tabulka `translation_message` neexistuje.
 - `[PLÁN]` **F4-14** Logika `is_customized`, `default_hash`, `is_outdated` a testy všech stavů
 - `[PLÁN]` **F4-15** Příkaz `translations:import`
 - `[PLÁN]` **F4-16** Příkaz `translations:check` (chybějící a nepoužité klíče)
@@ -405,9 +405,9 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[PLÁN]` **F4-23** Bezpečnost: texty jsou prostý text, test escapování, zákaz HTML
 - `[PLÁN]` **F4-24** Texty modulu (cs, en)
 - `[PLÁN]` **F4-25** Dokumentace modulu Translation
-- `[PLÁN]` **F4-26** Oddělit systémové překlady jednotlivých domén do cílového úložiště
+- `[ZRUŠENO]` **F4-26** Oddělit systémové překlady jednotlivých domén do cílového úložiště. Již dokončeno v F3-31 migrací `2026-11-15-210000-split-system-message-translations.sql`; krok se neopakuje.
 - `[PLÁN]` **F4-27** Implementovat chráněné systémové zdroje a oddělené vlastní překlady
-- `[PLÁN]` **F4-28** Migrovat současná data z `translation_message` bez ztráty
+- `[ZRUŠENO]` **F4-28** Migrovat současná data z `translation_message` bez ztráty. Již dokončeno a ověřeno v F3-31 včetně NULL-safe porovnání všech přenášených sloupců; krok se neopakuje.
 - `[PLÁN]` **F4-29** Testy oprávnění: administrátor nesmí měnit systémové zdroje
 
 ### F5: Catalog (vlna 1)
@@ -1209,6 +1209,12 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokončen F3-23 bez duplicitní implementace: existující GitHub Actions workflow již vytváří izolovanou databázi na `mysql:8.4`, aplikuje všechny dopředné migrace a vyžaduje MySQL integrační testy.
 - Ověřen poslední běh workflow #233 na commitu `79f0d771`: migrace i všechny následné kroky CI prošly. Schéma obsahuje `CHECK` nad `minor_units` a složený FK `iso4217_currency(code, minor_units)`; MySQL 8.4 obě omezení přijalo.
 - Nebyla měněna historická migrace ani přidáván zbytečný test/workflow. F3: **24 hotovo**, **0 rozděláno**, **9 plán**, **1 zrušeno**. Celkový souhrn: **136 hotovo**, **0 rozděláno**, **1 k úpravě**, **415 plán**, **2 zrušeno**.
+### v3.28 (16. 11. 2026)
+- Zahájen F4-02: přidány `MessageDomain`, aplikační kontrakt `MessageStore`, neměnný DTO `MessageCatalog` a databázová implementace `DatabaseMessageStore`. Každé načtení vybírá jednu z doménových tabulek pevným mapováním a provede jediný dotaz filtrovaný podle locale; fallback ani cache se zde neřeší.
+- `TranslationExtension` registruje databázové úložiště v DI. Přidán integrační test doménového oddělení, jazykového filtrování, prázdného katalogu, neměnnosti návratových dat a počtu dotazů. Lokální ověření zatím čeká.
+- Zpřesněn plán podle DB-only pravidla a dokončené migrace F3-31: F4-12 zrušen, F4-13 přesměrován na databázové tabulky, duplicitní F4-26 a F4-28 zrušeny.
+- F4: **1 hotovo**, **1 rozpracováno**, **24 plán**, **3 zrušeno**. Celkový souhrn: **146 hotovo**, **1 rozpracováno**, **1 k úpravě**, **401 plán**, **5 zrušeno**.
+
 ### v3.27 (16. 11. 2026)
 - Dokončen F4-01: připravena struktura modulu Translation (`Api`, `Application`, `Domain`, `Infrastructure/DI`, `Infrastructure/Persistence`) a konvenčně registrovaná `TranslationExtension` odvozená od `Nette\DI\CompilerExtension`. Bootstrap ji najde podle již existujícího `ModuleRegistry`; centrální registrace ani souborové překladové katalogy se nepřidávají.
 - Integrační test `tests/Modules/Translation/TranslationExtension.phpt` ověřuje přítomnost modulu v registru, platnost DI extension a její skutečné objevení při kompilaci kontejneru přes Bootstrap. Uživatel potvrdil `All active checks passed.`; GitHub Actions běh #308 na commitu `945deca` úspěšně dokončil migrace, MySQL integrační testy, PHPStan, coding standard a Deptrac.
