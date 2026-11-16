@@ -75,7 +75,11 @@ Celkem **554 kroků**: hotovo 148, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.31 (16. 11. 2026)\n- Dokončen F4-03: persistentní cache katalogů přes Nette Cache, dekorátor `CachedMessageStore` a přesná tagová invalidace podle domény a locale. Lokální `check.bat` i GitHub Actions (run #327) úspěšně prošly.\n- F4: **3 hotovo**, **0 rozděláno**, **23 plán**, **3 zrušeno**. Celkem: **148 hotovo**, **0 rozděláno**, **1 k úpravě**, **400 plán**, **5 zrušeno**.\n\n## 3. Nejbližší kroky
+### v3.31 (16. 11. 2026)
+- Dokončen F4-03: persistentní cache katalogů přes Nette Cache, dekorátor `CachedMessageStore` a přesná tagová invalidace podle domény a locale. Lokální `check.bat` i GitHub Actions (run #327) úspěšně prošly.
+- F4: **3 hotovo**, **0 rozděláno**, **23 plán**, **3 zrušeno**. Celkem: **148 hotovo**, **0 rozděláno**, **1 k úpravě**, **400 plán**, **5 zrušeno**.
+
+## 3. Nejbližší kroky
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; obě složky jsou součástí verzované struktury repozitáře.
 - `[HOTOVO]` **F2-02** Implementovány neměnné hodnotové objekty `Money` a `Currency` a výjimka `CurrencyMismatchException`. Částky používají celočíselné minor units; aritmetika hlídá přetečení, operace vyžadující shodnou měnu odmítají měnový nesoulad. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb. Jednotkové testy byly doplněny a ověřeny ve F2-14.
