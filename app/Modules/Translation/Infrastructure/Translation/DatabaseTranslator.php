@@ -24,7 +24,8 @@ final readonly class DatabaseTranslator implements Translator
     ) {}
 
     /**
-     * @param string|Stringable $message Stabilní klíč systémového textu.
+     * @param mixed $message Stabilní klíč systémového textu; očekává se string nebo Stringable.
+     * @param mixed ...$parameters Parametry pro budoucí formátování zprávy.
      */
     public function translate($message, ...$parameters): string
     {
