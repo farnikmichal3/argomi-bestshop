@@ -390,7 +390,6 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-03** Cache katalogů (Nette Cache): trvalé úložiště sdílené mezi requesty, dekorátor `CachedMessageStore`, oddělení podle domény a locale a aplikační kontrakt invalidace. Tagy pokrývají invalidaci všech katalogů, jedné domény, jednoho locale i přesného průniku domény a locale. Integrační test ověřuje cache hit/miss a všechny varianty invalidace. Lokální `check.bat` i GitHub Actions úspěšně prošly.
 - `[HOTOVO]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm: překladač a továrna s explicitní doménou a locale, DI registrace a integrační testy.
 - `[ROZDĚLÁNO]` **F4-05** Formátování ICU MessageFormat přes `intl`
-- `[ROZDĚLÁNO]` **F4-05** Formátování ICU MessageFormat přes `intl`
 - `[PLÁN]` **F4-06** Řetězec záloh: požadovaný jazyk, výchozí jazyk, klíč
 - `[PLÁN]` **F4-07** Logování chybějících překladů a Tracy panel
 - `[PLÁN]` **F4-08** Latte rozšíření: překlad klíče v šabloně
