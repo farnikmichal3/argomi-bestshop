@@ -417,4 +417,6 @@ Tato hranice je automaticky vynucována Deptrac pravidlem `Shared: [External]` a
 | 15. 11. 2026 | v3.8: zpřesněno oddělení synchronních interních doménových událostí od integračních zpráv Outboxu, transakční odpovědnost use-case, propagace výjimek a zákaz externích vedlejších účinků v synchronních posluchačích podle F2-18. |
 | 16. 11. 2026 | v4.1: doplněna skutečná struktura modulu Translation a jeho konvenčně registrovaná DI extension podle F4-01. |
 | 16. 11. 2026 | v4.2: doplněn aplikační kontrakt `MessageStore`, doménový výběr systémových textů, neměnný DTO katalog a databázový adaptér podle F4-02. |
-\n\n| 16. 11. 2026 | v4.4: potvrzena implementace persistentní cache katalogů v modulu Translation, dekorátor `CachedMessageStore` a `NetteMessageCacheInvalidator` včetně přesné invalidace kombinace domény a locale podle F4-03. |\n
+
+
+| 16. 11. 2026 | v4.4: potvrzena implementace persistentní cache katalogů v modulu Translation, dekorátor `CachedMessageStore` a `NetteMessageCacheInvalidator` včetně přesné invalidace kombinace domény a locale podle F4-03. |
