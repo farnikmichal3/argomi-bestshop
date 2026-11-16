@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.31 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.32 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 148, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 400, zrušeno 5.
+Celkem **554 kroků**: hotovo 148, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 399, zrušeno 5.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 148, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 3 | 0 | 0 | 0 | 0 | 23 | 3 |
+| F4 | Překlady v databázi | 29 | 3 | 1 | 0 | 0 | 0 | 22 | 3 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -75,9 +75,10 @@ Celkem **554 kroků**: hotovo 148, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.31 (16. 11. 2026)
+### v3.32 (16. 11. 2026)
 - Dokončen F4-03: persistentní cache katalogů přes Nette Cache, dekorátor `CachedMessageStore` a přesná tagová invalidace podle domény a locale. Lokální `check.bat` i GitHub Actions (run #327) úspěšně prošly.
-- F4: **3 hotovo**, **0 rozděláno**, **23 plán**, **3 zrušeno**. Celkem: **148 hotovo**, **0 rozděláno**, **1 k úpravě**, **400 plán**, **5 zrušeno**.
+- Zahájen F4-04: `DatabaseTranslator` implementující `Nette\\Localization\\Translator` a `DatabaseTranslatorFactory` s explicitní doménou a locale; chybějící klíč se zatím vrací beze změny a formátování parametrů zůstává ve F4-05. Integrační testy a lokální/CI ověření probíhají.
+- F4: **3 hotovo**, **1 rozděláno**, **22 plán**, **3 zrušeno**. Celkem: **148 hotovo**, **1 rozděláno**, **1 k úpravě**, **399 plán**, **5 zrušeno**.
 
 ## 3. Nejbližší kroky
 
@@ -387,7 +388,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap. Lokální `check.bat` i GitHub Actions (MySQL 8.4, migrace, integrační testy, PHPStan, coding standard a Deptrac) úspěšně prošly.
 - `[HOTOVO]` **F4-02** `MessageStore`: typovaný čtecí kontrakt, neměnný katalog zpráv a databázový adaptér pro tři vlastnické domény. Jeden parametrizovaný dotaz načítá zvolenou doménu a jazyk; `ActiveRow` zůstává uvnitř persistence vrstvy. Integrační test ověřuje DI, všechny tabulky, jazyky, chybějící klíče, neměnnost katalogu a počet dotazů. GitHub Actions i lokální `check.bat` úspěšně prošly.
 - `[HOTOVO]` **F4-03** Cache katalogů (Nette Cache): trvalé úložiště sdílené mezi requesty, dekorátor `CachedMessageStore`, oddělení podle domény a locale a aplikační kontrakt invalidace. Tagy pokrývají invalidaci všech katalogů, jedné domény, jednoho locale i přesného průniku domény a locale. Integrační test ověřuje cache hit/miss a všechny varianty invalidace. Lokální `check.bat` i GitHub Actions úspěšně prošly.
-- `[PLÁN]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm
+- `[ROZDĚLÁNO]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm
 - `[PLÁN]` **F4-05** Formátování ICU MessageFormat přes `intl`
 - `[PLÁN]` **F4-06** Řetězec záloh: požadovaný jazyk, výchozí jazyk, klíč
 - `[PLÁN]` **F4-07** Logování chybějících překladů a Tracy panel
