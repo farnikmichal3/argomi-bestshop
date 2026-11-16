@@ -57,19 +57,18 @@ try {
     // Parametry přijímá kontrakt Nette; ICU formátování patří do F4-05.
     Assert::same('Katalog česky', $catalogCs->translate($messageKey, 'ignored'));
 
-    Assert::same(
-        'Katalog česky',
-        $catalogCs->translate(new class($messageKey) implements Stringable {
-            public function __construct(
-                private string $value,
-            ) {}
+    $stringableKey = new class($messageKey) implements Stringable {
+        public function __construct(
+            private string $value,
+        ) {}
 
-            public function __toString(): string
-            {
-                return $this->value;
-            }
-        }        }),
-    );
+        public function __toString(): string
+        {
+            return $this->value;
+        }
+    };
+
+    Assert::same('Katalog česky', $catalogCs->translate($stringableKey));
 
     Assert::exception(
         static fn () => $catalogCs->translate(123),
