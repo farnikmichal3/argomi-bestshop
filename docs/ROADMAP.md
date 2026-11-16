@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 146, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 401, zrušeno 5.
+Celkem **554 kroků**: hotovo 147, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 401, zrušeno 5.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 146, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 1 | 1 | 0 | 0 | 0 | 24 | 3 |
+| F4 | Překlady v databázi | 29 | 2 | 0 | 0 | 0 | 0 | 24 | 3 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -378,10 +378,10 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 
 ### F4: Překlady v databázi
 
-_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 1 z 29 kroků; 1 rozpracováno; 3 zrušeno.
+_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 2 z 29 kroků; 0 rozpracováno; 3 zrušeno.
 
 - `[HOTOVO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap. Lokální `check.bat` i GitHub Actions (MySQL 8.4, migrace, integrační testy, PHPStan, coding standard a Deptrac) úspěšně prošly.
-- `[ROZDĚLÁNO]` **F4-02** `MessageStore`: typovaný čtecí kontrakt, katalog zpráv a databázový adaptér načítající jednu doménu a jazyk jediným dotazem; čeká na lokální ověření.
+- `[HOTOVO]` **F4-02** `MessageStore`: typovaný čtecí kontrakt, neměnný katalog zpráv a databázový adaptér pro tři vlastnické domény. Jeden parametrizovaný dotaz načítá zvolenou doménu a jazyk; `ActiveRow` zůstává uvnitř persistence vrstvy. Integrační test ověřuje DI, všechny tabulky, jazyky, chybějící klíče, neměnnost katalogu a počet dotazů. GitHub Actions i lokální `check.bat` úspěšně prošly.
 - `[PLÁN]` **F4-03** Cache domén (Nette Cache) a zneplatnění po uložení
 - `[PLÁN]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm
 - `[PLÁN]` **F4-05** Formátování ICU MessageFormat přes `intl`
@@ -1209,6 +1209,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokončen F3-23 bez duplicitní implementace: existující GitHub Actions workflow již vytváří izolovanou databázi na `mysql:8.4`, aplikuje všechny dopředné migrace a vyžaduje MySQL integrační testy.
 - Ověřen poslední běh workflow #233 na commitu `79f0d771`: migrace i všechny následné kroky CI prošly. Schéma obsahuje `CHECK` nad `minor_units` a složený FK `iso4217_currency(code, minor_units)`; MySQL 8.4 obě omezení přijalo.
 - Nebyla měněna historická migrace ani přidáván zbytečný test/workflow. F3: **24 hotovo**, **0 rozděláno**, **9 plán**, **1 zrušeno**. Celkový souhrn: **136 hotovo**, **0 rozděláno**, **1 k úpravě**, **415 plán**, **2 zrušeno**.
+### v3.30 (16. 11. 2026)
+- Dokončen F4-02: typovaný databázový `MessageStore`, neměnný `MessageCatalog` a pevné mapování tří překladových domén. Integrační test ověřuje skutečnou registraci DI, načítání cs/en ze všech tří tabulek, chybějící klíče, neměnnost katalogu a jediný SELECT na načtení.
+- GitHub Actions i uživatelovo lokální `check.bat` úspěšně prošly. F4-02 uzavřen jako HOTOVO.
+- F4: **2 hotovo**, **0 rozděláno**, **24 plán**, **3 zrušeno**. Celkový souhrn: **147 hotovo**, **0 rozděláno**, **1 k úpravě**, **401 plán**, **5 zrušeno**.
+
 ### v3.29 (16. 11. 2026)
 - GitHub Actions běh #315 na commitu `d395a4a` úspěšně dokončil izolované MySQL 8.4 migrace, všechny automatické testy včetně `MessageStoreIntegration.phpt`, PHPStan, coding standard a Deptrac.
 - F4-02 zůstává rozpracovaný do potvrzení lokálního `check.bat` uživatelem; rozsah ani souhrn kroků se nemění.
