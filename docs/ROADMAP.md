@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.28 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.29 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -1209,6 +1209,10 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokončen F3-23 bez duplicitní implementace: existující GitHub Actions workflow již vytváří izolovanou databázi na `mysql:8.4`, aplikuje všechny dopředné migrace a vyžaduje MySQL integrační testy.
 - Ověřen poslední běh workflow #233 na commitu `79f0d771`: migrace i všechny následné kroky CI prošly. Schéma obsahuje `CHECK` nad `minor_units` a složený FK `iso4217_currency(code, minor_units)`; MySQL 8.4 obě omezení přijalo.
 - Nebyla měněna historická migrace ani přidáván zbytečný test/workflow. F3: **24 hotovo**, **0 rozděláno**, **9 plán**, **1 zrušeno**. Celkový souhrn: **136 hotovo**, **0 rozděláno**, **1 k úpravě**, **415 plán**, **2 zrušeno**.
+### v3.29 (16. 11. 2026)
+- GitHub Actions běh #315 na commitu `d395a4a` úspěšně dokončil izolované MySQL 8.4 migrace, všechny automatické testy včetně `MessageStoreIntegration.phpt`, PHPStan, coding standard a Deptrac.
+- F4-02 zůstává rozpracovaný do potvrzení lokálního `check.bat` uživatelem; rozsah ani souhrn kroků se nemění.
+
 ### v3.28 (16. 11. 2026)
 - Zahájen F4-02: přidány `MessageDomain`, aplikační kontrakt `MessageStore`, neměnný DTO `MessageCatalog` a databázová implementace `DatabaseMessageStore`. Každé načtení vybírá jednu z doménových tabulek pevným mapováním a provede jediný dotaz filtrovaný podle locale; fallback ani cache se zde neřeší.
 - `TranslationExtension` registruje databázové úložiště v DI. Přidán integrační test doménového oddělení, jazykového filtrování, prázdného katalogu, neměnnosti návratových dat a počtu dotazů. Lokální ověření zatím čeká.
