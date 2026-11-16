@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.30 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.31 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 147, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 400, zrušeno 5.
+Celkem **554 kroků**: hotovo 148, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 400, zrušeno 5.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 147, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 2 | 1 | 0 | 0 | 0 | 23 | 3 |
+| F4 | Překlady v databázi | 29 | 3 | 0 | 0 | 0 | 0 | 23 | 3 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -75,7 +75,7 @@ Celkem **554 kroků**: hotovo 147, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-## 3. Nejbližší kroky
+### v3.31 (16. 11. 2026)\n- Dokončen F4-03: persistentní cache katalogů přes Nette Cache, dekorátor `CachedMessageStore` a přesná tagová invalidace podle domény a locale. Lokální `check.bat` i GitHub Actions (run #327) úspěšně prošly.\n- F4: **3 hotovo**, **0 rozděláno**, **23 plán**, **3 zrušeno**. Celkem: **148 hotovo**, **0 rozděláno**, **1 k úpravě**, **400 plán**, **5 zrušeno**.\n\n## 3. Nejbližší kroky
 
 - `[HOTOVO]` **F2-01** Ověřeno vytvoření `app/Shared/Domain` a `app/Shared/Infrastructure`; obě složky jsou součástí verzované struktury repozitáře.
 - `[HOTOVO]` **F2-02** Implementovány neměnné hodnotové objekty `Money` a `Currency` a výjimka `CurrencyMismatchException`. Částky používají celočíselné minor units; aritmetika hlídá přetečení, operace vyžadující shodnou měnu odmítají měnový nesoulad. Lokálně ověřeno přes `check.bat`: PHPStan, PHP-CS-Fixer a Deptrac bez chyb. Jednotkové testy byly doplněny a ověřeny ve F2-14.
@@ -378,11 +378,11 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 
 ### F4: Překlady v databázi
 
-_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 2 z 29 kroků; 1 rozpracováno; 3 zrušeno.
+_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 3 z 29 kroků; 0 rozpracováno; 3 zrušeno.
 
 - `[HOTOVO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap. Lokální `check.bat` i GitHub Actions (MySQL 8.4, migrace, integrační testy, PHPStan, coding standard a Deptrac) úspěšně prošly.
 - `[HOTOVO]` **F4-02** `MessageStore`: typovaný čtecí kontrakt, neměnný katalog zpráv a databázový adaptér pro tři vlastnické domény. Jeden parametrizovaný dotaz načítá zvolenou doménu a jazyk; `ActiveRow` zůstává uvnitř persistence vrstvy. Integrační test ověřuje DI, všechny tabulky, jazyky, chybějící klíče, neměnnost katalogu a počet dotazů. GitHub Actions i lokální `check.bat` úspěšně prošly.
-- `[ROZDĚLÁNO]` **F4-03** Cache katalogů (Nette Cache): cacheovaný dekorátor nad databázovým `MessageStore`, oddělení podle domény a locale, tagová invalidace přes aplikační kontrakt. Implementace připravena na lokální ověření.
+- `[HOTOVO]` **F4-03** Cache katalogů (Nette Cache): trvalé úložiště sdílené mezi requesty, dekorátor `CachedMessageStore`, oddělení podle domény a locale a aplikační kontrakt invalidace. Tagy pokrývají invalidaci všech katalogů, jedné domény, jednoho locale i přesného průniku domény a locale. Integrační test ověřuje cache hit/miss a všechny varianty invalidace. Lokální `check.bat` i GitHub Actions úspěšně prošly.
 - `[PLÁN]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm
 - `[PLÁN]` **F4-05** Formátování ICU MessageFormat přes `intl`
 - `[PLÁN]` **F4-06** Řetězec záloh: požadovaný jazyk, výchozí jazyk, klíč
