@@ -24,14 +24,13 @@ final class NetteMessageCacheInvalidator implements MessageCacheInvalidator
 
         if ($domain === null && $locale === null) {
             $tags[] = 'translation-catalogs';
+        } elseif ($domain !== null && $locale !== null) {
+            // Kombinovaný tag zajišťuje průnik filtrů, nikoliv jejich sjednocení.
+            $tags[] = 'translation-domain-locale-' . $domain->value . '-' . $locale->getCode();
+        } elseif ($domain !== null) {
+            $tags[] = 'translation-domain-' . $domain->value;
         } else {
-            if ($domain !== null) {
-                $tags[] = 'translation-domain-' . $domain->value;
-            }
-
-            if ($locale !== null) {
-                $tags[] = 'translation-locale-' . $locale->getCode();
-            }
+            $tags[] = 'translation-locale-' . $locale?->getCode();
         }
 
         $this->cache->clean([
