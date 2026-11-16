@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.8 · 16. 11. 2026
+**Revize:** 1.9 · 16. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -128,9 +128,10 @@ Import znamená databázovou operaci, nikoliv načítání textových katalogů:
 
 Modul používá standardní členění projektu: `Api/Dto`, `Api/Event`, `Application/Dto`, `Domain`, `Infrastructure/DI` a `Infrastructure/Persistence`. DI extension je `App\Modules\Translation\Infrastructure\DI\TranslationExtension` a Bootstrap ji automaticky registruje podle `ModuleRegistry` a konvence názvů.
 
-Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. Aplikační kontrakt `MessageStore` načítá jednu vlastnickou doménu a locale do neměnného `MessageCatalog`; doménu reprezentuje `MessageDomain` a databázový adaptér `DatabaseMessageStore` vybírá tabulku pevným mapováním enumu. Každé volání provede jediný SELECT filtrovaný podle locale. Databázové `ActiveRow` se mapuje uvnitř persistence vrstvy a nikdy neopouští infrastrukturu. Chybějící klíč zůstává v katalogu nepřítomný; fallback, cache, ICU formátování a diagnostika se řeší v samostatných navazujících krocích. Veškeré runtime překladové hodnoty se načítají výhradně z databáze.
+Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. Aplikační kontrakt `MessageStore` načítá jednu vlastnickou doménu a locale do neměnného `MessageCatalog`; doménu reprezentuje `MessageDomain` a databázový adaptér `DatabaseMessageStore` vybírá tabulku pevným mapováním enumu. Každé volání provede jediný SELECT filtrovaný podle locale. Databázové `ActiveRow` se mapuje uvnitř persistence vrstvy a nikdy neopouští infrastrukturu. `DatabaseTranslator` implementuje `Nette\\Localization\\Translator` nad jedním katalogem a `DatabaseTranslatorFactory` vytváří překladač pouze pro explicitně předanou doménu a locale. Překladač využívá cacheovaný `MessageStore`; neznámý klíč zatím vrací beze změny a parametry přijímá bez formátování, které bude doplněno přes ICU ve F4-05. Jazyk se neodvozuje ze skrytého globálního kontextu. Veškeré runtime překladové hodnoty se načítají výhradně z databáze.
 
 
 ### Historie revizí
 
+- **1.9 · 16. 11. 2026:** zahájena implementace `DatabaseTranslator` a `DatabaseTranslatorFactory`; překladač dostává doménu i locale explicitně, chybějící klíč zatím vrací beze změny a ICU formátování je vyhrazeno pro F4-05.
 - **1.8 · 16. 11. 2026:** dokončena implementace persistentní cache katalogů, dekorátoru `CachedMessageStore` a tagové invalidace včetně přesného průniku domény a locale; ověřeno lokálně i v GitHub Actions.
