@@ -380,7 +380,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 
 _Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 0 z 29 kroků; 1 rozpracováno.
 
-- `[ROZDĚLÁNO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a základní test modulu; čeká na lokální ověření.
+- `[ROZDĚLÁNO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap; čeká na lokální ověření.
 - `[PLÁN]` **F4-02** `MessageStore`: načtení domény a jazyka jedním dotazem
 - `[PLÁN]` **F4-03** Cache domén (Nette Cache) a zneplatnění po uložení
 - `[PLÁN]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm
@@ -1211,7 +1211,7 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Nebyla měněna historická migrace ani přidáván zbytečný test/workflow. F3: **24 hotovo**, **0 rozděláno**, **9 plán**, **1 zrušeno**. Celkový souhrn: **136 hotovo**, **0 rozděláno**, **1 k úpravě**, **415 plán**, **2 zrušeno**.
 ### v3.26 (16. 11. 2026)
 - Zahájen F4-01: připravena struktura modulu Translation (`Api`, `Application`, `Domain`, `Infrastructure/DI`, `Infrastructure/Persistence`) a `TranslationExtension` odvozená od `Nette\DI\CompilerExtension`. Bootstrap ji najde podle již existujícího `ModuleRegistry`; centrální registrace ani souborové překladové katalogy se nepřidávají.
-- Přidán `tests/Modules/Translation/TranslationExtension.phpt`, který ověřuje přítomnost modulu v registru a platnost konkrétní DI extension. Lokální ověření uživatelem zatím čeká.
+- Přidán `tests/Modules/Translation/TranslationExtension.phpt`, který ověřuje přítomnost modulu v registru, platnost DI extension a její skutečné objevení při kompilaci kontejneru přes Bootstrap. Lokální ověření uživatelem zatím čeká.
 - F4: **0 hotovo**, **1 rozděláno**, **28 plán**. Celkový souhrn: **145 hotovo**, **1 rozděláno**, **1 k úpravě**, **405 plán**, **2 zrušeno**.
 
 ### v3.25 (15. 11. 2026)
