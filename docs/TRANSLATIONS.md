@@ -129,4 +129,8 @@ Import znamená databázovou operaci, nikoliv načítání textových katalogů:
 Modul používá standardní členění projektu: `Api/Dto`, `Api/Event`, `Application/Dto`, `Domain`, `Infrastructure/DI` a `Infrastructure/Persistence`. DI extension je `App\Modules\Translation\Infrastructure\DI\TranslationExtension` a Bootstrap ji automaticky registruje podle `ModuleRegistry` a konvence názvů.
 
 Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. Aplikační kontrakt `MessageStore` načítá jednu vlastnickou doménu a locale do neměnného `MessageCatalog`; doménu reprezentuje `MessageDomain` a databázový adaptér `DatabaseMessageStore` vybírá tabulku pevným mapováním enumu. Každé volání provede jediný SELECT filtrovaný podle locale. Databázové `ActiveRow` se mapuje uvnitř persistence vrstvy a nikdy neopouští infrastrukturu. Chybějící klíč zůstává v katalogu nepřítomný; fallback, cache, ICU formátování a diagnostika se řeší v samostatných navazujících krocích. Veškeré runtime překladové hodnoty se načítají výhradně z databáze.
-\n\n### Historie revizí\n\n- **1.8 · 16. 11. 2026:** dokončena implementace persistentní cache katalogů, dekorátoru `CachedMessageStore` a tagové invalidace včetně přesného průniku domény a locale; ověřeno lokálně i v GitHub Actions.\n
+
+
+### Historie revizí
+
+- **1.8 · 16. 11. 2026:** dokončena implementace persistentní cache katalogů, dekorátoru `CachedMessageStore` a tagové invalidace včetně přesného průniku domény a locale; ověřeno lokálně i v GitHub Actions.
