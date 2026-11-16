@@ -3,6 +3,7 @@ Database translator implements Nette Translator and isolates explicit domain and
 --FILE--
 <?php
 
+use App\Modules\Translation\Application\MessageCacheInvalidator;
 use App\Modules\Translation\Domain\MessageDomain;
 use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory;
 use App\Shared\Domain\Locale\Locale;
@@ -22,6 +23,9 @@ $pdo = $integration->database->getConnection()->getPdo();
 /** @var DatabaseTranslatorFactory $factory */
 $factory = $container->getByType(DatabaseTranslatorFactory::class);
 Assert::type(DatabaseTranslatorFactory::class, $factory);
+
+/** @var MessageCacheInvalidator $cacheInvalidator */
+$cacheInvalidator = $container->getByType(MessageCacheInvalidator::class);
 
 $token = bin2hex(random_bytes(8));
 $messageKey = 'f4_04.shared_key.' . $token;
@@ -78,6 +82,9 @@ try {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
+
+    // Testovací katalogy vznikají uvnitř rollbacknuté transakce; nesmí zůstat v persistentní cache.
+    $cacheInvalidator->invalidate();
 }
 
 echo "OK\n";
