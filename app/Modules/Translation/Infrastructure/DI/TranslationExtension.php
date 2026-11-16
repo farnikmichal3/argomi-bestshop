@@ -12,6 +12,4 @@ use Nette\DI\CompilerExtension;
  * Bootstrap ji registruje podle ModuleRegistry a zavedené konvence názvů.
  * Konkrétní služby budou přidávány v navazujících krocích fáze F4.
  */
-final class TranslationExtension extends CompilerExtension
-{
-}
+final class TranslationExtension extends CompilerExtension {}
