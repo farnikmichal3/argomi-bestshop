@@ -30,7 +30,7 @@ final class NetteMessageCacheInvalidator implements MessageCacheInvalidator
         } elseif ($domain !== null) {
             $tags[] = 'translation-domain-' . $domain->value;
         } else {
-            $tags[] = 'translation-locale-' . $locale?->getCode();
+            $tags[] = 'translation-locale-' . $locale->getCode();
         }
 
         $this->cache->clean([
