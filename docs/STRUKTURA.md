@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.3 · 16. 11. 2026  
+**Revize:** 4.4 · 16. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 15. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -417,3 +417,4 @@ Tato hranice je automaticky vynucována Deptrac pravidlem `Shared: [External]` a
 | 15. 11. 2026 | v3.8: zpřesněno oddělení synchronních interních doménových událostí od integračních zpráv Outboxu, transakční odpovědnost use-case, propagace výjimek a zákaz externích vedlejších účinků v synchronních posluchačích podle F2-18. |
 | 16. 11. 2026 | v4.1: doplněna skutečná struktura modulu Translation a jeho konvenčně registrovaná DI extension podle F4-01. |
 | 16. 11. 2026 | v4.2: doplněn aplikační kontrakt `MessageStore`, doménový výběr systémových textů, neměnný DTO katalog a databázový adaptér podle F4-02. |
+\n\n| 16. 11. 2026 | v4.4: potvrzena implementace persistentní cache katalogů v modulu Translation, dekorátor `CachedMessageStore` a `NetteMessageCacheInvalidator` včetně přesné invalidace kombinace domény a locale podle F4-03. |\n
