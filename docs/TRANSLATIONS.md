@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.4 · 15. 11. 2026
+**Revize:** 1.5 · 16. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -119,3 +119,9 @@ Import znamená databázovou operaci, nikoliv načítání textových katalogů:
 5. Přidat fallback, ICU a cache.
 6. Přidat admin UI pro vlastní překlady a oprávnění.
 7. Přidat diagnostiku, ověření a dokumentaci.
+
+## 11. Struktura modulu Translation
+
+Modul používá standardní členění projektu: `Api/Dto`, `Api/Event`, `Application/Dto`, `Domain`, `Infrastructure/DI` a `Infrastructure/Persistence`. DI extension je `App\\Modules\\Translation\\Infrastructure\\DI\\TranslationExtension` a Bootstrap ji automaticky registruje podle `ModuleRegistry` a konvence názvů.
+
+Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. DI extension je zatím registračním bodem; služby úložiště, překladače, cache a diagnostiky se doplňují v navazujících krocích F4. Veškeré runtime překladové hodnoty se i nadále načítají výhradně z databáze.
