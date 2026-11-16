@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.26 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.27 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 145, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 405, zrušeno 2.
+Celkem **554 kroků**: hotovo 146, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 405, zrušeno 2.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 145, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 0 | 1 | 0 | 0 | 0 | 28 | 0 |
+| F4 | Překlady v databázi | 29 | 1 | 0 | 0 | 0 | 0 | 28 | 0 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -380,7 +380,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 
 _Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 0 z 29 kroků; 1 rozpracováno.
 
-- `[ROZDĚLÁNO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap; čeká na lokální ověření.
+- `[HOTOVO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap. Lokální `check.bat` i GitHub Actions (MySQL 8.4, migrace, integrační testy, PHPStan, coding standard a Deptrac) úspěšně prošly.
 - `[PLÁN]` **F4-02** `MessageStore`: načtení domény a jazyka jedním dotazem
 - `[PLÁN]` **F4-03** Cache domén (Nette Cache) a zneplatnění po uložení
 - `[PLÁN]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm
@@ -1209,6 +1209,11 @@ _Doplňkové nástroje nezbytné pro reálný provoz obchodu._ Hotovo 0 z 21 kro
 - Dokončen F3-23 bez duplicitní implementace: existující GitHub Actions workflow již vytváří izolovanou databázi na `mysql:8.4`, aplikuje všechny dopředné migrace a vyžaduje MySQL integrační testy.
 - Ověřen poslední běh workflow #233 na commitu `79f0d771`: migrace i všechny následné kroky CI prošly. Schéma obsahuje `CHECK` nad `minor_units` a složený FK `iso4217_currency(code, minor_units)`; MySQL 8.4 obě omezení přijalo.
 - Nebyla měněna historická migrace ani přidáván zbytečný test/workflow. F3: **24 hotovo**, **0 rozděláno**, **9 plán**, **1 zrušeno**. Celkový souhrn: **136 hotovo**, **0 rozděláno**, **1 k úpravě**, **415 plán**, **2 zrušeno**.
+### v3.27 (16. 11. 2026)
+- Dokončen F4-01: připravena struktura modulu Translation (`Api`, `Application`, `Domain`, `Infrastructure/DI`, `Infrastructure/Persistence`) a konvenčně registrovaná `TranslationExtension` odvozená od `Nette\DI\CompilerExtension`. Bootstrap ji najde podle již existujícího `ModuleRegistry`; centrální registrace ani souborové překladové katalogy se nepřidávají.
+- Integrační test `tests/Modules/Translation/TranslationExtension.phpt` ověřuje přítomnost modulu v registru, platnost DI extension a její skutečné objevení při kompilaci kontejneru přes Bootstrap. Uživatel potvrdil `All active checks passed.`; GitHub Actions běh #308 na commitu `945deca` úspěšně dokončil migrace, MySQL integrační testy, PHPStan, coding standard a Deptrac.
+- F4: **1 hotovo**, **0 rozděláno**, **28 plán**. Celkový souhrn: **146 hotovo**, **0 rozděláno**, **1 k úpravě**, **405 plán**, **2 zrušeno**.
+
 ### v3.26 (16. 11. 2026)
 - Zahájen F4-01: připravena struktura modulu Translation (`Api`, `Application`, `Domain`, `Infrastructure/DI`, `Infrastructure/Persistence`) a `TranslationExtension` odvozená od `Nette\DI\CompilerExtension`. Bootstrap ji najde podle již existujícího `ModuleRegistry`; centrální registrace ani souborové překladové katalogy se nepřidávají.
 - Přidán `tests/Modules/Translation/TranslationExtension.phpt`, který ověřuje přítomnost modulu v registru, platnost DI extension a její skutečné objevení při kompilaci kontejneru přes Bootstrap. Lokální ověření uživatelem zatím čeká.
