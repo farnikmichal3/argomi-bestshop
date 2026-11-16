@@ -77,7 +77,7 @@ Celkem **554 kroků**: hotovo 148, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 
 ### v3.32 (16. 11. 2026)
 - Dokončen F4-03: persistentní cache katalogů přes Nette Cache, dekorátor `CachedMessageStore` a přesná tagová invalidace podle domény a locale. Lokální `check.bat` i GitHub Actions (run #327) úspěšně prošly.
-- Zahájen F4-04: `DatabaseTranslator` implementující `Nette\\Localization\\Translator` a `DatabaseTranslatorFactory` s explicitní doménou a locale; chybějící klíč se zatím vrací beze změny a formátování parametrů zůstává ve F4-05. Integrační testy a lokální/CI ověření probíhají.
+- Zahájen F4-04: `DatabaseTranslator` implementující `Nette\Localization\Translator` a `DatabaseTranslatorFactory` s explicitní doménou a locale; chybějící klíč se zatím vrací beze změny a formátování parametrů zůstává ve F4-05. Integrační testy a lokální/CI ověření probíhají.
 - F4: **3 hotovo**, **1 rozděláno**, **22 plán**, **3 zrušeno**. Celkem: **148 hotovo**, **1 rozděláno**, **1 k úpravě**, **399 plán**, **5 zrušeno**.
 
 ## 3. Nejbližší kroky
