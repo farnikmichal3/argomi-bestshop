@@ -122,6 +122,6 @@ Import znamená databázovou operaci, nikoliv načítání textových katalogů:
 
 ## 11. Struktura modulu Translation
 
-Modul používá standardní členění projektu: `Api/Dto`, `Api/Event`, `Application/Dto`, `Domain`, `Infrastructure/DI` a `Infrastructure/Persistence`. DI extension je `App\\Modules\\Translation\\Infrastructure\\DI\\TranslationExtension` a Bootstrap ji automaticky registruje podle `ModuleRegistry` a konvence názvů.
+Modul používá standardní členění projektu: `Api/Dto`, `Api/Event`, `Application/Dto`, `Domain`, `Infrastructure/DI` a `Infrastructure/Persistence`. DI extension je `App\Modules\Translation\Infrastructure\DI\TranslationExtension` a Bootstrap ji automaticky registruje podle `ModuleRegistry` a konvence názvů.
 
 Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. DI extension je zatím registračním bodem; služby úložiště, překladače, cache a diagnostiky se doplňují v navazujících krocích F4. Veškeré runtime překladové hodnoty se i nadále načítají výhradně z databáze.
