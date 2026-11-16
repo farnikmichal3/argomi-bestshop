@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.10 · 16. 11. 2026
+**Revize:** 1.11 · 16. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -133,6 +133,7 @@ Modul záměrně nemá `Resources/translations` ani jiné runtime souborové kat
 
 ### Historie revizí
 
+- **1.11 · 16. 11. 2026:** F4-04 dokončen a ověřen lokálně (`All active checks passed.`) i v GitHub Actions run #336. `DatabaseTranslator` a `DatabaseTranslatorFactory` pracují s explicitní doménou a locale. Zahájena navazující etapa F4-05 pro ICU MessageFormat přes PHP `intl`.
 - **1.10 · 16. 11. 2026:** implementován `DatabaseTranslator` a `DatabaseTranslatorFactory` s explicitní doménou a locale; 32 integračních testů a GitHub Actions run #336 včetně PHPStan, PHP-CS-Fixer a Deptrac úspěšně prošly. Lokální `check.bat` čeká na ověření.
 - **1.9 · 16. 11. 2026:** zahájena implementace `DatabaseTranslator` a `DatabaseTranslatorFactory`; překladač dostává doménu i locale explicitně, chybějící klíč zatím vrací beze změny a ICU formátování je vyhrazeno pro F4-05.
 - **1.8 · 16. 11. 2026:** dokončena implementace persistentní cache katalogů, dekorátoru `CachedMessageStore` a tagové invalidace včetně přesného průniku domény a locale; ověřeno lokálně i v GitHub Actions.
