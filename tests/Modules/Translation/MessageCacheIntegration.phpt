@@ -9,7 +9,7 @@ use App\Modules\Translation\Application\MessageStore;
 use App\Modules\Translation\Domain\MessageDomain;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Caching\Cache;
-use Nette\Caching\Storages\MemoryStorage;
+use Nette\Caching\Storage;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
 
@@ -26,7 +26,52 @@ $invalidator = $container->getByType(MessageCacheInvalidator::class);
 Assert::type(MessageStore::class, $cachedStore);
 Assert::type(MessageCacheInvalidator::class, $invalidator);
 
-$cache = new Cache(new MemoryStorage(), 'translation-cache-test');
+// Nette\\Caching\\Storages\\MemoryStorage ve verzi 3.4.3 tagy ignoruje.
+// Testovací úložiště proto implementuje skutečnou invalidaci podle tagů.
+$storage = new class implements Storage {
+    /** @var array<string, array{data: mixed, tags: list<string>}> */
+    private array $items = [];
+
+    public function read(string $key): mixed
+    {
+        return $this->items[$key]['data'] ?? null;
+    }
+
+    public function lock(string $key): void
+    {
+    }
+
+    public function write(string $key, mixed $data, array $dependencies): void
+    {
+        $this->items[$key] = [
+            'data' => $data,
+            'tags' => $dependencies[Cache::Tags] ?? [],
+        ];
+    }
+
+    public function remove(string $key): void
+    {
+        unset($this->items[$key]);
+    }
+
+    public function clean(array $conditions): void
+    {
+        if (!empty($conditions[Cache::All])) {
+            $this->items = [];
+            return;
+        }
+
+        $tags = $conditions[Cache::Tags] ?? [];
+
+        foreach ($this->items as $key => $item) {
+            if (array_intersect($tags, $item['tags']) !== []) {
+                unset($this->items[$key]);
+            }
+        }
+    }
+};
+
+$cache = new Cache($storage, 'translation-cache-test');
 $inner = new class implements MessageStore {
     public int $loads = 0;
 
