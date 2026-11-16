@@ -59,12 +59,16 @@ try {
 
     Assert::same(
         'Katalog česky',
-        $catalogCs->translate(new class implements Stringable {
+        $catalogCs->translate(new class($messageKey) implements Stringable {
+            public function __construct(
+                private string $value,
+            ) {}
+
             public function __toString(): string
             {
-                return 'f4_04.shared_key.' . $GLOBALS['token'];
+                return $this->value;
             }
-        }),
+        }        }),
     );
 
     Assert::exception(
