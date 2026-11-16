@@ -26,7 +26,7 @@ $invalidator = $container->getByType(MessageCacheInvalidator::class);
 Assert::type(MessageStore::class, $cachedStore);
 Assert::type(MessageCacheInvalidator::class, $invalidator);
 
-// Nette\\Caching\\Storages\\MemoryStorage ve verzi 3.4.3 tagy ignoruje.
+// Nette\Caching\Storages\MemoryStorage ve verzi 3.4.3 tagy ignoruje.
 // Testovací úložiště proto implementuje skutečnou invalidaci podle tagů.
 $storage = new class implements Storage {
     /** @var array<string, array{data: mixed, tags: list<string>}> */
@@ -45,7 +45,10 @@ $storage = new class implements Storage {
     {
         $this->items[$key] = [
             'data' => $data,
-            'tags' => $dependencies[Cache::Tags] ?? [],
+            'tags' => array_map(
+                static fn (mixed $tag): string => (string) $tag,
+                (array) ($dependencies[Cache::Tags] ?? []),
+            ),
         ];
     }
 
@@ -61,7 +64,10 @@ $storage = new class implements Storage {
             return;
         }
 
-        $tags = $conditions[Cache::Tags] ?? [];
+        $tags = array_map(
+            static fn (mixed $tag): string => (string) $tag,
+            (array) ($conditions[Cache::Tags] ?? []),
+        );
 
         foreach ($this->items as $key => $item) {
             if (array_intersect($tags, $item['tags']) !== []) {
