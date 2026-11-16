@@ -111,14 +111,15 @@ Assert::same('version-3', $cached->load(MessageDomain::Cart, $localeCs)->get('te
 
 $cacheInvalidator->invalidate(MessageDomain::Catalog);
 Assert::same('version-5', $cached->load(MessageDomain::Catalog, $localeCs)->get('test.message'));
+Assert::same('version-6', $cached->load(MessageDomain::Catalog, $localeEn)->get('test.message'));
 Assert::same('version-3', $cached->load(MessageDomain::Cart, $localeCs)->get('test.message'));
 
 $cacheInvalidator->invalidate(null, $localeCs);
-Assert::same('version-6', $cached->load(MessageDomain::Cart, $localeCs)->get('test.message'));
-Assert::same('version-2', $cached->load(MessageDomain::Catalog, $localeEn)->get('test.message'));
+Assert::same('version-7', $cached->load(MessageDomain::Cart, $localeCs)->get('test.message'));
+Assert::same('version-6', $cached->load(MessageDomain::Catalog, $localeEn)->get('test.message'));
 
 $cacheInvalidator->invalidate();
-Assert::same('version-7', $cached->load(MessageDomain::Catalog, $localeEn)->get('test.message'));
+Assert::same('version-8', $cached->load(MessageDomain::Catalog, $localeEn)->get('test.message'));
 
 echo "OK\n";
 ?>
