@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.32 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.33 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -75,9 +75,9 @@ Celkem **554 kroků**: hotovo 148, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.32 (16. 11. 2026)
+### v3.33 (16. 11. 2026)
 - Dokončen F4-03: persistentní cache katalogů přes Nette Cache, dekorátor `CachedMessageStore` a přesná tagová invalidace podle domény a locale. Lokální `check.bat` i GitHub Actions (run #327) úspěšně prošly.
-- Zahájen F4-04: `DatabaseTranslator` implementující `Nette\Localization\Translator` a `DatabaseTranslatorFactory` s explicitní doménou a locale; chybějící klíč se zatím vrací beze změny a formátování parametrů zůstává ve F4-05. Integrační testy a lokální/CI ověření probíhají.
+- Zahájen F4-04: `DatabaseTranslator` implementující `Nette\Localization\Translator` a `DatabaseTranslatorFactory` s explicitní doménou a locale; chybějící klíč se zatím vrací beze změny a formátování parametrů zůstává ve F4-05. Integrační testy prošly (32 testů); GitHub Actions run #336 úspěšně dokončil testy, PHPStan, PHP-CS-Fixer i Deptrac. Čeká se na lokální `check.bat`.
 - F4: **3 hotovo**, **1 rozděláno**, **22 plán**, **3 zrušeno**. Celkem: **148 hotovo**, **1 rozděláno**, **1 k úpravě**, **399 plán**, **5 zrušeno**.
 
 ## 3. Nejbližší kroky
