@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.5 · 16. 11. 2026
+**Revize:** 1.6 · 16. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -124,4 +124,4 @@ Import znamená databázovou operaci, nikoliv načítání textových katalogů:
 
 Modul používá standardní členění projektu: `Api/Dto`, `Api/Event`, `Application/Dto`, `Domain`, `Infrastructure/DI` a `Infrastructure/Persistence`. DI extension je `App\Modules\Translation\Infrastructure\DI\TranslationExtension` a Bootstrap ji automaticky registruje podle `ModuleRegistry` a konvence názvů.
 
-Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. DI extension je zatím registračním bodem; služby úložiště, překladače, cache a diagnostiky se doplňují v navazujících krocích F4. Veškeré runtime překladové hodnoty se i nadále načítají výhradně z databáze.
+Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. Aplikační kontrakt `MessageStore` načítá jednu vlastnickou doménu a locale do neměnného `MessageCatalog`; doménu reprezentuje `MessageDomain` a databázový adaptér `DatabaseMessageStore` vybírá tabulku pevným mapováním enumu. Každé volání provede jediný SELECT filtrovaný podle locale. Databázové `ActiveRow` se mapuje uvnitř persistence vrstvy a nikdy neopouští infrastrukturu. Chybějící klíč zůstává v katalogu nepřítomný; fallback, cache, ICU formátování a diagnostika se řeší v samostatných navazujících krocích. Veškeré runtime překladové hodnoty se načítají výhradně z databáze.
