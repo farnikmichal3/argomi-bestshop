@@ -3,8 +3,8 @@ Database translator implements Nette Translator and isolates explicit domain and
 --FILE--
 <?php
 
-use App\Modules\Translation\Application\MessageCacheInvalidator;
 use App\Modules\Translation\Domain\MessageDomain;
+use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
 use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Localization\Translator;
@@ -20,12 +20,13 @@ $integration = IntegrationTestBootstrap::boot($rootDir);
 $container = $integration->container;
 $pdo = $integration->database->getConnection()->getPdo();
 
-/** @var DatabaseTranslatorFactory $factory */
-$factory = $container->getByType(DatabaseTranslatorFactory::class);
-Assert::type(DatabaseTranslatorFactory::class, $factory);
+/** @var DatabaseTranslatorFactory $diFactory */
+$diFactory = $container->getByType(DatabaseTranslatorFactory::class);
+Assert::type(DatabaseTranslatorFactory::class, $diFactory);
 
-/** @var MessageCacheInvalidator $cacheInvalidator */
-$cacheInvalidator = $container->getByType(MessageCacheInvalidator::class);
+// Přímé DB úložiště drží test nezávislý na sdílené persistentní cache
+// a na pořadí paralelně spouštěných integračních testů.
+$factory = new DatabaseTranslatorFactory(new DatabaseMessageStore($integration->database));
 
 $token = bin2hex(random_bytes(8));
 $messageKey = 'f4_04.shared_key.' . $token;
@@ -82,9 +83,6 @@ try {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
-
-    // Testovací katalogy vznikají uvnitř rollbacknuté transakce; nesmí zůstat v persistentní cache.
-    $cacheInvalidator->invalidate();
 }
 
 echo "OK\n";
