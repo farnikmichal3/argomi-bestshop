@@ -37,6 +37,7 @@ final class CachedMessageStore implements MessageStore
                 'translation-catalogs',
                 'translation-domain-' . $domain->value,
                 'translation-locale-' . $locale->getCode(),
+                'translation-domain-locale-' . $domain->value . '-' . $locale->getCode(),
             ],
         ]);
 
