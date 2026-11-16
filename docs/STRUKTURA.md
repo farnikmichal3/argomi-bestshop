@@ -2,7 +2,7 @@
 
 **Stav:** schválená základní struktura  
 **Revize:** 4.4 · 16. 11. 2026  
-**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 15. 11. 2026
+**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 16. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
 
@@ -61,8 +61,11 @@ app/
 │           │   └── NetteMessageCacheInvalidator.php
 │           ├── DI/
 │           │   └── TranslationExtension.php
-│           └── Persistence/
-│               └── DatabaseMessageStore.php
+│           ├── Persistence/
+│           │   └── DatabaseMessageStore.php
+│           └── Translation/
+│               ├── DatabaseTranslator.php
+│               └── DatabaseTranslatorFactory.php
 ├── Presentation/
 │   ├── Accessory/
 │   │   └── LatteExtension.php
