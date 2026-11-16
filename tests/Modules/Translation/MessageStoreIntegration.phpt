@@ -39,10 +39,6 @@ try {
         'F4-02 empty-catalog test',
     ]);
 
-    $insert = $pdo->prepare(
-        'INSERT INTO %s (message_key, locale, message_text) VALUES (?, ?, ?)',
-    );
-
     foreach ([
         ['catalog_message_translation', $catalogKey, 'cs', 'Katalog česky'],
         ['catalog_message_translation', $catalogKey, 'en', 'Catalog in English'],
