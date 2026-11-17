@@ -46,9 +46,9 @@ foreach ($rows as $row) {
 }
 
 $expected = [
+    'admin_message_translation' => ['language', 'code', 'RESTRICT'],
     'attribute_translation' => ['language', 'code', 'RESTRICT'],
     'attribute_value_translation' => ['language', 'code', 'RESTRICT'],
-    'admin_message_translation' => ['language', 'code', 'RESTRICT'],
     'cart' => ['language', 'code', 'RESTRICT'],
     'cart_message_translation' => ['language', 'code', 'RESTRICT'],
     'catalog_message_translation' => ['language', 'code', 'RESTRICT'],
