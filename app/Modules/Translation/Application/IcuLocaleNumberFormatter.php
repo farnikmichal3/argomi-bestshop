@@ -25,7 +25,11 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
         $formatter = $this->createFormatter($locale, NumberFormatter::DECIMAL);
         $formatted = $this->formatValue($formatter, $number);
 
-        if (!is_string($formatted) || $formatter->getErrorCode() > U_ZERO_ERROR) {
+        if (!is_string($formatted)) {
+            throw new NumberFormattingException($locale->getCode(), $formatter->getErrorMessage());
+        }
+
+        if ($formatter->getErrorCode() > U_ZERO_ERROR) {
             throw new NumberFormattingException($locale->getCode(), $formatter->getErrorMessage());
         }
 
@@ -146,7 +150,11 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
     ): string {
         $formatted = $this->formatValue($formatter, $number, NumberFormatter::TYPE_INT64);
 
-        if ($formatted === false || $formatter->getErrorCode() > U_ZERO_ERROR) {
+        if (!is_string($formatted)) {
+            throw new NumberFormattingException($locale->getCode(), $formatter->getErrorMessage());
+        }
+
+        if ($formatter->getErrorCode() > U_ZERO_ERROR) {
             throw new NumberFormattingException($locale->getCode(), $formatter->getErrorMessage());
         }
 
