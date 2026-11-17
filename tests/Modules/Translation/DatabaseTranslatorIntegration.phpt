@@ -71,11 +71,11 @@ try {
         $statement->execute([$key, $locale, $message]);
     }
 
-    $catalogCs = $factory->create(TranslationDomain::Catalog, Locale::fromString('cs'));
-    $catalogEn = $factory->create(TranslationDomain::Catalog, Locale::fromString('en'));
-    $cartCs = $factory->create(TranslationDomain::Cart, Locale::fromString('cs'));
-    $catalogEnWithFallback = $factory->create(TranslationDomain::Catalog, Locale::fromString('en'));
-    $cartEnWithFallback = $factory->create(TranslationDomain::Cart, Locale::fromString('en'));
+    $catalogCs = $factory->createTranslator(TranslationDomain::Catalog, Locale::fromString('cs'));
+    $catalogEn = $factory->createTranslator(TranslationDomain::Catalog, Locale::fromString('en'));
+    $cartCs = $factory->createTranslator(TranslationDomain::Cart, Locale::fromString('cs'));
+    $catalogEnWithFallback = $factory->createTranslator(TranslationDomain::Catalog, Locale::fromString('en'));
+    $cartEnWithFallback = $factory->createTranslator(TranslationDomain::Cart, Locale::fromString('en'));
 
     Assert::type(Translator::class, $catalogCs);
     Assert::same('Katalog česky', $catalogCs->translate($messageKey));
