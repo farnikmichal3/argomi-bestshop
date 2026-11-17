@@ -25,7 +25,7 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
         $formatter = $this->createFormatter($locale, NumberFormatter::DECIMAL);
         $formatted = $this->formatValue($formatter, $number);
 
-        if ($formatted === false || $formatter->getErrorCode() > U_ZERO_ERROR) {
+        if (!is_string($formatted) || $formatter->getErrorCode() > U_ZERO_ERROR) {
             throw new NumberFormattingException($locale->getCode(), $formatter->getErrorMessage());
         }
 
@@ -106,7 +106,7 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
         $formattedFraction = $this->formatInteger($fractionFormatter, $fractionAmount, $locale);
         $decimalSeparator = $this->getSymbolValue($formatter, NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
 
-        if ($decimalSeparator === false) {
+        if (!is_string($decimalSeparator)) {
             throw new NumberFormattingException(
                 $locale->getCode(),
                 $formatter->getErrorMessage(),
@@ -182,7 +182,7 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
     ): string {
         $value = $this->getTextAttributeValue($formatter, $attribute);
 
-        if ($value === false) {
+        if (!is_string($value)) {
             throw new NumberFormattingException($locale->getCode(), $formatter->getErrorMessage());
         }
 
