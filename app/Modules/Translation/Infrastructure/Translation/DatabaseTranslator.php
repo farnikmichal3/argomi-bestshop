@@ -48,6 +48,8 @@ final readonly class DatabaseTranslator implements Translator
         }
 
         $locale = $this->catalog->locale->getCode();
+
+        /** @var mixed $formatter */
         $formatter = \MessageFormatter::create($locale, $pattern);
 
         if (!$formatter instanceof \MessageFormatter) {
@@ -77,13 +79,14 @@ final readonly class DatabaseTranslator implements Translator
      * Jediné předané pole se chápe jako mapa pojmenovaných nebo pozičních
      * argumentů. Samostatné argumenty se převedou na indexy 0, 1, 2...
      *
-     * @param list<mixed> $parameters
+     * @param array<int|string, mixed> $parameters
      * @return array<int|string, string|int|float|null>
      */
     private function normalizeParameters(array $parameters): array
     {
-        $arguments = count($parameters) === 1 && is_array($parameters[0])
-            ? $parameters[0]
+        $values = array_values($parameters);
+        $arguments = count($values) === 1 && is_array($values[0])
+            ? $values[0]
             : $parameters;
 
         $normalized = [];
