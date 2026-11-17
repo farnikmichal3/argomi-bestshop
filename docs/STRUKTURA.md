@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.5 · 17. 11. 2026  
+**Revize:** 4.6 · 17. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 17. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -292,7 +292,7 @@ assets/
 
 `front.js` a `admin.js` jsou samostatné vstupy; společná inicializace Bootstrapu, Naja a nette-forms je v `shared.js`. Sass vstupy `front.scss` a `admin.scss` používají společný základ `_shared.scss`. Specifické styly a skripty patří do odpovídající oblasti, průřezový kód pouze do sdílených souborů. Výstupní soubory `www/assets/front.css`, `admin.css`, `front.js` a `admin.js` a příkazy `build`/`watch` spravuje `package.json`.
 
-## 6. Pravidla závislostí
+Modul Translation vystavuje `Api/TranslationDomain` a `Api/TranslatorFactory`. Prezentační vrstvy smějí používat pouze tyto veřejné kontrakty; `Domain/MessageDomain` a `Infrastructure/Translation/DatabaseTranslatorFactory` zůstávají interní. Interní továrna implementuje vlastní API a mapuje veřejnou doménu na interní model.\n\n## 6. Pravidla závislostí
 
 1. UI může volat veřejné API modulů nebo aplikační fasády; nesmí obcházet modul přímým přístupem do jeho persistence.
 2. Jeden modul nesmí používat interní třídy jiného modulu. Používá pouze jeho `Api`.
@@ -421,4 +421,4 @@ Tato hranice je automaticky vynucována Deptrac pravidlem `Shared: [External]` a
 | 16. 11. 2026 | v4.2: doplněn aplikační kontrakt `MessageStore`, doménový výběr systémových textů, neměnný DTO katalog a databázový adaptér podle F4-02. |
 
 
-| 16. 11. 2026 | v4.4: potvrzena implementace persistentní cache katalogů v modulu Translation, dekorátor `CachedMessageStore` a `NetteMessageCacheInvalidator` včetně přesné invalidace kombinace domény a locale podle F4-03. |
+| 17. 11. 2026 | v4.6: doplněno veřejné API modulu Translation a jednosměrná hranice závislostí; prezentační vrstvy neznají interní implementaci podle F4-08. |\n| 16. 11. 2026 | v4.4: potvrzena implementace persistentní cache katalogů v modulu Translation, dekorátor `CachedMessageStore` a `NetteMessageCacheInvalidator` včetně přesné invalidace kombinace domény a locale podle F4-03. |
