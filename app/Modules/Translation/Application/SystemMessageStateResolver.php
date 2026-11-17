@@ -67,7 +67,7 @@ final class SystemMessageStateResolver
             'core',
             true,
             $currentDefaultHash,
-            !hash_equals($defaultHash, $currentDefaultHash),
+            $isOutdated || !hash_equals($defaultHash, $currentDefaultHash),
         );
     }
 }
