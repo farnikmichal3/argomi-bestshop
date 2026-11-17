@@ -7,6 +7,8 @@ use App\Core\Module\ModuleRegistry;
 use App\Modules\Translation\Api\LocaleNumberFormatter;
 use App\Modules\Translation\Application\EntityTranslationResolver;
 use App\Modules\Translation\Application\IcuLocaleNumberFormatter;
+use App\Modules\Translation\Infrastructure\Console\TranslationsCheckCommand;
+use App\Modules\Translation\Infrastructure\Diagnostics\TranslationKeyUsageScanner;
 use App\Modules\Translation\Infrastructure\DI\TranslationExtension;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
@@ -27,6 +29,8 @@ Assert::false((new ReflectionClass(TranslationExtension::class))->isAbstract());
 $context = IntegrationTestBootstrap::boot($rootDir);
 Assert::true($context->container instanceof Container);
 Assert::type(EntityTranslationResolver::class, $context->container->getByType(EntityTranslationResolver::class));
+Assert::type(TranslationKeyUsageScanner::class, $context->container->getByType(TranslationKeyUsageScanner::class));
+Assert::type(TranslationsCheckCommand::class, $context->container->getByType(TranslationsCheckCommand::class));
 Assert::type(
     IcuLocaleNumberFormatter::class,
     $context->container->getByType(LocaleNumberFormatter::class),
