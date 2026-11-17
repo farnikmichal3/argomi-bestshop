@@ -54,7 +54,7 @@ try {
         $statement->execute([$key, $locale, $message]);
     }
 
-    $englishTranslator = $factory->create(MessageDomain::Catalog, Locale::fromString('en'));
+    $englishTranslator = $factory->create(TranslationDomain::Catalog, Locale::fromString('en'));
     $czechTranslator = $factory->create(MessageDomain::Catalog, Locale::fromString('cs'));
 
     $englishTemplate = $templateFactory->createTemplate();
