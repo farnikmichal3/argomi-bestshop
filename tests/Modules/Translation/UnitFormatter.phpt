@@ -21,18 +21,19 @@ $enPattern = '{count, plural, one {piece} other {pieces}}';
 Assert::same('kus', $formatter->formatName($csPattern, Quantity::fromInteger(1), $cs));
 Assert::same('kusy', $formatter->formatName($csPattern, Quantity::fromInteger(2), $cs));
 Assert::same('kusů', $formatter->formatName($csPattern, Quantity::fromInteger(5), $cs));
-Assert::same('kusů', $formatter->formatName($csPattern, Quantity::fromDecimal('1.250'), $cs));
-Assert::same('kusů', $formatter->formatName($csPattern, Quantity::fromDecimal('0.001'), $cs));
+Assert::same('kusu', $formatter->formatName($csPattern, Quantity::fromDecimal('1.250'), $cs));
+Assert::same('kusu', $formatter->formatName($csPattern, Quantity::fromDecimal('0.001'), $cs));
 
 Assert::same('piece', $formatter->formatName($enPattern, Quantity::fromInteger(1), $en));
 Assert::same('pieces', $formatter->formatName($enPattern, Quantity::fromInteger(2), $en));
 Assert::same('pieces', $formatter->formatName($enPattern, Quantity::fromDecimal('1.250'), $en));
+Assert::same('kus', $formatter->formatName($csPattern, Quantity::fromDecimal('1.000'), $cs));
 
 Assert::same('ks', $formatter->formatSymbol('ks'));
 Assert::same('m²', $formatter->formatSymbol('m²'));
 
 Assert::same(
-    'kusů',
+    'kusu',
     $formatter->formatName(
         $csPattern,
         new Quantity(PHP_INT_MIN),
@@ -40,7 +41,7 @@ Assert::same(
     ),
 );
 Assert::same(
-    'kusů',
+    'kusu',
     $formatter->formatName(
         $csPattern,
         new Quantity(PHP_INT_MAX),
