@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.12 · 17. 11. 2026
+**Revize:** 1.13 · 17. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -63,7 +63,7 @@ Role a oprávnění spravuje Identity. Modul Translation poskytuje kontrolní bo
 
 - Výchozí jazyk instalace je čeština (`cs`), další počáteční jazyk angličtina (`en`).
 - Jazyk se určuje z databázové evidence jazyků a aktivního kontextu; jazykové hodnoty se nesmějí natvrdo zapisovat do aplikační logiky.
-- Chybějící překlad se řeší databázovým fallbackem na výchozí jazyk a poté na klíč s diagnostikou; nikdy se nevrací souborová hodnota ani prázdný text.
+- Chybějící překlad se řeší databázovým fallbackem: požadované locale, výchozí aktivní locale z `LocaleProvider`, poté stabilní klíč. Fallback nikdy nepřechází mezi vlastnickými doménami; ICU formátování používá locale katalogu, ze kterého byl text skutečně nalezen. Nikdy se nevrací souborová hodnota ani prázdný text.
 - Parametrizované zprávy používají ICU MessageFormat přes PHP `intl`; samotné vzory zpráv jsou uložené v databázi.
 - `DatabaseTranslator` přijímá pojmenované argumenty jako jedno pole (`translate($key, ['count' => 2])`) nebo poziční argumenty samostatně (`translate($key, 'Košík', 2)`). Podporované hodnoty jsou `string`, `int`, `float`, `null` a `Stringable`; locale se vždy bere z katalogu.
 - Bez parametrů se vzor vrací beze změny. Chybný ICU vzor vyvolá `MessageFormattingException`; chyba se nezamlčí ani se nevrací původní vzor.
@@ -134,6 +134,8 @@ Modul záměrně nemá `Resources/translations` ani jiné runtime souborové kat
 
 
 ### Historie revizí
+
+- **1.13 · 17. 11. 2026:** F4-06 implementuje databázový fallback požadované locale → výchozí aktivní locale z `LocaleProvider` → stabilní klíč. Fallback zůstává izolovaný podle vlastnické domény a ICU formátování používá locale skutečně použitého katalogu.
 
 - **1.11 · 16. 11. 2026:** F4-04 dokončen a ověřen lokálně (`All active checks passed.`) i v GitHub Actions run #336. `DatabaseTranslator` a `DatabaseTranslatorFactory` pracují s explicitní doménou a locale. Zahájena navazující etapa F4-05 pro ICU MessageFormat přes PHP `intl`.
 - **1.10 · 16. 11. 2026:** implementován `DatabaseTranslator` a `DatabaseTranslatorFactory` s explicitní doménou a locale; 32 integračních testů a GitHub Actions run #336 včetně PHPStan, PHP-CS-Fixer a Deptrac úspěšně prošly. Lokální `check.bat` čeká na ověření.
