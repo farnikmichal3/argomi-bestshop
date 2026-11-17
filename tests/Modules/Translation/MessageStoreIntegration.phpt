@@ -4,6 +4,7 @@ MessageStore loads each owning domain and locale in one query and returns an imm
 <?php
 
 use App\Modules\Translation\Application\MessageStore;
+use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
 use App\Modules\Translation\Domain\MessageDomain;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Database\Explorer;
@@ -21,7 +22,7 @@ $container = $integration->container;
 /** @var Explorer $database */
 $database = $integration->database;
 $pdo = $database->getConnection()->getPdo();
-$store = $container->getByType(MessageStore::class);
+$store = new DatabaseMessageStore($database);
 
 Assert::type(MessageStore::class, $store);
 
