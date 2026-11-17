@@ -53,7 +53,7 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
             return $this->formatInteger($formatter, $money->minorAmount, $locale);
         }
 
-        $factor = self::minorUnitFactor($minorUnits);
+        $factor = self::minorUnitFactor($minorUnits, $locale);
         $wholeAmount = intdiv($money->minorAmount, $factor);
         $fractionAmount = $money->minorAmount % $factor;
         $isNegative = $money->minorAmount < 0;
@@ -189,7 +189,7 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
         return $value;
     }
 
-    private static function minorUnitFactor(int $minorUnits): int
+    private static function minorUnitFactor(int $minorUnits, Locale $locale): int
     {
         return match ($minorUnits) {
             1 => 10,
@@ -197,7 +197,7 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
             3 => 1_000,
             4 => 10_000,
             default => throw new NumberFormattingException(
-                'unknown',
+                $locale->getCode(),
                 sprintf('Unsupported currency precision: %d.', $minorUnits),
             ),
         };
