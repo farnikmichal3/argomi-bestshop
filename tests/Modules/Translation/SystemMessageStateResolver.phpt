@@ -68,6 +68,16 @@ Assert::same('My own wording', $customizedUnchanged->messageText);
 Assert::same($oldHash, $customizedUnchanged->defaultHash);
 Assert::false($customizedUnchanged->isOutdated);
 
+$stillOutdated = $resolver->resolve(
+    'My own wording',
+    'core',
+    true,
+    $oldHash,
+    true,
+    $oldDefault,
+);
+Assert::true($stillOutdated->isOutdated);
+
 $customKey = $resolver->resolve(
     'My custom key',
     'custom',
