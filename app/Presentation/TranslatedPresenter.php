@@ -41,7 +41,7 @@ abstract class TranslatedPresenter extends Presenter
     {
         parent::beforeRender();
 
-        $translator = $this->translatorFactory->create(
+        $translator = $this->translatorFactory->createTranslator(
             $this->getTranslationDomain(),
             $this->resolveTranslationLocale(),
         );
