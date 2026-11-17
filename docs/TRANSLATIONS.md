@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.17 · 17. 11. 2026
+**Revize:** 1.18 · 17. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -71,8 +71,9 @@ Role a oprávnění spravuje Identity. Modul Translation poskytuje kontrolní bo
 - Veřejné API `Api/LocaleNumberFormatter` poskytuje `formatNumber(int|float, Locale)` a `formatMoney(Money, Locale)`. Jazyk se neodvozuje z globálního kontextu a formátovač neprovádí měnové konverze.
 - Peněžní částky se nikdy nepředávají do `NumberFormatter::formatCurrency()`, protože jeho vstupem je `float`. Implementace formátuje celočíselnou hlavní část přes ICU a desetinnou část sestaví přesně z `Money::minorAmount` a `Currency::minorUnits`; používá měnové prefixy, suffixy a oddělovače ICU. Neprovádí zaokrouhlování ani nemění hodnotu částky.
 - Selhání ICU se propaguje jako veřejná výjimka `Api/NumberFormattingException`; nesmí se tiše vracet neformátovaná hodnota.
-- Veřejné API `Api/UnitFormatter` nabízí `formatSymbol(string)` a `formatName(string, Quantity, Locale)`. Symbol je již lokalizovaná hodnota z `unit_translation`; název používá ICU MessageFormat a vzor z databáze. `Quantity::toDecimalString()` se předá jako desetinný řetězec s odstraněnými nevýznamnými koncovými nulami, nikdy jako float; tím se zachová přesná hodnota a interní měřítko tisícin samo nemění pluralizační kategorii.
-- Chybný ICU vzor nebo chyba formátování názvu jednotky vyvolá veřejnou výjimku `Api/UnitFormattingException`.
+- Veřejné API `Api/UnitFormatter` nabízí `formatSymbol(string)` a `formatName(string, Quantity, Locale)`. Symbol je již lokalizovaná hodnota z `unit_translation`; název používá ICU MessageFormat a vzor z databáze. `Quantity::toDecimalString()` se předá jako desetinný řetězec s odstraněnými nevýznamnými koncovými nulami, nikdy jako float; interní měřítko tisícin samo nemění pluralizační kategorii.
+- ICU při pluralizaci převádí číselný argument na vlastní numerickou reprezentaci. Proto `IcuUnitFormatter` předem řetězcově ověřuje absolutní hodnotu menší než `2^41`, kde rozlišení sousedních hodnot IEEE 754 zůstává menší než jedna tisícina. Nad touto hranicí se vyvolá typovaná výjimka místo potenciálně chybného plurálu; samotná `Quantity` zůstává bez omezení a bez převodu na float.
+- Chybný ICU vzor, chyba formátování nebo množství mimo bezpečný rozsah ICU vyvolá veřejnou výjimku `Api/UnitFormattingException`.
 - Systémové texty jsou standardně prostý text; HTML se nepovoluje bez výslovně navrženého a sanitizovaného případu.
 
 ## 6. Databázové úložiště
