@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.39 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.40 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -74,6 +74,11 @@ Celkem **554 kroků**: hotovo 151, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.40 (17. 11. 2026)
+- Oprava F4-08: přidáno veřejné `TranslationApi` (`TranslationDomain`, `TranslatorFactory`). `TranslatedPresenter` a Front/Home používají pouze veřejný kontrakt; `DatabaseTranslatorFactory` mapuje veřejnou doménu na interní `MessageDomain`.
+- Deptrac nyní povoluje prezentačním vrstvám pouze `TranslationApi`; interní implementace smí implementovat vlastní API, ale veřejné API není závislé na interních třídách. Doplněny integrační testy DI a Latte.
+- F4-08 zůstává rozpracovaný do úspěšného GitHub Actions a potvrzení lokálního `check.bat`.
 
 ### v3.39 (17. 11. 2026)
 - Zahájen F4-08: nativní překladová podpora Latte přes `Template::setTranslator()`, společný `TranslatedPresenter`, explicitní vlastnická doména a ověření aktivního locale z routy. Runtime překlady zůstávají v databázi; compile-time locale se nepoužívá.
