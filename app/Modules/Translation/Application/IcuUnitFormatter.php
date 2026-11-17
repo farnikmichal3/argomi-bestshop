@@ -37,9 +37,10 @@ final class IcuUnitFormatter implements UnitFormatter
         }
 
         $formatted = $formatter->format([
-            // Quantity::toDecimalString() zachovává přesný desetinný zápis
-            // i pro krajní hodnoty integeru; aplikační kód nepoužívá float.
-            'count' => $quantity->toDecimalString(),
+            // Desetinný řetězec zachovává přesnost i pro krajní integerové
+            // hodnoty. Koncové nuly odstraníme, protože interní měřítko
+            // Quantity (tisíciny) samo o sobě nemá měnit pluralizační kategorii.
+            'count' => self::toCanonicalDecimal($quantity),
         ]);
 
         if (!is_string($formatted) || $formatter->getErrorCode() > U_ZERO_ERROR) {
@@ -50,5 +51,17 @@ final class IcuUnitFormatter implements UnitFormatter
         }
 
         return $formatted;
+    }
+
+    /**
+     * Převede pevný tří místný zápis na nejkratší přesný desetinný řetězec.
+     *
+     * Například 1.000 převede na 1 a 1.250 na 1.25.
+     */
+    private static function toCanonicalDecimal(Quantity $quantity): string
+    {
+        $decimal = rtrim($quantity->toDecimalString(), '0');
+
+        return rtrim($decimal, '.');
     }
 }
