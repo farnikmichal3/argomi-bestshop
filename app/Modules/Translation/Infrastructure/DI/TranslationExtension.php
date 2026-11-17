@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Translation\Infrastructure\DI;
 
-use App\Modules\Translation\Api\TranslatorFactory;
 use App\Modules\Translation\Infrastructure\Cache\CachedMessageStore;
 use App\Modules\Translation\Infrastructure\Cache\NetteMessageCacheInvalidator;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
-use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory;
 use Nette\Caching\Cache;
 use Nette\DI\CompilerExtension;
 
@@ -42,13 +40,6 @@ final class TranslationExtension extends CompilerExtension
             ->setType(NetteMessageCacheInvalidator::class)
             ->setArguments([
                 '@' . $this->prefix('cache'),
-            ]);
-
-        $builder->addDefinition($this->prefix('translatorFactory'))
-            ->setType(TranslatorFactory::class)
-            ->setFactory(DatabaseTranslatorFactory::class)
-            ->setArguments([
-                '@' . $this->prefix('messageStore'),
             ]);
     }
 }
