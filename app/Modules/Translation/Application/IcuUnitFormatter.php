@@ -26,6 +26,13 @@ final class IcuUnitFormatter implements UnitFormatter
 
     public function formatName(string $namePattern, Quantity $quantity, Locale $locale): string
     {
+        if (!self::isWithinReliableIcuRange($quantity)) {
+            throw new UnitFormattingException(
+                $locale->getCode(),
+                'Quantity exceeds the exact decimal precision supported by ICU plural selection.',
+            );
+        }
+
         try {
             $formatter = new MessageFormatter($locale->getCode(), $namePattern);
         } catch (Throwable $exception) {
@@ -51,6 +58,26 @@ final class IcuUnitFormatter implements UnitFormatter
         }
 
         return $formatted;
+    }
+
+    /**
+     * Ověří rozsah, ve kterém převod desetinného řetězce na ICU číslo
+     * zachová rozlišení všech tří desetinných míst.
+     *
+     * Při absolutní hodnotě menší než 2^41 je rozestup sousedních hodnot
+     * IEEE 754 double nejvýše 0,00048828125, tedy menší než 0,001.
+     * Kontrola pracuje výhradně s řetězcem; Quantity se nepřevádí na float.
+     */
+    private static function isWithinReliableIcuRange(Quantity $quantity): bool
+    {
+        $decimal = $quantity->toDecimalString();
+        $unsigned = ltrim($decimal, '-');
+        $whole = ltrim(explode('.', $unsigned, 2)[0], '0');
+        $whole = $whole === '' ? '0' : $whole;
+        $maximumWhole = '2199023255551';
+
+        return strlen($whole) < strlen($maximumWhole)
+            || (strlen($whole) === strlen($maximumWhole) && strcmp($whole, $maximumWhole) <= 0);
     }
 
     /**
