@@ -122,6 +122,7 @@ $expectedExceptions = [
     'shop_order|currency|currency|code',
     'attribute_translation|locale|language|code',
     'attribute_value_translation|locale|language|code',
+    'admin_message_translation|locale|language|code',
     'cart|locale|language|code',
     'category_translation|locale|language|code',
     'customer|locale|language|code',
