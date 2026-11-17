@@ -45,6 +45,19 @@ $negativeCzk = $formatter->formatMoney(
 Assert::contains('1 234,56', $normalizeSpaces($negativeCzk));
 Assert::notSame($czk, $negativeCzk);
 
+$negativeMinorUnit = $formatter->formatMoney(
+    new Money(-1, new Currency('CZK', 2)),
+    Locale::fromString('cs'),
+);
+Assert::contains('0,01', $normalizeSpaces($negativeMinorUnit));
+Assert::notSame(
+    $formatter->formatMoney(
+        new Money(1, new Currency('CZK', 2)),
+        Locale::fromString('cs'),
+    ),
+    $negativeMinorUnit,
+);
+
 $eur = $formatter->formatMoney(
     new Money(123456, new Currency('EUR', 2)),
     Locale::fromString('en'),
@@ -58,6 +71,12 @@ $zeroDecimalCurrency = $formatter->formatMoney(
 );
 Assert::contains('1,234', $normalizeSpaces($zeroDecimalCurrency));
 Assert::false(str_contains($zeroDecimalCurrency, '.'));
+
+$minimumZeroDecimalCurrency = $formatter->formatMoney(
+    new Money(PHP_INT_MIN, new Currency('JPY', 0)),
+    Locale::fromString('en'),
+);
+Assert::contains('9,223,372,036,854,775,808', $normalizeSpaces($minimumZeroDecimalCurrency));
 
 $fourDecimalCurrency = $formatter->formatMoney(
     new Money(12345678, new Currency('CLF', 4)),
