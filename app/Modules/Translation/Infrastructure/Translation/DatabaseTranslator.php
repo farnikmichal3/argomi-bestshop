@@ -12,14 +12,15 @@ use Stringable;
 /**
  * Překládá stabilní klíče z jednoho neměnného katalogu.
  *
- * Doména a locale jsou pevně určeny při vytvoření překladače. Chybějící
- * klíč se zatím vrací beze změny; databázový fallback doplní F4-06.
- * Parametrizované zprávy formátuje pomocí ICU podle locale katalogu.
+ * Doména a požadované locale jsou pevně určeny při vytvoření překladače.
+ * Chybějící text hledá v katalogu výchozího jazyka; pokud chybí i tam,
+ * vrací stabilní klíč. ICU formátování používá locale nalezeného textu.
  */
 final readonly class DatabaseTranslator implements Translator
 {
     public function __construct(
         private MessageCatalog $catalog,
+        private ?MessageCatalog $fallbackCatalog = null,
     ) {}
 
     /**
@@ -36,6 +37,12 @@ final readonly class DatabaseTranslator implements Translator
 
         $messageKey = (string) $message;
         $pattern = $this->catalog->get($messageKey);
+        $formatLocale = $this->catalog->locale->getCode();
+
+        if ($pattern === null && $this->fallbackCatalog !== null) {
+            $pattern = $this->fallbackCatalog->get($messageKey);
+            $formatLocale = $this->fallbackCatalog->locale->getCode();
+        }
 
         if ($pattern === null || $parameters === []) {
             return $pattern ?? $messageKey;
@@ -47,7 +54,7 @@ final readonly class DatabaseTranslator implements Translator
             return $pattern;
         }
 
-        $locale = $this->catalog->locale->getCode();
+        $locale = $formatLocale;
         $formatter = $this->createFormatter($locale, $pattern);
 
         if (!$formatter instanceof \MessageFormatter) {
