@@ -147,15 +147,66 @@ final class TranslationKeyUsageScanner
      */
     private function extractKeys(string $contents, string $extension): array
     {
-        $pattern = $extension === 'latte'
-            ? '/\{_\s*([\'"])([A-Za-z0-9][A-Za-z0-9_.-]*)\1/'
-            : '/->translate\(\s*([\'"])([A-Za-z0-9][A-Za-z0-9_.-]*)\1/';
+        if ($extension === 'latte') {
+            preg_match_all('/\\{_\\s*([\\'"])([A-Za-z0-9][A-Za-z0-9_.-]*)\\1/', $contents, $matches);
+            $keys = array_values(array_unique($matches[2] ?? []));
+            sort($keys);
 
-        preg_match_all($pattern, $contents, $matches);
+            return $keys;
+        }
 
-        $keys = array_values(array_unique($matches[2] ?? []));
+        $tokens = token_get_all($contents);
+        $keys = [];
+
+        foreach ($tokens as $index => $token) {
+            if (!is_array($token) || !in_array($token[0], [T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR], true)) {
+                continue;
+            }
+
+            $methodIndex = $this->nextSignificantTokenIndex($tokens, $index + 1);
+
+            if ($methodIndex === null || !is_array($tokens[$methodIndex]) || $tokens[$methodIndex][0] !== T_STRING || $tokens[$methodIndex][1] !== 'translate') {
+                continue;
+            }
+
+            $openingIndex = $this->nextSignificantTokenIndex($tokens, $methodIndex + 1);
+
+            if ($openingIndex === null || $tokens[$openingIndex] !== '(') {
+                continue;
+            }
+
+            $argumentIndex = $this->nextSignificantTokenIndex($tokens, $openingIndex + 1);
+
+            if ($argumentIndex === null || !is_array($tokens[$argumentIndex]) || $tokens[$argumentIndex][0] !== T_CONSTANT_ENCAPSED_STRING) {
+                continue;
+            }
+
+            if (preg_match('/\\A([\\'"])([A-Za-z0-9][A-Za-z0-9_.-]*)\\1\\z/', $tokens[$argumentIndex][1], $match) === 1) {
+                $keys[] = $match[2];
+            }
+        }
+
+        $keys = array_values(array_unique($keys));
         sort($keys);
 
         return $keys;
+    }
+
+    /**
+     * @param list<array{int, string, int}|string> $tokens
+     */
+    private function nextSignificantTokenIndex(array $tokens, int $start): ?int
+    {
+        for ($index = $start, $count = count($tokens); $index < $count; $index++) {
+            $token = $tokens[$index];
+
+            if (is_array($token) && in_array($token[0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
+                continue;
+            }
+
+            return $index;
+        }
+
+        return null;
     }
 }
