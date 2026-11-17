@@ -3,8 +3,9 @@ Database translator formats ICU messages with explicit locale and typed argument
 --FILE--
 <?php
 
-use App\Modules\Translation\Domain\MessageDomain;
+use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
+use App\Modules\Translation\Api\TranslatorFactory;
 use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory;
 use App\Modules\Translation\Infrastructure\Translation\MessageFormattingException;
 use App\Shared\Domain\Locale\Locale;
@@ -22,9 +23,9 @@ $integration = IntegrationTestBootstrap::boot($rootDir);
 $container = $integration->container;
 $pdo = $integration->database->getConnection()->getPdo();
 
-/** @var DatabaseTranslatorFactory $diFactory */
-$diFactory = $container->getByType(DatabaseTranslatorFactory::class);
-Assert::type(DatabaseTranslatorFactory::class, $diFactory);
+/** @var TranslatorFactory $diFactory */
+$diFactory = $container->getByType(TranslatorFactory::class);
+Assert::type(TranslatorFactory::class, $diFactory);
 
 // Přímé DB úložiště drží test nezávislý na sdílené persistentní cache
 // a na pořadí paralelně spouštěných integračních testů.
@@ -71,10 +72,10 @@ try {
     }
 
     $catalogCs = $factory->create(TranslationDomain::Catalog, Locale::fromString('cs'));
-    $catalogEn = $factory->create(MessageDomain::Catalog, Locale::fromString('en'));
+    $catalogEn = $factory->create(TranslationDomain::Catalog, Locale::fromString('en'));
     $cartCs = $factory->create(TranslationDomain::Cart, Locale::fromString('cs'));
-    $catalogEnWithFallback = $factory->create(MessageDomain::Catalog, Locale::fromString('en'));
-    $cartEnWithFallback = $factory->create(MessageDomain::Cart, Locale::fromString('en'));
+    $catalogEnWithFallback = $factory->create(TranslationDomain::Catalog, Locale::fromString('en'));
+    $cartEnWithFallback = $factory->create(TranslationDomain::Cart, Locale::fromString('en'));
 
     Assert::type(Translator::class, $catalogCs);
     Assert::same('Katalog česky', $catalogCs->translate($messageKey));
