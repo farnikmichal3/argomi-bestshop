@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.20 · 17. 11. 2026
+**Revize:** 1.22 · 17. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -112,6 +112,17 @@ První potvrzený katalogový systémový klíč je `button.add_to_cart` se zně
 - Cache se invaliduje po změně jazyků, systémových hodnot nebo vlastních překladů.
 - Výpadek cache nesmí způsobit ztrátu nebo změnu překladových dat.
 
+### 8.1 CLI diagnostika překladových klíčů
+
+Příkaz `translations:check` je pouze čtecí diagnostika; nikdy nezapisuje do databáze, neopravuje ani nemaže záznamy.
+
+- Prochází zdrojové soubory `app/UI` a hledá statické reference v Latte syntaxi `{_'stable.key'}` a v PHP voláních `$translator->translate('stable.key')`.
+- Vlastnickou doménu určuje z nejbližšího presenteru, který dědí z `TranslatedPresenter` a vrací konkrétní případ `TranslationDomain` v `getTranslationDomain()`. Neodvozuje doménu z názvu klíče ani názvu adresáře.
+- Každý nalezený klíč porovnává s tabulkou vlastníka a se všemi aktivními jazyky načtenými přes `LocaleProvider`. Chybějící jazyková hodnota je hlášena samostatně pro každý aktivní jazyk.
+- Databázový klíč bez statické reference v odpovídající doméně je hlášen jako nepoužívaný.
+- Při nálezu chybějících nebo nepoužívaných klíčů vrací příkaz nenulový návratový kód; bez nálezů končí úspěšně.
+- Dynamicky sestavené klíče, reference mimo `app/UI`, obsahové překlady entit a klíče generované za běhu nelze statickým skenerem spolehlivě určit. Tyto případy vyžadují samostatné explicitní pokrytí; výsledek proto není důkazem úplné absence dynamického použití.
+
 ## 9. Minimální ověření
 
 - žádná překladová hodnota není v aplikačních souborech,
@@ -156,6 +167,8 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 `setTranslator()` se volá bez druhého parametru jazyka. Překlad statických klíčů proto zůstává runtime operací a respektuje databázovou cache i její invalidaci; Latte nevkládá přeložený text do jazykově specifické kompilace šablony. Výstup zůstává pod standardním escapováním Latte. Presenter, který dosud nemá schválenou vlastnickou doménu, překladač nepřebírá.
 
 ### Historie revizí
+
+- **1.22 · 17. 11. 2026:** F4-16 přidává read-only příkaz `translations:check`. Porovnává statické reference v Latte/PHP pod `app/UI` s překlady ve všech aktivních jazycích a hlásí chybějící hodnoty i nepoužívané databázové klíče; dynamické reference zůstávají mimo automatickou detekci.
 
 - **1.21 · 17. 11. 2026:** F4-14 zavádí `SystemMessageStateResolver` a neměnné `SystemMessageState`. Výchozí systémový text se aktualizuje pouze u `source = core`, `is_customized = 0` a známého předchozího `default_hash`; hash je SHA-1 přes přesné UTF-8 znění. Vlastní texty zůstávají zachovány a při změně výchozího hashe se označí jako zastaralé. Příznak zastaralosti se automaticky nemaže. Vlastní klíče (`source = custom`) zůstávají beze změny. Historické řádky s `NULL default_hash` zůstávají beze změny, protože jejich předchozí výchozí znění nelze bezpečně rekonstruovat.
 - **1.20 · 17. 11. 2026:** F4-13 přidává první skutečný systémový klíč Catalog `button.add_to_cart` v češtině a angličtině do vlastnické tabulky. Seed je transakční a idempotentní; existující řádek nepřepisuje. Integrační test ověřuje i skutečná data dodaná migrací.\n- **1.19 · 17. 11. 2026:** F4-13 definuje idempotentní SQL seed pouze pro chybějící záznamy; duplicitní klíč ponechá celý existující řádek beze změny. Aktualizace systémových zdrojů je oddělena do F4-14.
