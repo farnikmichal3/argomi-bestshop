@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Presentation;
 
-use App\Modules\Translation\Domain\MessageDomain;
-use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory;
+use App\Modules\Translation\Api\TranslationDomain;
+use App\Modules\Translation\Api\TranslatorFactory;
 use App\Shared\Domain\Locale\InvalidLocaleException;
 use App\Shared\Domain\Locale\Locale;
 use App\Shared\Domain\Locale\LocaleProvider;
@@ -25,7 +25,6 @@ abstract class TranslatedPresenter extends Presenter
 
     private LocaleProvider $localeProvider;
 
-
     /**
      * Závislosti se předávají inject metodou, aby potomci mohli používat
      * vlastní konstruktorovou injekci bez řetězení konstruktorů.
@@ -37,7 +36,6 @@ abstract class TranslatedPresenter extends Presenter
         $this->translatorFactory = $translatorFactory;
         $this->localeProvider = $localeProvider;
     }
-
 
     protected function beforeRender(): void
     {
@@ -53,12 +51,10 @@ abstract class TranslatedPresenter extends Presenter
         $this->template->setTranslator($translator);
     }
 
-
     /**
      * Každý presenter výslovně určí vlastníka systémových překladových klíčů.
      */
     abstract protected function getTranslationDomain(): TranslationDomain;
-
 
     /**
      * Jazyk z routy musí být stále aktivní; samotná syntaktická platnost nestačí.
