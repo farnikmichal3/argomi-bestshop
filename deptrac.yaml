@@ -241,7 +241,7 @@
     SettingsApi: [SettingsInternal, Shared, External]
     ShippingApi: [ShippingInternal, Shared, External]
     TaxApi: [TaxInternal, Shared, External]
-    TranslationApi: [TranslationInternal, Shared, External]
+    TranslationApi: [Shared, External]
 
     # Interní implementace mají přístup pouze ke Shared
     # a externím knihovnám. Ostatní moduly musí používat
@@ -259,4 +259,4 @@
     SettingsInternal: [Shared, External]
     ShippingInternal: [Shared, External]
     TaxInternal: [Shared, External]
-    TranslationInternal: [Shared, External]
+    TranslationInternal: [TranslationApi, Shared, External]
