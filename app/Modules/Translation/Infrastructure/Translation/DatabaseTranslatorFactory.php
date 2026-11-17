@@ -7,6 +7,7 @@ namespace App\Modules\Translation\Infrastructure\Translation;
 use App\Modules\Translation\Application\MessageStore;
 use App\Modules\Translation\Domain\MessageDomain;
 use App\Shared\Domain\Locale\Locale;
+use App\Shared\Domain\Locale\LocaleProvider;
 
 /**
  * Vytváří překladač s explicitní vlastnickou doménou a locale.
