@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.49 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.50 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 155, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 392, zrušeno 5.
+Celkem **554 kroků**: hotovo 156, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 392, zrušeno 5.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 155, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 10 | 1 | 0 | 0 | 0 | 15 | 3 |
+| F4 | Překlady v databázi | 29 | 11 | 0 | 0 | 0 | 0 | 15 | 3 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -74,6 +74,12 @@ Celkem **554 kroků**: hotovo 155, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.50 (17. 11. 2026)
+- Dokončen F4-13: přidán skutečný Catalog systémový klíč `button.add_to_cart` v češtině a angličtině do idempotentního transakčního SQL seedu `2026-11-17-140000-seed-catalog-add-to-cart.sql`. Seed doplňuje pouze chybějící řádky a existující systémové ani vlastní překlady nepřepisuje.
+- Integrační test ověřuje skutečné seedované hodnoty i obecnou idempotenci a ochranu vlastních překladů ve všech třech vlastnických tabulkách. `TRANSLATIONS.md` aktualizováno na revizi 1.20.
+- GitHub Actions run #418 na commitu `b6765b8` prošel; uživatel provedl pull a potvrdil `All active checks passed.`
+- F4: **11 hotovo**, **0 rozděláno**, **15 plán**, **3 zrušeno**. Celkem: **156 hotovo**, **0 rozděláno**, **1 k úpravě**, **392 plán**, **5 zrušeno**.
 
 ### v3.49 (17. 11. 2026)
 - F4-13: dokončena specifikace bezpečného idempotentního SQL seedu v `TRANSLATIONS.md` revize 1.19 a přidán MySQL integrační test pro `catalog_message_translation`, `cart_message_translation` a `checkout_message_translation`. Test prokazuje, že opakované vložení nepřepíše původní systémový text ani existující vlastní překlad.
@@ -452,7 +458,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-10** Formátování peněz a čísel (`LocaleNumberFormatter`) podle jazyka. Veřejný kontrakt přijímá explicitní `Locale`; ICU implementace formátuje běžná čísla a `Money` zachovává přesnost minor units bez převodu částky na float. Testy pokrývají cs/en/de, měny s 0/2/4 desetinnými místy, záporné částky, `PHP_INT_MIN` a `PHP_INT_MAX`. GitHub Actions run #44071145527 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[HOTOVO]` **F4-11** `UnitFormatter`: symbol a název s množným číslem. Veřejný kontrakt, ICU implementace, DI registrace a testy pro cs/en, celočíselná i desetinná množství a bezpečnou hranici ICU (`|Quantity| < 2^41`); GitHub Actions run #44074597462 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[ZRUŠENO]` **F4-12** Struktura souborů s výchozími texty modulu (`Resources/translations`). Zrušeno kvůli závaznému DB-only pravidlu: runtime ani verzované souborové katalogy se nezavádějí; výchozí texty budou dodávány databázovými migracemi/seedy.
-- `[ROZDĚLÁNO]` **F4-13** Databázový importér výchozích systémových textů do tabulek vlastnických domén; žádná centrální tabulka `translation_message` neexistuje. Návrh musí být opakovatelný, transakční a nesmí přepsat vlastní překlady.
+- `[HOTOVO]` **F4-13** Databázový import výchozích systémových textů do tabulek vlastnických domén. První skutečný klíč Catalog `button.add_to_cart` je dodáván v češtině a angličtině transakčním idempotentním SQL seedem; existující záznamy se nepřepisují. MySQL integrační test ověřuje reálné hodnoty, opakované vložení a ochranu vlastních překladů ve všech třech doménových tabulkách. CI #418 i lokální `check.bat` prošly.
 - `[PLÁN]` **F4-14** Logika `is_customized`, `default_hash`, `is_outdated` a testy všech stavů
 - `[PLÁN]` **F4-15** Příkaz `translations:import`
 - `[PLÁN]` **F4-16** Příkaz `translations:check` (chybějící a nepoužité klíče)
