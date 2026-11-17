@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.16 · 17. 11. 2026
+**Revize:** 1.17 · 17. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -71,6 +71,8 @@ Role a oprávnění spravuje Identity. Modul Translation poskytuje kontrolní bo
 - Veřejné API `Api/LocaleNumberFormatter` poskytuje `formatNumber(int|float, Locale)` a `formatMoney(Money, Locale)`. Jazyk se neodvozuje z globálního kontextu a formátovač neprovádí měnové konverze.
 - Peněžní částky se nikdy nepředávají do `NumberFormatter::formatCurrency()`, protože jeho vstupem je `float`. Implementace formátuje celočíselnou hlavní část přes ICU a desetinnou část sestaví přesně z `Money::minorAmount` a `Currency::minorUnits`; používá měnové prefixy, suffixy a oddělovače ICU. Neprovádí zaokrouhlování ani nemění hodnotu částky.
 - Selhání ICU se propaguje jako veřejná výjimka `Api/NumberFormattingException`; nesmí se tiše vracet neformátovaná hodnota.
+- Veřejné API `Api/UnitFormatter` nabízí `formatSymbol(string)` a `formatName(string, Quantity, Locale)`. Symbol je již lokalizovaná hodnota z `unit_translation`; název používá ICU MessageFormat a vzor z databáze. `Quantity::toDecimalString()` se předá jako desetinný řetězec s odstraněnými nevýznamnými koncovými nulami, nikdy jako float; tím se zachová přesná hodnota a interní měřítko tisícin samo nemění pluralizační kategorii.
+- Chybný ICU vzor nebo chyba formátování názvu jednotky vyvolá veřejnou výjimku `Api/UnitFormattingException`.
 - Systémové texty jsou standardně prostý text; HTML se nepovoluje bez výslovně navrženého a sanitizovaného případu.
 
 ## 6. Databázové úložiště
@@ -133,7 +135,7 @@ Import znamená databázovou operaci, nikoliv načítání textových katalogů:
 
 Modul používá standardní členění projektu: `Api/Dto`, `Api/Event`, `Application/Dto`, `Domain`, `Infrastructure/DI` a `Infrastructure/Persistence`. DI extension je `App\Modules\Translation\Infrastructure\DI\TranslationExtension` a Bootstrap ji automaticky registruje podle `ModuleRegistry` a konvence názvů.
 
-Veřejné API modulu tvoří `Api/TranslationDomain`, `Api/TranslatorFactory`, `Api/LocaleNumberFormatter` a `Api/NumberFormattingException`. Prezentační vrstvy pro systémové texty používají pouze `TranslationDomain` a `TranslatorFactory`; ostatní moduly mohou formátovat čísla a peníze přes `LocaleNumberFormatter`. Interní `MessageDomain` ani `DatabaseTranslatorFactory` nejsou součástí veřejného kontraktu. Interní továrna mapuje veřejnou doménu na interní enum a vrací standardní `Nette\Localization\Translator`. Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. Aplikační kontrakt `MessageStore` načítá jednu vlastnickou doménu a locale do neměnného `MessageCatalog`; doménu reprezentuje `MessageDomain` a databázový adaptér `DatabaseMessageStore` vybírá tabulku pevným mapováním enumu. Každé volání provede jediný SELECT filtrovaný podle locale. Databázové `ActiveRow` se mapuje uvnitř persistence vrstvy a nikdy neopouští infrastrukturu. `DatabaseTranslator` implementuje `Nette\Localization\Translator` nad katalogem požadovaného locale a případným katalogem výchozího locale. `DatabaseTranslatorFactory` vytváří překladač pro explicitně předanou doménu a locale; výchozí locale získává z `LocaleProvider`. Překladač využívá cacheovaný `MessageStore`; chybějící klíč nejprve hledá ve výchozím katalogu stejné domény a až poté vrací stabilní klíč. ICU formátování používá locale katalogu, ze kterého byl text skutečně nalezen. Jazyk se neodvozuje ze skrytého globálního kontextu. Veškeré runtime překladové hodnoty se načítají výhradně z databáze.
+Veřejné API modulu tvoří `Api/TranslationDomain`, `Api/TranslatorFactory`, `Api/LocaleNumberFormatter`, `Api/NumberFormattingException`, `Api/UnitFormatter` a `Api/UnitFormattingException`. Prezentační vrstvy pro systémové texty používají pouze `TranslationDomain` a `TranslatorFactory`; ostatní moduly mohou formátovat čísla a peníze přes `LocaleNumberFormatter`. Interní `MessageDomain` ani `DatabaseTranslatorFactory` nejsou součástí veřejného kontraktu. Interní továrna mapuje veřejnou doménu na interní enum a vrací standardní `Nette\Localization\Translator`. Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. Aplikační kontrakt `MessageStore` načítá jednu vlastnickou doménu a locale do neměnného `MessageCatalog`; doménu reprezentuje `MessageDomain` a databázový adaptér `DatabaseMessageStore` vybírá tabulku pevným mapováním enumu. Každé volání provede jediný SELECT filtrovaný podle locale. Databázové `ActiveRow` se mapuje uvnitř persistence vrstvy a nikdy neopouští infrastrukturu. `DatabaseTranslator` implementuje `Nette\Localization\Translator` nad katalogem požadovaného locale a případným katalogem výchozího locale. `DatabaseTranslatorFactory` vytváří překladač pro explicitně předanou doménu a locale; výchozí locale získává z `LocaleProvider`. Překladač využívá cacheovaný `MessageStore`; chybějící klíč nejprve hledá ve výchozím katalogu stejné domény a až poté vrací stabilní klíč. ICU formátování používá locale katalogu, ze kterého byl text skutečně nalezen. Jazyk se neodvozuje ze skrytého globálního kontextu. Veškeré runtime překladové hodnoty se načítají výhradně z databáze.
 
 ## 12. Použití systémových překladů v Latte
 
