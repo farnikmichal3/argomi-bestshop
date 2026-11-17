@@ -15,5 +15,5 @@ use Nette\Localization\Translator;
  */
 interface TranslatorFactory
 {
-    public function create(TranslationDomain $domain, Locale $locale): Translator;
+    public function createTranslator(TranslationDomain $domain, Locale $locale): Translator;
 }
