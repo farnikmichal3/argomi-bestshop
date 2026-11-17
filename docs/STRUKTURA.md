@@ -294,7 +294,7 @@ assets/
 
 `front.js` a `admin.js` jsou samostatné vstupy; společná inicializace Bootstrapu, Naja a nette-forms je v `shared.js`. Sass vstupy `front.scss` a `admin.scss` používají společný základ `_shared.scss`. Specifické styly a skripty patří do odpovídající oblasti, průřezový kód pouze do sdílených souborů. Výstupní soubory `www/assets/front.css`, `admin.css`, `front.js` a `admin.js` a příkazy `build`/`watch` spravuje `package.json`.
 
-Modul Translation vystavuje `Api/TranslationDomain` a `Api/TranslatorFactory`. Prezentační vrstvy smějí používat pouze tyto veřejné kontrakty; `Domain/MessageDomain` a `Infrastructure/Translation/DatabaseTranslatorFactory` zůstávají interní. Interní továrna implementuje vlastní API a mapuje veřejnou doménu na interní model.\n\nModul Translation vystavuje `Api/TranslationDomain` a `Api/TranslatorFactory`. Prezentační vrstvy smějí používat pouze tyto veřejné kontrakty; `Domain/MessageDomain` a `Infrastructure/Translation/DatabaseTranslatorFactory` zůstávají interní. Interní továrna implementuje vlastní API a mapuje veřejnou doménu na interní model.
+Modul Translation vystavuje `Api/TranslationDomain` a `Api/TranslatorFactory`. Prezentační vrstvy smějí používat pouze tyto veřejné kontrakty; `Domain/MessageDomain` a `Infrastructure/Translation/DatabaseTranslatorFactory` zůstávají interní. Interní továrna implementuje vlastní API a mapuje veřejnou doménu na interní model.
 
 ## 6. Pravidla závislostí
 
