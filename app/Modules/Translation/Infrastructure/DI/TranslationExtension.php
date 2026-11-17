@@ -22,7 +22,7 @@ final class TranslationExtension extends CompilerExtension
     {
         $builder = $this->getContainerBuilder();
 
-        $builder->addDefinition($this->prefix('cache'))
+        $builder->addDefinition($this->prefix('entityTranslationResolver'))\n            ->setType(EntityTranslationResolver::class);\n\n        $builder->addDefinition($this->prefix('cache'))
             ->setFactory(Cache::class, ['@cache.storage', 'translation']);
 
         $builder->addDefinition($this->prefix('databaseMessageStore'))

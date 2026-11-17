@@ -22,7 +22,7 @@ Assert::false((new ReflectionClass(TranslationExtension::class))->isAbstract());
 
 // Kompilace skutečného kontejneru ověří, že Bootstrap extension objeví podle konvence.
 $context = IntegrationTestBootstrap::boot($rootDir);
-Assert::true($context->container instanceof Container);
+Assert::true($context->container instanceof Container);\nAssert::type(EntityTranslationResolver::class, $context->container->getByType(EntityTranslationResolver::class));
 
 echo "OK\n";
 ?>
