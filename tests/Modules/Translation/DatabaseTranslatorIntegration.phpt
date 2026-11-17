@@ -27,7 +27,10 @@ Assert::type(DatabaseTranslatorFactory::class, $diFactory);
 
 // Přímé DB úložiště drží test nezávislý na sdílené persistentní cache
 // a na pořadí paralelně spouštěných integračních testů.
-$factory = new DatabaseTranslatorFactory(new DatabaseMessageStore($integration->database));
+$factory = new DatabaseTranslatorFactory(
+    new DatabaseMessageStore($integration->database),
+    new DatabaseLocaleProvider($integration->database),
+);
 
 $token = bin2hex(random_bytes(8));
 $messageKey = 'f4_05.shared_key.' . $token;
@@ -37,6 +40,9 @@ $positionalKey = 'f4_05.positional.' . $token;
 $pluralCsKey = 'f4_05.plural_cs.' . $token;
 $pluralEnKey = 'f4_05.plural_en.' . $token;
 $malformedKey = 'f4_05.malformed.' . $token;
+$fallbackOnlyKey = 'f4_06.fallback_only.' . $token;
+$fallbackPluralKey = 'f4_06.fallback_plural.' . $token;
+$domainIsolationKey = 'f4_06.domain_isolation.' . $token;
 
 $pdo->beginTransaction();
 
@@ -50,6 +56,9 @@ try {
         ['catalog_message_translation', $pluralCsKey, 'cs', '{count, plural, one{# položka} few{# položky} other{# položek}}'],
         ['catalog_message_translation', $pluralEnKey, 'en', '{count, plural, one{# item} other{# items}}'],
         ['catalog_message_translation', $malformedKey, 'cs', '{count, plural, one{jedna}'],
+        ['catalog_message_translation', $fallbackOnlyKey, 'cs', 'Text pouze ve výchozím jazyce'],
+        ['catalog_message_translation', $fallbackPluralKey, 'cs', '{count, plural, one{# položka} few{# položky} other{# položek}}'],
+        ['cart_message_translation', $domainIsolationKey, 'cs', 'Jiná doména'],
     ];
 
     foreach ($rows as [$table, $key, $locale, $message]) {
@@ -63,14 +72,21 @@ try {
     $catalogCs = $factory->create(MessageDomain::Catalog, Locale::fromString('cs'));
     $catalogEn = $factory->create(MessageDomain::Catalog, Locale::fromString('en'));
     $cartCs = $factory->create(MessageDomain::Cart, Locale::fromString('cs'));
+    $catalogEnWithFallback = $factory->create(MessageDomain::Catalog, Locale::fromString('en'));
+    $cartEnWithFallback = $factory->create(MessageDomain::Cart, Locale::fromString('en'));
 
     Assert::type(Translator::class, $catalogCs);
     Assert::same('Katalog česky', $catalogCs->translate($messageKey));
     Assert::same('Catalog in English', $catalogEn->translate($messageKey));
     Assert::same('Košík česky', $cartCs->translate($messageKey));
 
-    // Neznámý klíč se do zavedení fallbacku vrací beze změny.
+    // Požadovaný jazyk má přednost; chybějící klíč použije výchozí jazyk.
     Assert::same($missingKey, $catalogCs->translate($missingKey));
+    Assert::same('Text pouze ve výchozím jazyce', $catalogEnWithFallback->translate($fallbackOnlyKey));
+    Assert::same('1 položka', $catalogEnWithFallback->translate($fallbackPluralKey, ['count' => 1]));
+    Assert::same('2 položky', $catalogEnWithFallback->translate($fallbackPluralKey, ['count' => 2]));
+    Assert::same($domainIsolationKey, $catalogEnWithFallback->translate($domainIsolationKey));
+    Assert::same('Jiná doména', $cartEnWithFallback->translate($domainIsolationKey));
 
     // Bez parametrů zůstává i ICU vzor beze změny.
     Assert::same('Ahoj, {name}!', $catalogCs->translate($namedKey));
