@@ -26,7 +26,7 @@ try {
     $domains = [
         'catalog_message_translation',
         'cart_message_translation',
-        'checkout_message_translation,
+        'checkout_message_translation',
     ];
 
     foreach ($domains as $index => $table) {
