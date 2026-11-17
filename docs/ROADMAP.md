@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.38 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.39 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 151, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 397, zrušeno 5.
+Celkem **554 kroků**: hotovo 151, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 396, zrušeno 5.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 151, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 6 | 0 | 0 | 0 | 0 | 20 | 3 |
+| F4 | Překlady v databázi | 29 | 6 | 1 | 0 | 0 | 0 | 19 | 3 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -74,6 +74,11 @@ Celkem **554 kroků**: hotovo 151, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.39 (17. 11. 2026)
+- Zahájen F4-08: nativní překladová podpora Latte přes `Template::setTranslator()`, společný `TranslatedPresenter`, explicitní vlastnická doména a ověření aktivního locale z routy. Runtime překlady zůstávají v databázi; compile-time locale se nepoužívá.
+- F4-08 čeká na úspěšné GitHub Actions a potvrzení lokálního `check.bat`.
+- F4: **6 hotovo**, **1 rozděláno**, **19 plán**, **3 zrušeno**. Celkem: **151 hotovo**, **1 rozděláno**, **1 k úpravě**, **396 plán**, **5 zrušeno**.
 
 ### v3.38 (17. 11. 2026)
 - Dokončen F4-06: `DatabaseTranslatorFactory` získává výchozí aktivní locale z `LocaleProvider` a předává překladači katalog stejné domény jako fallback. Překladač hledá v požadovaném locale, poté ve výchozím locale a nakonec vrací stabilní klíč; ICU formátování používá locale katalogu, ze kterého byl text nalezen. Integrační testy ověřují fallback, doménovou izolaci a české plurály při požadovaném anglickém locale.
@@ -383,7 +388,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 
 ### F4: Překlady v databázi
 
-_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 6 z 29 kroků; 0 rozpracováno; 3 zrušeno.
+_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 6 z 29 kroků; 1 rozpracováno; 3 zrušeno.
 
 - `[HOTOVO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap. Lokální `check.bat` i GitHub Actions (MySQL 8.4, migrace, integrační testy, PHPStan, coding standard a Deptrac) úspěšně prošly.
 - `[HOTOVO]` **F4-02** `MessageStore`: typovaný čtecí kontrakt, neměnný katalog zpráv a databázový adaptér pro tři vlastnické domény. Jeden parametrizovaný dotaz načítá zvolenou doménu a jazyk; `ActiveRow` zůstává uvnitř persistence vrstvy. Integrační test ověřuje DI, všechny tabulky, jazyky, chybějící klíče, neměnnost katalogu a počet dotazů. GitHub Actions i lokální `check.bat` úspěšně prošly.
@@ -392,7 +397,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-05** Formátování ICU MessageFormat přes `intl`: `DatabaseTranslator` používá locale konkrétního katalogu, podporuje pojmenované i poziční parametry, pluralizaci cs/en a typované hodnoty včetně `Stringable`. Neplatný ICU vzor vyvolá `MessageFormattingException`; `ext-intl` je povinná Composer závislost. Ověřeno integračními testy, GitHub Actions i lokálním `check.bat`.
 - `[HOTOVO]` **F4-06** Řetězec záloh: požadovaný jazyk, výchozí jazyk, klíč. Ověřen fallback v rámci stejné domény, stabilní klíč při chybějícím překladu a ICU formátování podle skutečného locale nalezeného katalogu; lokální `check.bat` i GitHub Actions run #354 prošly.
 - `[PLÁN]` **F4-07** Logování chybějících překladů a Tracy panel
-- `[PLÁN]` **F4-08** Latte rozšíření: překlad klíče v šabloně
+- `[ROZDĚLÁNO]` **F4-08** Latte rozšíření: překlad klíče v šabloně. Nativní Latte překladová syntaxe je napojena přes `Template::setTranslator()`; společný `TranslatedPresenter` vyžaduje explicitní doménu a ověřuje aktivní locale. Čeká na CI a lokální `check.bat`.
 - `[PLÁN]` **F4-09** Pomocník pro překlad entit (překladová řádka se zálohou na výchozí jazyk)
 - `[PLÁN]` **F4-10** Formátování peněz a čísel (`NumberFormatter`) podle jazyka
 - `[PLÁN]` **F4-11** `UnitFormatter`: symbol a název s množným číslem
