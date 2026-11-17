@@ -23,7 +23,7 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
     public function formatNumber(int|float $number, Locale $locale): string
     {
         $formatter = $this->createFormatter($locale, NumberFormatter::DECIMAL);
-        $formatted = $formatter->format($number);
+        $formatted = $this->formatValue($formatter, $number);
 
         if ($formatted === false || $formatter->getErrorCode() > U_ZERO_ERROR) {
             throw new NumberFormattingException($locale->getCode(), $formatter->getErrorMessage());
@@ -104,7 +104,7 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
         $this->setAttribute($fractionFormatter, NumberFormatter::MAX_INTEGER_DIGITS, $minorUnits, $locale);
 
         $formattedFraction = $this->formatInteger($fractionFormatter, $fractionAmount, $locale);
-        $decimalSeparator = $formatter->getSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
+        $decimalSeparator = $this->getSymbolValue($formatter, NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
 
         if ($decimalSeparator === false) {
             throw new NumberFormattingException(
@@ -144,7 +144,7 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
         int $number,
         Locale $locale,
     ): string {
-        $formatted = $formatter->format($number, NumberFormatter::TYPE_INT64);
+        $formatted = $this->formatValue($formatter, $number, NumberFormatter::TYPE_INT64);
 
         if ($formatted === false || $formatter->getErrorCode() > U_ZERO_ERROR) {
             throw new NumberFormattingException($locale->getCode(), $formatter->getErrorMessage());
@@ -180,13 +180,48 @@ final class IcuLocaleNumberFormatter implements LocaleNumberFormatter
         int $attribute,
         Locale $locale,
     ): string {
-        $value = $formatter->getTextAttribute($attribute);
+        $value = $this->getTextAttributeValue($formatter, $attribute);
 
         if ($value === false) {
             throw new NumberFormattingException($locale->getCode(), $formatter->getErrorMessage());
         }
 
         return $value;
+    }
+
+    /**
+     * Zachová runtime možnost selhání ICU, kterou PHPStan stub nevyjadřuje.
+     *
+     * @return mixed Výsledek ICU včetně případného false při chybě.
+     */
+    private function formatValue(
+        NumberFormatter $formatter,
+        int|float $number,
+        ?int $type = null,
+    ): mixed {
+        return $type === null
+            ? $formatter->format($number)
+            : $formatter->format($number, $type);
+    }
+
+    /**
+     * Zachová runtime možnost false, kterou PHPStan stub nevyjadřuje.
+     *
+     * @return mixed Textový atribut ICU nebo false při chybě.
+     */
+    private function getTextAttributeValue(NumberFormatter $formatter, int $attribute): mixed
+    {
+        return $formatter->getTextAttribute($attribute);
+    }
+
+    /**
+     * Zachová runtime možnost false, kterou PHPStan stub nevyjadřuje.
+     *
+     * @return mixed Symbol ICU nebo false při chybě.
+     */
+    private function getSymbolValue(NumberFormatter $formatter, int $symbol): mixed
+    {
+        return $formatter->getSymbol($symbol);
     }
 
     private static function minorUnitFactor(int $minorUnits, Locale $locale): int
