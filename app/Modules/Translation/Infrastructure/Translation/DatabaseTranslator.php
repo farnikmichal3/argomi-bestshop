@@ -48,13 +48,23 @@ final readonly class DatabaseTranslator implements Translator
         }
 
         $locale = $this->catalog->locale->getCode();
-        $formatted = \MessageFormatter::formatMessage($locale, $pattern, $arguments);
+        $formatter = \MessageFormatter::create($locale, $pattern);
+
+        if ($formatter === false) {
+            throw new MessageFormattingException(
+                $messageKey,
+                $locale,
+                intl_get_error_message(),
+            );
+        }
+
+        $formatted = $formatter->format($arguments);
 
         if ($formatted === false) {
             throw new MessageFormattingException(
                 $messageKey,
                 $locale,
-                intl_get_error_message(),
+                $formatter->getErrorMessage(),
             );
         }
 
