@@ -9,6 +9,7 @@
 	"require": {
 		"php": ">=8.3",
 		"contributte/console": "^0.11.0",
+		"ext-intl": "*",
 		"ezyang/htmlpurifier": "^4.19",
 		"latte/latte": "^3.1",
 		"monolog/monolog": "^3.12",
