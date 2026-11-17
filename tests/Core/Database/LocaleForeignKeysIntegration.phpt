@@ -48,6 +48,7 @@ foreach ($rows as $row) {
 $expected = [
     'attribute_translation' => ['language', 'code', 'RESTRICT'],
     'attribute_value_translation' => ['language', 'code', 'RESTRICT'],
+    'admin_message_translation' => ['language', 'code', 'RESTRICT'],
     'cart' => ['language', 'code', 'RESTRICT'],
     'cart_message_translation' => ['language', 'code', 'RESTRICT'],
     'catalog_message_translation' => ['language', 'code', 'RESTRICT'],
@@ -89,6 +90,12 @@ try {
     );
     $insertMessage->execute([$token, $languageCode, 'Test']);
 
+    $insertAdminMessage = $pdo->prepare(
+        'INSERT INTO admin_message_translation (message_key, locale, message_text)
+         VALUES (?, ?, ?)',
+    );
+    $insertAdminMessage->execute([$token, $languageCode, 'Admin test']);
+
     $deleteLanguageError = null;
 
     try {
@@ -108,6 +115,11 @@ try {
         'DELETE FROM catalog_message_translation WHERE message_key = ? AND locale = ?',
     );
     $deleteMessage->execute([$token, $languageCode]);
+
+    $deleteAdminMessage = $pdo->prepare(
+        'DELETE FROM admin_message_translation WHERE message_key = ? AND locale = ?',
+    );
+    $deleteAdminMessage->execute([$token, $languageCode]);
 
     $deleteLanguage = $pdo->prepare('DELETE FROM language WHERE code = ?');
     $deleteLanguage->execute([$languageCode]);
