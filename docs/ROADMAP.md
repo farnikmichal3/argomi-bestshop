@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.53 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.54 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 157, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 389, zrušeno 6.
+Celkem **554 kroků**: hotovo 158, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 389, zrušeno 6.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 157, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 12 | 1 | 0 | 0 | 0 | 12 | 4 |
+| F4 | Překlady v databázi | 29 | 13 | 0 | 0 | 0 | 0 | 11 | 4 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -74,6 +74,11 @@ Celkem **554 kroků**: hotovo 157, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.54 (17. 11. 2026)
+- Dokončen F4-16: read-only CLI `translations:check` porovnává statické klíče z Latte/PHP v `app/UI` s překlady ve všech aktivních jazycích a hlásí chybějící hodnoty i nepoužívané databázové klíče. Doménu určuje z nejbližšího `TranslatedPresenter`; dynamické reference zůstávají mimo statickou kontrolu.
+- Ověřeno GitHub Actions run #433 a lokální `check.bat` (`All active checks passed.`). Příkaz byl spuštěn přes testovací konzoli nad `argomi_bestshop_test`: nalezeno 0 chybějících jazykových hodnot a 9 nepoužívaných klíčů. Jde o očekávaný diagnostický nález, nikoli chybu překladu; databáze nebyla změněna. Testovací konzole nově povoluje tento read-only příkaz.
+- F4: **13 hotovo**, **0 rozděláno**, **11 plán**, **4 zrušeno**. Celkem: **158 hotovo**, **0 rozděláno**, **1 k úpravě**, **389 plán**, **6 zrušeno**.
 
 ### v3.53 (17. 11. 2026)
 - Zahájena implementace F4-16: read-only CLI `translations:check` porovnává statické klíče z Latte/PHP v `app/UI` s překlady ve všech aktivních jazycích a hlásí chybějící hodnoty i nepoužívané databázové klíče. Doménu určuje z nejbližšího `TranslatedPresenter`; dynamické reference zůstávají mimo statickou kontrolu.
@@ -475,7 +480,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-13** Databázový import výchozích systémových textů do tabulek vlastnických domén. První skutečný klíč Catalog `button.add_to_cart` je dodáván v češtině a angličtině transakčním idempotentním SQL seedem; existující záznamy se nepřepisují. MySQL integrační test ověřuje reálné hodnoty, opakované vložení a ochranu vlastních překladů ve všech třech doménových tabulkách. CI #418 i lokální `check.bat` prošly.
 - `[HOTOVO]` **F4-14** Logika `is_customized`, `default_hash`, `is_outdated` a testy všech stavů. `SystemMessageStateResolver` bezpečně aktualizuje systémové texty, chrání vlastní texty, vyhodnocuje zastaralost podle SHA-1 hashe a ponechává legacy řádky s `default_hash=NULL` beze změny. CI i lokální `check.bat` prošly.
 - `[ZRUŠENO]` **F4-15** Příkaz `translations:import`. Výchozí systémové překlady se dodávají verzovanými SQL seedy a jejich aplikace je výhradně odpovědností Nextras Migrations. Samostatný příkaz by vytvářel duplicitní mechanismus pro spouštění migrací a obcházel jednotné řízení databázových změn.
-- `[ROZDĚLÁNO]` **F4-16** Příkaz `translations:check` (chybějící a nepoužité klíče). Read-only CLI skenuje statické reference v Latte a PHP pod `app/UI`, doménu určuje podle nejbližšího `TranslatedPresenter` a porovnává klíče s DB ve všech aktivních jazycích. Dynamicky sestavené klíče nejsou staticky detekovatelné; CI a lokální kontrola čekají na dokončení.
+- `[HOTOVO]` **F4-16** Příkaz `translations:check` (chybějící a nepoužité klíče). Read-only CLI skenuje statické reference v Latte a PHP pod `app/UI`, doménu určuje podle nejbližšího `TranslatedPresenter` a porovnává klíče s DB ve všech aktivních jazycích. Dynamicky sestavené klíče nejsou staticky detekovatelné; CI a lokální kontrola čekají na dokončení.
 - `[PLÁN]` **F4-17** Admin: seznam textů s filtrem domény, jazyka a stavu
 - `[PLÁN]` **F4-18** Admin: správa vlastních překladů a zneplatnění cache; systémové zdroje zůstávají chráněné
 - `[PLÁN]` **F4-19** Admin: přehled změněných systémových zdrojů a vlastních překladů; bez přímé editace systémového zdroje
