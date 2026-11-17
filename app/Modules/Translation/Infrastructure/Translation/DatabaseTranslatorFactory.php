@@ -24,7 +24,7 @@ final readonly class DatabaseTranslatorFactory implements TranslatorFactory
         private LocaleProvider $localeProvider,
     ) {}
 
-    public function create(TranslationDomain $domain, Locale $locale): DatabaseTranslator
+    public function createTranslator(TranslationDomain $domain, Locale $locale): DatabaseTranslator
     {
         $messageDomain = match ($domain) {
             TranslationDomain::Catalog => MessageDomain::Catalog,
