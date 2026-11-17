@@ -9,8 +9,8 @@ use App\Presentation\TranslatedPresenter;
 
 final class HomePresenter extends TranslatedPresenter
 {
-    protected function getTranslationDomain(): MessageDomain
+    protected function getTranslationDomain(): TranslationDomain
     {
-        return MessageDomain::Catalog;
+        return TranslationDomain::Catalog;
     }
 }
