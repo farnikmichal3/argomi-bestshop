@@ -48,11 +48,9 @@ final readonly class DatabaseTranslator implements Translator
         }
 
         $locale = $this->catalog->locale->getCode();
-
-        /** @var mixed $formatter */
         $formatter = \MessageFormatter::create($locale, $pattern);
 
-        if (!$formatter instanceof \MessageFormatter) {
+        if ($formatter === null) {
             throw new MessageFormattingException(
                 $messageKey,
                 $locale,
@@ -62,7 +60,7 @@ final readonly class DatabaseTranslator implements Translator
 
         $formatted = $formatter->format($arguments);
 
-        if ($formatted === false) {
+        if ($formatter->getErrorCode() !== U_ZERO_ERROR) {
             throw new MessageFormattingException(
                 $messageKey,
                 $locale,
