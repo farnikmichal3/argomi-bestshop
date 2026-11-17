@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.34 · 16. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.35 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -75,10 +75,9 @@ Celkem **554 kroků**: hotovo 149, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.34 (16. 11. 2026)
-- Dokončen F4-04: `DatabaseTranslator` implementující `Nette\Localization\Translator` a `DatabaseTranslatorFactory` s explicitní doménou a locale. Chybějící klíč se vrací beze změny; parametry se přijímají, jejich ICU formátování je součástí F4-05. Ověřeno 32 integračními testy, GitHub Actions run #336 (testy, PHPStan, PHP-CS-Fixer, Deptrac) a uživatelovým `check.bat` (`All active checks passed.`).
-- Zahájen F4-05: formátování ICU MessageFormat přes rozšíření PHP `intl`; návrh a implementace budou řešit také typované parametry a locale specifické plurály.
-- F4: **4 hotovo**, **1 rozděláno**, **21 plán**, **3 zrušeno**. Celkem: **149 hotovo**, **1 rozděláno**, **1 k úpravě**, **398 plán**, **5 zrušeno**.
+### v3.35 (17. 11. 2026)
+- Dokončen F4-05: `DatabaseTranslator` formátuje parametrizované zprávy přes ICU `MessageFormatter` z PHP `intl`. Podporuje pojmenované argumenty předané v jednom poli i poziční argumenty předané samostatně, včetně hodnot `string`, `int`, `float`, `null` a `Stringable`. Locale se bere z konkrétního `MessageCatalog`; chybějící klíč a zpráva bez parametrů zůstávají beze změny. Chybný ICU vzor vyvolá `MessageFormattingException`. Ověření čeká na CI a lokální `check.bat`.
+- F4: **5 hotovo**, **0 rozděláno**, **20 plán**, **3 zrušeno**. Celkem: **150 hotovo**, **0 rozděláno**, **1 k úpravě**, **398 plán**, **5 zrušeno**.
 
 ## 3. Nejbližší kroky
 
@@ -389,7 +388,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-02** `MessageStore`: typovaný čtecí kontrakt, neměnný katalog zpráv a databázový adaptér pro tři vlastnické domény. Jeden parametrizovaný dotaz načítá zvolenou doménu a jazyk; `ActiveRow` zůstává uvnitř persistence vrstvy. Integrační test ověřuje DI, všechny tabulky, jazyky, chybějící klíče, neměnnost katalogu a počet dotazů. GitHub Actions i lokální `check.bat` úspěšně prošly.
 - `[HOTOVO]` **F4-03** Cache katalogů (Nette Cache): trvalé úložiště sdílené mezi requesty, dekorátor `CachedMessageStore`, oddělení podle domény a locale a aplikační kontrakt invalidace. Tagy pokrývají invalidaci všech katalogů, jedné domény, jednoho locale i přesného průniku domény a locale. Integrační test ověřuje cache hit/miss a všechny varianty invalidace. Lokální `check.bat` i GitHub Actions úspěšně prošly.
 - `[HOTOVO]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm: překladač a továrna s explicitní doménou a locale, DI registrace a integrační testy.
-- `[ROZDĚLÁNO]` **F4-05** Formátování ICU MessageFormat přes `intl`
+- `[HOTOVO]` **F4-05** Formátování ICU MessageFormat přes `intl`
 - `[PLÁN]` **F4-06** Řetězec záloh: požadovaný jazyk, výchozí jazyk, klíč
 - `[PLÁN]` **F4-07** Logování chybějících překladů a Tracy panel
 - `[PLÁN]` **F4-08** Latte rozšíření: překlad klíče v šabloně
