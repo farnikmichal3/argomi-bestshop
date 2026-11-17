@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73ce1abe34a8c5c6a3e289679c37c5f0",
+    "content-hash": "6540b1bb5cf9257529452a288f37e8db",
     "packages": [
         {
             "name": "contributte/console",
@@ -6043,6 +6043,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
+        "ext-intl": "*",
         "php": ">=8.3"
     },
     "platform-dev": {},
