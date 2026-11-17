@@ -46,10 +46,10 @@ try {
         );
     }
 
-    // Testovací konzole povoluje pouze migrace vpřed a pomocné příkazy.
+    // Testovací konzole povoluje pouze migrace vpřed, read-only diagnostiku a pomocné příkazy.
     // Zejména migrations:reset nesmí být dostupné, protože databázi maže.
     $command = $argv[1] ?? 'list';
-    if (!in_array($command, ['migrations:continue', 'list', 'help', '--help', '--version'], true)) {
+    if (!in_array($command, ['migrations:continue', 'translations:check', 'list', 'help', '--help', '--version'], true)) {
         throw new LogicException(sprintf('Příkaz "%s" není v testovací konzoli povolen.', $command));
     }
 
