@@ -68,6 +68,8 @@ try {
         __DIR__ . '/fixtures/latte-translation.latte',
         [
             'name' => 'Alice',
+            'titleKey' => $titleKey,
+            'greetingKey' => $greetingKey,
             'dynamicKey' => $titleKey,
             'fallbackKey' => $fallbackKey,
             'unsafeKey' => $unsafeKey,
