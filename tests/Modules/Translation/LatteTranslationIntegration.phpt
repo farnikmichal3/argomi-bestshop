@@ -22,7 +22,7 @@ $integration = IntegrationTestBootstrap::boot($rootDir);
 $pdo = $integration->database->getConnection()->getPdo();
 $templateFactory = $integration->container->getByType(TemplateFactory::class);
 
-// Přímé úložiště brání závislosti testu na sdílené persistentní cache.
+// Přímé DB úložiště brání závislosti testu na sdílené persistentní cache.
 $factory = new DatabaseTranslatorFactory(
     new DatabaseMessageStore($integration->database),
     new DatabaseLocaleProvider($integration->database),
@@ -53,8 +53,8 @@ try {
         $statement->execute([$key, $locale, $message]);
     }
 
-    $englishTranslator = $factory->create(TranslationDomain::Catalog, Locale::fromString('en'));
-    $czechTranslator = $factory->create(TranslationDomain::Catalog, Locale::fromString('cs'));
+    $englishTranslator = $factory->createTranslator(TranslationDomain::Catalog, Locale::fromString('en'));
+    $czechTranslator = $factory->createTranslator(TranslationDomain::Catalog, Locale::fromString('cs'));
 
     $englishTemplate = $templateFactory->createTemplate();
 
