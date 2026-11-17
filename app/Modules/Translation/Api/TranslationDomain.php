@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Translation\\Api;
+namespace App\Modules\Translation\Api;
 
 /**
  * Veřejné označení vlastníka systémových překladů.
