@@ -32,21 +32,36 @@ Assert::same('kus', $formatter->formatName($csPattern, Quantity::fromDecimal('1.
 Assert::same('ks', $formatter->formatSymbol('ks'));
 Assert::same('m²', $formatter->formatSymbol('m²'));
 
+// Nejvyšší podporované celé číslo i desetinné množství těsně pod 2^41.
 Assert::same(
-    'kusu',
-    $formatter->formatName(
-        $csPattern,
-        new Quantity(PHP_INT_MIN),
-        $cs,
-    ),
+    'kusů',
+    $formatter->formatName($csPattern, new Quantity(2199023255551000), $cs),
 );
 Assert::same(
     'kusu',
-    $formatter->formatName(
-        $csPattern,
-        new Quantity(PHP_INT_MAX),
-        $cs,
-    ),
+    $formatter->formatName($csPattern, new Quantity(2199023255551999), $cs),
+);
+Assert::same(
+    'kusu',
+    $formatter->formatName($csPattern, new Quantity(-2199023255551999), $cs),
+);
+
+// Za hranicí bezpečné přesnosti ICU se chyba propaguje místo chybného plurálu.
+Assert::exception(
+    static fn () => $formatter->formatName($csPattern, new Quantity(2199023255552000), $cs),
+    UnitFormattingException::class,
+);
+Assert::exception(
+    static fn () => $formatter->formatName($csPattern, new Quantity(-2199023255552000), $cs),
+    UnitFormattingException::class,
+);
+Assert::exception(
+    static fn () => $formatter->formatName($csPattern, new Quantity(PHP_INT_MIN), $cs),
+    UnitFormattingException::class,
+);
+Assert::exception(
+    static fn () => $formatter->formatName($csPattern, new Quantity(PHP_INT_MAX), $cs),
+    UnitFormattingException::class,
 );
 
 Assert::exception(
