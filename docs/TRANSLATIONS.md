@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.13 · 17. 11. 2026
+**Revize:** 1.14 · 17. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -133,8 +133,23 @@ Modul používá standardní členění projektu: `Api/Dto`, `Api/Event`, `Appli
 Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. Aplikační kontrakt `MessageStore` načítá jednu vlastnickou doménu a locale do neměnného `MessageCatalog`; doménu reprezentuje `MessageDomain` a databázový adaptér `DatabaseMessageStore` vybírá tabulku pevným mapováním enumu. Každé volání provede jediný SELECT filtrovaný podle locale. Databázové `ActiveRow` se mapuje uvnitř persistence vrstvy a nikdy neopouští infrastrukturu. `DatabaseTranslator` implementuje `Nette\Localization\Translator` nad katalogem požadovaného locale a případným katalogem výchozího locale. `DatabaseTranslatorFactory` vytváří překladač pro explicitně předanou doménu a locale; výchozí locale získává z `LocaleProvider`. Překladač využívá cacheovaný `MessageStore`; chybějící klíč nejprve hledá ve výchozím katalogu stejné domény a až poté vrací stabilní klíč. ICU formátování používá locale katalogu, ze kterého byl text skutečně nalezen. Jazyk se neodvozuje ze skrytého globálního kontextu. Veškeré runtime překladové hodnoty se načítají výhradně z databáze.
 
 
+## 12. Použití systémových překladů v Latte
+
+Presenter, jehož šablony používají systémové texty, dědí z `App\Presentation\TranslatedPresenter`. Potomek výslovně vrací vlastní `MessageDomain`; doména se nikdy neodvozuje z názvu presenteru ani z klíče. Společný presenter před vykreslením vytvoří překladač přes `DatabaseTranslatorFactory` a předá jej šabloně přes `setTranslator()`.
+
+Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří přes `LocaleProvider::isActive()`; presenter bez parametru `lang` použije výchozí aktivní jazyk z databáze. Latte používá nativní překladové značky a filtr, například:
+
+```latte
+<h1>{_'catalog.title'}</h1>
+<p>{_'catalog.products_count', count: $count}</p>
+<span>{$messageKey|translate}</span>
+```
+
+`setTranslator()` se volá bez druhého parametru jazyka. Překlad statických klíčů proto zůstává runtime operací a respektuje databázovou cache i její invalidaci; Latte nevkládá přeložený text do jazykově specifické kompilace šablony. Výstup zůstává pod standardním escapováním Latte. Presenter, který dosud nemá schválenou vlastnickou doménu, překladač nepřebírá.
+
 ### Historie revizí
 
+- **1.14 · 17. 11. 2026:** F4-08 zavádí `TranslatedPresenter`, explicitní doménu a ověření aktivního locale z routy; Latte používá nativní `setTranslator()` bez compile-time locale.
 - **1.13 · 17. 11. 2026:** F4-06 implementuje databázový fallback požadované locale → výchozí aktivní locale z `LocaleProvider` → stabilní klíč. Fallback zůstává izolovaný podle vlastnické domény a ICU formátování používá locale skutečně použitého katalogu.
 
 - **1.11 · 16. 11. 2026:** F4-04 dokončen a ověřen lokálně (`All active checks passed.`) i v GitHub Actions run #336. `DatabaseTranslator` a `DatabaseTranslatorFactory` pracují s explicitní doménou a locale. Zahájena navazující etapa F4-05 pro ICU MessageFormat přes PHP `intl`.
