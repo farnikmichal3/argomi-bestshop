@@ -10,7 +10,6 @@ use App\Shared\Domain\Locale\Locale;
 use App\Shared\Infrastructure\Persistence\Locale\DatabaseLocaleProvider;
 use Nette\Application\UI\TemplateFactory;
 use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
-use RuntimeException;
 use Tests\Support\IntegrationTestBootstrap;
 use Tester\Assert;
 
