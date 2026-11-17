@@ -244,9 +244,8 @@
     TaxApi: [TaxInternal, Shared, External]
     TranslationApi: [Shared, External]
 
-    # Interní implementace mají přístup pouze ke Shared
-    # a externím knihovnám. Ostatní moduly musí používat
-    # výslovně povolené veřejné API.
+    # Interní implementace mohou implementovat vlastní veřejné API;
+    # jinak smějí používat pouze Shared a externí knihovny.
     CartInternal: [Shared, External]
     CatalogInternal: [Shared, External]
     CheckoutInternal: [Shared, External]
