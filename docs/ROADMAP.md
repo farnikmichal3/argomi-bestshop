@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.47 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.48 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 154, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 393, zrušeno 5.
+Celkem **554 kroků**: hotovo 155, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 392, zrušeno 5.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 154, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 9 | 1 | 0 | 0 | 0 | 16 | 3 |
+| F4 | Překlady v databázi | 29 | 10 | 1 | 0 | 0 | 0 | 15 | 3 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -74,6 +74,12 @@ Celkem **554 kroků**: hotovo 154, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.48 (17. 11. 2026)
+- Dokončen F4-11: `UnitFormatter` poskytuje lokalizovaný symbol a ICU pluralizaci názvu jednotky podle explicitního `Locale` a přesného `Quantity`. Hodnoty mimo bezpečný rozsah ICU (`|Quantity| < 2^41`) jsou odmítnuty typovanou výjimkou; doménové množství zůstává beze změny a bez float.
+- GitHub Actions run #44074597462 prošel včetně MySQL migrací/integrace, 36 testů, PHPStan, coding standard a Deptrac. Uživatel potvrdil `All active checks passed.` po lokálním `check.bat`.
+- Zahájen F4-13: databázový import výchozích systémových textů do tabulek vlastnických domén; F4-12 zůstává zrušen kvůli DB-only pravidlu. Před implementací se ověřuje migrační/seed model a ochrana existujících vlastních překladů.
+- F4: **10 hotovo**, **1 rozděláno**, **15 plán**, **3 zrušeno**. Celkem: **155 hotovo**, **1 rozděláno**, **1 k úpravě**, **392 plán**, **5 zrušeno**.
 
 ### v3.47 (17. 11. 2026)
 - Po prvním CI běhu F4-11 odhalila zkouška `PHP_INT_MIN`/`PHP_INT_MAX`, že ICU neumí spolehlivě vybírat pluralizační kategorii pro celý rozsah PHP integeru.
@@ -439,9 +445,9 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-08** Latte rozšíření: překlad klíče v šabloně. Nativní Latte překladová syntaxe je napojena přes `Template::setTranslator()`; společný `TranslatedPresenter` vyžaduje explicitní doménu a ověřuje aktivní locale. GitHub Actions run #44065470430 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[HOTOVO]` **F4-09** Pomocník pro překlad entit (překladová řádka se zálohou na výchozí jazyk). Aplikační `EntityTranslationResolver` je typově obecný, upřednostňuje požadované locale, při jeho absenci použije výchozí locale a při shodě jazyků pracuje s jediným výsledkem. Testy pokrývají prioritu, fallback, chybějící překlady i shodné locale. GitHub Actions run #44066963629 i lokální `check.bat` uživatelem potvrzeny jako úspěšné; načítání řádků zůstává odpovědností repozitáře.
 - `[HOTOVO]` **F4-10** Formátování peněz a čísel (`LocaleNumberFormatter`) podle jazyka. Veřejný kontrakt přijímá explicitní `Locale`; ICU implementace formátuje běžná čísla a `Money` zachovává přesnost minor units bez převodu částky na float. Testy pokrývají cs/en/de, měny s 0/2/4 desetinnými místy, záporné částky, `PHP_INT_MIN` a `PHP_INT_MAX`. GitHub Actions run #44071145527 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
-- `[ROZDĚLÁNO]` **F4-11** `UnitFormatter`: symbol a název s množným číslem. Veřejný kontrakt, ICU implementace, DI registrace a testy pro cs/en, celočíselná i desetinná množství a bezpečnou hranici ICU (`|Quantity| < 2^41`); ověření čeká na CI a lokální `check.bat`.
+- `[HOTOVO]` **F4-11** `UnitFormatter`: symbol a název s množným číslem. Veřejný kontrakt, ICU implementace, DI registrace a testy pro cs/en, celočíselná i desetinná množství a bezpečnou hranici ICU (`|Quantity| < 2^41`); GitHub Actions run #44074597462 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[ZRUŠENO]` **F4-12** Struktura souborů s výchozími texty modulu (`Resources/translations`). Zrušeno kvůli závaznému DB-only pravidlu: runtime ani verzované souborové katalogy se nezavádějí; výchozí texty budou dodávány databázovými migracemi/seedy.
-- `[PLÁN]` **F4-13** Databázový importér výchozích systémových textů do tabulek vlastnických domén; žádná centrální tabulka `translation_message` neexistuje.
+- `[ROZDĚLÁNO]` **F4-13** Databázový importér výchozích systémových textů do tabulek vlastnických domén; žádná centrální tabulka `translation_message` neexistuje. Návrh musí být opakovatelný, transakční a nesmí přepsat vlastní překlady.
 - `[PLÁN]` **F4-14** Logika `is_customized`, `default_hash`, `is_outdated` a testy všech stavů
 - `[PLÁN]` **F4-15** Příkaz `translations:import`
 - `[PLÁN]` **F4-16** Příkaz `translations:check` (chybějící a nepoužité klíče)
