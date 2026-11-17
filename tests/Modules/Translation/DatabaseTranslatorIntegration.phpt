@@ -8,6 +8,7 @@ use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
 use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory;
 use App\Modules\Translation\Infrastructure\Translation\MessageFormattingException;
 use App\Shared\Domain\Locale\Locale;
+use App\Shared\Infrastructure\Persistence\Locale\DatabaseLocaleProvider;
 use Nette\Localization\Translator;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
