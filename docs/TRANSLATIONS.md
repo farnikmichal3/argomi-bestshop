@@ -151,6 +151,7 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 
 ### Historie revizí
 
+- **1.16 · 17. 11. 2026:** doplněno veřejné API formátování čísel a peněz podle explicitního locale; peněžní částky zůstávají přesné v minor units bez převodu na float podle F4-10.
 - **1.15 · 17. 11. 2026:** veřejné `TranslationApi` odděluje prezentační vrstvy od interního `MessageDomain` a databázové továrny; Deptrac vynucuje jednosměrnou závislost na API.\n- **1.14 · 17. 11. 2026:** F4-08 zavádí `TranslatedPresenter`, explicitní doménu a ověření aktivního locale z routy; Latte používá nativní `setTranslator()` bez compile-time locale.
 - **1.13 · 17. 11. 2026:** F4-06 implementuje databázový fallback požadované locale → výchozí aktivní locale z `LocaleProvider` → stabilní klíč. Fallback zůstává izolovaný podle vlastnické domény a ICU formátování používá locale skutečně použitého katalogu.
 
@@ -159,5 +160,3 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 - **1.9 · 16. 11. 2026:** zahájena implementace `DatabaseTranslator` a `DatabaseTranslatorFactory`; překladač dostává doménu i locale explicitně, chybějící klíč zatím vrací beze změny a ICU formátování je vyhrazeno pro F4-05.
 - **1.8 · 16. 11. 2026:** dokončena implementace persistentní cache katalogů, dekorátoru `CachedMessageStore` a tagové invalidace včetně přesného průniku domény a locale; ověřeno lokálně i v GitHub Actions.
 
-
-| 17. 11. 2026 | v1.16: doplněno veřejné API formátování čísel a peněz podle explicitního locale; peněžní částky zůstávají přesné v minor units bez převodu na float podle F4-10. |
