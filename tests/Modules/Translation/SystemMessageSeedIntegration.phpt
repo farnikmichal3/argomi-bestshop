@@ -18,6 +18,32 @@ $integration = IntegrationTestBootstrap::boot($rootDir);
 $database = $integration->database;
 $pdo = $database->getConnection()->getPdo();
 
+$catalogMessages = $pdo->query(
+    "SELECT locale, message_text, source, is_customized, default_hash, is_outdated "
+    . "FROM catalog_message_translation "
+    . "WHERE message_key = 'button.add_to_cart' "
+    . "ORDER BY locale",
+)->fetchAll(PDO::FETCH_ASSOC);
+
+Assert::same([
+    [
+        'locale' => 'cs',
+        'message_text' => 'Přidat do košíku',
+        'source' => 'core',
+        'is_customized' => 0,
+        'default_hash' => null,
+        'is_outdated' => 0,
+    ],
+    [
+        'locale' => 'en',
+        'message_text' => 'Add to cart',
+        'source' => 'core',
+        'is_customized' => 0,
+        'default_hash' => null,
+        'is_outdated' => 0,
+    ],
+], $catalogMessages);
+
 $token = bin2hex(random_bytes(8));
 
 $pdo->beginTransaction();

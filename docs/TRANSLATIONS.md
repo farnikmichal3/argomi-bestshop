@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.19 · 17. 11. 2026
+**Revize:** 1.20 · 17. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -99,7 +99,7 @@ Import znamená databázovou operaci, nikoliv načítání textových katalogů:
 - Aktualizace již existujících systémových textů, výpočet `default_hash` a změny `is_customized` / `is_outdated` patří do F4-14. Seed F4-13 existující řádky neupravuje.
 - SQL soubory smějí obsahovat výchozí hodnoty, ale nejsou runtime úložištěm. Runtime překladač čte texty výhradně z databáze; souborový fallback neexistuje.
 
-Dokud vlastnický modul nedefinuje stabilní klíče a skutečná zdrojová znění, nesmí seed obsahovat zástupné ani vymyšlené produkční zprávy. Testovací klíče smějí vznikat pouze v integračních testech a jejich transakce se vždy vrací zpět.
+První potvrzený katalogový systémový klíč je `button.add_to_cart` se zněními `cs` = „Přidat do košíku“ a `en` = „Add to cart“. Vlastníkem je Catalog. Seed `2026-11-17-140000-seed-catalog-add-to-cart.sql` vkládá oba jazykové řádky do `catalog_message_translation`; při existujícím klíči ponechá celý řádek beze změny. Ostatní klíče se přidávají až po definování skutečných stabilních klíčů a zdrojových znění v příslušných modulech. Testovací klíče smějí vznikat pouze v integračních testech a jejich transakce se vždy vrací zpět.
 
 ## 8. Cache a diagnostika
 
@@ -157,7 +157,7 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 
 ### Historie revizí
 
-- **1.19 · 17. 11. 2026:** F4-13 definuje idempotentní SQL seed pouze pro chybějící záznamy; duplicitní klíč ponechá celý existující řádek beze změny. Aktualizace systémových zdrojů je oddělena do F4-14.
+- **1.20 · 17. 11. 2026:** F4-13 přidává první skutečný systémový klíč Catalog `button.add_to_cart` v češtině a angličtině do vlastnické tabulky. Seed je transakční a idempotentní; existující řádek nepřepisuje. Integrační test ověřuje i skutečná data dodaná migrací.\n- **1.19 · 17. 11. 2026:** F4-13 definuje idempotentní SQL seed pouze pro chybějící záznamy; duplicitní klíč ponechá celý existující řádek beze změny. Aktualizace systémových zdrojů je oddělena do F4-14.
 
 - **1.16 · 17. 11. 2026:** doplněno veřejné API formátování čísel a peněz podle explicitního locale; peněžní částky zůstávají přesné v minor units bez převodu na float podle F4-10.
 - **1.15 · 17. 11. 2026:** veřejné `TranslationApi` odděluje prezentační vrstvy od interního `MessageDomain` a databázové továrny; Deptrac vynucuje jednosměrnou závislost na API.\n- **1.14 · 17. 11. 2026:** F4-08 zavádí `TranslatedPresenter`, explicitní doménu a ověření aktivního locale z routy; Latte používá nativní `setTranslator()` bez compile-time locale.
