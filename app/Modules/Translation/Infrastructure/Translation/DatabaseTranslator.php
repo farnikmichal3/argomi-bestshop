@@ -48,9 +48,9 @@ final readonly class DatabaseTranslator implements Translator
         }
 
         $locale = $this->catalog->locale->getCode();
-        $formatter = \MessageFormatter::create($locale, $pattern);
+        $formatter = $this->createFormatter($locale, $pattern);
 
-        if ($formatter === null) {
+        if (!$formatter instanceof \MessageFormatter) {
             throw new MessageFormattingException(
                 $messageKey,
                 $locale,
@@ -69,6 +69,17 @@ final readonly class DatabaseTranslator implements Translator
         }
 
         return $formatted;
+    }
+
+    /**
+     * V některých běhových verzích intl může create() při neplatném vzoru
+     * vrátit null, přestože PHPStan pro interní funkci předpokládá objekt.
+     *
+     * @return mixed Výsledek ICU factory včetně případného null při chybě.
+     */
+    private function createFormatter(string $locale, string $pattern): mixed
+    {
+        return \MessageFormatter::create($locale, $pattern);
     }
 
     /**
