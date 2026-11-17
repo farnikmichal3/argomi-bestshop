@@ -3,7 +3,7 @@ Latte templates translate database keys at runtime with explicit locale and doma
 --FILE--
 <?php
 
-use App\Modules\Translation\Domain\MessageDomain;
+use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
 use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory;
 use App\Shared\Domain\Locale\Locale;
@@ -55,7 +55,7 @@ try {
     }
 
     $englishTranslator = $factory->create(TranslationDomain::Catalog, Locale::fromString('en'));
-    $czechTranslator = $factory->create(MessageDomain::Catalog, Locale::fromString('cs'));
+    $czechTranslator = $factory->create(TranslationDomain::Catalog, Locale::fromString('cs'));
 
     $englishTemplate = $templateFactory->createTemplate();
 
