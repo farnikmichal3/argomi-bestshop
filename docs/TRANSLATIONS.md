@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.18 · 17. 11. 2026
+**Revize:** 1.19 · 17. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -91,12 +91,15 @@ Modul Translation vlastní společnou infrastrukturu a tabulku `language`, nikol
 ## 7. Import a aktualizace systémových textů
 
 Import znamená databázovou operaci, nikoliv načítání textových katalogů:
-- nové systémové klíče a jazykové hodnoty se vkládají řízeným DB seedem/migrací; SQL soubory smějí obsahovat výchozí hodnoty,
-- aktualizace porovnává verzi nebo hash systémového záznamu,
-- chráněné systémové hodnoty se aktualizují pouze autorizovaným migračním mechanismem,
-- administrátorské vlastní hodnoty se nikdy nepřepisují,
-- operace musí být opakovatelná, transakční a auditovatelná,
-- runtime překladač čte texty výhradně z databáze; souborový fallback neexistuje.
+
+- Výchozí texty se dodávají výhradně verzovanými SQL migracemi nebo SQL seedy; každý klíč a jazykový záznam patří do tabulky svého vlastníka.
+- Seed vkládá pouze chybějící dvojici `(locale, message_key)`. Použije explicitní seznam sloupců a `INSERT ... ON DUPLICATE KEY UPDATE id = id`; konflikt unikátního klíče je záměrně beze změny. Nesmí se použít `REPLACE`, `INSERT IGNORE` ani obecný upsert přepisující text či stav řádku.
+- Díky tomu je seed opakovatelný a nikdy nepřepíše existující záznam, ať už jde o systémový nebo vlastní překlad. Nový systémový záznam nastaví `source = 'core'`, `is_customized = 0` a `is_outdated = 0`; `default_hash` zůstává do implementace F4-14 NULL.
+- Každý seed běží v transakci. Pro více doménových tabulek se používají samostatné explicitní INSERT příkazy; název tabulky nesmí pocházet z uživatelského vstupu.
+- Aktualizace již existujících systémových textů, výpočet `default_hash` a změny `is_customized` / `is_outdated` patří do F4-14. Seed F4-13 existující řádky neupravuje.
+- SQL soubory smějí obsahovat výchozí hodnoty, ale nejsou runtime úložištěm. Runtime překladač čte texty výhradně z databáze; souborový fallback neexistuje.
+
+Dokud vlastnický modul nedefinuje stabilní klíče a skutečná zdrojová znění, nesmí seed obsahovat zástupné ani vymyšlené produkční zprávy. Testovací klíče smějí vznikat pouze v integračních testech a jejich transakce se vždy vrací zpět.
 
 ## 8. Cache a diagnostika
 
@@ -153,6 +156,8 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 `setTranslator()` se volá bez druhého parametru jazyka. Překlad statických klíčů proto zůstává runtime operací a respektuje databázovou cache i její invalidaci; Latte nevkládá přeložený text do jazykově specifické kompilace šablony. Výstup zůstává pod standardním escapováním Latte. Presenter, který dosud nemá schválenou vlastnickou doménu, překladač nepřebírá.
 
 ### Historie revizí
+
+- **1.19 · 17. 11. 2026:** F4-13 definuje idempotentní SQL seed pouze pro chybějící záznamy; duplicitní klíč ponechá celý existující řádek beze změny. Aktualizace systémových zdrojů je oddělena do F4-14.
 
 - **1.16 · 17. 11. 2026:** doplněno veřejné API formátování čísel a peněz podle explicitního locale; peněžní částky zůstávají přesné v minor units bez převodu na float podle F4-10.
 - **1.15 · 17. 11. 2026:** veřejné `TranslationApi` odděluje prezentační vrstvy od interního `MessageDomain` a databázové továrny; Deptrac vynucuje jednosměrnou závislost na API.\n- **1.14 · 17. 11. 2026:** F4-08 zavádí `TranslatedPresenter`, explicitní doménu a ověření aktivního locale z routy; Latte používá nativní `setTranslator()` bez compile-time locale.
