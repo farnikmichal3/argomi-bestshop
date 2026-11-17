@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.6 · 17. 11. 2026  
+**Revize:** 4.7 · 17. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 17. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -46,13 +46,18 @@ app/
 │   ├── Tax/
 │   └── Translation/
 │       ├── Api/
+│       │   ├── LocaleNumberFormatter.php
+│       │   ├── NumberFormattingException.php
+│       │   ├── UnitFormatter.php
+│       │   ├── UnitFormattingException.php
 │       │   ├── TranslationDomain.php
-│       │   ├── TranslatorFactory.php
-│       │   ├── Dto/
-│       │   └── Event/
+│       │   └── TranslatorFactory.php
 │       ├── Application/
 │       │   ├── Dto/
 │       │   │   └── MessageCatalog.php
+│       │   ├── EntityTranslationResolver.php
+│       │   ├── IcuLocaleNumberFormatter.php
+│       │   ├── IcuUnitFormatter.php
 │       │   ├── MessageCacheInvalidator.php
 │       │   └── MessageStore.php
 │       ├── Domain/
