@@ -148,7 +148,7 @@ final class TranslationKeyUsageScanner
     private function extractKeys(string $contents, string $extension): array
     {
         if ($extension === 'latte') {
-            preg_match_all('/\\{_\\s*([\\'"])([A-Za-z0-9][A-Za-z0-9_.-]*)\\1/', $contents, $matches);
+            preg_match_all("~\\{_\\s*(['\"])([A-Za-z0-9][A-Za-z0-9_.-]*)\\1~", $contents, $matches);
             $keys = array_values(array_unique($matches[2] ?? []));
             sort($keys);
 
@@ -181,7 +181,7 @@ final class TranslationKeyUsageScanner
                 continue;
             }
 
-            if (preg_match('/\\A([\\'"])([A-Za-z0-9][A-Za-z0-9_.-]*)\\1\\z/', $tokens[$argumentIndex][1], $match) === 1) {
+            if (preg_match("/\\A(['\"])([A-Za-z0-9][A-Za-z0-9_.-]*)\\1\\z/", $tokens[$argumentIndex][1], $match) === 1) {
                 $keys[] = $match[2];
             }
         }
