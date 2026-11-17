@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.11 · 16. 11. 2026
+**Revize:** 1.12 · 17. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -65,6 +65,8 @@ Role a oprávnění spravuje Identity. Modul Translation poskytuje kontrolní bo
 - Jazyk se určuje z databázové evidence jazyků a aktivního kontextu; jazykové hodnoty se nesmějí natvrdo zapisovat do aplikační logiky.
 - Chybějící překlad se řeší databázovým fallbackem na výchozí jazyk a poté na klíč s diagnostikou; nikdy se nevrací souborová hodnota ani prázdný text.
 - Parametrizované zprávy používají ICU MessageFormat přes PHP `intl`; samotné vzory zpráv jsou uložené v databázi.
+- `DatabaseTranslator` přijímá pojmenované argumenty jako jedno pole (`translate($key, ['count' => 2])`) nebo poziční argumenty samostatně (`translate($key, 'Košík', 2)`). Podporované hodnoty jsou `string`, `int`, `float`, `null` a `Stringable`; locale se vždy bere z katalogu.
+- Bez parametrů se vzor vrací beze změny. Chybný ICU vzor vyvolá `MessageFormattingException`; chyba se nezamlčí ani se nevrací původní vzor.
 - Peníze, čísla a množství se formátují podle locale a měny, nikoliv skládáním textu.
 - Systémové texty jsou standardně prostý text; HTML se nepovoluje bez výslovně navrženého a sanitizovaného případu.
 
