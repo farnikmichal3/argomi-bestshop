@@ -15,7 +15,7 @@ use App\Shared\Domain\Locale\LocaleProvider;
  * Načítání probíhá přes MessageStore, takže se automaticky využívá
  * persistentní cache katalogů a nevzniká skrytý globální jazykový kontext.
  */
-final readonly class DatabaseTranslatorFactory
+final readonly class DatabaseTranslatorFactory implements TranslatorFactory
 {
     public function __construct(
         private MessageStore $messageStore,
@@ -33,7 +33,7 @@ final readonly class DatabaseTranslatorFactory
 
         return new DatabaseTranslator(
             $catalog,
-            $this->messageStore->load($domain, $defaultLocale),
+            $this->messageStore->load($messageDomain, $defaultLocale),
         );
     }
 }
