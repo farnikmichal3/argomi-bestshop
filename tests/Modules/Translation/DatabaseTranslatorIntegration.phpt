@@ -1,11 +1,12 @@
 --TEST--
-Database translator implements Nette Translator and isolates explicit domain and locale catalogs
+Database translator formats ICU messages with explicit locale and typed arguments
 --FILE--
 <?php
 
 use App\Modules\Translation\Domain\MessageDomain;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
 use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory;
+use App\Modules\Translation\Infrastructure\Translation\MessageFormattingException;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Localization\Translator;
 use Tester\Assert;
@@ -29,17 +30,29 @@ Assert::type(DatabaseTranslatorFactory::class, $diFactory);
 $factory = new DatabaseTranslatorFactory(new DatabaseMessageStore($integration->database));
 
 $token = bin2hex(random_bytes(8));
-$messageKey = 'f4_04.shared_key.' . $token;
-$missingKey = 'f4_04.missing_key.' . $token;
+$messageKey = 'f4_05.shared_key.' . $token;
+$missingKey = 'f4_05.missing_key.' . $token;
+$namedKey = 'f4_05.named.' . $token;
+$positionalKey = 'f4_05.positional.' . $token;
+$pluralCsKey = 'f4_05.plural_cs.' . $token;
+$pluralEnKey = 'f4_05.plural_en.' . $token;
+$malformedKey = 'f4_05.malformed.' . $token;
 
 $pdo->beginTransaction();
 
 try {
-    foreach ([
+    $rows = [
         ['catalog_message_translation', $messageKey, 'cs', 'Katalog česky'],
         ['catalog_message_translation', $messageKey, 'en', 'Catalog in English'],
         ['cart_message_translation', $messageKey, 'cs', 'Košík česky'],
-    ] as [$table, $key, $locale, $message]) {
+        ['catalog_message_translation', $namedKey, 'cs', 'Ahoj, {name}!'],
+        ['catalog_message_translation', $positionalKey, 'cs', '{0} má {1} položek'],
+        ['catalog_message_translation', $pluralCsKey, 'cs', '{count, plural, one{# položka} few{# položky} other{# položek}}'],
+        ['catalog_message_translation', $pluralEnKey, 'en', '{count, plural, one{# item} other{# items}}'],
+        ['catalog_message_translation', $malformedKey, 'cs', '{count, plural, one{jedna}'],
+    ];
+
+    foreach ($rows as [$table, $key, $locale, $message]) {
         $statement = $pdo->prepare(sprintf(
             'INSERT INTO %s (message_key, locale, message_text) VALUES (?, ?, ?)',
             $table,
@@ -59,10 +72,27 @@ try {
     // Neznámý klíč se do zavedení fallbacku vrací beze změny.
     Assert::same($missingKey, $catalogCs->translate($missingKey));
 
-    // Parametry přijímá kontrakt Nette; ICU formátování patří do F4-05.
-    Assert::same('Katalog česky', $catalogCs->translate($messageKey, 'ignored'));
+    // Bez parametrů zůstává i ICU vzor beze změny.
+    Assert::same('Ahoj, {name}!', $catalogCs->translate($namedKey));
+    Assert::same('Ahoj, Michale!', $catalogCs->translate($namedKey, ['name' => 'Michale']));
+    Assert::same('Košík má 3 položek', $catalogCs->translate($positionalKey, 'Košík', 3));
 
-    $stringableKey = new class($messageKey) implements Stringable {
+    // Plurály se řídí locale konkrétního katalogu, nikoliv globálním jazykem.
+    Assert::same('2 položky', $catalogCs->translate($pluralCsKey, ['count' => 2]));
+    Assert::same('2 items', $catalogEn->translate($pluralEnKey, ['count' => 2]));
+    Assert::same('1 item', $catalogEn->translate($pluralEnKey, ['count' => 1]));
+
+    Assert::exception(
+        static fn () => $catalogCs->translate($malformedKey, ['count' => 2]),
+        MessageFormattingException::class,
+    );
+
+    Assert::exception(
+        static fn () => $catalogCs->translate($namedKey, ['name' => new stdClass()]),
+        InvalidArgumentException::class,
+    );
+
+    $stringableKeyObject = new class($messageKey) implements Stringable {
         public function __construct(
             private string $value,
         ) {}
@@ -73,7 +103,15 @@ try {
         }
     };
 
-    Assert::same('Katalog česky', $catalogCs->translate($stringableKey));
+    $stringableParameter = new class implements Stringable {
+        public function __toString(): string
+        {
+            return 'Michale';
+        }
+    };
+
+    Assert::same('Katalog česky', $catalogCs->translate($stringableKeyObject));
+    Assert::same('Ahoj, Michale!', $catalogCs->translate($namedKey, ['name' => $stringableParameter]));
 
     Assert::exception(
         static fn () => $catalogCs->translate(123),
