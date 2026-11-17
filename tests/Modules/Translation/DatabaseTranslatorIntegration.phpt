@@ -4,8 +4,8 @@ Database translator formats ICU messages with explicit locale and typed argument
 <?php
 
 use App\Modules\Translation\Api\TranslationDomain;
-use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
 use App\Modules\Translation\Api\TranslatorFactory;
+use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
 use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory;
 use App\Modules\Translation\Infrastructure\Translation\MessageFormattingException;
 use App\Shared\Domain\Locale\Locale;
