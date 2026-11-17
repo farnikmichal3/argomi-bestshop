@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.48 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.49 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -75,10 +75,15 @@ Celkem **554 kroků**: hotovo 155, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
+### v3.49 (17. 11. 2026)
+- F4-13: dokončena specifikace bezpečného idempotentního SQL seedu v `TRANSLATIONS.md` revize 1.19 a přidán MySQL integrační test pro `catalog_message_translation`, `cart_message_translation` a `checkout_message_translation`. Test prokazuje, že opakované vložení nepřepíše původní systémový text ani existující vlastní překlad.
+- GitHub Actions run #44077431222 prošel; uživatel potvrdil úspěšné lokální `check.bat` (`All active checks passed.`).
+- F4-13 zůstává rozpracovaný do okamžiku, kdy budou v jednotlivých modulech definovány skutečné stabilní klíče a zdrojová znění. Produkční seed s vymyšlenými hodnotami se nevytváří; F4-14 zůstává oddělen.
+
 ### v3.48 (17. 11. 2026)
 - Dokončen F4-11: `UnitFormatter` poskytuje lokalizovaný symbol a ICU pluralizaci názvu jednotky podle explicitního `Locale` a přesného `Quantity`. Hodnoty mimo bezpečný rozsah ICU (`|Quantity| < 2^41`) jsou odmítnuty typovanou výjimkou; doménové množství zůstává beze změny a bez float.
 - GitHub Actions run #44074597462 prošel včetně MySQL migrací/integrace, 36 testů, PHPStan, coding standard a Deptrac. Uživatel potvrdil `All active checks passed.` po lokálním `check.bat`.
-- Zahájen F4-13: databázový import výchozích systémových textů do tabulek vlastnických domén; F4-12 zůstává zrušen kvůli DB-only pravidlu. Před implementací se ověřuje migrační/seed model a ochrana existujících vlastních překladů.
+- F4-13: definován a integračně ověřen bezpečný SQL seed kontrakt pro tři vlastnické tabulky. Seed vkládá pouze chybějící `(locale, message_key)` a při duplicitě ponechá celý existující řádek beze změny; test ověřuje opakované spuštění i ochranu vlastních překladů a běží v transakci s rollbackem. GitHub Actions run #44077431222 prošel a uživatel potvrdil úspěšné lokální `check.bat` (`All active checks passed.`). F4-13 zůstává rozpracovaný, protože zatím nejsou definovány skutečné stabilní produkční klíče a jejich zdrojová znění; nevkládáme zástupné texty.
 - F4: **10 hotovo**, **1 rozděláno**, **15 plán**, **3 zrušeno**. Celkem: **155 hotovo**, **1 rozděláno**, **1 k úpravě**, **392 plán**, **5 zrušeno**.
 
 ### v3.47 (17. 11. 2026)
