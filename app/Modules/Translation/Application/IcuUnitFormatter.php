@@ -50,7 +50,7 @@ final class IcuUnitFormatter implements UnitFormatter
             'count' => self::toCanonicalDecimal($quantity),
         ]);
 
-        if (!is_string($formatted) || $formatter->getErrorCode() > U_ZERO_ERROR) {
+        if ($formatter->getErrorCode() > U_ZERO_ERROR) {
             throw new UnitFormattingException(
                 $locale->getCode(),
                 $formatter->getErrorMessage(),
