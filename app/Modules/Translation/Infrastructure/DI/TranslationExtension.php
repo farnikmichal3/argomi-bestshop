@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Modules\Translation\Infrastructure\DI;
 
 use App\Modules\Translation\Api\LocaleNumberFormatter;
+use App\Modules\Translation\Api\UnitFormatter;
 use App\Modules\Translation\Application\EntityTranslationResolver;
 use App\Modules\Translation\Application\IcuLocaleNumberFormatter;
+use App\Modules\Translation\Application\IcuUnitFormatter;
 use App\Modules\Translation\Infrastructure\Cache\CachedMessageStore;
 use App\Modules\Translation\Infrastructure\Cache\NetteMessageCacheInvalidator;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
@@ -31,6 +33,10 @@ final class TranslationExtension extends CompilerExtension
         $builder->addDefinition($this->prefix('localeNumberFormatter'))
             ->setType(LocaleNumberFormatter::class)
             ->setFactory(IcuLocaleNumberFormatter::class);
+
+        $builder->addDefinition($this->prefix('unitFormatter'))
+            ->setType(UnitFormatter::class)
+            ->setFactory(IcuUnitFormatter::class);
 
         $builder->addDefinition($this->prefix('cache'))
             ->setFactory(Cache::class, ['@cache.storage', 'translation']);
