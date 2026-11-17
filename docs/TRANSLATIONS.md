@@ -157,6 +157,7 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 
 ### Historie revizí
 
+- **1.21 · 17. 11. 2026:** F4-14 zavádí `SystemMessageStateResolver` a neměnné `SystemMessageState`. Výchozí systémový text se aktualizuje pouze u `source = core`, `is_customized = 0` a známého předchozího `default_hash`; hash je SHA-1 přes přesné UTF-8 znění. Vlastní texty zůstávají zachovány a při změně výchozího hashe se označí jako zastaralé. Příznak zastaralosti se automaticky nemaže. Vlastní klíče (`source = custom`) zůstávají beze změny. Historické řádky s `NULL default_hash` zůstávají beze změny, protože jejich předchozí výchozí znění nelze bezpečně rekonstruovat.
 - **1.20 · 17. 11. 2026:** F4-13 přidává první skutečný systémový klíč Catalog `button.add_to_cart` v češtině a angličtině do vlastnické tabulky. Seed je transakční a idempotentní; existující řádek nepřepisuje. Integrační test ověřuje i skutečná data dodaná migrací.\n- **1.19 · 17. 11. 2026:** F4-13 definuje idempotentní SQL seed pouze pro chybějící záznamy; duplicitní klíč ponechá celý existující řádek beze změny. Aktualizace systémových zdrojů je oddělena do F4-14.
 
 - **1.16 · 17. 11. 2026:** doplněno veřejné API formátování čísel a peněz podle explicitního locale; peněžní částky zůstávají přesné v minor units bez převodu na float podle F4-10.
