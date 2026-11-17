@@ -21,7 +21,7 @@ use Nette\Application\UI\Presenter;
  */
 abstract class TranslatedPresenter extends Presenter
 {
-    private DatabaseTranslatorFactory $translatorFactory;
+    private TranslatorFactory $translatorFactory;
 
     private LocaleProvider $localeProvider;
 
@@ -31,7 +31,7 @@ abstract class TranslatedPresenter extends Presenter
      * vlastní konstruktorovou injekci bez řetězení konstruktorů.
      */
     public function injectTranslation(
-        DatabaseTranslatorFactory $translatorFactory,
+        TranslatorFactory $translatorFactory,
         LocaleProvider $localeProvider,
     ): void {
         $this->translatorFactory = $translatorFactory;
@@ -57,7 +57,7 @@ abstract class TranslatedPresenter extends Presenter
     /**
      * Každý presenter výslovně určí vlastníka systémových překladových klíčů.
      */
-    abstract protected function getTranslationDomain(): MessageDomain;
+    abstract protected function getTranslationDomain(): TranslationDomain;
 
 
     /**
