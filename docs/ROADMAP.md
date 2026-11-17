@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.46 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.47 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -74,6 +74,13 @@ Celkem **554 kroků**: hotovo 154, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.47 (17. 11. 2026)
+- Po prvním CI běhu F4-11 odhalila zkouška `PHP_INT_MIN`/`PHP_INT_MAX`, že ICU neumí spolehlivě vybírat pluralizační kategorii pro celý rozsah PHP integeru.
+- Po schválení uživatelem je proto doplněna fail-safe hranice: `IcuUnitFormatter` řetězcově povolí pouze absolutní hodnoty menší než `2^41`; nad hranicí vyvolá `UnitFormattingException` místo vrácení potenciálně chybného názvu. Doménová `Quantity` zůstává beze změny a bez float.
+- Testy nyní ověřují podporované kladné i záporné hraniční hodnoty, odmítnutí hodnot nad hranicí a běžné cs/en plurály. Aktualizována dokumentace Translation.
+- F4-11 zůstává rozpracovaný do úspěšného CI a lokálního ověření přes `check.bat`.
+- F4: **9 hotovo**, **1 rozděláno**, **16 plán**, **3 zrušeno**. Celkem: **154 hotovo**, **1 rozděláno**, **1 k úpravě**, **393 plán**, **5 zrušeno**.
 
 ### v3.46 (17. 11. 2026)
 - Zahájen F4-11: přidán veřejný `UnitFormatter`, ICU implementace `IcuUnitFormatter`, typovaná `UnitFormattingException`, registrace v Translation DI a testy pro cs/en, symboly, celočíselná i desetinná množství a meze `PHP_INT_MIN`/`PHP_INT_MAX`.
@@ -432,7 +439,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-08** Latte rozšíření: překlad klíče v šabloně. Nativní Latte překladová syntaxe je napojena přes `Template::setTranslator()`; společný `TranslatedPresenter` vyžaduje explicitní doménu a ověřuje aktivní locale. GitHub Actions run #44065470430 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[HOTOVO]` **F4-09** Pomocník pro překlad entit (překladová řádka se zálohou na výchozí jazyk). Aplikační `EntityTranslationResolver` je typově obecný, upřednostňuje požadované locale, při jeho absenci použije výchozí locale a při shodě jazyků pracuje s jediným výsledkem. Testy pokrývají prioritu, fallback, chybějící překlady i shodné locale. GitHub Actions run #44066963629 i lokální `check.bat` uživatelem potvrzeny jako úspěšné; načítání řádků zůstává odpovědností repozitáře.
 - `[HOTOVO]` **F4-10** Formátování peněz a čísel (`LocaleNumberFormatter`) podle jazyka. Veřejný kontrakt přijímá explicitní `Locale`; ICU implementace formátuje běžná čísla a `Money` zachovává přesnost minor units bez převodu částky na float. Testy pokrývají cs/en/de, měny s 0/2/4 desetinnými místy, záporné částky, `PHP_INT_MIN` a `PHP_INT_MAX`. GitHub Actions run #44071145527 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
-- `[ROZDĚLÁNO]` **F4-11** `UnitFormatter`: symbol a název s množným číslem. Veřejný kontrakt, ICU implementace, DI registrace a testy pro cs/en, celočíselná i desetinná množství a krajní hodnoty `Quantity`; ověření čeká na CI a lokální `check.bat`.
+- `[ROZDĚLÁNO]` **F4-11** `UnitFormatter`: symbol a název s množným číslem. Veřejný kontrakt, ICU implementace, DI registrace a testy pro cs/en, celočíselná i desetinná množství a bezpečnou hranici ICU (`|Quantity| < 2^41`); ověření čeká na CI a lokální `check.bat`.
 - `[ZRUŠENO]` **F4-12** Struktura souborů s výchozími texty modulu (`Resources/translations`). Zrušeno kvůli závaznému DB-only pravidlu: runtime ani verzované souborové katalogy se nezavádějí; výchozí texty budou dodávány databázovými migracemi/seedy.
 - `[PLÁN]` **F4-13** Databázový importér výchozích systémových textů do tabulek vlastnických domén; žádná centrální tabulka `translation_message` neexistuje.
 - `[PLÁN]` **F4-14** Logika `is_customized`, `default_hash`, `is_outdated` a testy všech stavů
