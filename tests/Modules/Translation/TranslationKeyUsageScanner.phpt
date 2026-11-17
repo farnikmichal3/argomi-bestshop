@@ -6,6 +6,8 @@ Translation key usage scanner resolves presenter domains and finds literal Latte
 use App\Modules\Translation\Infrastructure\Diagnostics\TranslationKeyUsageScanner;
 use Tester\Assert;
 
+require dirname(__DIR__, 3) . '/vendor/autoload.php';
+
 $root = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'argomi-translation-scan-' . bin2hex(random_bytes(6));
 $home = $root . DIRECTORY_SEPARATOR . 'Front' . DIRECTORY_SEPARATOR . 'Home';
 
