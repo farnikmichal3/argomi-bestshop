@@ -25,6 +25,7 @@ final class TranslationsCheckCommand extends Command
         'catalog' => 'catalog_message_translation',
         'cart' => 'cart_message_translation',
         'checkout' => 'checkout_message_translation',
+        'admin' => 'admin_message_translation',
     ];
 
     public function __construct(
