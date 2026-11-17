@@ -4,7 +4,9 @@ Translation module DI extension is discovered and compiled by the application Bo
 <?php
 
 use App\Core\Module\ModuleRegistry;
+use App\Modules\Translation\Api\LocaleNumberFormatter;
 use App\Modules\Translation\Application\EntityTranslationResolver;
+use App\Modules\Translation\Application\IcuLocaleNumberFormatter;
 use App\Modules\Translation\Infrastructure\DI\TranslationExtension;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
@@ -25,6 +27,10 @@ Assert::false((new ReflectionClass(TranslationExtension::class))->isAbstract());
 $context = IntegrationTestBootstrap::boot($rootDir);
 Assert::true($context->container instanceof Container);
 Assert::type(EntityTranslationResolver::class, $context->container->getByType(EntityTranslationResolver::class));
+Assert::type(
+    IcuLocaleNumberFormatter::class,
+    $context->container->getByType(LocaleNumberFormatter::class),
+);
 
 echo "OK\n";
 ?>
