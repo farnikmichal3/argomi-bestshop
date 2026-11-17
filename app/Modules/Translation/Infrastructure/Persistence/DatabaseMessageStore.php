@@ -31,6 +31,7 @@ final class DatabaseMessageStore implements MessageStore
             MessageDomain::Catalog => 'catalog_message_translation',
             MessageDomain::Cart => 'cart_message_translation',
             MessageDomain::Checkout => 'checkout_message_translation',
+            MessageDomain::Admin => 'admin_message_translation',
         };
 
         $rows = $this->database->table($table)

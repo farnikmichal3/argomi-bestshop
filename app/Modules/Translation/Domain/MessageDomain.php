@@ -15,4 +15,5 @@ enum MessageDomain: string
     case Catalog = 'catalog';
     case Cart = 'cart';
     case Checkout = 'checkout';
+    case Admin = 'admin';
 }

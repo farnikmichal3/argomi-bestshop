@@ -30,6 +30,7 @@ final readonly class DatabaseTranslatorFactory implements TranslatorFactory
             TranslationDomain::Catalog => MessageDomain::Catalog,
             TranslationDomain::Cart => MessageDomain::Cart,
             TranslationDomain::Checkout => MessageDomain::Checkout,
+            TranslationDomain::Admin => MessageDomain::Admin,
         };
 
         $catalog = $this->messageStore->load($messageDomain, $locale);

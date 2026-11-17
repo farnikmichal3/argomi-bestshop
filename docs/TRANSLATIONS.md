@@ -33,6 +33,12 @@ Příklady existujících tabulek: `product_translation`, `category_translation`
 ### Systémové texty
 Systémové texty mají doménu a stabilní klíč. Jejich hodnoty pro jednotlivé jazyky jsou uloženy v databázi. Modul Translation poskytuje společnou infrastrukturu, ale doménové klíče zůstávají vlastnictvím příslušných modulů.
 
+- `Catalog`, `Cart` a `Checkout` vlastní systémové texty příslušných obchodních modulů.
+- `Admin` je samostatná vlastnická doména pro texty administrativního rozhraní (včetně správy překladů). Texty administrace se nesmějí ukládat do `Catalog` ani do jiné obchodní domény.
+- Každá doména má vlastní databázovou tabulku. Pro `Admin` je to `admin_message_translation`; její struktura odpovídá ostatním systémovým překladovým tabulkám a zachovává ochranné atributy `source`, `is_customized`, `default_hash` a `is_outdated`.
+- Veřejný `TranslationDomain::Admin` a interní `MessageDomain::Admin` mapují na toto úložiště. Fallback i cache zůstávají izolované podle domény.
+- Výchozí texty Admin budou dodány verzovaným idempotentním SQL seedem; runtime načítání zůstává výhradně databázové.
+
 ## 3. Systémové hodnoty a ochrana
 
 - Systémové klíče a jejich jazykové hodnoty jsou databázová data.
@@ -167,6 +173,8 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 `setTranslator()` se volá bez druhého parametru jazyka. Překlad statických klíčů proto zůstává runtime operací a respektuje databázovou cache i její invalidaci; Latte nevkládá přeložený text do jazykově specifické kompilace šablony. Výstup zůstává pod standardním escapováním Latte. Presenter, který dosud nemá schválenou vlastnickou doménu, překladač nepřebírá.
 
 ### Historie revizí
+
+- **1.23 · 17. 11. 2026:** F4-17 zavádí samostatnou vlastnickou doménu `Admin` a tabulku `admin_message_translation`; administrativní texty se oddělují od obchodních domén. Doplněno mapování veřejné i interní domény, databázového úložiště a integrační test.
 
 - **1.22 · 17. 11. 2026:** F4-16 přidává read-only příkaz `translations:check`. Porovnává statické reference v Latte/PHP pod `app/UI` s překlady ve všech aktivních jazycích a hlásí chybějící hodnoty i nepoužívané databázové klíče; dynamické reference zůstávají mimo automatickou detekci.
 

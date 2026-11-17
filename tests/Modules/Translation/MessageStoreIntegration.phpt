@@ -30,6 +30,7 @@ $token = bin2hex(random_bytes(8));
 $catalogKey = 'f4_02.catalog.' . $token;
 $cartKey = 'f4_02.cart.' . $token;
 $checkoutKey = 'f4_02.checkout.' . $token;
+$adminKey = 'f4_17.admin.' . $token;
 $emptyLocale = 'qz';
 
 $pdo->beginTransaction();
@@ -45,6 +46,7 @@ try {
         ['catalog_message_translation', $catalogKey, 'en', 'Catalog in English'],
         ['cart_message_translation', $cartKey, 'cs', 'Košík česky'],
         ['checkout_message_translation', $checkoutKey, 'cs', 'Pokladna česky'],
+        ['admin_message_translation', $adminKey, 'cs', 'Administrace česky'],
     ] as [$table, $key, $locale, $message]) {
         $statement = $pdo->prepare(sprintf(
             'INSERT INTO %s (message_key, locale, message_text) VALUES (?, ?, ?)',
@@ -86,6 +88,10 @@ try {
 
     $checkout = $store->load(MessageDomain::Checkout, Locale::fromString('cs'));
     Assert::same('Pokladna česky', $checkout->get($checkoutKey));
+
+    $admin = $store->load(MessageDomain::Admin, Locale::fromString('cs'));
+    Assert::same('Administrace česky', $admin->get($adminKey));
+    Assert::null($admin->get($catalogKey));
 
     $empty = $store->load(MessageDomain::Checkout, Locale::fromString($emptyLocale));
     Assert::same([], $empty->all());
