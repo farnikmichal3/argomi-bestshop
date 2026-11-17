@@ -50,7 +50,7 @@ final readonly class DatabaseTranslator implements Translator
         $locale = $this->catalog->locale->getCode();
         $formatter = \MessageFormatter::create($locale, $pattern);
 
-        if ($formatter === false) {
+        if (!$formatter instanceof \\MessageFormatter) {
             throw new MessageFormattingException(
                 $messageKey,
                 $locale,
