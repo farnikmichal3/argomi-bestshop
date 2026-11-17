@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.41 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.42 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 152, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 395, zrušeno 5.
+Celkem **554 kroků**: hotovo 153, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 395, zrušeno 5.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 152, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 7 | 1 | 0 | 0 | 0 | 18 | 3 |
+| F4 | Překlady v databázi | 29 | 8 | 0 | 0 | 0 | 0 | 17 | 3 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -74,6 +74,11 @@ Celkem **554 kroků**: hotovo 152, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.42 (17. 11. 2026)
+- Dokončen F4-09: GitHub Actions run #44066963629 úspěšně dokončil migrace, MySQL integrační testy, automatické testy, PHPStan, coding standard i Deptrac. Uživatel potvrdil `All active checks passed.` po lokálním `check.bat`.
+- `EntityTranslationResolver` je ověřen pro prioritu požadovaného locale, fallback na výchozí locale, chybějící překlady a shodné locale; načítání překladových řádků zůstává odpovědností repozitáře.
+- F4: **8 hotovo**, **0 rozděláno**, **17 plán**, **3 zrušeno**. Celkem: **153 hotovo**, **0 rozděláno**, **1 k úpravě**, **395 plán**, **5 zrušeno**.
 
 ### v3.41 (17. 11. 2026)
 - Dokončen F4-08: GitHub Actions run #44065470430 skončil úspěšně a uživatel potvrdil `All active checks passed.` po lokálním `check.bat`.
@@ -408,7 +413,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-06** Řetězec záloh: požadovaný jazyk, výchozí jazyk, klíč. Ověřen fallback v rámci stejné domény, stabilní klíč při chybějícím překladu a ICU formátování podle skutečného locale nalezeného katalogu; lokální `check.bat` i GitHub Actions run #354 prošly.
 - `[PLÁN]` **F4-07** Logování chybějících překladů a Tracy panel
 - `[HOTOVO]` **F4-08** Latte rozšíření: překlad klíče v šabloně. Nativní Latte překladová syntaxe je napojena přes `Template::setTranslator()`; společný `TranslatedPresenter` vyžaduje explicitní doménu a ověřuje aktivní locale. GitHub Actions run #44065470430 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
-- `[ROZDĚLÁNO]` **F4-09** Pomocník pro překlad entit (překladová řádka se zálohou na výchozí jazyk). Aplikační `EntityTranslationResolver` je typově obecný, upřednostňuje požadované locale, při jeho absenci použije výchozí locale a při shodě jazyků pracuje s jediným výsledkem. Načítání řádků zůstává odpovědností repozitáře.
+- `[HOTOVO]` **F4-09** Pomocník pro překlad entit (překladová řádka se zálohou na výchozí jazyk). Aplikační `EntityTranslationResolver` je typově obecný, upřednostňuje požadované locale, při jeho absenci použije výchozí locale a při shodě jazyků pracuje s jediným výsledkem. Testy pokrývají prioritu, fallback, chybějící překlady i shodné locale. GitHub Actions run #44066963629 i lokální `check.bat` uživatelem potvrzeny jako úspěšné; načítání řádků zůstává odpovědností repozitáře.
 - `[PLÁN]` **F4-10** Formátování peněz a čísel (`NumberFormatter`) podle jazyka
 - `[PLÁN]` **F4-11** `UnitFormatter`: symbol a název s množným číslem
 - `[ZRUŠENO]` **F4-12** Struktura souborů s výchozími texty modulu (`Resources/translations`). Zrušeno kvůli závaznému DB-only pravidlu: runtime ani verzované souborové katalogy se nezavádějí; výchozí texty budou dodávány databázovými migracemi/seedy.
