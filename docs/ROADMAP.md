@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.52 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.53 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 157, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 390, zrušeno 6.
+Celkem **554 kroků**: hotovo 157, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 389, zrušeno 6.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 157, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 12 | 0 | 0 | 0 | 0 | 13 | 4 |
+| F4 | Překlady v databázi | 29 | 12 | 1 | 0 | 0 | 0 | 12 | 4 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -74,6 +74,11 @@ Celkem **554 kroků**: hotovo 157, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.53 (17. 11. 2026)
+- Zahájena implementace F4-16: read-only CLI `translations:check` porovnává statické klíče z Latte/PHP v `app/UI` s překlady ve všech aktivních jazycích a hlásí chybějící hodnoty i nepoužívané databázové klíče. Doménu určuje z nejbližšího `TranslatedPresenter`; dynamické reference zůstávají mimo statickou kontrolu.
+- Připraven scanner, CLI příkaz, DI registrace, test skeneru a rozšíření testu kompilace DI. Čeká se na CI a lokální `check.bat`.
+- F4: **12 hotovo**, **1 rozděláno**, **12 plán**, **4 zrušeno**. Celkem: **157 hotovo**, **1 rozděláno**, **1 k úpravě**, **389 plán**, **6 zrušeno**.
 
 ### v3.52 (17. 11. 2026)
 - F4-15 zrušen jako duplicitní: import výchozích systémových překladů z verzovaných SQL seedů zůstává výhradně odpovědností Nextras Migrations. Nevznikne paralelní CLI mechanismus pro spouštění nebo správu migrací; DB-only pravidlo zůstává zachováno.
@@ -453,7 +458,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 
 ### F4: Překlady v databázi
 
-_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 12 z 29 kroků; 0 rozpracováno; 14 plánováno; 3 zrušeno.
+_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 12 z 29 kroků; 1 rozpracováno; 12 plánováno; 4 zrušeno.
 
 - `[HOTOVO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap. Lokální `check.bat` i GitHub Actions (MySQL 8.4, migrace, integrační testy, PHPStan, coding standard a Deptrac) úspěšně prošly.
 - `[HOTOVO]` **F4-02** `MessageStore`: typovaný čtecí kontrakt, neměnný katalog zpráv a databázový adaptér pro tři vlastnické domény. Jeden parametrizovaný dotaz načítá zvolenou doménu a jazyk; `ActiveRow` zůstává uvnitř persistence vrstvy. Integrační test ověřuje DI, všechny tabulky, jazyky, chybějící klíče, neměnnost katalogu a počet dotazů. GitHub Actions i lokální `check.bat` úspěšně prošly.
@@ -470,7 +475,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-13** Databázový import výchozích systémových textů do tabulek vlastnických domén. První skutečný klíč Catalog `button.add_to_cart` je dodáván v češtině a angličtině transakčním idempotentním SQL seedem; existující záznamy se nepřepisují. MySQL integrační test ověřuje reálné hodnoty, opakované vložení a ochranu vlastních překladů ve všech třech doménových tabulkách. CI #418 i lokální `check.bat` prošly.
 - `[HOTOVO]` **F4-14** Logika `is_customized`, `default_hash`, `is_outdated` a testy všech stavů. `SystemMessageStateResolver` bezpečně aktualizuje systémové texty, chrání vlastní texty, vyhodnocuje zastaralost podle SHA-1 hashe a ponechává legacy řádky s `default_hash=NULL` beze změny. CI i lokální `check.bat` prošly.
 - `[ZRUŠENO]` **F4-15** Příkaz `translations:import`. Výchozí systémové překlady se dodávají verzovanými SQL seedy a jejich aplikace je výhradně odpovědností Nextras Migrations. Samostatný příkaz by vytvářel duplicitní mechanismus pro spouštění migrací a obcházel jednotné řízení databázových změn.
-- `[PLÁN]` **F4-16** Příkaz `translations:check` (chybějící a nepoužité klíče)
+- `[ROZDĚLÁNO]` **F4-16** Příkaz `translations:check` (chybějící a nepoužité klíče). Read-only CLI skenuje statické reference v Latte a PHP pod `app/UI`, doménu určuje podle nejbližšího `TranslatedPresenter` a porovnává klíče s DB ve všech aktivních jazycích. Dynamicky sestavené klíče nejsou staticky detekovatelné; CI a lokální kontrola čekají na dokončení.
 - `[PLÁN]` **F4-17** Admin: seznam textů s filtrem domény, jazyka a stavu
 - `[PLÁN]` **F4-18** Admin: správa vlastních překladů a zneplatnění cache; systémové zdroje zůstávají chráněné
 - `[PLÁN]` **F4-19** Admin: přehled změněných systémových zdrojů a vlastních překladů; bez přímé editace systémového zdroje
