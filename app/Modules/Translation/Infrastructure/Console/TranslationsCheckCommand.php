@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Translation\Infrastructure\Console;
 
-use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Infrastructure\Diagnostics\TranslationKeyUsageScanner;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Database\Explorer;
