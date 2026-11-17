@@ -70,9 +70,9 @@ try {
         $statement->execute([$key, $locale, $message]);
     }
 
-    $catalogCs = $factory->create(MessageDomain::Catalog, Locale::fromString('cs'));
+    $catalogCs = $factory->create(TranslationDomain::Catalog, Locale::fromString('cs'));
     $catalogEn = $factory->create(MessageDomain::Catalog, Locale::fromString('en'));
-    $cartCs = $factory->create(MessageDomain::Cart, Locale::fromString('cs'));
+    $cartCs = $factory->create(TranslationDomain::Cart, Locale::fromString('cs'));
     $catalogEnWithFallback = $factory->create(MessageDomain::Catalog, Locale::fromString('en'));
     $cartEnWithFallback = $factory->create(MessageDomain::Cart, Locale::fromString('en'));
 
