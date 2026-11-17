@@ -5,6 +5,8 @@ services:
 	- App\Shared\Infrastructure\Console\DbResetEnvironmentPolicy(%app.environment%)
 	- App\Shared\Infrastructure\Console\DbResetCommand
 	- App\Shared\Infrastructure\Console\OutboxWorkerCommand
+	- App\Modules\Translation\Infrastructure\Diagnostics\TranslationKeyUsageScanner(%appDir%/UI)
+	- App\Modules\Translation\Infrastructure\Console\TranslationsCheckCommand
 	# Dispatcher dostává všechny služby označené tagem domainEventListener už při kompilaci DI kontejneru.
 	- App\Shared\Infrastructure\Event\SynchronousEventDispatcher(
 		listeners: tagged(domainEventListener)
