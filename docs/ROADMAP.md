@@ -75,7 +75,12 @@ Celkem **554 kroků**: hotovo 152, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.41 (17. 11. 2026)\n- Dokončen F4-08: GitHub Actions run #44065470430 skončil úspěšně a uživatel potvrdil `All active checks passed.` po lokálním `check.bat`.\n- Zahájen F4-09: přidán typovaný obecný `EntityTranslationResolver`; upřednostňuje požadované locale, používá výchozí locale jako fallback a při shodném locale respektuje jediný lookup. Testy pokrývají prioritu, fallback, chybějící překlady i shodné locale.\n- F4: **7 hotovo**, **1 rozděláno**, **18 plán**, **3 zrušeno**. Celkem: **152 hotovo**, **1 rozděláno**, **1 k úpravě**, **395 plán**, **5 zrušeno**.\n\n### v3.40 (17. 11. 2026)
+### v3.41 (17. 11. 2026)
+- Dokončen F4-08: GitHub Actions run #44065470430 skončil úspěšně a uživatel potvrdil `All active checks passed.` po lokálním `check.bat`.
+- Zahájen F4-09: přidán typovaný obecný `EntityTranslationResolver`; upřednostňuje požadované locale, používá výchozí locale jako fallback a při shodném locale respektuje jediný lookup. Testy pokrývají prioritu, fallback, chybějící překlady i shodné locale.
+- F4: **7 hotovo**, **1 rozděláno**, **18 plán**, **3 zrušeno**. Celkem: **152 hotovo**, **1 rozděláno**, **1 k úpravě**, **395 plán**, **5 zrušeno**.
+
+### v3.40 (17. 11. 2026)
 - Oprava F4-08: přidáno veřejné `TranslationApi` (`TranslationDomain`, `TranslatorFactory`). `TranslatedPresenter` a Front/Home používají pouze veřejný kontrakt; `DatabaseTranslatorFactory` mapuje veřejnou doménu na interní `MessageDomain`.
 - Deptrac nyní povoluje prezentačním vrstvám pouze `TranslationApi`; interní implementace smí implementovat vlastní API, ale veřejné API není závislé na interních třídách. Doplněny integrační testy DI a Latte.
 - F4-08 zůstává rozpracovaný do úspěšného GitHub Actions a potvrzení lokálního `check.bat`.

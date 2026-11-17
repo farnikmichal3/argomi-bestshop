@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Translation\\Application;
+namespace App\Modules\Translation\Application;
 
-use App\\Shared\\Domain\\Locale\\Locale;
+use App\Shared\Domain\Locale\Locale;
 
 /**
  * Vybere překlad entity pro požadovaný jazyk s fallbackem na výchozí jazyk.

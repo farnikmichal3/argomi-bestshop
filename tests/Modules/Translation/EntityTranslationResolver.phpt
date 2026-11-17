@@ -3,9 +3,9 @@ Entity translation resolver prefers requested locale and falls back to the defau
 --FILE--
 <?php
 
-use App\\Modules\\Translation\\Application\\EntityTranslationResolver;
-use App\\Shared\\Domain\\Locale\\Locale;
-use Tester\\Assert;
+use App\Modules\Translation\Application\EntityTranslationResolver;
+use App\Shared\Domain\Locale\Locale;
+use Tester\Assert;
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
@@ -68,7 +68,7 @@ Assert::null(
     'When locales are equal, a second value must not simulate a duplicate fallback lookup.',
 );
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK
