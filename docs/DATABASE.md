@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 2.0 · 15. 11. 2026  
+**Revize:** 2.1 · 17. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -90,7 +90,7 @@ Objednávky používají explicitní `shop_order.is_demo`. Příznak se po vytvo
   - `category.parent_id` – samovazba kategorie;
   - `product_relation.related_product_id` – druhá vazba z tabulky produktových vztahů na `product.id`;
   - `currency` – obchodní sloupec odkazující na přirozený klíč `currency.code` (používá se v cenových tabulkách, košíku a objednávce);
-  - `locale` – jazykový kód odkazující na `language.code` (v tabulkách `cart` a `shop_order`);
+  - `locale` – jazykový kód odkazující na přirozený klíč `language.code`; používají jej zákaznické a transakční tabulky (`customer`, `cart`, `shop_order`), překladové tabulky katalogu a jednotlivých modulů (`*_translation`) i systémové překladové tabulky (`admin_message_translation`, `cart_message_translation`, `catalog_message_translation`, `checkout_message_translation`). Povinné jazykové vazby používají `ON DELETE RESTRICT`; pouze volitelné `customer.locale` používá `ON DELETE SET NULL`.
   - `currency(code, minor_units)` → `iso4217_currency(code, minor_units)` – složená vazba, která vynucuje současnou shodu kódu měny a její přesnosti;
   - `product_variant_attribute_value(product_id, attribute_id)` → `product_variant_axis(product_id, attribute_id)` – vazba na složený unikátní klíč osy varianty; zdrojové a cílové sloupce mají shodné názvy i pořadí.
 - U složených cizích klíčů, které začínají odkazem na `id`, musí první zdrojový sloupec dodržet konvenci `<referenced_table>_id`; další sloupce vyjadřují doplňující část složené identity a jejich pořadí musí odpovídat cílovým sloupcům.
