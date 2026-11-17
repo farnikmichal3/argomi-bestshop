@@ -18,12 +18,21 @@ final readonly class DatabaseTranslatorFactory
 {
     public function __construct(
         private MessageStore $messageStore,
+        private LocaleProvider $localeProvider,
     ) {}
 
     public function create(MessageDomain $domain, Locale $locale): DatabaseTranslator
     {
+        $catalog = $this->messageStore->load($domain, $locale);
+        $defaultLocale = $this->localeProvider->getDefault();
+
+        if ($locale->equals($defaultLocale)) {
+            return new DatabaseTranslator($catalog);
+        }
+
         return new DatabaseTranslator(
-            $this->messageStore->load($domain, $locale),
+            $catalog,
+            $this->messageStore->load($domain, $defaultLocale),
         );
     }
 }
