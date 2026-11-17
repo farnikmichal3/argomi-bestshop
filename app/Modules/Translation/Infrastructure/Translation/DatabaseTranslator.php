@@ -14,8 +14,7 @@ use Stringable;
  *
  * Doména a locale jsou pevně určeny při vytvoření překladače. Chybějící
  * klíč se zatím vrací beze změny; databázový fallback doplní F4-06.
- * Parametry jsou přijaty kvůli kontraktu Nette, jejich ICU formátování
- * však zajišťuje až navazující krok F4-05.
+ * Parametrizované zprávy formátuje pomocí ICU podle locale katalogu.
  */
 final readonly class DatabaseTranslator implements Translator
 {
@@ -25,7 +24,7 @@ final readonly class DatabaseTranslator implements Translator
 
     /**
      * @param mixed $message Stabilní klíč systémového textu; očekává se string nebo Stringable.
-     * @param mixed ...$parameters Parametry pro budoucí formátování zprávy.
+     * @param mixed ...$parameters Pojmenované parametry v jednom poli nebo poziční parametry.
      */
     public function translate($message, ...$parameters): string
     {
@@ -36,7 +35,64 @@ final readonly class DatabaseTranslator implements Translator
         }
 
         $messageKey = (string) $message;
+        $pattern = $this->catalog->get($messageKey);
 
-        return $this->catalog->get($messageKey) ?? $messageKey;
+        if ($pattern === null || $parameters === []) {
+            return $pattern ?? $messageKey;
+        }
+
+        $arguments = $this->normalizeParameters($parameters);
+
+        if ($arguments === []) {
+            return $pattern;
+        }
+
+        $locale = $this->catalog->locale->getCode();
+        $formatted = \MessageFormatter::formatMessage($locale, $pattern, $arguments);
+
+        if ($formatted === false) {
+            throw new MessageFormattingException(
+                $messageKey,
+                $locale,
+                intl_get_error_message(),
+            );
+        }
+
+        return $formatted;
+    }
+
+    /**
+     * Připraví argumenty pro ICU a odmítne hodnoty s nejednoznačným převodem.
+     *
+     * Jediné předané pole se chápe jako mapa pojmenovaných nebo pozičních
+     * argumentů. Samostatné argumenty se převedou na indexy 0, 1, 2...
+     *
+     * @param list<mixed> $parameters
+     * @return array<int|string, string|int|float|null>
+     */
+    private function normalizeParameters(array $parameters): array
+    {
+        $arguments = count($parameters) === 1 && is_array($parameters[0])
+            ? $parameters[0]
+            : $parameters;
+
+        $normalized = [];
+
+        foreach ($arguments as $key => $value) {
+            if ($value instanceof Stringable) {
+                $value = (string) $value;
+            }
+
+            if (!is_string($value) && !is_int($value) && !is_float($value) && $value !== null) {
+                throw new InvalidArgumentException(sprintf(
+                    'Translation parameter "%s" must be a string, number, null, or Stringable value.',
+                    (string) $key,
+                ));
+            }
+
+            $normalized[$key] = $value;
+        }
+
+        return $normalized;
     }
 }
