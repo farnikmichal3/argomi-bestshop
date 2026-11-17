@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.36 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.37 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 150, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 398, zrušeno 5.
+Celkem **554 kroků**: hotovo 150, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 397, zrušeno 5.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 150, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 5 | 0 | 0 | 0 | 0 | 21 | 3 |
+| F4 | Překlady v databázi | 29 | 5 | 1 | 0 | 0 | 0 | 20 | 3 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -75,9 +75,9 @@ Celkem **554 kroků**: hotovo 150, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.36 (17. 11. 2026)
-- Dokončen F4-05: `DatabaseTranslator` formátuje parametrizované zprávy přes ICU `MessageFormatter` z PHP `intl`. Podporuje pojmenované argumenty předané v jednom poli i poziční argumenty předané samostatně, včetně hodnot `string`, `int`, `float`, `null` a `Stringable`. Locale se bere z konkrétního `MessageCatalog`; chybějící klíč a zpráva bez parametrů zůstávají beze změny. Chybný ICU vzor vyvolá `MessageFormattingException`. `ext-intl` je povinná Composer platformní závislost a CI ji explicitně instaluje. GitHub Actions běh #349 prošel; uživatel potvrdil čisté lokální `check.bat`.
-- F4: **5 hotovo**, **0 rozděláno**, **21 plán**, **3 zrušeno**. Celkem: **150 hotovo**, **0 rozděláno**, **1 k úpravě**, **398 plán**, **5 zrušeno**.
+### v3.37 (17. 11. 2026)
+- Zahájen F4-06: překladač hledá nejprve v požadovaném locale, poté ve výchozím aktivním locale získaném z `LocaleProvider`, a nakonec vrací stabilní klíč. Fallback zůstává v rámci stejné vlastnické domény; ICU formátování musí použít locale katalogu, ze kterého byl text nalezen. Doplněny integrační testy pro fallback, doménovou izolaci a české plurály při požadovaném anglickém locale. Čeká se na GitHub Actions a lokální `check.bat`.
+- F4: **5 hotovo**, **1 rozděláno**, **20 plán**, **3 zrušeno**. Celkem: **150 hotovo**, **1 rozděláno**, **1 k úpravě**, **397 plán**, **5 zrušeno**.
 
 ## 3. Nejbližší kroky
 
@@ -389,7 +389,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-03** Cache katalogů (Nette Cache): trvalé úložiště sdílené mezi requesty, dekorátor `CachedMessageStore`, oddělení podle domény a locale a aplikační kontrakt invalidace. Tagy pokrývají invalidaci všech katalogů, jedné domény, jednoho locale i přesného průniku domény a locale. Integrační test ověřuje cache hit/miss a všechny varianty invalidace. Lokální `check.bat` i GitHub Actions úspěšně prošly.
 - `[HOTOVO]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm: překladač a továrna s explicitní doménou a locale, DI registrace a integrační testy.
 - `[HOTOVO]` **F4-05** Formátování ICU MessageFormat přes `intl`: `DatabaseTranslator` používá locale konkrétního katalogu, podporuje pojmenované i poziční parametry, pluralizaci cs/en a typované hodnoty včetně `Stringable`. Neplatný ICU vzor vyvolá `MessageFormattingException`; `ext-intl` je povinná Composer závislost. Ověřeno integračními testy, GitHub Actions i lokálním `check.bat`.
-- `[PLÁN]` **F4-06** Řetězec záloh: požadovaný jazyk, výchozí jazyk, klíč
+- `[ROZDĚLÁNO]` **F4-06** Řetězec záloh: požadovaný jazyk, výchozí jazyk, klíč
 - `[PLÁN]` **F4-07** Logování chybějících překladů a Tracy panel
 - `[PLÁN]` **F4-08** Latte rozšíření: překlad klíče v šabloně
 - `[PLÁN]` **F4-09** Pomocník pro překlad entit (překladová řádka se zálohou na výchozí jazyk)
