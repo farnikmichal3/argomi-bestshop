@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6540b1bb5cf9257529452a288f37e8db",
+    "content-hash": "a9b2115958906cc54764cf43e129f87d",
     "packages": [
         {
             "name": "contributte/console",
@@ -4079,7 +4079,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-03T12:14:22+00:00"
+            "time": "2026-11-03T12:14:22+00:00",
+            "published-time": "2026-11-03T12:14:36+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -6043,8 +6044,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-intl": "*",
-        "php": ">=8.3"
+        "php": ">=8.3",
+        "ext-intl": "*"
     },
     "platform-dev": {},
     "platform-overrides": {
