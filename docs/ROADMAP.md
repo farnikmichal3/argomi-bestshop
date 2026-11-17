@@ -383,7 +383,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 
 ### F4: Překlady v databázi
 
-_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 3 z 29 kroků; 0 rozpracováno; 3 zrušeno.
+_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 6 z 29 kroků; 0 rozpracováno; 3 zrušeno.
 
 - `[HOTOVO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap. Lokální `check.bat` i GitHub Actions (MySQL 8.4, migrace, integrační testy, PHPStan, coding standard a Deptrac) úspěšně prošly.
 - `[HOTOVO]` **F4-02** `MessageStore`: typovaný čtecí kontrakt, neměnný katalog zpráv a databázový adaptér pro tři vlastnické domény. Jeden parametrizovaný dotaz načítá zvolenou doménu a jazyk; `ActiveRow` zůstává uvnitř persistence vrstvy. Integrační test ověřuje DI, všechny tabulky, jazyky, chybějící klíče, neměnnost katalogu a počet dotazů. GitHub Actions i lokální `check.bat` úspěšně prošly.
