@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.50 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.51 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 156, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 392, zrušeno 5.
+Celkem **554 kroků**: hotovo 157, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 391, zrušeno 5.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 156, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 11 | 0 | 0 | 0 | 0 | 15 | 3 |
+| F4 | Překlady v databázi | 29 | 12 | 0 | 0 | 0 | 0 | 14 | 3 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -74,6 +74,11 @@ Celkem **554 kroků**: hotovo 156, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.51 (17. 11. 2026)
+- Dokončen F4-14: `SystemMessageStateResolver` bezpečně řeší aktualizaci výchozích systémových překladů, zachování administrátorských úprav, označení zastaralých vlastních textů, ochranu klíčů `source=custom` a beze změny ponechává historické řádky s `default_hash=NULL`. Hash výchozího textu používá SHA-1 nad přesným UTF-8 zněním.
+- Jednotkové testy pokrývají všechny stavové větve; GitHub Actions i lokální `check.bat` uživatelem potvrzeny jako úspěšné (`All active checks passed.`).
+- F4: **12 hotovo**, **0 rozděláno**, **14 plán**, **3 zrušeno**. Celkem: **157 hotovo**, **0 rozděláno**, **1 k úpravě**, **391 plán**, **5 zrušeno**.
 
 ### v3.50 (17. 11. 2026)
 - Dokončen F4-13: přidán skutečný Catalog systémový klíč `button.add_to_cart` v češtině a angličtině do idempotentního transakčního SQL seedu `2026-11-17-140000-seed-catalog-add-to-cart.sql`. Seed doplňuje pouze chybějící řádky a existující systémové ani vlastní překlady nepřepisuje.
@@ -444,7 +449,7 @@ _Schéma vlny 1 spuštěné, ověřené a napojené na Nette Database Explorer._
 
 ### F4: Překlady v databázi
 
-_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 8 z 29 kroků; 1 rozpracováno; 3 zrušeno.
+_Modul Translation: systémové texty, jednotky, obsah entit, přepsání administrátorem._ Hotovo 12 z 29 kroků; 0 rozpracováno; 14 plánováno; 3 zrušeno.
 
 - `[HOTOVO]` **F4-01** Modul `Translation`: struktura a DI extension. Připraveny adresáře Api, Application, Domain a Infrastructure, konvenčně registrovaná `TranslationExtension` a integrační test skutečné kompilace DI kontejneru přes Bootstrap. Lokální `check.bat` i GitHub Actions (MySQL 8.4, migrace, integrační testy, PHPStan, coding standard a Deptrac) úspěšně prošly.
 - `[HOTOVO]` **F4-02** `MessageStore`: typovaný čtecí kontrakt, neměnný katalog zpráv a databázový adaptér pro tři vlastnické domény. Jeden parametrizovaný dotaz načítá zvolenou doménu a jazyk; `ActiveRow` zůstává uvnitř persistence vrstvy. Integrační test ověřuje DI, všechny tabulky, jazyky, chybějící klíče, neměnnost katalogu a počet dotazů. GitHub Actions i lokální `check.bat` úspěšně prošly.
@@ -459,7 +464,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-11** `UnitFormatter`: symbol a název s množným číslem. Veřejný kontrakt, ICU implementace, DI registrace a testy pro cs/en, celočíselná i desetinná množství a bezpečnou hranici ICU (`|Quantity| < 2^41`); GitHub Actions run #44074597462 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[ZRUŠENO]` **F4-12** Struktura souborů s výchozími texty modulu (`Resources/translations`). Zrušeno kvůli závaznému DB-only pravidlu: runtime ani verzované souborové katalogy se nezavádějí; výchozí texty budou dodávány databázovými migracemi/seedy.
 - `[HOTOVO]` **F4-13** Databázový import výchozích systémových textů do tabulek vlastnických domén. První skutečný klíč Catalog `button.add_to_cart` je dodáván v češtině a angličtině transakčním idempotentním SQL seedem; existující záznamy se nepřepisují. MySQL integrační test ověřuje reálné hodnoty, opakované vložení a ochranu vlastních překladů ve všech třech doménových tabulkách. CI #418 i lokální `check.bat` prošly.
-- `[PLÁN]` **F4-14** Logika `is_customized`, `default_hash`, `is_outdated` a testy všech stavů
+- `[HOTOVO]` **F4-14** Logika `is_customized`, `default_hash`, `is_outdated` a testy všech stavů. `SystemMessageStateResolver` bezpečně aktualizuje systémové texty, chrání vlastní texty, vyhodnocuje zastaralost podle SHA-1 hashe a ponechává legacy řádky s `default_hash=NULL` beze změny. CI i lokální `check.bat` prošly.
 - `[PLÁN]` **F4-15** Příkaz `translations:import`
 - `[PLÁN]` **F4-16** Příkaz `translations:check` (chybějící a nepoužité klíče)
 - `[PLÁN]` **F4-17** Admin: seznam textů s filtrem domény, jazyka a stavu
