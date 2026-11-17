@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Modules\Translation\Infrastructure\Translation;
 
+use App\Modules\Translation\Api\TranslationDomain;
+use App\Modules\Translation\Api\TranslatorFactory;
 use App\Modules\Translation\Application\MessageStore;
 use App\Modules\Translation\Domain\MessageDomain;
 use App\Shared\Domain\Locale\Locale;
 use App\Shared\Domain\Locale\LocaleProvider;
 
 /**
- * Vytváří překladač s explicitní vlastnickou doménou a locale.
+ * Databázová implementace veřejné továrny překladačů.
  *
- * Načítání probíhá přes MessageStore, takže se automaticky využívá
- * persistentní cache katalogů a nevzniká skrytý globální jazykový kontext.
+ * Veřejnou doménu mapuje na interní model modulu; načítání přes MessageStore
+ * zachovává persistentní cache i fallback stejné vlastnické domény.
  */
 final readonly class DatabaseTranslatorFactory implements TranslatorFactory
 {
@@ -22,9 +24,15 @@ final readonly class DatabaseTranslatorFactory implements TranslatorFactory
         private LocaleProvider $localeProvider,
     ) {}
 
-    public function create(MessageDomain $domain, Locale $locale): DatabaseTranslator
+    public function create(TranslationDomain $domain, Locale $locale): DatabaseTranslator
     {
-        $catalog = $this->messageStore->load($domain, $locale);
+        $messageDomain = match ($domain) {
+            TranslationDomain::Catalog => MessageDomain::Catalog,
+            TranslationDomain::Cart => MessageDomain::Cart,
+            TranslationDomain::Checkout => MessageDomain::Checkout,
+        };
+
+        $catalog = $this->messageStore->load($messageDomain, $locale);
         $defaultLocale = $this->localeProvider->getDefault();
 
         if ($locale->equals($defaultLocale)) {
