@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.43 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.44 · 17. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -75,9 +75,10 @@ Celkem **554 kroků**: hotovo 153, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.43 (17. 11. 2026)
-- Zahájen F4-10: veřejný kontrakt `LocaleNumberFormatter`, implementace ICU a registrace v DI. Formátování `Money` zachovává celočíselné minor units a nepředává skutečnou částku do API vyžadujícího `float`; doplněny testy locale, měn a celočíselných mezí.
-- Implementace čeká na ověření v GitHub Actions a na lokální `check.bat`; krok zůstává rozpracovaný.
+### v3.44 (17. 11. 2026)
+- F4-10: GitHub Actions run #44071145527 úspěšně dokončil MySQL migrace a integrační testy, všech 35 automatických testů, PHPStan, coding standard i Deptrac.
+- Veřejný kontrakt `LocaleNumberFormatter` a ICU implementace formátují čísla podle explicitního locale; `Money` zůstává přesné v minor units bez převodu částky na float. Doplněny testy cs/en/de, měn s 0/2/4 desetinnými místy, záporných částek a celočíselných mezí.
+- F4-10 čeká pouze na lokální ověření uživatelem přes `check.bat`; krok zůstává rozpracovaný.
 - F4: **8 hotovo**, **1 rozděláno**, **17 plán**, **3 zrušeno**. Celkem: **153 hotovo**, **1 rozděláno**, **1 k úpravě**, **394 plán**, **5 zrušeno**.
 
 ### v3.42 (17. 11. 2026)
@@ -419,7 +420,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[PLÁN]` **F4-07** Logování chybějících překladů a Tracy panel
 - `[HOTOVO]` **F4-08** Latte rozšíření: překlad klíče v šabloně. Nativní Latte překladová syntaxe je napojena přes `Template::setTranslator()`; společný `TranslatedPresenter` vyžaduje explicitní doménu a ověřuje aktivní locale. GitHub Actions run #44065470430 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[HOTOVO]` **F4-09** Pomocník pro překlad entit (překladová řádka se zálohou na výchozí jazyk). Aplikační `EntityTranslationResolver` je typově obecný, upřednostňuje požadované locale, při jeho absenci použije výchozí locale a při shodě jazyků pracuje s jediným výsledkem. Testy pokrývají prioritu, fallback, chybějící překlady i shodné locale. GitHub Actions run #44066963629 i lokální `check.bat` uživatelem potvrzeny jako úspěšné; načítání řádků zůstává odpovědností repozitáře.
-- `[ROZDĚLÁNO]` **F4-10** Formátování peněz a čísel (`NumberFormatter`) podle jazyka. Veřejné API přijímá explicitní `Locale`; formátování `Money` zachovává přesnost minor units bez převodu částky na float. Implementace a testy jsou připraveny, čeká se na CI a lokální ověření.
+- `[ROZDĚLÁNO]` **F4-10** Formátování peněz a čísel (`NumberFormatter`) podle jazyka. Veřejné API přijímá explicitní `Locale`; formátování `Money` zachovává přesnost minor units bez převodu částky na float. GitHub Actions run #44071145527 úspěšný; čeká se na lokální ověření přes `check.bat`.
 - `[PLÁN]` **F4-11** `UnitFormatter`: symbol a název s množným číslem
 - `[ZRUŠENO]` **F4-12** Struktura souborů s výchozími texty modulu (`Resources/translations`). Zrušeno kvůli závaznému DB-only pravidlu: runtime ani verzované souborové katalogy se nezavádějí; výchozí texty budou dodávány databázovými migracemi/seedy.
 - `[PLÁN]` **F4-13** Databázový importér výchozích systémových textů do tabulek vlastnických domén; žádná centrální tabulka `translation_message` neexistuje.
