@@ -9,6 +9,7 @@ use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
+use SplFileInfo;
 
 /**
  * Hledá statické systémové překladové klíče v Latte šablonách a PHP presenterech.
@@ -39,6 +40,10 @@ final class TranslationKeyUsageScanner
         );
 
         foreach ($iterator as $file) {
+            if (!$file instanceof SplFileInfo) {
+                continue;
+            }
+
             if (!$file->isFile() || !in_array($file->getExtension(), ['latte', 'php'], true)) {
                 continue;
             }
@@ -149,7 +154,7 @@ final class TranslationKeyUsageScanner
     {
         if ($extension === 'latte') {
             preg_match_all("~\\{_\\s*(['\"])([A-Za-z0-9][A-Za-z0-9_.-]*)\\1~", $contents, $matches);
-            $keys = array_values(array_unique($matches[2] ?? []));
+            $keys = array_values(array_unique($matches[2]));
             sort($keys);
 
             return $keys;
