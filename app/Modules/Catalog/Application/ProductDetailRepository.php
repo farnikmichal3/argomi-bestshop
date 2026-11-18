@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Application;
+namespace App\Modules\Catalog\Application;
 
-use App\\Modules\\Catalog\\Application\\Dto\\ProductDetailDto;
-use App\\Shared\\Domain\\Locale\\Locale;
+use App\Modules\Catalog\Application\Dto\ProductDetailDto;
+use App\Shared\Domain\Locale\Locale;
 
 interface ProductDetailRepository
 {
