@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.65 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.66 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 166, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 381, zrušeno 6.
+Celkem **554 kroků**: hotovo 167, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 380, zrušeno 6.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 166, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 21 | 0 | 0 | 0 | 0 | 3 | 4 |
+| F4 | Překlady v databázi | 29 | 22 | 0 | 0 | 0 | 0 | 2 | 4 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -493,7 +493,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-22** Oprávnění k úpravě překladů. Role `translation_viewer`/`translation_manager` jsou ověřeny resolverem; skutečný Nette DI kontejner automaticky váže veřejné `TranslationPermission` na `NetteTranslationPermissionService`. Integrační test potvrzuje, že nepřihlášený uživatel nemá oprávnění ke čtení ani správě. Presenter vynucuje autorizaci při zobrazení i při zpracování formulářů. GitHub Actions CI i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[HOTOVO]` **F4-23** Bezpečnost překladů: zapisovací vrstva odmítá HTML a vyžaduje neprázdný prostý text; Latte automaticky escapuje i nedůvěryhodný text načtený přímo z databáze. `MessageTranslationWriterIntegration.phpt` ověřuje odmítnutí HTML při zápisu a `LatteTranslationIntegration.phpt` ověřuje escapování `<script>` při vykreslení včetně absence surového skriptu. Audit `TranslationsPresenter` a `default.latte` nepotvrdil použití `noescape`.
 - `[HOTOVO]` **F4-24** Texty modulu (cs, en). Idempotentní Admin SQL seed obsahuje české a anglické systémové texty. Integrační test skenuje všechny statické překladové klíče v Admin UI a pro každý vyžaduje záznam `source=core` v obou jazycích; současně ověřuje idempotenci a ochranu vlastních překladů. GitHub Actions run #44273356294 na commitu `74f1eeb` i lokální `check.bat` uživatelem potvrzeny jako úspěšné (`All active checks passed.`).
-- `[PLÁN]` **F4-25** Dokumentace modulu Translation
+- `[HOTOVO]` **F4-25** Dokumentace modulu Translation. Vznikl `app/Modules/Translation/README.md` s praktickým popisem veřejného API, použití v prezenterech/Latte, formátování, správy jazyků, oprávnění, cache, diagnostiky, databázového vlastnictví a DI registrace. Dokument odkazuje na kanonický `docs/TRANSLATIONS.md` a je dostupný také z indexu `docs/README.md`. GitHub Actions run #44274201945 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[ZRUŠENO]` **F4-26** Oddělit systémové překlady jednotlivých domén do cílového úložiště. Již dokončeno v F3-31 migrací `2026-11-15-210000-split-system-message-translations.sql`; krok se neopakuje.
 - `[PLÁN]` **F4-27** Implementovat chráněné systémové zdroje a oddělené vlastní překlady
 - `[ZRUŠENO]` **F4-28** Migrovat současná data z `translation_message` bez ztráty. Již dokončeno a ověřeno v F3-31 včetně NULL-safe porovnání všech přenášených sloupců; krok se neopakuje.
@@ -502,6 +502,11 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 ### v3.56 (18. 11. 2026)
 - Dokončen F4-17: read-only Admin seznam překladů s validovanými filtry domény, jazyka a stavu, limitem 200 řádků a bezpečným escapováním. Po opravě integračního testu systémových seedů uživatel potvrdil `All active checks passed.`
 - F4: **14 hotovo**, **0 rozděláno**, **10 plán**, **4 zrušeno**. Celkem: **159 hotovo**, **0 rozděláno**, **1 k úpravě**, **388 plán**, **6 zrušeno**.
+
+### v3.66 (18. 11. 2026)
+- Dokončen F4-25: přidán `app/Modules/Translation/README.md` jako praktická dokumentace veřejného API, použití překladače v prezenterech a Latte, formátování čísel/peněz/jednotek, správy jazyků a vlastních textů, oprávnění, cache, diagnostiky, databázového vlastnictví a DI registrace. `docs/README.md` nyní odkazuje na modulový průvodce; kanonický `docs/TRANSLATIONS.md` zůstává zdrojem detailního překladového standardu.
+- GitHub Actions run #44274201945 na commitu `2c2080f` i lokální `check.bat` uživatelem potvrzeny jako úspěšné (`All active checks passed.`).
+- F4: **22 hotovo**, **0 rozděláno**, **2 plán**, **4 zrušeno**. Celkem: **167 hotovo**, **0 rozděláno**, **1 k úpravě**, **380 plán**, **6 zrušeno**.
 
 ### v3.65 (18. 11. 2026)
 - Dokončen F4-24: idempotentní Admin SQL seed poskytuje systémové texty v češtině a angličtině. Integrační test skenuje všechny statické překladové klíče Admin UI a vyžaduje záznam `source=core` v obou jazycích; zachovává také ověření idempotence a ochrany vlastních překladů. GitHub Actions run #44273356294 na commitu `74f1eeb` i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
