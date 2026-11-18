@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Application;
+namespace App\Modules\Catalog\Application;
 
 /**
  * Povolené stabilní způsoby řazení produktů v kategorii.
