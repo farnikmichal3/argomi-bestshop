@@ -36,6 +36,12 @@ Assert::type(
     $context->container->getByType(LocaleNumberFormatter::class),
 );
 
+// Veřejné oprávnění musí být skutečně navázáno na Nette User přes automatické DI.
+$permission = $context->container->getByType(TranslationPermission::class);
+Assert::type(NetteTranslationPermissionService::class, $permission);
+Assert::false($permission->canView());
+Assert::false($permission->canManage());
+
 echo "OK\n";
 ?>
 --EXPECT--
