@@ -357,7 +357,19 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
     private function firstNonNullText(mixed $number, mixed $text): ?string
     {
         if ($number !== null) {
-            return $this->string($number, 'numeric attribute value');
+            if (is_string($number)) {
+                return $number;
+            }
+
+            if (is_int($number)) {
+                return (string) $number;
+            }
+
+            if (is_float($number) && is_finite($number)) {
+                return number_format($number, 6, '.', '');
+            }
+
+            throw new UnexpectedValueException('Databázové pole numeric attribute value neobsahuje platné číslo.');
         }
 
         return $this->nullableString($text, 'text attribute value');
