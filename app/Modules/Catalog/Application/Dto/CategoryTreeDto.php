@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Application\\Dto;
+namespace App\Modules\Catalog\Application\Dto;
 
-use App\\Modules\\Catalog\\Domain\\Category\\Category;
+use App\Modules\Catalog\Domain\Category\Category;
 
 /**
  * Kategorie včetně překladu požadovaného jazyka a seřazených potomků.
