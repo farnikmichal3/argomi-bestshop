@@ -36,6 +36,26 @@ $pdo->beginTransaction();
 try {
     $writer->createCustom(TranslationDomain::Catalog, $customKey, $locale, 'Původní vlastní text');
 
+    // F4-20: vlastní text lze založit pouze v některé z explicitně povolených domén.
+    $domainTables = [
+        TranslationDomain::Catalog->value => 'catalog_message_translation',
+        TranslationDomain::Cart->value => 'cart_message_translation',
+        TranslationDomain::Checkout->value => 'checkout_message_translation',
+        TranslationDomain::Admin->value => 'admin_message_translation',
+    ];
+
+    foreach (TranslationDomain::cases() as $domain) {
+        $domainKey = 'f4_20.allowed.' . $domain->value . '.' . $token;
+        $writer->createCustom($domain, $domainKey, $locale, 'Vlastní text ' . $domain->value);
+
+        $table = $domainTables[$domain->value];
+        $statement = $pdo->prepare(
+            'SELECT source, message_text FROM ' . $table . ' WHERE message_key = ? AND locale = ?',
+        );
+        $statement->execute([$domainKey, $locale->getCode()]);
+        Assert::same(['source' => 'custom', 'message_text' => 'Vlastní text ' . $domain->value], $statement->fetch(PDO::FETCH_ASSOC));
+    }
+
     $before = $translatorFactory->createTranslator(TranslationDomain::Catalog, $locale);
     Assert::same('Původní vlastní text', $before->translate($customKey));
 
