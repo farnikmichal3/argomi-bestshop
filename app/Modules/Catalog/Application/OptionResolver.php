@@ -48,6 +48,8 @@ final readonly class OptionResolver
             $definitionsById[$definition->option->id] = $definition;
         }
 
+        /** @var array<int, true> $seenOptionIds */
+        $seenOptionIds = [];
         /** @var array<int, array{valueId: int|null, textValue: string|null}> $selectedById */
         $selectedById = [];
 
@@ -57,9 +59,10 @@ final readonly class OptionResolver
             }
 
             $optionId = $selection['optionId'];
-            if (isset($selectedById[$optionId])) {
+            if (isset($seenOptionIds[$optionId])) {
                 throw new InvalidArgumentException(sprintf('Volba %d byla odeslána více než jednou.', $optionId));
             }
+            $seenOptionIds[$optionId] = true;
 
             $definition = $definitionsById[$optionId] ?? null;
             if ($definition === null) {
