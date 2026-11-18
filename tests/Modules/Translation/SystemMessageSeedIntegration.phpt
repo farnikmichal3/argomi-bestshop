@@ -54,6 +54,30 @@ Assert::same([
     ['locale' => 'en', 'message_text' => 'Translation management', 'default_hash' => null],
 ], $adminTitle);
 
+// F4-24: každý statický klíč používaný administrací musí mít systémovou hodnotu cs i en.
+$usages = (new TranslationKeyUsageScanner($rootDir . '/app/UI'))->scan();
+$adminKeys = array_keys($usages['admin'] ?? []);
+sort($adminKeys);
+Assert::true($adminKeys !== [], 'Admin UI musí obsahovat statické překladové klíče.');
+
+$adminTranslation = $pdo->prepare(
+    "SELECT locale, source FROM admin_message_translation "
+    . "WHERE message_key = ? AND locale IN ('cs', 'en') ORDER BY locale",
+);
+
+foreach ($adminKeys as $adminKey) {
+    $adminTranslation->execute([$adminKey]);
+
+    Assert::same(
+        [
+            ['locale' => 'cs', 'source' => 'core'],
+            ['locale' => 'en', 'source' => 'core'],
+        ],
+        $adminTranslation->fetchAll(PDO::FETCH_ASSOC),
+        sprintf('Admin klíč "%s" musí mít systémový překlad v cs i en.', $adminKey),
+    );
+}
+
 $token = bin2hex(random_bytes(8));
 
 $pdo->beginTransaction();
