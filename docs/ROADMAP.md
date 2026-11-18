@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.68 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.69 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 167, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 378, zrušeno 7.
+Celkem **554 kroků**: hotovo 168, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 378, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 167, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 22 | 1 | 0 | 0 | 0 | 0 | 5 |
+| F4 | Překlady v databázi | 29 | 23 | 0 | 0 | 0 | 0 | 0 | 5 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -497,11 +497,15 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[ZRUŠENO]` **F4-26** Oddělit systémové překlady jednotlivých domén do cílového úložiště. Již dokončeno v F3-31 migrací `2026-11-15-210000-split-system-message-translations.sql`; krok se neopakuje.
 - `[ZRUŠENO]` **F4-27** Implementovat chráněné systémové zdroje a oddělené vlastní překlady. Již pokryto F4-18 (writer spravuje pouze `source=custom`, chrání `source=core`, testuje zákaz změn systémových řádků) a F4-20 (vlastní překlady ve všech čtyřech doménách); opakovaná implementace by duplikovala hotové řešení.
 - `[ZRUŠENO]` **F4-28** Migrovat současná data z `translation_message` bez ztráty. Již dokončeno a ověřeno v F3-31 včetně NULL-safe porovnání všech přenášených sloupců; krok se neopakuje.
-- `[ROZDĚLÁNO]` **F4-29** Testy oprávnění: administrátor nesmí měnit systémové zdroje. Přidán `TranslationsPresenterAuthorizationIntegration.phpt`, který ověřuje zákaz správy pro uživatele bez role manager, zákaz změny/smazání `source=core` i pro správce a zákaz čtení bez oprávnění. GitHub Actions run #44275837360 prošel; čeká se na lokální `check.bat`.
+- `[HOTOVO]` **F4-29** Testy oprávnění: administrátor nesmí měnit systémové zdroje. `TranslationsPresenterAuthorizationIntegration.phpt` ověřuje zákaz správy pro uživatele bez role manager, zákaz změny/smazání `source=core` i pro správce a zákaz čtení bez oprávnění. GitHub Actions run #44275837360 i lokální `check.bat` prošly.
 
 ### v3.56 (18. 11. 2026)
 - Dokončen F4-17: read-only Admin seznam překladů s validovanými filtry domény, jazyka a stavu, limitem 200 řádků a bezpečným escapováním. Po opravě integračního testu systémových seedů uživatel potvrdil `All active checks passed.`
 - F4: **14 hotovo**, **0 rozděláno**, **10 plán**, **4 zrušeno**. Celkem: **159 hotovo**, **0 rozděláno**, **1 k úpravě**, **388 plán**, **6 zrušeno**.
+
+### v3.69 (18. 11. 2026)
+- F4-29 dokončen: integrační test celé administrační hranice oprávnění prošel v GitHub Actions i lokálně přes `check.bat`. Ověřeno odmítnutí create/update/delete bez role správce, ochrana `source=core` i před správcem a zákaz čtení bez oprávnění.
+- F4 uzavřeno: **23 hotovo**, **0 rozděláno**, **0 plán**, **5 zrušeno**. Celkem: **168 hotovo**, **0 rozděláno**, **1 k úpravě**, **378 plán**, **7 zrušeno**.
 
 ### v3.68 (18. 11. 2026)
 - Zahájen F4-29: přidán integrační test celé administrační hranice oprávnění. Uživatel bez role `translation_manager` nesmí odeslat create/update/delete; ani oprávněný správce nesmí upravit či odstranit `source=core`; přístup bez oprávnění ke čtení je odmítnut. GitHub Actions run #44275837360 úspěšně prošel včetně MySQL integračních testů, PHPStan, coding standard a Deptrac; čeká se na lokální `check.bat`.
