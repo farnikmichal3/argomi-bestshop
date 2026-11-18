@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Infrastructure\\Persistence;
+namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\\Modules\\Catalog\\Application\\Dto\\CustomerOptionDetailDto;
-use App\\Modules\\Catalog\\Application\\Dto\\CustomerOptionValueDto;
-use App\\Modules\\Catalog\\Application\\Dto\\ProductAttributeDetailDto;
-use App\\Modules\\Catalog\\Application\\Dto\\ProductDetailDto;
-use App\\Modules\\Catalog\\Application\\Dto\\ProductImageDto;
-use App\\Modules\\Catalog\\Application\\Dto\\ProductVariantDetailDto;
-use App\\Modules\\Catalog\\Application\\Dto\\VariantAttributeValueDto;
-use App\\Modules\\Catalog\\Application\\ProductDetailRepository;
-use App\\Modules\\Catalog\\Application\\ProductRepository;
-use App\\Shared\\Domain\\Locale\\Locale;
-use Nette\\Database\\Explorer;
-use Nette\\Database\\Table\\ActiveRow;
+use App\Modules\Catalog\Application\Dto\CustomerOptionDetailDto;
+use App\Modules\Catalog\Application\Dto\CustomerOptionValueDto;
+use App\Modules\Catalog\Application\Dto\ProductAttributeDetailDto;
+use App\Modules\Catalog\Application\Dto\ProductDetailDto;
+use App\Modules\Catalog\Application\Dto\ProductImageDto;
+use App\Modules\Catalog\Application\Dto\ProductVariantDetailDto;
+use App\Modules\Catalog\Application\Dto\VariantAttributeValueDto;
+use App\Modules\Catalog\Application\ProductDetailRepository;
+use App\Modules\Catalog\Application\ProductRepository;
+use App\Shared\Domain\Locale\Locale;
+use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
 use UnexpectedValueException;
 
 /**
@@ -310,7 +310,7 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
             }
         }
 
-        if (is_string($value) && preg_match('/\\A-?[0-9]+\\z/D', $value) === 1) {
+        if (is_string($value) && preg_match('/\A-?[0-9]+\z/D', $value) === 1) {
             $validated = filter_var($value, FILTER_VALIDATE_INT);
             if ($validated !== false) {
                 return $validated;
