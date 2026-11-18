@@ -10,7 +10,7 @@ use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory
 use App\Shared\Domain\Locale\Locale;
 use App\Shared\Infrastructure\Persistence\Locale\DatabaseLocaleProvider;
 use Nette\Application\UI\TemplateFactory;
-use Psr\Log\NullLogger;
+use Monolog\Logger;
 use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 use Tests\Support\IntegrationTestBootstrap;
 use Tester\Assert;
@@ -28,7 +28,7 @@ $templateFactory = $integration->container->getByType(TemplateFactory::class);
 $factory = new DatabaseTranslatorFactory(
     new DatabaseMessageStore($integration->database),
     new DatabaseLocaleProvider($integration->database),
-    new MissingTranslationDiagnostics(new NullLogger()),
+    new MissingTranslationDiagnostics(new Logger('translation-test')),
 );
 
 $token = bin2hex(random_bytes(8));

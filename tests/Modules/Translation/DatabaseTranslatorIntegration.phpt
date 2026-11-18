@@ -33,7 +33,7 @@ Assert::type(TranslatorFactory::class, $diFactory);
 $factory = new DatabaseTranslatorFactory(
     new DatabaseMessageStore($integration->database),
     new DatabaseLocaleProvider($integration->database),
-    new MissingTranslationDiagnostics(new NullLogger()),
+    new MissingTranslationDiagnostics(new Logger('translation-test')),
 );
 
 $token = bin2hex(random_bytes(8));

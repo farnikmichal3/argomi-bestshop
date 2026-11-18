@@ -9,12 +9,12 @@ use App\Modules\Translation\Infrastructure\Diagnostics\MissingTranslationDiagnos
 use App\Modules\Translation\Infrastructure\Diagnostics\MissingTranslationPanel;
 use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslator;
 use App\Shared\Domain\Locale\Locale;
-use Psr\Log\NullLogger;
+use Monolog\Logger;
 use Tester\Assert;
 
 require dirname(__DIR__, 3) . '/vendor/autoload.php';
 
-$diagnostics = new MissingTranslationDiagnostics(new NullLogger());
+$diagnostics = new MissingTranslationDiagnostics(new Logger('translation-test'));
 $locale = Locale::fromString('en');
 $catalog = new MessageCatalog(MessageDomain::Catalog, $locale, []);
 $fallback = new MessageCatalog(
