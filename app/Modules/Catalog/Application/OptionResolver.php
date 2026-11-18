@@ -23,7 +23,7 @@ final readonly class OptionResolver
     ) {}
 
     /**
-     * @param list<array<string, mixed>> $selections Seznam položek optionId + valueId nebo textValue.
+     * @param array<int, array<string, mixed>> $selections Seznam položek optionId + valueId nebo textValue.
      *
      * @throws InvalidArgumentException Při neplatném, duplicitním nebo neúplném výběru.
      */
@@ -109,8 +109,7 @@ final readonly class OptionResolver
                 continue;
             }
 
-            $length = preg_match_all('/./us', $textValue);
-            if ($length === false || $length > self::MAX_TEXT_LENGTH) {
+            if (preg_match('/\\A.{1,' . self::MAX_TEXT_LENGTH . '}\\z/us', $textValue) !== 1) {
                 throw new InvalidArgumentException(sprintf('Text volby %d musí mít nejvýše %d znaků.', $optionId, self::MAX_TEXT_LENGTH));
             }
 
