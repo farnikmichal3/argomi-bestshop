@@ -15,13 +15,11 @@ use App\Modules\Catalog\Application\ProductDetailRepository;
 use App\Modules\Catalog\Application\ProductRepository;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Database\Explorer;
-use Nette\Database\Table\ActiveRow;
 use UnexpectedValueException;
 
 /**
  * Dávkový read model detailu katalogového produktu.
  *
- * Všechny ActiveRow objekty zůstávají uvnitř persistence vrstvy.
  * Počet dotazů je omezený a nezávisí na počtu variant ani voleb.
  */
 final class DatabaseProductDetailRepository implements ProductDetailRepository
