@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.71 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.72 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -503,6 +503,10 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - Dokončen F4-17: read-only Admin seznam překladů s validovanými filtry domény, jazyka a stavu, limitem 200 řádků a bezpečným escapováním. Po opravě integračního testu systémových seedů uživatel potvrdil `All active checks passed.`
 - F4: **14 hotovo**, **0 rozděláno**, **10 plán**, **4 zrušeno**. Celkem: **159 hotovo**, **0 rozděláno**, **1 k úpravě**, **388 plán**, **6 zrušeno**.
 
+### v3.72 (18. 11. 2026)
+- F5-02 dokončen: přidány neměnné doménové objekty `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` a typované enumy. Testy pokrývají platné i neplatné hodnoty; GitHub Actions i lokální `check.bat` uživatel potvrdil jako úspěšné.
+- F5: **2 hotovo**, **0 rozděláno**, **34 plán**. Celkem: **171 hotovo**, **0 rozděláno**, **1 k úpravě**, **376 plán**, **7 zrušeno**.
+
 ### v3.71 (18. 11. 2026)
 - F5-01 dokončen: přidána modulová `CatalogExtension`, dokumentace hranic a struktury katalogu a integrační test skutečné registrace přes Bootstrap. Zachována automatická registrace existujícího `ProductRepository` bez duplicitních definic. GitHub Actions i lokální `check.bat` uživatel potvrdil jako úspěšné.
 - F5: **1 hotovo**, **0 rozděláno**, **35 plán**. Celkem: **170 hotovo**, **0 rozděláno**, **1 k úpravě**, **377 plán**, **7 zrušeno**.
@@ -559,10 +563,10 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### F5: Catalog (vlna 1)
 
-_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 0 z 36 kroků.
+_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 2 z 36 kroků.
 
 - `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
-- `[PLÁN]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption`
+- `[HOTOVO]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` — typované neměnné modely a enumy stavů/typů; validace identifikátorů, kódů, SHA-256 hashe a fyzických rozměrů; doménový test bez infrastrukturních závislostí.
 - `[PLÁN]` **F5-03** `CategoryRepository`: strom kategorií, aktivní kategorie, řazení
 - `[PLÁN]` **F5-04** `ProductRepository`: výpis produktů v kategorii, stránkování, řazení
 - `[PLÁN]` **F5-05** `ProductDetailService`: načtení detailu produktu (překlady, varianty, obrázky, atributy, volby)
