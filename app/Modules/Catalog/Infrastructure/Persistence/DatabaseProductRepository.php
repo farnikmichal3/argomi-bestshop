@@ -99,11 +99,11 @@ final class DatabaseProductRepository implements ProductRepository
         ProductSortOrder $sort = ProductSortOrder::CategoryPosition,
     ): ProductListingDto {
         if ($categoryId < 1 || $page < 1 || $perPage < 1 || $perPage > 100) {
-            throw new \\InvalidArgumentException('ID kategorie a stránkování musí být kladné; limit stránky je 100.');
+            throw new \InvalidArgumentException('ID kategorie a stránkování musí být kladné; limit stránky je 100.');
         }
 
         if ($page > intdiv(PHP_INT_MAX, $perPage)) {
-            throw new \\InvalidArgumentException('Požadovaná stránka překračuje bezpečný rozsah offsetu.');
+            throw new \InvalidArgumentException('Požadovaná stránka překračuje bezpečný rozsah offsetu.');
         }
 
         $category = $this->database->table('category')
