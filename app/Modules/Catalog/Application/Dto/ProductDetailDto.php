@@ -7,13 +7,16 @@ namespace App\Modules\Catalog\Application\Dto;
 /**
  * Kompletní lokalizovaný read model aktivního produktu pro katalog.
  *
- * @param list<ProductVariantDetailDto> $variants
- * @param list<ProductImageDto> $images
- * @param list<ProductAttributeDetailDto> $attributes
- * @param list<CustomerOptionDetailDto> $options
+ * DTO záměrně obsahuje pouze data potřebná pro zobrazení detailu.
  */
 final readonly class ProductDetailDto
 {
+    /**
+     * @param list<ProductVariantDetailDto> $variants
+     * @param list<ProductImageDto> $images
+     * @param list<ProductAttributeDetailDto> $attributes
+     * @param list<CustomerOptionDetailDto> $options
+     */
     public function __construct(
         public ProductDto $product,
         public ?ProductTranslationDto $translation,
