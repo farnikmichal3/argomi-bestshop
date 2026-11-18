@@ -6,7 +6,10 @@ namespace App\Modules\Catalog\Infrastructure\Persistence;
 
 use App\Modules\Catalog\Application\Dto\ProductDto;
 use App\Modules\Catalog\Application\Dto\ProductTranslationDto;
+use App\Modules\Catalog\Application\Dto\ProductListItemDto;
+use App\Modules\Catalog\Application\Dto\ProductListingDto;
 use App\Modules\Catalog\Application\ProductRepository;
+use App\Modules\Catalog\Application\ProductSortOrder;
 use App\Shared\Domain\Locale\Locale;
 use DateTimeImmutable;
 use DateTimeInterface;
