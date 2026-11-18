@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 161, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 386, zrušeno 6.
+Celkem **554 kroků**: hotovo 161, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 385, zrušeno 6.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 161, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 16 | 0 | 0 | 0 | 0 | 8 | 4 |
+| F4 | Překlady v databázi | 29 | 16 | 1 | 0 | 0 | 0 | 7 | 4 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -488,7 +488,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-17** Admin: seznam textů s filtrem domény, jazyka a stavu. Read-only administrativní seznam používá validované filtry domény, jazyka a stavu, omezuje výsledek na 200 řádků a bezpečně escapuje výstup. GitHub Actions i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[HOTOVO]` **F4-18** Admin: správa vlastních překladů a zneplatnění cache; systémové zdroje zůstávají chráněné. `MessageTranslationWriter` dovoluje vytvářet, upravovat a mazat pouze `source=custom`, validuje klíč i prostý text a po změně invaliduje přesnou kombinaci domény a jazyka. Integrační test ověřuje čtení přes cache, invalidaci, ochranu systémových řádků a odmítnutí HTML; lokální `check.bat` uživatelem potvrzen.
 - `[HOTOVO]` **F4-19** Admin: přehled změněných systémových zdrojů a vlastních překladů; bez přímé editace systémového zdroje
-- `[PLÁN]` **F4-20** Admin: vytvoření vlastního textu v povolené doméně
+- `[ROZDĚLÁNO]` **F4-20** Admin: vytvoření vlastního textu v povolené doméně
 - `[PLÁN]` **F4-21** Admin: přidání a aktivace nového jazyka
 - `[PLÁN]` **F4-22** Oprávnění k úpravě překladů
 - `[PLÁN]` **F4-23** Bezpečnost: texty jsou prostý text, test escapování, zákaz HTML
