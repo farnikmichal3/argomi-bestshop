@@ -3,11 +3,11 @@ Catalog product repository lists active category products with stable pagination
 --FILE--
 <?php
 
-use App\\Modules\\Catalog\\Application\\ProductRepository;
-use App\\Modules\\Catalog\\Application\\ProductSortOrder;
-use App\\Shared\\Domain\\Locale\\Locale;
-use Tester\\Assert;
-use Tests\\Support\\IntegrationTestBootstrap;
+use App\Modules\Catalog\Application\ProductRepository;
+use App\Modules\Catalog\Application\ProductSortOrder;
+use App\Shared\Domain\Locale\Locale;
+use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 
@@ -85,7 +85,7 @@ Assert::exception(
     InvalidArgumentException::class,
 );
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK
