@@ -3,11 +3,11 @@ VariantSelector resolves complete active demo variant combinations and rejects i
 --FILE--
 <?php
 
-use App\\Modules\\Catalog\\Application\\VariantSelector;
-use App\\Modules\\Catalog\\Infrastructure\\Persistence\\DatabaseVariantSelectionRepository;
-use Nette\\Database\\Explorer;
-use Tester\\Assert;
-use Tests\\Support\\IntegrationTestBootstrap;
+use App\Modules\Catalog\Application\VariantSelector;
+use App\Modules\Catalog\Infrastructure\Persistence\DatabaseVariantSelectionRepository;
+use Nette\Database\Explorer;
+use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 
@@ -77,7 +77,7 @@ Assert::same(null, $selector->select(1, [
     'size' => ['type' => 'enum', 'value' => 'xxl'],
 ]));
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK
