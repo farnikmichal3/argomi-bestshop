@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Application;
 
 use App\Modules\Catalog\Application\Dto\ProductDto;
 use App\Modules\Catalog\Application\Dto\ProductTranslationDto;
+use App\Modules\Catalog\Application\Dto\ProductListingDto;
 use App\Shared\Domain\Locale\Locale;
 
 /**
