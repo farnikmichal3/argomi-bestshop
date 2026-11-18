@@ -61,6 +61,7 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
 
         $productAttributeRows = $this->database->table('product_attribute_value')
             ->where('product_id', $productId)
+            ->order('attribute_id ASC, id ASC')
             ->fetchAll();
 
         $allAttributeIds = [];
