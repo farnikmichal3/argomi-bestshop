@@ -487,7 +487,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-16** Příkaz `translations:check` (chybějící a nepoužité klíče). Read-only CLI skenuje statické reference v Latte a PHP pod `app/UI`, doménu určuje podle nejbližšího `TranslatedPresenter` a porovnává klíče s DB ve všech aktivních jazycích. Dynamicky sestavené klíče nejsou staticky detekovatelné; CI a lokální kontrola čekají na dokončení.
 - `[HOTOVO]` **F4-17** Admin: seznam textů s filtrem domény, jazyka a stavu. Read-only administrativní seznam používá validované filtry domény, jazyka a stavu, omezuje výsledek na 200 řádků a bezpečně escapuje výstup. GitHub Actions i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[HOTOVO]` **F4-18** Admin: správa vlastních překladů a zneplatnění cache; systémové zdroje zůstávají chráněné. `MessageTranslationWriter` dovoluje vytvářet, upravovat a mazat pouze `source=custom`, validuje klíč i prostý text a po změně invaliduje přesnou kombinaci domény a jazyka. Integrační test ověřuje čtení přes cache, invalidaci, ochranu systémových řádků a odmítnutí HTML; lokální `check.bat` uživatelem potvrzen.
-- `[PLÁN]` **F4-19** Admin: přehled změněných systémových zdrojů a vlastních překladů; bez přímé editace systémového zdroje
+- `[HOTOVO]` **F4-19** Admin: přehled změněných systémových zdrojů a vlastních překladů; bez přímé editace systémového zdroje
 - `[PLÁN]` **F4-20** Admin: vytvoření vlastního textu v povolené doméně
 - `[PLÁN]` **F4-21** Admin: přidání a aktivace nového jazyka
 - `[PLÁN]` **F4-22** Oprávnění k úpravě překladů
