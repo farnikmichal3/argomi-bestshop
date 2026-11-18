@@ -8,7 +8,6 @@ use App\Modules\Catalog\Application\Dto\CustomerOptionDetailDto;
 use App\Modules\Catalog\Application\Dto\CustomerOptionValueDto;
 use App\Modules\Catalog\Application\Dto\ProductAttributeDetailDto;
 use App\Modules\Catalog\Application\Dto\ProductDetailDto;
-use App\Modules\Catalog\Application\Dto\ProductImageDto;
 use App\Modules\Catalog\Application\Dto\ProductVariantDetailDto;
 use App\Modules\Catalog\Application\Dto\VariantAttributeValueDto;
 use App\Modules\Catalog\Application\ProductDetailRepository;
