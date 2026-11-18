@@ -4,11 +4,13 @@ Latte templates translate database keys at runtime with explicit locale and doma
 <?php
 
 use App\Modules\Translation\Api\TranslationDomain;
+use App\Modules\Translation\Infrastructure\Diagnostics\MissingTranslationDiagnostics;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
 use App\Modules\Translation\Infrastructure\Translation\DatabaseTranslatorFactory;
 use App\Shared\Domain\Locale\Locale;
 use App\Shared\Infrastructure\Persistence\Locale\DatabaseLocaleProvider;
 use Nette\Application\UI\TemplateFactory;
+use Psr\Log\NullLogger;
 use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 use Tests\Support\IntegrationTestBootstrap;
 use Tester\Assert;
@@ -26,6 +28,7 @@ $templateFactory = $integration->container->getByType(TemplateFactory::class);
 $factory = new DatabaseTranslatorFactory(
     new DatabaseMessageStore($integration->database),
     new DatabaseLocaleProvider($integration->database),
+    new MissingTranslationDiagnostics(new NullLogger()),
 );
 
 $token = bin2hex(random_bytes(8));

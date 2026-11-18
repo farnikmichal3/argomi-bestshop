@@ -36,9 +36,13 @@ final class DatabaseLocaleManager implements LocaleManager
 
     public function add(Locale $locale, string $name, int $sortOrder = 0): void
     {
+        if (preg_match('//u', $name) !== 1) {
+            throw new InvalidArgumentException('Název jazyka musí být platný UTF-8 text.');
+        }
+
         $nameLength = preg_match_all('/./us', $name);
 
-        if (trim($name) === '' || $nameLength === false || $nameLength > 100 || $sortOrder < 0) {
+        if (trim($name) === '' || $nameLength > 100 || $sortOrder < 0) {
             throw new InvalidArgumentException('Jazyk musí mít název a nezáporné pořadí.');
         }
 

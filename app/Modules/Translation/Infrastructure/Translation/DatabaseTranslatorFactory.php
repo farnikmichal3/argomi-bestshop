@@ -7,6 +7,7 @@ namespace App\Modules\Translation\Infrastructure\Translation;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Modules\Translation\Application\MessageStore;
+use App\Modules\Translation\Application\MissingTranslationReporter;
 use App\Modules\Translation\Domain\MessageDomain;
 use App\Shared\Domain\Locale\Locale;
 use App\Shared\Domain\Locale\LocaleProvider;
@@ -22,6 +23,7 @@ final readonly class DatabaseTranslatorFactory implements TranslatorFactory
     public function __construct(
         private MessageStore $messageStore,
         private LocaleProvider $localeProvider,
+        private MissingTranslationReporter $missingTranslationReporter,
     ) {}
 
     public function createTranslator(TranslationDomain $domain, Locale $locale): DatabaseTranslator
@@ -37,12 +39,13 @@ final readonly class DatabaseTranslatorFactory implements TranslatorFactory
         $defaultLocale = $this->localeProvider->getDefault();
 
         if ($locale->equals($defaultLocale)) {
-            return new DatabaseTranslator($catalog);
+            return new DatabaseTranslator($catalog, null, $this->missingTranslationReporter);
         }
 
         return new DatabaseTranslator(
             $catalog,
             $this->messageStore->load($messageDomain, $defaultLocale),
+            $this->missingTranslationReporter,
         );
     }
 }

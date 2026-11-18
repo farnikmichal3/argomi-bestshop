@@ -6,12 +6,14 @@ namespace App;
 
 use App\Core\Environment\DebugModePolicy;
 use App\Core\Module\ModuleRegistry;
+use App\Modules\Translation\Infrastructure\Diagnostics\MissingTranslationPanel;
 use LogicException;
 use Nette;
 use Nette\Bootstrap\Configurator;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 use Nette\Neon\Neon;
+use Tracy\Debugger;
 
 class Bootstrap
 {
@@ -38,7 +40,14 @@ class Bootstrap
     {
         $this->initializeEnvironment();
         $this->setupContainer();
-        return $this->configurator->createContainer();
+        $container = $this->configurator->createContainer();
+        $bar = Debugger::getBar();
+
+        if ($bar !== null) {
+            $bar->addPanel($container->getByType(MissingTranslationPanel::class));
+        }
+
+        return $container;
     }
 
 

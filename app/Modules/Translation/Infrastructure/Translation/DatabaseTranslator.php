@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Translation\Infrastructure\Translation;
 
 use App\Modules\Translation\Application\Dto\MessageCatalog;
+use App\Modules\Translation\Application\MissingTranslationReporter;
 use InvalidArgumentException;
 use Nette\Localization\Translator;
 use Stringable;
@@ -21,6 +22,7 @@ final readonly class DatabaseTranslator implements Translator
     public function __construct(
         private MessageCatalog $catalog,
         private ?MessageCatalog $fallbackCatalog = null,
+        private ?MissingTranslationReporter $missingTranslationReporter = null,
     ) {}
 
     /**
@@ -37,6 +39,15 @@ final readonly class DatabaseTranslator implements Translator
 
         $messageKey = (string) $message;
         $pattern = $this->catalog->get($messageKey);
+
+        if ($pattern === null) {
+            $this->missingTranslationReporter?->report(
+                $this->catalog->domain,
+                $this->catalog->locale,
+                $messageKey,
+            );
+        }
+
         $formatLocale = $this->catalog->locale->getCode();
 
         if ($pattern === null && $this->fallbackCatalog !== null) {
