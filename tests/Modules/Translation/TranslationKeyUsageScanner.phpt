@@ -13,6 +13,9 @@ $home = $root . DIRECTORY_SEPARATOR . 'Front' . DIRECTORY_SEPARATOR . 'Home';
 
 mkdir($home, 0777, true);
 
+$admin = $root . DIRECTORY_SEPARATOR . 'Admin' . DIRECTORY_SEPARATOR . 'Translations';
+mkdir($admin, 0777, true);
+
 file_put_contents(
     $home . DIRECTORY_SEPARATOR . 'HomePresenter.php',
     <<<'PHP'
@@ -28,6 +31,34 @@ final class HomePresenter extends TranslatedPresenter
         return TranslationDomain::Catalog;
     }
 }
+PHP,
+);
+
+file_put_contents(
+    $admin . DIRECTORY_SEPARATOR . 'TranslationsPresenter.php',
+    <<<'PHP'
+<?php
+
+use App\Modules\\Translation\\Api\\TranslationDomain;
+use App\Presentation\\TranslatedPresenter;
+
+final class TranslationsPresenter extends TranslatedPresenter
+{
+    protected function getTranslationDomain(): TranslationDomain
+    {
+        return TranslationDomain::Admin;
+    }
+}
+PHP,
+);
+
+file_put_contents(
+    $admin . DIRECTORY_SEPARATOR . 'TranslationsPresenterExtra.php',
+    <<<'PHP'
+<?php
+$form->addText('messageKey', 'translations.create.key');
+$flashKey = 'translations.created';
+$options = ['create' => 'translations.operation.create'];
 PHP,
 );
 
@@ -59,6 +90,11 @@ $scanner = new TranslationKeyUsageScanner($root . DIRECTORY_SEPARATOR . 'Front')
 $usages = $scanner->scan();
 
 Assert::same([
+    'admin' => [
+        'translations.create.key' => true,
+        'translations.created' => true,
+        'translations.operation.create' => true,
+    ],
     'catalog' => [
         'catalog.from_php' => true,
         'catalog.products_count' => true,

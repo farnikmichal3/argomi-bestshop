@@ -123,7 +123,7 @@ První potvrzený katalogový systémový klíč je `button.add_to_cart` se zně
 
 Příkaz `translations:check` je pouze čtecí diagnostika; nikdy nezapisuje do databáze, neopravuje ani nemaže záznamy.
 
-- Prochází zdrojové soubory `app/UI` a hledá statické reference v Latte syntaxi `{_'stable.key'}` a v PHP voláních `$translator->translate('stable.key')`.
+- Prochází zdrojové soubory `app/UI` a hledá statické reference v Latte syntaxi `{_'stable.key'}`, v PHP voláních `$translator->translate('stable.key')` a v literálech prefixu `translations.*` používaných jako Nette Forms labely a option texty.
 - Vlastnickou doménu určuje z nejbližšího presenteru, který dědí z `TranslatedPresenter` a vrací konkrétní případ `TranslationDomain` v `getTranslationDomain()`. Neodvozuje doménu z názvu klíče ani názvu adresáře.
 - Každý nalezený klíč porovnává s tabulkou vlastníka a se všemi aktivními jazyky načtenými přes `LocaleProvider`. Chybějící jazyková hodnota je hlášena samostatně pro každý aktivní jazyk.
 - Databázový klíč bez statické reference v odpovídající doméně je hlášen jako nepoužívaný.

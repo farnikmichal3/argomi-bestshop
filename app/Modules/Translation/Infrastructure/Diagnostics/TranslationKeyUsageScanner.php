@@ -164,6 +164,13 @@ final class TranslationKeyUsageScanner
         $keys = [];
 
         foreach ($tokens as $index => $token) {
+            // Nette Forms dostávají překladové klíče jako statické řetězce v argumentech i option polích.
+            if (is_array($token) && $token[0] === T_CONSTANT_ENCAPSED_STRING) {
+                if (preg_match("/\\A(['\\\"])(translations\\.[A-Za-z0-9_.-]+)\\1\\z/", $token[1], $formMatch) === 1) {
+                    $keys[] = $formMatch[2];
+                }
+            }
+
             if (!is_array($token) || !in_array($token[0], [T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR], true)) {
                 continue;
             }
