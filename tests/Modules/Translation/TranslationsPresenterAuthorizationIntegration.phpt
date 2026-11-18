@@ -119,7 +119,7 @@ $managerPermission = new class implements TranslationPermission {
     }
 };
 
-$managerPresenter = new TestableTranslationsPresenter(
+$managerPresenter = new TranslationsPresenter(
     $reader,
     $writer,
     $localeManager,
@@ -156,7 +156,7 @@ $deniedViewPermission = new class implements TranslationPermission {
     }
 };
 
-$deniedViewPresenter = new TestableTranslationsPresenter(
+$deniedViewPresenter = new TranslationsPresenter(
     $reader,
     $writer,
     $localeManager,
