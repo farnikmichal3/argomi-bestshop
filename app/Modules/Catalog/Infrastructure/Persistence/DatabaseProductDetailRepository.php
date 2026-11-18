@@ -27,6 +27,7 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
     public function __construct(
         private readonly Explorer $database,
         private readonly ProductRepository $products,
+        private readonly ProductImageRepository $images,
     ) {}
 
     public function findActiveDetail(int $productId, Locale $locale): ?ProductDetailDto
@@ -175,27 +176,7 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
             );
         }
 
-        $activeVariantIdSet = array_fill_keys($variantIds, true);
-        $images = [];
-        foreach (
-            $this->database->table('product_image')
-                ->where('product_id', $productId)
-                ->order('sort_order ASC, id ASC')
-                ->fetchAll() as $row
-        ) {
-            $imageVariantId = $this->nullableInteger($row->product_variant_id, 'product_image.product_variant_id');
-            if ($imageVariantId !== null && !isset($activeVariantIdSet[$imageVariantId])) {
-                continue;
-            }
-
-            $images[] = new ProductImageDto(
-                $this->integer($row->id, 'product_image.id'),
-                $imageVariantId,
-                $this->string($row->file_path, 'product_image.file_path'),
-                $this->nullableString($row->alt_text, 'product_image.alt_text'),
-                $this->integer($row->sort_order, 'product_image.sort_order'),
-            );
-        }
+        $images = $this->images->findForProduct($productId, $variantIds);
 
         $attributes = [];
         foreach ($productAttributeRows as $row) {
