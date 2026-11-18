@@ -21,24 +21,31 @@ $rootDir = dirname(__DIR__, 3);
 require $rootDir . '/vendor/autoload.php';
 require_once $rootDir . '/tests/Support/IntegrationTestBootstrap.php';
 
-final class TestableTranslationsPresenter extends TranslationsPresenter
-{
-    public function manageForm(): Form
-    {
-        return $this->createComponentManageForm();
-    }
-}
-
 $integration = IntegrationTestBootstrap::boot($rootDir);
 /** @var Explorer $database */
 $database = $integration->database;
 $pdo = $database->getConnection()->getPdo();
 
+/** @var MessageTranslationReader $reader */
 $reader = $integration->container->getByType(MessageTranslationReader::class);
+/** @var MessageTranslationWriter $writer */
 $writer = $integration->container->getByType(MessageTranslationWriter::class);
+/** @var LocaleManager $localeManager */
 $localeManager = $integration->container->getByType(LocaleManager::class);
+/** @var TranslatorFactory $translatorFactory */
 $translatorFactory = $integration->container->getByType(TranslatorFactory::class);
+/** @var LocaleProvider $localeProvider */
 $localeProvider = $integration->container->getByType(LocaleProvider::class);
+
+$getManageForm = static function (TranslationsPresenter $presenter): Form {
+    $form = $presenter->getComponent('manageForm');
+
+    if (!$form instanceof Form) {
+        throw new RuntimeException('TranslationsPresenter must create its management form.');
+    }
+
+    return $form;
+};
 
 $coreKey = 'button.add_to_cart';
 $locale = 'cs';
@@ -50,7 +57,9 @@ $readCore = static function () use ($pdo, $coreKey, $locale): array {
     $statement->execute([$coreKey, $locale]);
 
     $row = $statement->fetch(PDO::FETCH_ASSOC);
-    Assert::type('array', $row);
+    if (!is_array($row)) {
+        throw new RuntimeException('The seeded core translation must exist.');
+    }
 
     return $row;
 };
@@ -71,7 +80,7 @@ $viewerPermission = new class implements TranslationPermission {
     }
 };
 
-$viewerPresenter = new TestableTranslationsPresenter(
+$viewerPresenter = new TranslationsPresenter(
     $reader,
     $writer,
     $localeManager,
@@ -80,7 +89,7 @@ $viewerPresenter = new TestableTranslationsPresenter(
     $localeProvider,
 );
 
-$viewerForm = $viewerPresenter->manageForm();
+$viewerForm = $getManageForm($viewerPresenter);
 $viewerSubmit = $viewerForm->onSuccess[0];
 
 foreach (['update', 'delete', 'create'] as $operation) {
@@ -120,7 +129,7 @@ $managerPresenter = new TestableTranslationsPresenter(
 );
 
 foreach (['update', 'delete'] as $operation) {
-    $managerForm = $managerPresenter->manageForm();
+    $managerForm = $getManageForm($managerPresenter);
     $managerSubmit = $managerForm->onSuccess[0];
 
     $managerSubmit($managerForm, (object) [
