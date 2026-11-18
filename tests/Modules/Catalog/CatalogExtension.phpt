@@ -27,6 +27,7 @@ Assert::true($context->container instanceof Container);
 
 // Existující čtecí kontrakt musí zůstat dostupný přes automatické vyhledávání služeb.
 Assert::type(ProductRepository::class, $context->container->getByType(ProductRepository::class));
+Assert::type(ProductImageStorage::class, $context->container->getByType(ProductImageStorage::class));
 
 echo "OK\\n";
 ?>
