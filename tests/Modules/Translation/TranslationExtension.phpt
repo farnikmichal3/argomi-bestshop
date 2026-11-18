@@ -5,11 +5,13 @@ Translation module DI extension is discovered and compiled by the application Bo
 
 use App\Core\Module\ModuleRegistry;
 use App\Modules\Translation\Api\LocaleNumberFormatter;
+use App\Modules\Translation\Api\TranslationPermission;
 use App\Modules\Translation\Application\EntityTranslationResolver;
 use App\Modules\Translation\Application\IcuLocaleNumberFormatter;
 use App\Modules\Translation\Infrastructure\Console\TranslationsCheckCommand;
 use App\Modules\Translation\Infrastructure\Diagnostics\TranslationKeyUsageScanner;
 use App\Modules\Translation\Infrastructure\DI\TranslationExtension;
+use App\Modules\Translation\Infrastructure\Security\NetteTranslationPermissionService;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
 use Tests\Support\IntegrationTestBootstrap;
