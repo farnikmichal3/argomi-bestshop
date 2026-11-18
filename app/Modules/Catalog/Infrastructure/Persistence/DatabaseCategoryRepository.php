@@ -51,7 +51,7 @@ final class DatabaseCategoryRepository implements CategoryRepository
 
         foreach ($rows as $row) {
             $category = $this->mapCategory($row);
-            
+
             $categories[$category->id] = $category;
             $parentKey = $category->parentId ?? 0;
             $childrenByParent[$parentKey] ??= [];
