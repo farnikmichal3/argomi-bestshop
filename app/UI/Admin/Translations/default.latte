@@ -65,7 +65,17 @@
             <select class="form-select" id="translation-status" name="status">
                 <option value="">{_'translations.filter.all'}</option>
                 {foreach $statuses as $status}
-                    <option value="{$status->value}" selected={$selectedStatus === $status->value}>{_'translations.status.' . $status->value}</option>
+                    <option value="{$status->value}" selected={$selectedStatus === $status->value}>
+                        {if $status->value === 'core'}
+                            {_'translations.status.core'}
+                        {elseif $status->value === 'custom'}
+                            {_'translations.status.custom'}
+                        {elseif $status->value === 'customized'}
+                            {_'translations.status.customized'}
+                        {elseif $status->value === 'outdated'}
+                            {_'translations.status.outdated'}
+                        {/if}
+                    </option>
                 {/foreach}
             </select>
         </div>

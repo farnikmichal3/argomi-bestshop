@@ -23,6 +23,8 @@ VALUES
     ('translations.filter.status', 'en', 'Status', 'core', 0, SHA1('Status'), 0),
     ('translations.status.custom', 'cs', 'Vlastní zdroj', 'core', 0, SHA1('Vlastní zdroj'), 0),
     ('translations.status.custom', 'en', 'Custom source', 'core', 0, SHA1('Custom source'), 0),
+    ('translations.status.core', 'cs', 'Systémový', 'core', 0, SHA1('Systémový'), 0),
+    ('translations.status.core', 'en', 'System', 'core', 0, SHA1('System'), 0),
     ('translations.status.customized', 'cs', 'Upravený', 'core', 0, SHA1('Upravený'), 0),
     ('translations.status.customized', 'en', 'Customized', 'core', 0, SHA1('Customized'), 0),
     ('translations.status.outdated', 'cs', 'Zastaralý', 'core', 0, SHA1('Zastaralý'), 0),

@@ -13,7 +13,7 @@ $home = $root . DIRECTORY_SEPARATOR . 'Front' . DIRECTORY_SEPARATOR . 'Home';
 
 mkdir($home, 0777, true);
 
-$admin = $root . DIRECTORY_SEPARATOR . 'Admin' . DIRECTORY_SEPARATOR . 'Translations';
+$admin = $root . DIRECTORY_SEPARATOR . 'Front' . DIRECTORY_SEPARATOR . 'Admin' . DIRECTORY_SEPARATOR . 'Translations';
 mkdir($admin, 0777, true);
 
 file_put_contents(
