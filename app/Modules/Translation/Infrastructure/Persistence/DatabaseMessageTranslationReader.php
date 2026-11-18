@@ -70,8 +70,8 @@ final class DatabaseMessageTranslationReader implements MessageTranslationReader
 
         usort(
             $translations,
-            static fn(MessageTranslation $left, MessageTranslation $right): int =>
-                [$left->domain->value, $left->locale, $left->messageKey]
+            static fn(MessageTranslation $left, MessageTranslation $right): int
+                => [$left->domain->value, $left->locale, $left->messageKey]
                 <=> [$right->domain->value, $right->locale, $right->messageKey],
         );
 
