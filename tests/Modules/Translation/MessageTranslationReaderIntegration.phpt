@@ -29,6 +29,7 @@ $token = bin2hex(random_bytes(8));
 $coreKey = 'f4_17.core.' . $token;
 $customKey = 'f4_17.custom.' . $token;
 $outdatedKey = 'f4_17.outdated.' . $token;
+$modifiedKey = 'f4_19.modified.' . $token;
 $adminKey = 'f4_17.admin.' . $token;
 
 $pdo->beginTransaction();
@@ -43,6 +44,9 @@ try {
     $pdo->prepare(
         "INSERT INTO catalog_message_translation (message_key, locale, message_text, source, is_outdated) VALUES (?, 'cs', 'Zastaralý text', 'core', 1)",
     )->execute([$outdatedKey]);
+    $pdo->prepare(
+        "INSERT INTO catalog_message_translation (message_key, locale, message_text, source, is_customized) VALUES (?, 'cs', 'Upravený systémový text', 'core', 1)",
+    )->execute([$modifiedKey]);
     $pdo->prepare(
         "INSERT INTO admin_message_translation (message_key, locale, message_text) VALUES (?, 'cs', 'Admin text')",
     )->execute([$adminKey]);
@@ -59,7 +63,8 @@ try {
     Assert::true(count(array_filter($custom, static fn($row): bool => $row->messageKey === $customKey)) === 1);
 
     $customized = $reader->search(TranslationDomain::Catalog, Locale::fromString('cs'), TranslationMessageStatus::Customized);
-    Assert::true(count(array_filter($customized, static fn($row): bool => $row->messageKey === $customKey)) === 1);
+    Assert::true(count(array_filter($customized, static fn($row): bool => $row->messageKey === $modifiedKey)) === 1);
+    Assert::same([], array_values(array_filter($customized, static fn($row): bool => $row->messageKey === $customKey)));
 
     $outdated = $reader->search(TranslationDomain::Catalog, Locale::fromString('cs'), TranslationMessageStatus::Outdated);
     Assert::true(count(array_filter($outdated, static fn($row): bool => $row->messageKey === $outdatedKey)) === 1);
