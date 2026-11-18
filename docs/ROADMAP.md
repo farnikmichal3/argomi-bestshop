@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.69 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.71 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -503,9 +503,13 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - Dokončen F4-17: read-only Admin seznam překladů s validovanými filtry domény, jazyka a stavu, limitem 200 řádků a bezpečným escapováním. Po opravě integračního testu systémových seedů uživatel potvrdil `All active checks passed.`
 - F4: **14 hotovo**, **0 rozděláno**, **10 plán**, **4 zrušeno**. Celkem: **159 hotovo**, **0 rozděláno**, **1 k úpravě**, **388 plán**, **6 zrušeno**.
 
+### v3.71 (18. 11. 2026)
+- F5-01 dokončen: přidána modulová `CatalogExtension`, dokumentace hranic a struktury katalogu a integrační test skutečné registrace přes Bootstrap. Zachována automatická registrace existujícího `ProductRepository` bez duplicitních definic. GitHub Actions i lokální `check.bat` uživatel potvrdil jako úspěšné.
+- F5: **1 hotovo**, **0 rozděláno**, **35 plán**. Celkem: **170 hotovo**, **0 rozděláno**, **1 k úpravě**, **377 plán**, **7 zrušeno**.
+
 ### v3.70 (18. 11. 2026)
 - F4-07 dokončen: integrační test ověřuje zapojení chybějících překladů přes skutečný DI kontejner až do Tracy panelu. GitHub Actions run #44277097758 i lokální `check.bat` úspěšně prošly.
-- F4: **24 hotovo**, **0 rozděláno**, **0 plán**, **5 zrušeno**. Celkem: **169 hotovo**, **0 rozděláno**, **1 k úpravě**, **378 plán**, **7 zrušeno**.
+- F4: **24 hotovo**, **0 rozděláno**, **0 plán**, **5 zrušeno**. Celkem: **170 hotovo**, **0 rozděláno**, **1 k úpravě**, **377 plán**, **7 zrušeno**.
 
 ### v3.69 (18. 11. 2026)
 - F4-29 dokončen: integrační test celé administrační hranice oprávnění prošel v GitHub Actions i lokálně přes `check.bat`. Ověřeno odmítnutí create/update/delete bez role správce, ochrana `source=core` i před správcem a zákaz čtení bez oprávnění.
@@ -557,7 +561,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 0 z 36 kroků.
 
-- `[PLÁN]` **F5-01** Modul `Catalog`: struktura a DI extension
+- `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
 - `[PLÁN]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption`
 - `[PLÁN]` **F5-03** `CategoryRepository`: strom kategorií, aktivní kategorie, řazení
 - `[PLÁN]` **F5-04** `ProductRepository`: výpis produktů v kategorii, stránkování, řazení
