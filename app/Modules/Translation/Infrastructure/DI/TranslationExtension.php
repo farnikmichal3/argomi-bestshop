@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Translation\Infrastructure\DI;
 
 use App\Modules\Translation\Api\LocaleNumberFormatter;
+use App\Modules\Translation\Api\MessageTranslationReader;
 use App\Modules\Translation\Api\UnitFormatter;
 use App\Modules\Translation\Application\EntityTranslationResolver;
 use App\Modules\Translation\Application\IcuLocaleNumberFormatter;
@@ -12,6 +13,7 @@ use App\Modules\Translation\Application\IcuUnitFormatter;
 use App\Modules\Translation\Infrastructure\Cache\CachedMessageStore;
 use App\Modules\Translation\Infrastructure\Cache\NetteMessageCacheInvalidator;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
+use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageTranslationReader;
 use Nette\Caching\Cache;
 use Nette\DI\CompilerExtension;
 
@@ -27,7 +29,11 @@ final class TranslationExtension extends CompilerExtension
     {
         $builder = $this->getContainerBuilder();
 
-        $builder->addDefinition($this->prefix('messageTranslationReader'))\n            ->setType(MessageTranslationReader::class)\n            ->setFactory(DatabaseMessageTranslationReader::class);\n\n        $builder->addDefinition($this->prefix('entityTranslationResolver'))
+        $builder->addDefinition($this->prefix('messageTranslationReader'))
+            ->setType(MessageTranslationReader::class)
+            ->setFactory(DatabaseMessageTranslationReader::class);
+
+        $builder->addDefinition($this->prefix('entityTranslationResolver'))
             ->setType(EntityTranslationResolver::class);
 
         $builder->addDefinition($this->prefix('localeNumberFormatter'))
