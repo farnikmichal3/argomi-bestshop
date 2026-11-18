@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Application;
+namespace App\Modules\Catalog\Application;
 
-use App\\Modules\\Catalog\\Application\\Dto\\CategoryTreeDto;
-use App\\Shared\\Domain\\Locale\\Locale;
+use App\Modules\Catalog\Application\Dto\CategoryTreeDto;
+use App\Shared\Domain\Locale\Locale;
 
 /**
  * Aplikační kontrakt pro čtení hierarchie kategorií katalogu.
