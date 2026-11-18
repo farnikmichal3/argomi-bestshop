@@ -32,13 +32,13 @@ final class DatabaseCategoryRepository implements CategoryRepository
 
     public function findActiveTree(Locale $locale): array
     {
-        return $this->loadTree($locale, true);
+        return $this->filterActiveTree($this->loadTree($locale));
     }
 
     /**
      * @return list<CategoryTreeDto>
      */
-    private function loadTree(Locale $locale, bool $activeOnly): array
+    private function loadTree(Locale $locale): array
     {
         $rows = $this->database->table('category')
             ->order('sort_order ASC, id ASC')
@@ -51,11 +51,7 @@ final class DatabaseCategoryRepository implements CategoryRepository
 
         foreach ($rows as $row) {
             $category = $this->mapCategory($row);
-
-            if ($activeOnly && !$category->isActive) {
-                continue;
-            }
-
+            
             $categories[$category->id] = $category;
             $parentKey = $category->parentId ?? 0;
             $childrenByParent[$parentKey] ??= [];
@@ -85,6 +81,31 @@ final class DatabaseCategoryRepository implements CategoryRepository
         }
 
         return $tree;
+    }
+
+    /**
+     * Odstraní neaktivní uzly i celé jejich podstromy.
+     *
+     * @param list<CategoryTreeDto> $nodes
+     * @return list<CategoryTreeDto>
+     */
+    private function filterActiveTree(array $nodes): array
+    {
+        $result = [];
+
+        foreach ($nodes as $node) {
+            if (!$node->category->isActive) {
+                continue;
+            }
+
+            $result[] = new CategoryTreeDto(
+                $node->category,
+                $node->translation,
+                $this->filterActiveTree($node->children),
+            );
+        }
+
+        return $result;
     }
 
     /**
