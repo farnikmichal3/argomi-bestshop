@@ -169,28 +169,23 @@ final class DatabaseProductRepository implements ProductRepository
             $rightProduct = $right['product'];
 
             return match ($sort) {
-                ProductSortOrder::CategoryPosition
-                    =>
+                ProductSortOrder::CategoryPosition =>
                     ($positionComparison = $left['categoryPosition'] <=> $right['categoryPosition']) !== 0
                         ? $positionComparison
                         : ($leftProduct->id <=> $rightProduct->id),
-                ProductSortOrder::ProductCodeAscending
-                    =>
+                ProductSortOrder::ProductCodeAscending =>
                     ($codeComparison = strcmp($leftProduct->code, $rightProduct->code)) !== 0
                         ? $codeComparison
                         : ($leftProduct->id <=> $rightProduct->id),
-                ProductSortOrder::ProductCodeDescending
-                    =>
+                ProductSortOrder::ProductCodeDescending =>
                     ($codeComparison = strcmp($rightProduct->code, $leftProduct->code)) !== 0
                         ? $codeComparison
                         : ($rightProduct->id <=> $leftProduct->id),
-                ProductSortOrder::Newest
-                    =>
+                ProductSortOrder::Newest =>
                     ($dateComparison = $rightProduct->createdAt <=> $leftProduct->createdAt) !== 0
                         ? $dateComparison
                         : ($rightProduct->id <=> $leftProduct->id),
-                ProductSortOrder::Oldest
-                    =>
+                ProductSortOrder::Oldest =>
                     ($dateComparison = $leftProduct->createdAt <=> $rightProduct->createdAt) !== 0
                         ? $dateComparison
                         : ($leftProduct->id <=> $rightProduct->id),
