@@ -23,6 +23,8 @@ services:
 	- App\Shared\Infrastructure\Clock\SystemClock
 	# Generátor veřejných ULID je jedinou registrovanou implementací rozhraní PublicIdGenerator.
 	- App\Shared\Infrastructure\PublicId\SymfonyUlidGenerator
+	# Fyzické soubory katalogových obrázků zůstávají mimo veřejný adresář www/.
+	- App\\Modules\\Catalog\\Infrastructure\\Storage\\FilesystemProductImageStorage(%appDir%/../var/catalog-images)
 	# Poskytovatel není zachycen automatickým vyhledáváním *Service/*Repository,
 	# proto jej registrujeme výslovně. Rozhraní CurrencyProvider se pak autowiruje
 	# přes jedinou dostupnou implementaci.
