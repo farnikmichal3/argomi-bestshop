@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Infrastructure\\Persistence;
+namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\\Modules\\Catalog\\Application\\CategoryRepository;
-use App\\Modules\\Catalog\\Application\\Dto\\CategoryTranslationDto;
-use App\\Modules\\Catalog\\Application\\Dto\\CategoryTreeDto;
-use App\\Modules\\Catalog\\Domain\\Category\\Category;
-use App\\Shared\\Domain\\Locale\\Locale;
-use Nette\\Database\\Explorer;
-use Nette\\Database\\Table\\ActiveRow;
+use App\Modules\Catalog\Application\CategoryRepository;
+use App\Modules\Catalog\Application\Dto\CategoryTranslationDto;
+use App\Modules\Catalog\Application\Dto\CategoryTreeDto;
+use App\Modules\Catalog\Domain\Category\Category;
+use App\Shared\Domain\Locale\Locale;
+use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
 use UnexpectedValueException;
 
 /**
@@ -27,7 +27,7 @@ final class DatabaseCategoryRepository implements CategoryRepository
 
     public function findTree(Locale $locale): array
     {
-        return $this->loadTree($locale, false);
+        return $this->loadTree($locale);
     }
 
     public function findActiveTree(Locale $locale): array
@@ -191,7 +191,7 @@ final class DatabaseCategoryRepository implements CategoryRepository
         }
 
         // sort_order is signed and may be negative.
-        if ($field === 'category.sort_order' && is_string($value) && preg_match('/\\A-?[0-9]+\\z/D', $value) === 1) {
+        if ($field === 'category.sort_order' && is_string($value) && preg_match('/\A-?[0-9]+\z/D', $value) === 1) {
             $integer = filter_var($value, FILTER_VALIDATE_INT);
 
             if ($integer !== false) {
