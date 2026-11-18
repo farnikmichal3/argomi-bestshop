@@ -57,6 +57,8 @@ final class DatabaseMessageTranslationReader implements MessageTranslationReader
                 $selection->where('source', 'core');
             } elseif ($status === TranslationMessageStatus::Custom) {
                 $selection->where('source', 'custom');
+            } elseif ($status === TranslationMessageStatus::Customized) {
+                $selection->where('is_customized', 1);
             } elseif ($status === TranslationMessageStatus::Outdated) {
                 $selection->where('is_outdated', 1);
             }
