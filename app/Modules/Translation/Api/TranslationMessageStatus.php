@@ -11,5 +11,6 @@ enum TranslationMessageStatus: string
 {
     case Core = 'core';
     case Custom = 'custom';
+    case Customized = 'customized';
     case Outdated = 'outdated';
 }
