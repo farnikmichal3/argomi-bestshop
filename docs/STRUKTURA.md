@@ -58,6 +58,7 @@ app/
 │       │   ├── NumberFormattingException.php
 │       │   ├── TranslationDomain.php
 │       │   ├── TranslationMessageStatus.php
+│       │   ├── TranslationDiagnostics.php
 │       │   ├── TranslationPermission.php
 │       │   ├── TranslatorFactory.php
 │       │   ├── UnitFormatter.php
