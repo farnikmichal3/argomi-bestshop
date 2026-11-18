@@ -63,6 +63,8 @@ VALUES
     ('translations.form.operation', 'en', 'Operation', 'core', 0, NULL, 0),
     ('translations.form.submit', 'cs', 'Provést', 'core', 0, NULL, 0),
     ('translations.form.submit', 'en', 'Apply', 'core', 0, NULL, 0),
+    ('translations.form.expired', 'cs', 'Formulář vypršel. Obnov stránku a zkus to znovu.', 'core', 0, NULL, 0),
+    ('translations.form.expired', 'en', 'The form expired. Refresh the page and try again.', 'core', 0, NULL, 0),
     ('translations.operation.create', 'cs', 'Vytvořit nový', 'core', 0, NULL, 0),
     ('translations.operation.create', 'en', 'Create new', 'core', 0, NULL, 0),
     ('translations.operation.update', 'cs', 'Upravit vlastní', 'core', 0, NULL, 0),
