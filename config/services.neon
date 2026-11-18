@@ -7,6 +7,8 @@ services:
 	- App\Shared\Infrastructure\Console\OutboxWorkerCommand
 	- App\Modules\Translation\Infrastructure\Diagnostics\TranslationKeyUsageScanner(%appDir%/UI)
 	- App\Modules\Translation\Infrastructure\Console\TranslationsCheckCommand
+	# Resolver má vlastní název a nespadá do automatického vyhledávání tříd se suffixem Service.
+	- App\Modules\Catalog\Application\OptionResolver
 	# Dispatcher dostává všechny služby označené tagem domainEventListener už při kompilaci DI kontejneru.
 	- App\Shared\Infrastructure\Event\SynchronousEventDispatcher(
 		listeners: tagged(domainEventListener)
