@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **555 kroků**: hotovo 172, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 374, zrušeno 7.
+Celkem **554 kroků**: hotovo 172, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 373, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -505,11 +505,11 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### v3.74 (18. 11. 2026)
 - Zahájen F5-04: rozšiřujeme existující ProductRepository o stránkovaný výpis aktivních produktů přímo přiřazených do aktivní kategorie. Přidány typované volby řazení, lokalizované položky výpisu a integrační testy; čeká se na CI a lokální ověření.
-- F5: **3 hotovo**, **1 rozděláno**, **32 plán**. Celkem: **172 hotovo**, **1 rozděláno**, **1 k úpravě**, **374 plán**, **7 zrušeno**.
+- F5: **3 hotovo**, **1 rozděláno**, **32 plán**. Celkem: **172 hotovo**, **1 rozděláno**, **1 k úpravě**, **373 plán**, **7 zrušeno**.
 
 ### v3.73 (18. 11. 2026)
 - F5-03 dokončen: `CategoryRepository` načítá lokalizovaný strom kategorií v deterministickém pořadí, podporuje aktivní strom a bezpečně detekuje osiřelé/cyklické vazby. Integrační test ověřuje překlady i filtrování; GitHub Actions i lokální `check.bat` uživatel potvrdil jako úspěšné.
-- F5: **3 hotovo**, **0 rozděláno**, **33 plán**. Celkem: **172 hotovo**, **0 rozděláno**, **1 k úpravě**, **375 plán**, **7 zrušeno**.
+- F5: **3 hotovo**, **0 rozděláno**, **33 plán**. Celkem: **172 hotovo**, **0 rozděláno**, **1 k úpravě**, **374 plán**, **7 zrušeno**.
 
 ### v3.72 (18. 11. 2026)
 - F5-02 dokončen: přidány neměnné doménové objekty `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` a typované enumy. Testy pokrývají platné i neplatné hodnoty; GitHub Actions i lokální `check.bat` uživatel potvrdil jako úspěšné.
