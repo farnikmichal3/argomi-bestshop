@@ -1,0 +1,78 @@
+{block title}{_'translations.title'}{/block}
+
+{block content}
+<main class="container py-5">
+    <h1>{_'translations.title'}</h1>
+    <p>{_'translations.description'}</p>
+
+    <form method="get" action="{link this}" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label class="form-label" for="translation-domain">{_'translations.filter.domain'}</label>
+            <select class="form-select" id="translation-domain" name="domain">
+                <option value="">{_'translations.filter.all'}</option>
+                {foreach $domains as $domain}
+                    <option value="{$domain->value}" selected={$selectedDomain === $domain->value}>{$domain->value}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="translation-locale">{_'translations.filter.locale'}</label>
+            <select class="form-select" id="translation-locale" name="locale">
+                <option value="">{_'translations.filter.all'}</option>
+                {foreach $locales as $locale}
+                    <option value="{$locale->getCode()}" selected={$selectedLocale === $locale->getCode()}>{$locale->getCode()}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="translation-status">{_'translations.filter.status'}</label>
+            <select class="form-select" id="translation-status" name="status">
+                <option value="">{_'translations.filter.all'}</option>
+                {foreach $statuses as $status}
+                    <option value="{$status->value}" selected={$selectedStatus === $status->value}>{_'translations.status.' . $status->value}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button class="btn btn-primary" type="submit">{_'translations.filter.apply'}</button>
+        </div>
+    </form>
+
+    <p>{_'translations.results'}: {count($rows)}</p>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>{_'translations.column.domain'}</th>
+                    <th>{_'translations.column.key'}</th>
+                    <th>{_'translations.column.locale'}</th>
+                    <th>{_'translations.column.text'}</th>
+                    <th>{_'translations.column.source'}</th>
+                    <th>{_'translations.column.state'}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr n:foreach="$rows as $row">
+                    <td>{$row->domain->value}</td>
+                    <td><code>{$row->messageKey}</code></td>
+                    <td>{$row->locale}</td>
+                    <td>{$row->messageText}</td>
+                    <td>{$row->source}</td>
+                    <td>
+                        {if $row->isOutdated}
+                            {_'translations.status.outdated'}
+                        {elseif $row->isCustomized}
+                            {_'translations.status.customized'}
+                        {else}
+                            {_'translations.status.current'}
+                        {/if}
+                    </td>
+                </tr>
+                <tr n:if="$rows === []">
+                    <td colspan="6">{_'translations.empty'}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+{/block}
