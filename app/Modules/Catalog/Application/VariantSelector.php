@@ -47,7 +47,7 @@ final readonly class VariantSelector
         }
 
         foreach ($attributes as $code => $attribute) {
-            if (!is_array($attribute) || !isset($attribute['type']) || $attribute['type'] !== $axisTypes[$code]) {
+            if ($attribute['type'] !== $axisTypes[$code]) {
                 throw new InvalidArgumentException(sprintf('Výběr osy %s neodpovídá typu definovanému produktem.', $code));
             }
         }
