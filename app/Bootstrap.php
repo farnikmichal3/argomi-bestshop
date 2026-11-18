@@ -41,11 +41,7 @@ class Bootstrap
         $this->initializeEnvironment();
         $this->setupContainer();
         $container = $this->configurator->createContainer();
-        $bar = Debugger::getBar();
-
-        if ($bar !== null) {
-            $bar->addPanel($container->getByType(MissingTranslationPanel::class));
-        }
+        Debugger::getBar()->addPanel($container->getByType(MissingTranslationPanel::class));
 
         return $container;
     }
