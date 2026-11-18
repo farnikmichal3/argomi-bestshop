@@ -18,14 +18,6 @@ use Nette\Database\Explorer;
  */
 final class DatabaseMessageTranslationWriter implements MessageTranslationWriter
 {
-    /** @var array<string, MessageDomain> */
-    private const DOMAINS = [
-        'catalog_message_translation' => MessageDomain::Catalog,
-        'cart_message_translation' => MessageDomain::Cart,
-        'checkout_message_translation' => MessageDomain::Checkout,
-        'admin_message_translation' => MessageDomain::Admin,
-    ];
-
     public function __construct(
         private readonly Explorer $database,
         private readonly MessageCacheInvalidator $cacheInvalidator,

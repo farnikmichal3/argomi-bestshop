@@ -5,6 +5,40 @@
     <h1>{_'translations.title'}</h1>
     <p>{_'translations.description'}</p>
 
+    <section class="card mb-4">
+        <div class="card-body">
+            <h2 class="h4">{_'translations.create.title'}</h2>
+            {control manageForm}
+        </div>
+    </section>
+
+    <section class="card mb-4">
+        <div class="card-body">
+            <h2 class="h4">{_'translations.languages.title'}</h2>
+            {control languageForm}
+            <div class="table-responsive mt-3">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>{_'translations.languages.code'}</th>
+                            <th>{_'translations.languages.name'}</th>
+                            <th>{_'translations.languages.state'}</th>
+                            <th>{_'translations.languages.default'}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr n:foreach="$managedLocales as $managedLocale">
+                            <td>{$managedLocale->code}</td>
+                            <td>{$managedLocale->name}</td>
+                            <td>{if $managedLocale->isActive}{_'translations.languages.active'}{else}{_'translations.languages.inactive'}{/if}</td>
+                            <td>{if $managedLocale->isDefault}{_'translations.languages.default'}{else}—{/if}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
     <form method="get" action="{link this}" class="row g-3 mb-4">
         <div class="col-md-3">
             <label class="form-label" for="translation-domain">{_'translations.filter.domain'}</label>

@@ -44,6 +44,16 @@ Assert::same([
     ],
 ], $catalogMessages);
 
+$adminTitle = $pdo->query(
+    "SELECT locale, message_text FROM admin_message_translation "
+    . "WHERE message_key = 'translations.title' ORDER BY locale",
+)->fetchAll(PDO::FETCH_ASSOC);
+
+Assert::same([
+    ['locale' => 'cs', 'message_text' => 'Správa překladů'],
+    ['locale' => 'en', 'message_text' => 'Translation management'],
+], $adminTitle);
+
 $token = bin2hex(random_bytes(8));
 
 $pdo->beginTransaction();
@@ -53,6 +63,7 @@ try {
         'catalog_message_translation',
         'cart_message_translation',
         'checkout_message_translation',
+        'admin_message_translation',
     ];
 
     foreach ($domains as $index => $table) {
