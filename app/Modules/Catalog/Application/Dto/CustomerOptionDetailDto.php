@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Application\\Dto;
+namespace App\Modules\Catalog\Application\Dto;
 
 /**
  * @param list<CustomerOptionValueDto> $values
