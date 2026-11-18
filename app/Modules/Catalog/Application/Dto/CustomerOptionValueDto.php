@@ -12,3 +12,4 @@ final readonly class CustomerOptionValueDto
         public ?string $label,
         public int $sortOrder,
     ) {}
+}
