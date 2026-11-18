@@ -159,7 +159,7 @@ final class DatabaseProductRepository implements ProductRepository
                 $totalItems,
                 $page,
                 $perPage,
-                intdiv($totalItems + $perPage - 1, $perPage),
+                intdiv($totalItems, $perPage) + ($totalItems % $perPage === 0 ? 0 : 1),
             );
         }
 
