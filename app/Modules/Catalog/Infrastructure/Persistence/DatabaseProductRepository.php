@@ -296,6 +296,18 @@ final class DatabaseProductRepository implements ProductRepository
             }
         }
 
+        if (
+            in_array($field, ['product_category.sort_order'], true)
+            && is_string($value)
+            && preg_match('/\\A-?[0-9]+\\z/D', $value) === 1
+        ) {
+            $integer = filter_var($value, FILTER_VALIDATE_INT);
+
+            if ($integer !== false) {
+                return $integer;
+            }
+        }
+
         throw new UnexpectedValueException(sprintf('Databázové pole %s neobsahuje platné PHP celé číslo.', $field));
     }
 
