@@ -3,10 +3,10 @@ Catalog category repository returns localized, ordered category trees
 --FILE--
 <?php
 
-use App\\Modules\\Catalog\\Application\\CategoryRepository;
-use App\\Shared\\Domain\\Locale\\Locale;
-use Tester\\Assert;
-use Tests\\Support\\IntegrationTestBootstrap;
+use App\Modules\Catalog\Application\CategoryRepository;
+use App\Shared\Domain\Locale\Locale;
+use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 
