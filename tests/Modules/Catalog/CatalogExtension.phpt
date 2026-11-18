@@ -4,6 +4,7 @@ Catalog module DI extension is discovered and compiled by the application Bootst
 <?php
 
 use App\Core\Module\ModuleRegistry;
+use App\Modules\Catalog\Application\ProductImageStorage;
 use App\Modules\Catalog\Application\ProductRepository;
 use App\Modules\Catalog\Infrastructure\DI\CatalogExtension;
 use Nette\DI\CompilerExtension;
