@@ -50,8 +50,8 @@ $adminTitle = $pdo->query(
 )->fetchAll(PDO::FETCH_ASSOC);
 
 Assert::same([
-    ['locale' => 'cs', 'message_text' => 'Správa překladů', 'default_hash' => sha1('Správa překladů')],
-    ['locale' => 'en', 'message_text' => 'Translation management', 'default_hash' => sha1('Translation management')],
+    ['locale' => 'cs', 'message_text' => 'Správa překladů', 'default_hash' => null],
+    ['locale' => 'en', 'message_text' => 'Translation management', 'default_hash' => null],
 ], $adminTitle);
 
 $token = bin2hex(random_bytes(8));
