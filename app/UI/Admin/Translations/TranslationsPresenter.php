@@ -18,7 +18,9 @@ final class TranslationsPresenter extends TranslatedPresenter
     public function __construct(
         private readonly MessageTranslationReader $translationReader,
         private readonly LocaleProvider $localeProvider,
-    ) {}
+    ) {
+        parent::__construct();
+    }
 
     protected function getTranslationDomain(): TranslationDomain
     {
@@ -68,8 +70,8 @@ final class TranslationsPresenter extends TranslatedPresenter
         $this->template->domains = TranslationDomain::cases();
         $this->template->locales = $this->localeProvider->getActiveLocales();
         $this->template->statuses = TranslationMessageStatus::cases();
-        $this->template->selectedDomain = $selectedDomain?->value ?? '';
+        $this->template->selectedDomain = $selectedDomain->value ?? '';
         $this->template->selectedLocale = $selectedLocale?->getCode() ?? '';
-        $this->template->selectedStatus = $selectedStatus?->value ?? '';
+        $this->template->selectedStatus = $selectedStatus->value ?? '';
     }
 }
