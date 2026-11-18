@@ -64,7 +64,7 @@ Assert::notNull($charger);
 Assert::count(1, $charger->attributes);
 Assert::same('gan', $charger->attributes[0]->code);
 Assert::same('Technologie GaN', $charger->attributes[0]->name);
-Assert::same('1', $charger->attributes[0]->value);
+Assert::same('1.000000', $charger->attributes[0]->value);
 
 Assert::same(null, $service->getById(PHP_INT_MAX, Locale::fromString('cs')));
 Assert::exception(
