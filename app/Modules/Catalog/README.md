@@ -23,12 +23,12 @@ První čtecí řez katalogu již obsahuje:
 - `Application/Dto/CategoryTreeDto` a `CategoryTranslationDto` – neměnný lokalizovaný strom kategorií;
 - `Application/Dto/ProductDto`, `ProductTranslationDto`, `ProductListItemDto` a `ProductListingDto` – neměnné read-model DTO;
 - `Infrastructure/Persistence/DatabaseCategoryRepository` – dávkové načtení kategorií a překladů přes Nette Database Explorer, deterministické řazení a bezpečné sestavení stromu;
-- `Infrastructure/Persistence/DatabaseProductRepository` – implementaci přes Nette Database Explorer včetně stránkovaného výpisu aktivních produktů přímo zařazených do kategorie; podporuje řazení podle pozice v kategorii, kódu a data vytvoření;
+- `Infrastructure/Persistence/DatabaseProductRepository` – implementaci přes Nette Database Explorer včetně stránkovaného výpisu aktivních produktů přímo zařazených do kategorie; podporuje řazení podle pozice v kategorii, kódu a data vytvoření;\n- `Application/ProductDetailService` a `ProductDetailRepository` – lokalizovaný detail aktivního produktu; read model obsahuje překlad produktu, aktivní varianty s lokalizovanými hodnotami os, obrázky, produktové atributy a zákaznické volby včetně hodnot; databázový adaptér načítá související data dávkově a nepoužívá N+1 dotazy;
 - `Domain/Variant/VariantCombinationHash` – deterministickou kanonizaci a SHA-256 hash kombinace variant.
 
 Repozitář mapuje databázové řádky na DTO uvnitř persistence vrstvy. Časové údaje převádí do UTC.
 
-Výpis produktů používá ProductListingDto a ProductListItemDto; položky
+Detail produktu načítá pouze aktivní produkty a aktivní varianty. Překladové názvy atributů, enum hodnot a zákaznických voleb se vybírají výhradně podle explicitního Locale; chybějící překlad zůstává null a nepoužívá skrytý fallback. Ceny a sklad nejsou součástí katalogového detailu a zůstávají ve vlastnictví modulů Pricing a Inventory.\n\nVýpis produktů používá ProductListingDto a ProductListItemDto; položky
 obsahují základní produkt a volitelný překlad požadovaného jazyka. Stránkování
 je číslováno od 1 a limit je 1 až 100 položek. Výchozí řazení respektuje
 product_category.sort_order; další povolené volby jsou kód vzestupně/sestupně
