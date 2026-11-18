@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.57 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.58 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 160, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 387, zrušeno 6.
+Celkem **554 kroků**: hotovo 161, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 386, zrušeno 6.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 160, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 15 | 0 | 0 | 0 | 0 | 9 | 4 |
+| F4 | Překlady v databázi | 29 | 16 | 0 | 0 | 0 | 0 | 8 | 4 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -502,6 +502,10 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 ### v3.56 (18. 11. 2026)
 - Dokončen F4-17: read-only Admin seznam překladů s validovanými filtry domény, jazyka a stavu, limitem 200 řádků a bezpečným escapováním. Po opravě integračního testu systémových seedů uživatel potvrdil `All active checks passed.`
 - F4: **14 hotovo**, **0 rozděláno**, **10 plán**, **4 zrušeno**. Celkem: **159 hotovo**, **0 rozděláno**, **1 k úpravě**, **388 plán**, **6 zrušeno**.
+
+### v3.58 (18. 11. 2026)
+- Dokončen F4-19: přehled překladů rozlišuje upravené/zastaralé systémové řádky (`source = core`) od vlastních překladů (`source = custom`). Doplněn regresní integrační test a dokumentace. GitHub Actions CI i lokální `check.bat` uživatelem potvrzeny jako úspěšné (`All active checks passed.`).
+- F4: **16 hotovo**, **0 rozděláno**, **8 plán**, **4 zrušeno**. Celkem: **161 hotovo**, **0 rozděláno**, **1 k úpravě**, **386 plán**, **6 zrušeno**.
 
 ### v3.57 (18. 11. 2026)
 - Dokončen F4-18: správa vlastních překladů s ochranou systémových zdrojů a cílenou invalidací cache; integrační testy a lokální `check.bat` prošly.
