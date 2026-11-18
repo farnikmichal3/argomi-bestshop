@@ -27,7 +27,7 @@ final class TranslationExtension extends CompilerExtension
     {
         $builder = $this->getContainerBuilder();
 
-        $builder->addDefinition($this->prefix('entityTranslationResolver'))
+        $builder->addDefinition($this->prefix('messageTranslationReader'))\n            ->setType(MessageTranslationReader::class)\n            ->setFactory(DatabaseMessageTranslationReader::class);\n\n        $builder->addDefinition($this->prefix('entityTranslationResolver'))
             ->setType(EntityTranslationResolver::class);
 
         $builder->addDefinition($this->prefix('localeNumberFormatter'))
