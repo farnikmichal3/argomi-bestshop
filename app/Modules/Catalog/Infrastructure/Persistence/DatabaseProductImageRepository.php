@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Infrastructure\\Persistence;
+namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\\Modules\\Catalog\\Application\\Dto\\ProductImageDto;
-use App\\Modules\\Catalog\\Application\\ProductImageRepository;
-use Nette\\Database\\Explorer;
+use App\Modules\Catalog\Application\Dto\ProductImageDto;
+use App\Modules\Catalog\Application\ProductImageRepository;
+use Nette\Database\Explorer;
 use UnexpectedValueException;
 
 final class DatabaseProductImageRepository implements ProductImageRepository
@@ -52,7 +52,7 @@ final class DatabaseProductImageRepository implements ProductImageRepository
             return $value;
         }
 
-        if (is_string($value) && preg_match('/\\A-?[0-9]+\\z/D', $value) === 1) {
+        if (is_string($value) && preg_match('/\A-?[0-9]+\z/D', $value) === 1) {
             $validated = filter_var($value, FILTER_VALIDATE_INT);
             if ($validated !== false) {
                 return $validated;
