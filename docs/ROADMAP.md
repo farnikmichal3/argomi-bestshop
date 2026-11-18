@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.56 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.57 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 159, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 388, zrušeno 6.
+Celkem **554 kroků**: hotovo 160, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 387, zrušeno 6.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 159, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 14 | 0 | 0 | 0 | 0 | 10 | 4 |
+| F4 | Překlady v databázi | 29 | 15 | 0 | 0 | 0 | 0 | 9 | 4 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -486,7 +486,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[ZRUŠENO]` **F4-15** Příkaz `translations:import`. Výchozí systémové překlady se dodávají verzovanými SQL seedy a jejich aplikace je výhradně odpovědností Nextras Migrations. Samostatný příkaz by vytvářel duplicitní mechanismus pro spouštění migrací a obcházel jednotné řízení databázových změn.
 - `[HOTOVO]` **F4-16** Příkaz `translations:check` (chybějící a nepoužité klíče). Read-only CLI skenuje statické reference v Latte a PHP pod `app/UI`, doménu určuje podle nejbližšího `TranslatedPresenter` a porovnává klíče s DB ve všech aktivních jazycích. Dynamicky sestavené klíče nejsou staticky detekovatelné; CI a lokální kontrola čekají na dokončení.
 - `[HOTOVO]` **F4-17** Admin: seznam textů s filtrem domény, jazyka a stavu. Read-only administrativní seznam používá validované filtry domény, jazyka a stavu, omezuje výsledek na 200 řádků a bezpečně escapuje výstup. GitHub Actions i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
-- `[PLÁN]` **F4-18** Admin: správa vlastních překladů a zneplatnění cache; systémové zdroje zůstávají chráněné
+- `[HOTOVO]` **F4-18** Admin: správa vlastních překladů a zneplatnění cache; systémové zdroje zůstávají chráněné. `MessageTranslationWriter` dovoluje vytvářet, upravovat a mazat pouze `source=custom`, validuje klíč i prostý text a po změně invaliduje přesnou kombinaci domény a jazyka. Integrační test ověřuje čtení přes cache, invalidaci, ochranu systémových řádků a odmítnutí HTML; lokální `check.bat` uživatelem potvrzen.
 - `[PLÁN]` **F4-19** Admin: přehled změněných systémových zdrojů a vlastních překladů; bez přímé editace systémového zdroje
 - `[PLÁN]` **F4-20** Admin: vytvoření vlastního textu v povolené doméně
 - `[PLÁN]` **F4-21** Admin: přidání a aktivace nového jazyka
@@ -502,6 +502,10 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 ### v3.56 (18. 11. 2026)
 - Dokončen F4-17: read-only Admin seznam překladů s validovanými filtry domény, jazyka a stavu, limitem 200 řádků a bezpečným escapováním. Po opravě integračního testu systémových seedů uživatel potvrdil `All active checks passed.`
 - F4: **14 hotovo**, **0 rozděláno**, **10 plán**, **4 zrušeno**. Celkem: **159 hotovo**, **0 rozděláno**, **1 k úpravě**, **388 plán**, **6 zrušeno**.
+
+### v3.57 (18. 11. 2026)
+- Dokončen F4-18: správa vlastních překladů s ochranou systémových zdrojů a cílenou invalidací cache; integrační testy a lokální `check.bat` prošly.
+- F4: **15 hotovo**, **0 rozděláno**, **9 plán**, **4 zrušeno**. Celkem: **160 hotovo**, **0 rozděláno**, **1 k úpravě**, **387 plán**, **6 zrušeno**.
 
 ### F5: Catalog (vlna 1)
 
