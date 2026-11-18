@@ -43,4 +43,20 @@ interface ProductRepository
      * @return list<ProductTranslationDto>
      */
     public function findTranslations(int $productId): array;
+
+    /**
+     * Vrátí aktivní produkty přímo zařazené do kategorie.
+     *
+     * Stránkování začíná od 1. Počet položek na stránku je omezen na 100.
+     * Výsledek obsahuje překlad pro požadovaný jazyk, pokud existuje.
+     *
+     * @throws \\InvalidArgumentException Při neplatném ID nebo stránkování.
+     */
+    public function findByCategory(
+        int $categoryId,
+        Locale $locale,
+        int $page = 1,
+        int $perPage = 12,
+        ProductSortOrder $sort = ProductSortOrder::CategoryPosition,
+    ): ProductListingDto;
 }
