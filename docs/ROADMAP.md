@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.59 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.60 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 162, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 385, zrušeno 6.
+Celkem **554 kroků**: hotovo 163, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 384, zrušeno 6.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 162, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 17 | 0 | 0 | 0 | 0 | 7 | 4 |
+| F4 | Překlady v databázi | 29 | 18 | 0 | 0 | 0 | 0 | 6 | 4 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -489,7 +489,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-18** Admin: správa vlastních překladů a zneplatnění cache; systémové zdroje zůstávají chráněné. `MessageTranslationWriter` dovoluje vytvářet, upravovat a mazat pouze `source=custom`, validuje klíč i prostý text a po změně invaliduje přesnou kombinaci domény a jazyka. Integrační test ověřuje čtení přes cache, invalidaci, ochranu systémových řádků a odmítnutí HTML; lokální `check.bat` uživatelem potvrzen.
 - `[HOTOVO]` **F4-19** Admin: přehled změněných systémových zdrojů a vlastních překladů; bez přímé editace systémového zdroje
 - `[HOTOVO]` **F4-20** Admin: vytvoření vlastního textu v povolené doméně. Integrační test ověřuje vytvoření vlastního překladu ve všech čtyřech povolených doménách (Catalog, Cart, Checkout, Admin) a kontroluje správnou vlastnickou tabulku i `source=custom`; GitHub Actions run #44270604492 a lokální `check.bat` uživatelem potvrzeny jako úspěšné (`All active checks passed.`).
-- `[PLÁN]` **F4-21** Admin: přidání a aktivace nového jazyka
+- `[HOTOVO]` **F4-21** Admin: přidání a aktivace nového jazyka. Již existující `LocaleManager` a administrační formulář umožňují přidat jazyk jako neaktivní, následně jej aktivovat/deaktivovat; výchozí jazyk nelze deaktivovat. Integrační test `LocaleManagerIntegration.phpt` ověřuje přidání, stav v `LocaleProvider`, aktivaci, deaktivaci i ochranu výchozího jazyka. Dynamické načítání aktivních jazyků z DB zajišťuje `DatabaseLocaleProvider`; CI run #44270604492 a lokální `check.bat` prošly.
 - `[PLÁN]` **F4-22** Oprávnění k úpravě překladů
 - `[PLÁN]` **F4-23** Bezpečnost: texty jsou prostý text, test escapování, zákaz HTML
 - `[PLÁN]` **F4-24** Texty modulu (cs, en)
@@ -502,6 +502,10 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 ### v3.56 (18. 11. 2026)
 - Dokončen F4-17: read-only Admin seznam překladů s validovanými filtry domény, jazyka a stavu, limitem 200 řádků a bezpečným escapováním. Po opravě integračního testu systémových seedů uživatel potvrdil `All active checks passed.`
 - F4: **14 hotovo**, **0 rozděláno**, **10 plán**, **4 zrušeno**. Celkem: **159 hotovo**, **0 rozděláno**, **1 k úpravě**, **388 plán**, **6 zrušeno**.
+
+### v3.60 (18. 11. 2026)
+- Dokončen F4-21 po auditu existující implementace: Admin umožňuje přidat jazyk nejprve jako neaktivní a samostatně jej aktivovat/deaktivovat. `LocaleManagerIntegration.phpt` ověřuje uložení, promítnutí aktivace do `LocaleProvider`, deaktivaci i zákaz deaktivace výchozího jazyka; aktivní jazyky se načítají dynamicky z DB bez pevného seznamu. GitHub Actions run #44270604492 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
+- F4: **18 hotovo**, **0 rozděláno**, **6 plán**, **4 zrušeno**. Celkem: **163 hotovo**, **0 rozděláno**, **1 k úpravě**, **384 plán**, **6 zrušeno**.
 
 ### v3.59 (18. 11. 2026)
 - Dokončen F4-20: vytváření vlastních textů je integračně ověřeno ve všech čtyřech povolených doménách Catalog, Cart, Checkout a Admin; test potvrzuje uložení do správné vlastnické tabulky se `source=custom`. GitHub Actions run #44270604492 i lokální `check.bat` uživatelem potvrzeny jako úspěšné (`All active checks passed.`).
