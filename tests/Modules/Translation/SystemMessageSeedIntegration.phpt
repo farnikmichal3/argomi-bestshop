@@ -3,6 +3,7 @@ System message SQL seeds are idempotent and never overwrite existing rows in own
 --FILE--
 <?php
 
+use App\Modules\Translation\Infrastructure\Diagnostics\TranslationKeyUsageScanner;
 use Nette\Database\Explorer;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
