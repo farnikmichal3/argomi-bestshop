@@ -567,7 +567,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 
 - `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
 - `[HOTOVO]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` — typované neměnné modely a enumy stavů/typů; validace identifikátorů, kódů, SHA-256 hashe a fyzických rozměrů; doménový test bez infrastrukturních závislostí.
-- `[PLÁN]` **F5-03** `CategoryRepository`: strom kategorií, aktivní kategorie, řazení
+- `[HOTOVO]` **F5-03** `CategoryRepository`: lokalizovaný strom kategorií, aktivní strom, deterministické řazení a kontrola integrity hierarchie; integrační test překladů a filtrování.
 - `[PLÁN]` **F5-04** `ProductRepository`: výpis produktů v kategorii, stránkování, řazení
 - `[PLÁN]` **F5-05** `ProductDetailService`: načtení detailu produktu (překlady, varianty, obrázky, atributy, volby)
 - `[PLÁN]` **F5-06** `VariantSelector`: vyhledání varianty podle zvolených hodnot os
