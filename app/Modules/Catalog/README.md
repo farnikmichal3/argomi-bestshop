@@ -20,10 +20,19 @@ První čtecí řez katalogu již obsahuje:
 
 - `Application/CategoryRepository` – kontrakt pro čtení úplného a aktivního stromu kategorií včetně lokalizovaných názvů;\n- `Application/ProductRepository` – kontrakt pro čtení produktu a překladů;
 - `Application/Dto/CategoryTreeDto` a `CategoryTranslationDto` – neměnný lokalizovaný strom kategorií;\n- `Application/Dto/ProductDto` a `ProductTranslationDto` – neměnné read-model DTO;
-- `Infrastructure/Persistence/DatabaseCategoryRepository` – dávkové načtení kategorií a překladů přes Nette Database Explorer, deterministické řazení a bezpečné sestavení stromu;\n- `Infrastructure/Persistence/DatabaseProductRepository` – implementaci přes Nette Database Explorer;
+- `Infrastructure/Persistence/DatabaseCategoryRepository` – dávkové načtení kategorií a překladů přes Nette Database Explorer, deterministické řazení a bezpečné sestavení stromu;\n- `Infrastructure/Persistence/DatabaseProductRepository` – implementaci přes Nette Database Explorer včetně stránkovaného výpisu aktivních produktů přímo zařazených do kategorie; podporuje řazení podle pozice v kategorii, kódu a data vytvoření;
 - `Domain/Variant/VariantCombinationHash` – deterministickou kanonizaci a SHA-256 hash kombinace variant.
 
 Repozitář mapuje databázové řádky na DTO uvnitř persistence vrstvy. Časové údaje převádí do UTC.
+
+Výpis produktů používá ProductListingDto a ProductListItemDto; položky
+obsahují základní produkt a volitelný překlad požadovaného jazyka. Stránkování
+je číslováno od 1 a limit je 1 až 100 položek. Výchozí řazení respektuje
+product_category.sort_order; další povolené volby jsou kód vzestupně/sestupně
+a datum vytvoření nejnovější/nejstarší. Řazení je typované přes ProductSortOrder,
+takže uživatelský vstup nikdy netvoří SQL identifikátor. Neaktivní kategorie
+ani neaktivní produkty se do výpisu nedostanou. Výpis zahrnuje pouze přímé
+přiřazení produktu do kategorie, nikoli automaticky její potomky.
 
 ## DI registrace
 
