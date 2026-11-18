@@ -89,6 +89,123 @@ final class DatabaseProductRepository implements ProductRepository
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function findByCategory(
+        int $categoryId,
+        Locale $locale,
+        int $page = 1,
+        int $perPage = 12,
+        ProductSortOrder $sort = ProductSortOrder::CategoryPosition,
+    ): ProductListingDto {
+        if ($categoryId < 1 || $page < 1 || $perPage < 1 || $perPage > 100) {
+            throw new \\InvalidArgumentException('ID kategorie a stránkování musí být kladné; limit stránky je 100.');
+        }
+
+        if ($page > intdiv(PHP_INT_MAX, $perPage)) {
+            throw new \\InvalidArgumentException('Požadovaná stránka překračuje bezpečný rozsah offsetu.');
+        }
+
+        $category = $this->database->table('category')
+            ->where('id', $categoryId)
+            ->where('is_active', 1)
+            ->fetch();
+
+        if ($category === null) {
+            return new ProductListingDto([], 0, $page, $perPage, 0);
+        }
+
+        // product_category je výchozí tabulka: její unikátní vazba
+        // (product_id, category_id) zaručuje jednu položku na produkt.
+        // Stav produktu filtrujeme přes FK vztah v Nette Exploreru.
+        $assignments = $this->database->table('product_category')
+            ->where('category_id', $categoryId)
+            ->where(':product.status', 'active');
+
+        $totalItems = $assignments->count('*');
+
+        switch ($sort) {
+            case ProductSortOrder::CategoryPosition:
+                $assignments->order('sort_order ASC, product_id ASC');
+                break;
+
+            case ProductSortOrder::ProductCodeAscending:
+                $assignments->order(':product.code ASC, product_id ASC');
+                break;
+
+            case ProductSortOrder::ProductCodeDescending:
+                $assignments->order(':product.code DESC, product_id DESC');
+                break;
+
+            case ProductSortOrder::Newest:
+                $assignments->order(':product.created_at DESC, product_id DESC');
+                break;
+
+            case ProductSortOrder::Oldest:
+                $assignments->order(':product.created_at ASC, product_id ASC');
+                break;
+        }
+
+        $assignmentRows = $assignments
+            ->limit($perPage, ($page - 1) * $perPage)
+            ->fetchAll();
+
+        if ($assignmentRows === []) {
+            return new ProductListingDto(
+                [],
+                $totalItems,
+                $page,
+                $perPage,
+                intdiv($totalItems + $perPage - 1, $perPage),
+            );
+        }
+
+        $productIds = [];
+        foreach ($assignmentRows as $assignment) {
+            $productIds[] = $this->mapInteger($assignment->product_id, 'product_category.product_id');
+        }
+
+        $productsById = [];
+        foreach ($this->database->table('product')->where('id', $productIds)->fetchAll() as $row) {
+            $product = $this->mapProduct($row);
+            $productsById[$product->id] = $product;
+        }
+
+        $translationsByProductId = [];
+        foreach (
+            $this->database->table('product_translation')
+                ->where('product_id', $productIds)
+                ->where('locale', $locale->getCode())
+                ->fetchAll() as $row
+        ) {
+            $translation = $this->mapTranslation($row);
+            $translationsByProductId[$translation->productId] = $translation;
+        }
+
+        $items = [];
+        foreach ($productIds as $productId) {
+            $product = $productsById[$productId] ?? null;
+
+            if ($product === null) {
+                throw new UnexpectedValueException('Vazba kategorie odkazuje na neexistující produkt.');
+            }
+
+            $items[] = new ProductListItemDto(
+                $product,
+                $translationsByProductId[$productId] ?? null,
+            );
+        }
+
+        return new ProductListingDto(
+            $items,
+            $totalItems,
+            $page,
+            $perPage,
+            intdiv($totalItems + $perPage - 1, $perPage),
+        );
+    }
+
+    /**
      * Převede produktový řádek na DTO a ověří očekávané databázové typy.
      *
      * Kontrola je záměrná i při existenci SQL omezení: poškozená nebo
