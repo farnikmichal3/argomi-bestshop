@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Infrastructure\\Persistence;
+namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\\Modules\\Catalog\\Application\\VariantSelectionRepository;
-use Nette\\Database\\Explorer;
+use App\Modules\Catalog\Application\VariantSelectionRepository;
+use Nette\Database\Explorer;
 use UnexpectedValueException;
 
 /**
@@ -28,22 +28,35 @@ final readonly class DatabaseVariantSelectionRepository implements VariantSelect
             return null;
         }
 
+        $axisRows = $this->database->table('product_variant_axis')
+            ->where('product_id', $productId)
+            ->order('attribute_id ASC')
+            ->fetchAll();
+
+        if ($axisRows === []) {
+            return [];
+        }
+
+        $attributeIds = [];
+        foreach ($axisRows as $row) {
+            $attributeIds[] = $row->attribute_id;
+        }
+
         $axes = [];
         foreach (
-            $this->database->table('product_variant_axis')
-                ->where('product_id', $productId)
-                ->order('attribute_id ASC')
-                ->fetchAll() as $row
+            $this->database->table('attribute')
+                ->where('id', $attributeIds)
+                ->fetchAll() as $attribute
         ) {
-            $attribute = $this->database->table('attribute')
-                ->where('id', $row->attribute_id)
-                ->fetch();
-
-            if ($attribute === null || !is_string($attribute->code) || !is_string($attribute->type)) {
-                throw new UnexpectedValueException('Varianta produktu odkazuje na neplatnou definici osy.');
+            if (!is_string($attribute->code) || !is_string($attribute->type)) {
+                throw new UnexpectedValueException('Definice variantní osy obsahuje neplatný kód nebo typ.');
             }
 
             $axes[$attribute->code] = $attribute->type;
+        }
+
+        if (count($axes) !== count($axisRows)) {
+            throw new UnexpectedValueException('Varianta produktu odkazuje na neexistující definici osy.');
         }
 
         return $axes;
