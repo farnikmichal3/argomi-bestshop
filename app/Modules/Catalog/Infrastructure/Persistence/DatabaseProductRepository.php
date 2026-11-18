@@ -170,20 +170,25 @@ final class DatabaseProductRepository implements ProductRepository
 
             return match ($sort) {
                 ProductSortOrder::CategoryPosition =>
-                    ($left['categoryPosition'] <=> $right['categoryPosition'])
-                    ?: ($leftProduct->id <=> $rightProduct->id),
+                    ($positionComparison = $left['categoryPosition'] <=> $right['categoryPosition']) !== 0
+                        ? $positionComparison
+                        : ($leftProduct->id <=> $rightProduct->id),
                 ProductSortOrder::ProductCodeAscending =>
-                    strcmp($leftProduct->code, $rightProduct->code)
-                    ?: ($leftProduct->id <=> $rightProduct->id),
+                    ($codeComparison = strcmp($leftProduct->code, $rightProduct->code)) !== 0
+                        ? $codeComparison
+                        : ($leftProduct->id <=> $rightProduct->id),
                 ProductSortOrder::ProductCodeDescending =>
-                    strcmp($rightProduct->code, $leftProduct->code)
-                    ?: ($rightProduct->id <=> $leftProduct->id),
+                    ($codeComparison = strcmp($rightProduct->code, $leftProduct->code)) !== 0
+                        ? $codeComparison
+                        : ($rightProduct->id <=> $leftProduct->id),
                 ProductSortOrder::Newest =>
-                    ($rightProduct->createdAt <=> $leftProduct->createdAt)
-                    ?: ($rightProduct->id <=> $leftProduct->id),
+                    ($dateComparison = $rightProduct->createdAt <=> $leftProduct->createdAt) !== 0
+                        ? $dateComparison
+                        : ($rightProduct->id <=> $leftProduct->id),
                 ProductSortOrder::Oldest =>
-                    ($leftProduct->createdAt <=> $rightProduct->createdAt)
-                    ?: ($leftProduct->id <=> $rightProduct->id),
+                    ($dateComparison = $leftProduct->createdAt <=> $rightProduct->createdAt) !== 0
+                        ? $dateComparison
+                        : ($leftProduct->id <=> $rightProduct->id),
             };
         });
 
