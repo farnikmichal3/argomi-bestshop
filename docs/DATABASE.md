@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 2.1 · 17. 11. 2026  
+**Revize:** 2.2 · 18. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -13,6 +13,8 @@ Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nep�
 | structures | `migrations/structures/2026-11-04-200000-init.sql` | Počáteční databázové schéma |
 | structures | `migrations/structures/2026-11-15-120000-transactional-outbox.sql` | Samostatná persistence Transactional Outbox (F3-34) |
 | structures | `migrations/structures/2026-11-15-220000-protect-demo-orders.sql` | Označení demo objednávek a ochrana Outboxu/skladu (F3-32) |
+| structures | `migrations/structures/2026-11-17-150000-admin-message-translation.sql` | Samostatná tabulka systémových překladů Admin (F4-17) |
+| dummy-data | `migrations/dummy-data/2026-11-18-080000-seed-admin-translation.sql` | Idempotentní cs/en seed administračních textů včetně SHA-1 default_hash (F4-24) |
 | dummy-data | `migrations/dummy-data/2026-11-15-230000-classify-demo-orders.sql` | Označení čtyř demo objednávek (F3-32) |
 | basic-data | `migrations/basic-data/2026-11-04-201000-basic-data.sql` | Základní číselníky a referenční data |
 | dummy-data | `migrations/dummy-data/2026-11-04-202000-demo-products.sql` | Demonstrační obsah a související ukázková data |
@@ -25,11 +27,11 @@ Aktuální cesta je `migrations/`, nikoliv historicky zmiňované `database/migr
 
 ## 2. Schéma v1 – tabulky
 
-Počáteční soubor vytváří 46 tabulek:
+Počáteční soubor `2026-11-04-200000-init.sql` vytváří 46 tabulek; dopředné migrace rozšiřují schéma podle potřeb modulů.
 
 | Oblast | Tabulky |
 |---|---|
-| Jazyk, měna, jednotky a překlady | `language`, `currency`, `unit`, `unit_translation`, `translation_message` |
+| Jazyk, měna, jednotky a překlady | `language`, `currency`, `unit`, `unit_translation`, `catalog_message_translation`, `cart_message_translation`, `checkout_message_translation`, `admin_message_translation` |
 | Daně | `tax_class`, `tax_rate` |
 | Katalog | `product`, `product_translation`, `category`, `category_translation`, `product_category`, `attribute`, `attribute_translation`, `attribute_value`, `attribute_value_translation`, `product_variant_axis`, `product_variant`, `product_attribute_value`, `product_variant_attribute_value`, `product_option`, `product_option_translation`, `product_option_value`, `product_option_value_translation`, `product_relation`, `product_image` |
 | Ceny | `variant_price`, `variant_price_history`, `option_value_price` |
@@ -133,11 +135,11 @@ Objednávky používají explicitní `shop_order.is_demo`. Příznak se po vytvo
 
 Vlastnictví je aplikační hranice; cizí klíče v současném schématu jsou popsány podle skutečných SQL vazeb a samy o sobě neznamenají povolení přímého přístupu z cizího modulu.
 
-## 7. Přechodný stav překladů
+## 7. Systémové překlady podle vlastníka
 
-Současné schéma v1 obsahuje centrální tabulku `translation_message` vedle doménových překladových tabulek jako `product_translation`, `category_translation` a `unit_translation`.
+Historickou centrální tabulku `translation_message` odstranila dopředná migrace `2026-11-15-210000-split-system-message-translations.sql`; původní migrace `init.sql` zůstává beze změny. Systémové texty jsou fyzicky oddělené do tabulek `catalog_message_translation`, `cart_message_translation`, `checkout_message_translation` a `admin_message_translation`. Poslední tabulku vytváří `2026-11-17-150000-admin-message-translation.sql` a navazující seed `2026-11-18-080000-seed-admin-translation.sql` vkládá administrační klíče pro češtinu a angličtinu.
 
-Nové rozhodnutí stanoví, že systémové překlady mají být rozděleny podle domén/modulů a chráněny před úpravami administrátorem. Současná jediná `translation_message` proto není cílový stav. Přechod je popsán v [TRANSLATIONS](TRANSLATIONS.md) a musí být proveden novou dopřednou migrací. Historická migrace se nepřepisuje.
+Všechny systémové tabulky používají stejnou ochrannou strukturu: `source`, `is_customized`, `default_hash` a `is_outdated`; unikátní dvojice `(locale, message_key)` a FK na `language(code)` brání duplicitám a osiřelým jazykovým záznamům. Admin seed ukládá SHA-1 přesné výchozí znění do `default_hash` a při konfliktu zachovává celý existující řádek. Runtime čtení i zápis probíhá výhradně přes modul Translation; systémový zdroj `core` je aplikačně chráněn před změnou a odstraněním. Podrobnosti jsou v [TRANSLATIONS](TRANSLATIONS.md).
 
 ## 8. Transactional Outbox
 
@@ -289,6 +291,7 @@ CI nastavuje `TEST_DATABASE_REQUIRED=1`, takže integrační testy nesmějí bý
 
 ## 13. Historie
 
+| 18. 11. 2026 | v2.2: doplněna samostatná tabulka `admin_message_translation`, cs/en seed administračních textů a jejich SHA-1 `default_hash` (F4-17/F4-24). |
 | Datum | Změna |
 |---|---|
 | 4. 11. 2026 | Vytvořeno počáteční schéma a seed data v SQL. |

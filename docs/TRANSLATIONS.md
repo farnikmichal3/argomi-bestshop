@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.22 · 17. 11. 2026
+**Revize:** 1.24 · 18. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -63,7 +63,7 @@ Administrátor nesmí:
 - odstranit systémový záznam,
 - měnit překlady mimo rozsah svého oprávnění.
 
-Role a oprávnění spravuje Identity. Modul Translation poskytuje kontrolní body a auditní události.
+Role a oprávnění spravuje Identity. Modul Translation vynucuje serverové role `translation_viewer` (pouze čtení) a `translation_manager` (čtení i správa). Oprávnění se vyhodnocuje pouze pro přihlášeného uživatele; skrytí formuláře není bezpečnostní hranice.
 
 ## 5. Jazyky, fallback a formátování
 
@@ -88,7 +88,8 @@ Obsahové překlady zůstávají v tabulkách vlastnických domén (např. `prod
 
 - Catalog: `catalog_message_translation`,
 - Cart: `cart_message_translation`,
-- Checkout: `checkout_message_translation`.
+- Checkout: `checkout_message_translation`,
+- Admin: `admin_message_translation`.
 
 Každá tabulka zachovává společný kontrakt: `id`, `message_key`, `locale`, `message_text`, `source`, `is_customized`, `default_hash`, `is_outdated`, `updated_at` a `updated_by`. Sloupec `domain` není potřeba, protože vlastnictví vyjadřuje samotná tabulka. Unikátní index `(locale, message_key)` brání duplicitě klíče v rámci jazyka a vlastnické domény; `locale` odkazuje na `language(code)` s `ON DELETE RESTRICT`.
 
@@ -129,6 +130,18 @@ Příkaz `translations:check` je pouze čtecí diagnostika; nikdy nezapisuje do 
 - Při nálezu chybějících nebo nepoužívaných klíčů vrací příkaz nenulový návratový kód; bez nálezů končí úspěšně.
 - Dynamicky sestavené klíče, reference mimo `app/UI`, obsahové překlady entit a klíče generované za běhu nelze statickým skenerem spolehlivě určit. Tyto případy vyžadují samostatné explicitní pokrytí; výsledek proto není důkazem úplné absence dynamického použití.
 
+### 8.2 Runtime diagnostika chybějících překladů
+
+`DatabaseTranslator` hlásí chybějící text v požadovaném locale přes `MissingTranslationReporter`, i když se podaří použít výchozí jazyk. Diagnostika deduplikuje stejné kombinace domény, locale a klíče v rámci požadavku, zapíše strukturované varování do aplikačního logu a zpřístupní záznamy ve vývojovém Tracy panelu. Panel escapuje všechny hodnoty; v produkčním režimu se nezobrazuje. Chybějící klíč se nikdy automaticky nezapisuje do databáze.
+
+### 8.3 Admin správa a ochrana
+
+- Read-only přehled zobrazuje všechny čtyři systémové domény a filtruje podle domény, aktivního jazyka a stavu (`core`, `custom`, upravený, zastaralý).
+- Vlastní překlady lze vytvořit, upravit a odstranit pouze se `source = 'custom'`. Databázový writer odmítá HTML a nikdy nezapisuje do řádku `source = 'core'`; po úspěšné změně invaliduje přesnou cache domény a locale.
+- Formuláře používají výchozí CSRF ochranu Nette Forms. Zobrazení textu používá standardní escapování Latte.
+- Jazyk se přidává nejprve jako neaktivní; aktivace/deaktivace je samostatná operace. Výchozí jazyk nelze deaktivovat. Aktivní jazyky se automaticky promítnou do `LocaleProvider` a jazykových rout.
+
+
 ## 9. Minimální ověření
 
 - žádná překladová hodnota není v aplikačních souborech,
@@ -156,7 +169,7 @@ Příkaz `translations:check` je pouze čtecí diagnostika; nikdy nezapisuje do 
 
 Modul používá standardní členění projektu: `Api/Dto`, `Api/Event`, `Application/Dto`, `Domain`, `Infrastructure/DI` a `Infrastructure/Persistence`. DI extension je `App\Modules\Translation\Infrastructure\DI\TranslationExtension` a Bootstrap ji automaticky registruje podle `ModuleRegistry` a konvence názvů.
 
-Veřejné API modulu tvoří `Api/TranslationDomain`, `Api/TranslatorFactory`, `Api/LocaleNumberFormatter`, `Api/NumberFormattingException`, `Api/UnitFormatter` a `Api/UnitFormattingException`. Prezentační vrstvy pro systémové texty používají pouze `TranslationDomain` a `TranslatorFactory`; ostatní moduly mohou formátovat čísla a peníze přes `LocaleNumberFormatter`. Interní `MessageDomain` ani `DatabaseTranslatorFactory` nejsou součástí veřejného kontraktu. Interní továrna mapuje veřejnou doménu na interní enum a vrací standardní `Nette\Localization\Translator`. Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. Aplikační kontrakt `MessageStore` načítá jednu vlastnickou doménu a locale do neměnného `MessageCatalog`; doménu reprezentuje `MessageDomain` a databázový adaptér `DatabaseMessageStore` vybírá tabulku pevným mapováním enumu. Každé volání provede jediný SELECT filtrovaný podle locale. Databázové `ActiveRow` se mapuje uvnitř persistence vrstvy a nikdy neopouští infrastrukturu. `DatabaseTranslator` implementuje `Nette\Localization\Translator` nad katalogem požadovaného locale a případným katalogem výchozího locale. `DatabaseTranslatorFactory` vytváří překladač pro explicitně předanou doménu a locale; výchozí locale získává z `LocaleProvider`. Překladač využívá cacheovaný `MessageStore`; chybějící klíč nejprve hledá ve výchozím katalogu stejné domény a až poté vrací stabilní klíč. ICU formátování používá locale katalogu, ze kterého byl text skutečně nalezen. Jazyk se neodvozuje ze skrytého globálního kontextu. Veškeré runtime překladové hodnoty se načítají výhradně z databáze.
+Veřejné API modulu tvoří `Api/TranslationDomain`, `Api/TranslatorFactory`, `Api/MessageTranslationReader`, `Api/MessageTranslationWriter`, `Api/LocaleManager`, `Api/TranslationPermission`, `Api/TranslationMessageStatus`, `Api/LocaleNumberFormatter`, `Api/NumberFormattingException`, `Api/UnitFormatter` a `Api/UnitFormattingException`. Prezentační vrstvy pro systémové texty používají pouze `TranslationDomain` a `TranslatorFactory`; ostatní moduly mohou formátovat čísla a peníze přes `LocaleNumberFormatter`. Interní `MessageDomain` ani `DatabaseTranslatorFactory` nejsou součástí veřejného kontraktu. Interní továrna mapuje veřejnou doménu na interní enum a vrací standardní `Nette\Localization\Translator`. Modul záměrně nemá `Resources/translations` ani jiné runtime souborové katalogy. Aplikační kontrakt `MessageStore` načítá jednu vlastnickou doménu a locale do neměnného `MessageCatalog`; doménu reprezentuje `MessageDomain` a databázový adaptér `DatabaseMessageStore` vybírá tabulku pevným mapováním enumu. Každé volání provede jediný SELECT filtrovaný podle locale. Databázové `ActiveRow` se mapuje uvnitř persistence vrstvy a nikdy neopouští infrastrukturu. `DatabaseTranslator` implementuje `Nette\Localization\Translator` nad katalogem požadovaného locale a případným katalogem výchozího locale. `DatabaseTranslatorFactory` vytváří překladač pro explicitně předanou doménu a locale; výchozí locale získává z `LocaleProvider`. Překladač využívá cacheovaný `MessageStore`; chybějící klíč nejprve hledá ve výchozím katalogu stejné domény a až poté vrací stabilní klíč. ICU formátování používá locale katalogu, ze kterého byl text skutečně nalezen. Jazyk se neodvozuje ze skrytého globálního kontextu. Veškeré runtime překladové hodnoty se načítají výhradně z databáze. `DatabaseMessageTranslationReader` čte seznamy domén, `DatabaseMessageTranslationWriter` mění výhradně vlastní záznamy a invaliduje cache, `DatabaseLocaleManager` spravuje jazyky. `MissingTranslationDiagnostics` zajišťuje logování a Tracy panel. `NetteTranslationPermissionService` vynucuje přihlášené role `translation_viewer` a `translation_manager`.
 
 ## 12. Použití systémových překladů v Latte
 
@@ -174,6 +187,7 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 
 ### Historie revizí
 
+- **1.24 · 18. 11. 2026:** dokončena administrační správa vlastních překladů a jazyků, serverová oprávnění, runtime diagnostika chybějících textů s Tracy panelem a idempotentní cs/en seed domény Admin. Systémové zdroje zůstávají chráněné a všechny zápisy invalidují cache.
 - **1.23 · 17. 11. 2026:** F4-17 zavádí samostatnou vlastnickou doménu `Admin` a tabulku `admin_message_translation`; administrativní texty se oddělují od obchodních domén. Doplněno mapování veřejné i interní domény, databázového úložiště a integrační test.
 
 - **1.22 · 17. 11. 2026:** F4-16 přidává read-only příkaz `translations:check`. Porovnává statické reference v Latte/PHP pod `app/UI` s překlady ve všech aktivních jazycích a hlásí chybějící hodnoty i nepoužívané databázové klíče; dynamické reference zůstávají mimo automatickou detekci.

@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.7 · 17. 11. 2026  
+**Revize:** 4.8 · 18. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 17. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -46,30 +46,51 @@ app/
 │   ├── Tax/
 │   └── Translation/
 │       ├── Api/
+│       │   ├── Dto/
+│       │   │   └── ManagedLocale.php
+│       │   ├── CustomMessageNotFoundException.php
+│       │   ├── DefaultLanguageCannotBeDeactivatedException.php
+│       │   ├── LanguageNotFoundException.php
+│       │   ├── LocaleManager.php
 │       │   ├── LocaleNumberFormatter.php
+│       │   ├── MessageTranslationReader.php
+│       │   ├── MessageTranslationWriter.php
 │       │   ├── NumberFormattingException.php
-│       │   ├── UnitFormatter.php
-│       │   ├── UnitFormattingException.php
 │       │   ├── TranslationDomain.php
-│       │   └── TranslatorFactory.php
+│       │   ├── TranslationMessageStatus.php
+│       │   ├── TranslationPermission.php
+│       │   ├── TranslatorFactory.php
+│       │   ├── UnitFormatter.php
+│       │   └── UnitFormattingException.php
 │       ├── Application/
 │       │   ├── Dto/
-│       │   │   └── MessageCatalog.php
+│       │   │   ├── MessageCatalog.php
+│       │   │   └── MissingTranslation.php
 │       │   ├── EntityTranslationResolver.php
 │       │   ├── IcuLocaleNumberFormatter.php
 │       │   ├── IcuUnitFormatter.php
 │       │   ├── MessageCacheInvalidator.php
-│       │   └── MessageStore.php
+│       │   ├── MessageStore.php
+│       │   ├── MissingTranslationReporter.php
+│       │   └── TranslationPermissionResolver.php
 │       ├── Domain/
 │       │   └── MessageDomain.php
 │       └── Infrastructure/
 │           ├── Cache/
 │           │   ├── CachedMessageStore.php
 │           │   └── NetteMessageCacheInvalidator.php
+│           ├── Diagnostics/
+│           │   ├── MissingTranslationDiagnostics.php
+│           │   └── MissingTranslationPanel.php
 │           ├── DI/
 │           │   └── TranslationExtension.php
 │           ├── Persistence/
-│           │   └── DatabaseMessageStore.php
+│           │   ├── DatabaseLocaleManager.php
+│           │   ├── DatabaseMessageStore.php
+│           │   ├── DatabaseMessageTranslationReader.php
+│           │   └── DatabaseMessageTranslationWriter.php
+│           ├── Security/
+│           │   └── NetteTranslationPermissionService.php
 │           └── Translation/
 │               ├── DatabaseTranslator.php
 │               └── DatabaseTranslatorFactory.php
@@ -154,6 +175,8 @@ app/
     │   ├── Orders/
     │   ├── Settings/
     │   └── Translations/
+    │       ├── TranslationsPresenter.php
+    │       └── default.latte
     ├── Front/
     │   ├── @layout.latte
     │   ├── Account/
@@ -299,7 +322,7 @@ assets/
 
 `front.js` a `admin.js` jsou samostatné vstupy; společná inicializace Bootstrapu, Naja a nette-forms je v `shared.js`. Sass vstupy `front.scss` a `admin.scss` používají společný základ `_shared.scss`. Specifické styly a skripty patří do odpovídající oblasti, průřezový kód pouze do sdílených souborů. Výstupní soubory `www/assets/front.css`, `admin.css`, `front.js` a `admin.js` a příkazy `build`/`watch` spravuje `package.json`.
 
-Modul Translation vystavuje `Api/TranslationDomain` a `Api/TranslatorFactory`. Prezentační vrstvy smějí používat pouze tyto veřejné kontrakty; `Domain/MessageDomain` a `Infrastructure/Translation/DatabaseTranslatorFactory` zůstávají interní. Interní továrna implementuje vlastní API a mapuje veřejnou doménu na interní model.
+Modul Translation vystavuje veřejné kontrakty pro překlad, čtení a správu vlastních překladů, jazyky a oprávnění. Prezentační vrstvy používají pouze `Api`; databázové čtení/zápis, cache, Tracy diagnostika a Nette security adaptér zůstávají v `Infrastructure`. `TranslationsPresenter` spravuje pouze vlastní zdroje, aktivaci jazyků a read-only přehled systémových textů. Runtime chybějící překlady se deduplikují, logují a v debug režimu zobrazují v Tracy panelu.
 
 ## 6. Pravidla závislostí
 
@@ -392,6 +415,7 @@ Tato hranice je automaticky vynucována Deptrac pravidlem `Shared: [External]` a
 
 ## 11. Historie
 
+| 18. 11. 2026 | v4.8: doplněn skutečný strom Admin správy překladů, veřejných kontraktů pro vlastní překlady/jazyky/oprávnění, runtime diagnostiky a Tracy panelu podle F4-07 a F4-17–F4-29. |
 | 10. 11. 2026 | v1.3: aktualizován strom `Shared` podle skutečného repozitáře; odstraněna zastaralá reference na `OrmModel.php`, který byl odstraněn v F1-37. |
 | 10. 11. 2026 | v1.4: doplněno a ověřeno explicitní mapování presenterů `UI/Front` a `UI/Admin` podle Nette Application 3.3.1; zachováno obecné mapování pro `Presentation`. |
 | 10. 11. 2026 | v1.5: doplněny minimální presentery Front/Home a Admin/Dashboard, uvítací Latte šablony, jazykové routy `/cs` a `/en`, administrační `/admin` a přesměrování `/` na `/cs`. |
