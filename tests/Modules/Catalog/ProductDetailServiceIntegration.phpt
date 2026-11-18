@@ -3,10 +3,10 @@ Catalog product detail service loads localized product data in bounded batch que
 --FILE--
 <?php
 
-use App\\Modules\\Catalog\\Application\\ProductDetailService;
-use App\\Shared\\Domain\\Locale\\Locale;
-use Tester\\Assert;
-use Tests\\Support\\IntegrationTestBootstrap;
+use App\Modules\Catalog\Application\ProductDetailService;
+use App\Shared\Domain\Locale\Locale;
+use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 
@@ -72,7 +72,7 @@ Assert::exception(
     InvalidArgumentException::class,
 );
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK
