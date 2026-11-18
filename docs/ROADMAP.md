@@ -56,7 +56,7 @@ Celkem **554 kroků**: hotovo 168, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F1 | Prostředí a repozitář | 39 | 38 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
-| F4 | Překlady v databázi | 29 | 23 | 0 | 0 | 0 | 0 | 0 | 5 |
+| F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
 | F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
@@ -475,7 +475,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - `[HOTOVO]` **F4-04** Implementace `Nette\Localization\Translator` nad úložištěm: překladač a továrna s explicitní doménou a locale, DI registrace a integrační testy.
 - `[HOTOVO]` **F4-05** Formátování ICU MessageFormat přes `intl`: `DatabaseTranslator` používá locale konkrétního katalogu, podporuje pojmenované i poziční parametry, pluralizaci cs/en a typované hodnoty včetně `Stringable`. Neplatný ICU vzor vyvolá `MessageFormattingException`; `ext-intl` je povinná Composer závislost. Ověřeno integračními testy, GitHub Actions i lokálním `check.bat`.
 - `[HOTOVO]` **F4-06** Řetězec záloh: požadovaný jazyk, výchozí jazyk, klíč. Ověřen fallback v rámci stejné domény, stabilní klíč při chybějícím překladu a ICU formátování podle skutečného locale nalezeného katalogu; lokální `check.bat` i GitHub Actions run #354 prošly.
-- `[PLÁN]` **F4-07** Logování chybějících překladů a Tracy panel
+- `[HOTOVO]` **F4-07** Logování chybějících překladů a Tracy panel. `DatabaseTranslator` hlásí chybějící klíče, diagnostika deduplikuje záznamy v rámci požadavku a vývojový Tracy panel je bezpečně zobrazuje. Integrační test přes skutečný DI kontejner ověřuje registraci reporteru a panelu i průchod chybějícího klíče od `TranslatorFactory` do diagnostiky. GitHub Actions run #44277097758 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[HOTOVO]` **F4-08** Latte rozšíření: překlad klíče v šabloně. Nativní Latte překladová syntaxe je napojena přes `Template::setTranslator()`; společný `TranslatedPresenter` vyžaduje explicitní doménu a ověřuje aktivní locale. GitHub Actions run #44065470430 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
 - `[HOTOVO]` **F4-09** Pomocník pro překlad entit (překladová řádka se zálohou na výchozí jazyk). Aplikační `EntityTranslationResolver` je typově obecný, upřednostňuje požadované locale, při jeho absenci použije výchozí locale a při shodě jazyků pracuje s jediným výsledkem. Testy pokrývají prioritu, fallback, chybějící překlady i shodné locale. GitHub Actions run #44066963629 i lokální `check.bat` uživatelem potvrzeny jako úspěšné; načítání řádků zůstává odpovědností repozitáře.
 - `[HOTOVO]` **F4-10** Formátování peněz a čísel (`LocaleNumberFormatter`) podle jazyka. Veřejný kontrakt přijímá explicitní `Locale`; ICU implementace formátuje běžná čísla a `Money` zachovává přesnost minor units bez převodu částky na float. Testy pokrývají cs/en/de, měny s 0/2/4 desetinnými místy, záporné částky, `PHP_INT_MIN` a `PHP_INT_MAX`. GitHub Actions run #44071145527 i lokální `check.bat` uživatelem potvrzeny jako úspěšné.
@@ -502,6 +502,10 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 ### v3.56 (18. 11. 2026)
 - Dokončen F4-17: read-only Admin seznam překladů s validovanými filtry domény, jazyka a stavu, limitem 200 řádků a bezpečným escapováním. Po opravě integračního testu systémových seedů uživatel potvrdil `All active checks passed.`
 - F4: **14 hotovo**, **0 rozděláno**, **10 plán**, **4 zrušeno**. Celkem: **159 hotovo**, **0 rozděláno**, **1 k úpravě**, **388 plán**, **6 zrušeno**.
+
+### v3.70 (18. 11. 2026)
+- F4-07 dokončen: integrační test ověřuje zapojení chybějících překladů přes skutečný DI kontejner až do Tracy panelu. GitHub Actions run #44277097758 i lokální `check.bat` úspěšně prošly.
+- F4: **24 hotovo**, **0 rozděláno**, **0 plán**, **5 zrušeno**. Celkem: **169 hotovo**, **0 rozděláno**, **1 k úpravě**, **378 plán**, **7 zrušeno**.
 
 ### v3.69 (18. 11. 2026)
 - F4-29 dokončen: integrační test celé administrační hranice oprávnění prošel v GitHub Actions i lokálně přes `check.bat`. Ověřeno odmítnutí create/update/delete bez role správce, ochrana `source=core` i před správcem a zákaz čtení bez oprávnění.
