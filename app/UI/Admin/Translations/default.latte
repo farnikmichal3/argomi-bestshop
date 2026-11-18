@@ -99,6 +99,8 @@
                             {_'translations.status.outdated'}
                         {elseif $row->isCustomized}
                             {_'translations.status.customized'}
+                        {elseif $row->source === 'custom'}
+                            {_'translations.status.custom'}
                         {else}
                             {_'translations.status.current'}
                         {/if}
