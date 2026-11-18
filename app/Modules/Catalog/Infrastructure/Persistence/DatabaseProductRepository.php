@@ -118,66 +118,92 @@ final class DatabaseProductRepository implements ProductRepository
             return new ProductListingDto([], 0, $page, $perPage, 0);
         }
 
-        // product_category je výchozí tabulka: její unikátní vazba
-        // (product_id, category_id) zaručuje jednu položku na produkt.
-        // Stav produktu filtrujeme přes FK vztah v Nette Exploreru.
-        $assignments = $this->database->table('product_category')
+        // Načteme přímá přiřazení a aktivní produkty samostatně.
+        // Tím se vyhneme implicitnímu FK resolveru Nette Exploreru,
+        // jehož dostupnost závisí na introspekci konkrétního DB driveru.
+        $assignmentRows = $this->database->table('product_category')
             ->where('category_id', $categoryId)
-            ->where(':product.status', 'active');
-
-        $totalItems = $assignments->count('*');
-
-        switch ($sort) {
-            case ProductSortOrder::CategoryPosition:
-                $assignments->order('sort_order ASC, product_id ASC');
-                break;
-
-            case ProductSortOrder::ProductCodeAscending:
-                $assignments->order(':product.code ASC, product_id ASC');
-                break;
-
-            case ProductSortOrder::ProductCodeDescending:
-                $assignments->order(':product.code DESC, product_id DESC');
-                break;
-
-            case ProductSortOrder::Newest:
-                $assignments->order(':product.created_at DESC, product_id DESC');
-                break;
-
-            case ProductSortOrder::Oldest:
-                $assignments->order(':product.created_at ASC, product_id ASC');
-                break;
-        }
-
-        $assignmentRows = $assignments
-            ->limit($perPage, ($page - 1) * $perPage)
             ->fetchAll();
 
         if ($assignmentRows === []) {
-            return new ProductListingDto(
-                [],
-                $totalItems,
-                $page,
-                $perPage,
-                intdiv($totalItems, $perPage) + ($totalItems % $perPage === 0 ? 0 : 1),
-            );
+            return new ProductListingDto([], 0, $page, $perPage, 0);
         }
 
+        $assignmentsByProductId = [];
         $productIds = [];
+
         foreach ($assignmentRows as $assignment) {
-            $productIds[] = $this->mapInteger($assignment->product_id, 'product_category.product_id');
+            $productId = $this->mapInteger($assignment->product_id, 'product_category.product_id');
+            $assignmentsByProductId[$productId] = $this->mapInteger(
+                $assignment->sort_order,
+                'product_category.sort_order',
+            );
+            $productIds[] = $productId;
         }
 
         $productsById = [];
-        foreach ($this->database->table('product')->where('id', $productIds)->fetchAll() as $row) {
+        foreach (
+            $this->database->table('product')
+                ->where('id', $productIds)
+                ->where('status', 'active')
+                ->fetchAll() as $row
+        ) {
             $product = $this->mapProduct($row);
             $productsById[$product->id] = $product;
+        }
+
+        // Produkt bez odpovídajícího řádku je při správně vynuceném FK
+        // nemožný; neaktivní produkty se z katalogu pouze vyřadí.
+        $listing = [];
+        foreach ($productsById as $productId => $product) {
+            $listing[] = [
+                'product' => $product,
+                'categoryPosition' => $assignmentsByProductId[$productId],
+            ];
+        }
+
+        usort($listing, static function (array $left, array $right) use ($sort): int {
+            /** @var ProductDto $leftProduct */
+            $leftProduct = $left['product'];
+            /** @var ProductDto $rightProduct */
+            $rightProduct = $right['product'];
+
+            return match ($sort) {
+                ProductSortOrder::CategoryPosition =>
+                    ($left['categoryPosition'] <=> $right['categoryPosition'])
+                    ?: ($leftProduct->id <=> $rightProduct->id),
+                ProductSortOrder::ProductCodeAscending =>
+                    strcmp($leftProduct->code, $rightProduct->code)
+                    ?: ($leftProduct->id <=> $rightProduct->id),
+                ProductSortOrder::ProductCodeDescending =>
+                    strcmp($rightProduct->code, $leftProduct->code)
+                    ?: ($rightProduct->id <=> $leftProduct->id),
+                ProductSortOrder::Newest =>
+                    ($rightProduct->createdAt <=> $leftProduct->createdAt)
+                    ?: ($rightProduct->id <=> $leftProduct->id),
+                ProductSortOrder::Oldest =>
+                    ($leftProduct->createdAt <=> $rightProduct->createdAt)
+                    ?: ($leftProduct->id <=> $rightProduct->id),
+            };
+        });
+
+        $totalItems = count($listing);
+        $totalPages = intdiv($totalItems, $perPage) + ($totalItems % $perPage === 0 ? 0 : 1);
+        $pageItems = array_slice($listing, ($page - 1) * $perPage, $perPage);
+
+        if ($pageItems === []) {
+            return new ProductListingDto([], $totalItems, $page, $perPage, $totalPages);
+        }
+
+        $pageProductIds = [];
+        foreach ($pageItems as $item) {
+            $pageProductIds[] = $item['product']->id;
         }
 
         $translationsByProductId = [];
         foreach (
             $this->database->table('product_translation')
-                ->where('product_id', $productIds)
+                ->where('product_id', $pageProductIds)
                 ->where('locale', $locale->getCode())
                 ->fetchAll() as $row
         ) {
@@ -186,26 +212,16 @@ final class DatabaseProductRepository implements ProductRepository
         }
 
         $items = [];
-        foreach ($productIds as $productId) {
-            $product = $productsById[$productId] ?? null;
-
-            if ($product === null) {
-                throw new UnexpectedValueException('Vazba kategorie odkazuje na neexistující produkt.');
-            }
-
+        foreach ($pageItems as $item) {
+            /** @var ProductDto $product */
+            $product = $item['product'];
             $items[] = new ProductListItemDto(
                 $product,
-                $translationsByProductId[$productId] ?? null,
+                $translationsByProductId[$product->id] ?? null,
             );
         }
 
-        return new ProductListingDto(
-            $items,
-            $totalItems,
-            $page,
-            $perPage,
-            intdiv($totalItems + $perPage - 1, $perPage),
-        );
+        return new ProductListingDto($items, $totalItems, $page, $perPage, $totalPages);
     }
 
     /**
