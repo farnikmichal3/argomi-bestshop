@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Infrastructure\Storage;
 
 use App\Modules\Catalog\Application\ProductImageStorage;
-use RuntimeException;
 use InvalidArgumentException;
+use RuntimeException;
 
 final class FilesystemProductImageStorage implements ProductImageStorage
 {
