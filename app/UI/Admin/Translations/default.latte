@@ -5,17 +5,19 @@
     <h1>{_'translations.title'}</h1>
     <p>{_'translations.description'}</p>
 
+{if $canManage}
     <section class="card mb-4">
         <div class="card-body">
             <h2 class="h4">{_'translations.create.title'}</h2>
             {control manageForm}
         </div>
     </section>
+{/if}
 
     <section class="card mb-4">
         <div class="card-body">
             <h2 class="h4">{_'translations.languages.title'}</h2>
-            {control languageForm}
+            {if $canManage}{control languageForm}{/if}
             <div class="table-responsive mt-3">
                 <table class="table table-sm">
                     <thead>

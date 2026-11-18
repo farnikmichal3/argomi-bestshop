@@ -12,12 +12,14 @@ use App\Modules\Translation\Api\MessageTranslationReader;
 use App\Modules\Translation\Api\MessageTranslationWriter;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslationMessageStatus;
+use App\Modules\Translation\Api\TranslationPermission;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Presentation\TranslatedPresenter;
 use App\Shared\Domain\Locale\InvalidLocaleException;
 use App\Shared\Domain\Locale\Locale;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\UniqueConstraintViolationException;
 use stdClass;
@@ -29,6 +31,7 @@ final class TranslationsPresenter extends TranslatedPresenter
         private readonly MessageTranslationWriter $translationWriter,
         private readonly LocaleManager $localeManager,
         private readonly TranslatorFactory $translatorFactory,
+        private readonly TranslationPermission $translationPermission,
         private readonly LocaleProvider $localeProvider,
     ) {
         parent::__construct();
@@ -44,6 +47,10 @@ final class TranslationsPresenter extends TranslatedPresenter
         ?string $locale = null,
         ?string $status = null,
     ): void {
+        if (!$this->translationPermission->canView()) {
+            throw new ForbiddenRequestException();
+        }
+
         $selectedDomain = $domain === null || $domain === ''
             ? null
             : TranslationDomain::tryFrom($domain);
@@ -74,6 +81,7 @@ final class TranslationsPresenter extends TranslatedPresenter
             throw new BadRequestException('Neplatný filtr stavu.');
         }
 
+        $this->template->canManage = $this->translationPermission->canManage();
         $this->template->rows = $this->translationReader->search(
             $selectedDomain,
             $selectedLocale,
@@ -109,7 +117,6 @@ final class TranslationsPresenter extends TranslatedPresenter
 
         $form = new Form();
         $form->setTranslator($translator);
-        $form->addProtection('translations.form.expired');
         $form->addSelect('operation', 'translations.form.operation', [
             'create' => 'translations.operation.create',
             'update' => 'translations.operation.update',
@@ -131,6 +138,10 @@ final class TranslationsPresenter extends TranslatedPresenter
             ->setHtmlAttribute('class', 'btn btn-primary');
 
         $form->onSuccess[] = function (Form $form, stdClass $values) use ($translator): void {
+            if (!$this->translationPermission->canManage()) {
+                throw new ForbiddenRequestException();
+            }
+
             $domainValue = $values->domain;
             $localeValue = $values->locale;
             $keyValue = $values->messageKey;
@@ -206,7 +217,6 @@ final class TranslationsPresenter extends TranslatedPresenter
 
         $form = new Form();
         $form->setTranslator($translator);
-        $form->addProtection('translations.form.expired');
         $form->addSelect('operation', 'translations.languages.operation', [
             'create' => 'translations.languages.operation.create',
             'activate' => 'translations.languages.operation.activate',
@@ -224,6 +234,10 @@ final class TranslationsPresenter extends TranslatedPresenter
             ->setHtmlAttribute('class', 'btn btn-primary');
 
         $form->onSuccess[] = function (Form $form, stdClass $values) use ($translator): void {
+            if (!$this->translationPermission->canManage()) {
+                throw new ForbiddenRequestException();
+            }
+
             $code = $values->code;
             $name = $values->name;
             $sortOrderValue = $values->sortOrder;
@@ -246,7 +260,7 @@ final class TranslationsPresenter extends TranslatedPresenter
                     case 'create':
                         $sortOrder = is_string($sortOrderValue) ? filter_var($sortOrderValue, FILTER_VALIDATE_INT) : false;
 
-                        if (!is_string($name) || $sortOrder === false || $sortOrder < 0) {
+                        if (!is_string($name) || !is_int($sortOrder) || $sortOrder < 0) {
                             $form->addError($translator->translate('translations.error.invalid_input'));
                             return;
                         }

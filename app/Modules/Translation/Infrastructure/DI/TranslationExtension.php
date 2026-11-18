@@ -8,16 +8,19 @@ use App\Modules\Translation\Api\LocaleManager;
 use App\Modules\Translation\Api\LocaleNumberFormatter;
 use App\Modules\Translation\Api\MessageTranslationReader;
 use App\Modules\Translation\Api\MessageTranslationWriter;
+use App\Modules\Translation\Api\TranslationPermission;
 use App\Modules\Translation\Api\UnitFormatter;
 use App\Modules\Translation\Application\EntityTranslationResolver;
 use App\Modules\Translation\Application\IcuLocaleNumberFormatter;
 use App\Modules\Translation\Application\IcuUnitFormatter;
+use App\Modules\Translation\Application\TranslationPermissionResolver;
 use App\Modules\Translation\Infrastructure\Cache\CachedMessageStore;
 use App\Modules\Translation\Infrastructure\Cache\NetteMessageCacheInvalidator;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseLocaleManager;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageStore;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageTranslationReader;
 use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageTranslationWriter;
+use App\Modules\Translation\Infrastructure\Security\NetteTranslationPermissionService;
 use Nette\Caching\Cache;
 use Nette\DI\CompilerExtension;
 
@@ -32,6 +35,13 @@ final class TranslationExtension extends CompilerExtension
     public function loadConfiguration(): void
     {
         $builder = $this->getContainerBuilder();
+
+        $builder->addDefinition($this->prefix('translationPermissionResolver'))
+            ->setType(TranslationPermissionResolver::class);
+
+        $builder->addDefinition($this->prefix('translationPermission'))
+            ->setType(TranslationPermission::class)
+            ->setFactory(NetteTranslationPermissionService::class);
 
         $builder->addDefinition($this->prefix('localeManager'))
             ->setType(LocaleManager::class)
