@@ -13,6 +13,7 @@ use App\Modules\Catalog\Domain\Option\CustomerOption;
  */
 final readonly class CustomerOptionDefinitionDto
 {
+    /** @param list<int> $valueIds */
     public function __construct(
         public CustomerOption $option,
         public array $valueIds,
