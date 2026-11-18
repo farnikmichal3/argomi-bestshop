@@ -95,8 +95,8 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
 
         $attributeNames = [];
         foreach ($attributeTranslations as $row) {
-            $attributeNames[$this->integer($row->attribute_id, 'attribute_translation.attribute_id')] =
-                $this->string($row->name, 'attribute_translation.name');
+            $attributeNames[$this->integer($row->attribute_id, 'attribute_translation.attribute_id')]
+                = $this->string($row->name, 'attribute_translation.name');
         }
 
         $enumValueIds = [];
@@ -117,8 +117,8 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
 
         $enumCodes = [];
         foreach ($enumValues as $row) {
-            $enumCodes[$this->integer($row->id, 'attribute_value.id')] =
-                $this->string($row->code, 'attribute_value.code');
+            $enumCodes[$this->integer($row->id, 'attribute_value.id')]
+                = $this->string($row->code, 'attribute_value.code');
         }
 
         $enumTranslations = $enumValueIds === []
@@ -130,8 +130,8 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
 
         $enumLabels = [];
         foreach ($enumTranslations as $row) {
-            $enumLabels[$this->integer($row->attribute_value_id, 'attribute_value_translation.attribute_value_id')] =
-                $this->string($row->label, 'attribute_value_translation.label');
+            $enumLabels[$this->integer($row->attribute_value_id, 'attribute_value_translation.attribute_value_id')]
+                = $this->string($row->label, 'attribute_value_translation.label');
         }
 
         $variantValuesByVariant = [];
@@ -239,8 +239,8 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
                     ->where('locale', $localeCode)
                     ->fetchAll() as $row
             ) {
-                $optionNames[$this->integer($row->product_option_id, 'product_option_translation.product_option_id')] =
-                    $this->string($row->name, 'product_option_translation.name');
+                $optionNames[$this->integer($row->product_option_id, 'product_option_translation.product_option_id')]
+                    = $this->string($row->name, 'product_option_translation.name');
             }
 
             $optionValueRows = $this->database->table('product_option_value')
@@ -261,8 +261,8 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
                         ->where('locale', $localeCode)
                         ->fetchAll() as $row
                 ) {
-                    $optionValueLabels[$this->integer($row->product_option_value_id, 'product_option_value_translation.product_option_value_id')] =
-                        $this->string($row->label, 'product_option_value_translation.label');
+                    $optionValueLabels[$this->integer($row->product_option_value_id, 'product_option_value_translation.product_option_value_id')]
+                        = $this->string($row->label, 'product_option_value_translation.label');
                 }
             }
 
