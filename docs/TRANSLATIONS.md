@@ -137,6 +137,7 @@ Příkaz `translations:check` je pouze čtecí diagnostika; nikdy nezapisuje do 
 ### 8.3 Admin správa a ochrana
 
 - Read-only přehled zobrazuje všechny čtyři systémové domény a filtruje podle domény, aktivního jazyka a stavu (`core`, `custom`, upravený, zastaralý).
+- Stav `upravený` a `zastaralý` se vztahuje výhradně na systémové řádky `source = core`; vlastní řádky `source = custom` se zobrazují samostatně jako vlastní zdroj, i kdyby historická data měla příznak `is_customized`. Tím se přehled změněných systémových zdrojů nemíchá s přehledem vlastních překladů.
 - Vlastní překlady lze vytvořit, upravit a odstranit pouze se `source = 'custom'`. Databázový writer odmítá HTML a nikdy nezapisuje do řádku `source = 'core'`; po úspěšné změně invaliduje přesnou cache domény a locale.
 - Formuláře používají výchozí CSRF ochranu Nette Forms. Zobrazení textu používá standardní escapování Latte.
 - Jazyk se přidává nejprve jako neaktivní; aktivace/deaktivace je samostatná operace. Výchozí jazyk nelze deaktivovat. Aktivní jazyky se automaticky promítnou do `LocaleProvider` a jazykových rout.
