@@ -51,7 +51,7 @@ interface ProductRepository
      * Stránkování začíná od 1. Počet položek na stránku je omezen na 100.
      * Výsledek obsahuje překlad pro požadovaný jazyk, pokud existuje.
      *
-     * @throws \\InvalidArgumentException Při neplatném ID nebo stránkování.
+     * @throws \InvalidArgumentException Při neplatném ID nebo stránkování.
      */
     public function findByCategory(
         int $categoryId,
