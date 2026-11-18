@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.77 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.78 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 175, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 370, zrušeno 7.
+Celkem **554 kroků**: hotovo 176, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 369, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **554 kroků**: hotovo 175, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 36 | 6 | 0 | 0 | 0 | 0 | 30 | 0 |
+| F5 | Catalog (vlna 1) | 36 | 7 | 0 | 0 | 0 | 0 | 29 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
@@ -74,6 +74,10 @@ Celkem **554 kroků**: hotovo 175, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.78 (18. 11. 2026)
+- Dokončeno F5-07 `OptionResolver`: validace a normalizace zákaznických voleb aktivního produktu, povinnosti voleb, vlastnictví a typové správnosti hodnot, odmítnutí duplicitních a neznámých voleb. Cenové rozdíly zůstávají ve vlastnictví budoucího modulu Pricing (F6); Catalog pouze vrací ověřený výběr. Integrační test ověřen přes Nette DI kontejner. GitHub Actions i lokální `check.bat` prošly.
+- F5: **7 hotovo**, **0 rozděláno**, **29 plán**. Celkem: **176 hotovo**, **0 rozděláno**, **1 k úpravě**, **369 plán**, **7 zrušeno**.
 
 ### v3.55 (17. 11. 2026)
 - Zahájen F4-17: schválena a založena samostatná vlastnická doména `Admin` pro texty administrace. Přidána tabulka `admin_message_translation`, veřejné a interní enumy domény, mapování databázového úložiště a integrační test izolace od Catalog/Cart/Checkout. Texty administrace budou seedovány odděleně; žádné obchodní překladové tabulky se nemění.
@@ -593,7 +597,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-04** `ProductRepository`: stránkovaný výpis aktivních produktů přímo přiřazených do aktivní kategorie, lokalizované DTO, typované řazení (pozice, kód vzestupně/sestupně, nejnovější/nejstarší), stabilní pořadí a dávkové načítání překladů. Integrační test ověřuje cs/en, přímé přiřazení, řazení, prázdné stránky a neplatné argumenty.
 - `[HOTOVO]` **F5-05** `ProductDetailService`: načtení lokalizovaného detailu aktivního produktu (překlady, varianty, obrázky, atributy, volby) dávkovanými dotazy; ceny a sklad zůstávají ve vlastních doménách. GitHub Actions i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-06** `VariantSelector`: validace úplné sady os a typů hodnot, kanonický SHA-256 hash, vyhledání odpovídající aktivní varianty aktivního produktu; databázové načítání os bez N+1 dotazů. Integrační test demo trička, kabelu a GaN nabíječky; CI i lokální `check.bat` prošly.
-- `[PLÁN]` **F5-07** `OptionResolver`: validace a výpočet ceny voleb zákazníka
+- `[HOTOVO]` **F5-07** `OptionResolver`: validace a normalizace povinných i volitelných voleb aktivního produktu, kontrola vlastnictví a typů (`choice`/`text`), odmítnutí neznámých, duplicitních a neplatných hodnot; integrační testy nad demo tričkem. Pricing a cenové rozdíly zůstávají mimo Catalog. CI i lokální `check.bat` prošly.
 - `[PLÁN]` **F5-08** Repozitář obrázků a vazba na varianty; zachování originálů a generování responzivních WebP/AVIF variant podle F0-30
 - `[PLÁN]` **F5-09** Správa souvisejících produktů (`product_relation`)
 - `[PLÁN]` **F5-10** Generování a kontrola slugů (unikátnost v rámci jazyka)
