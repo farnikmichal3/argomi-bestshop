@@ -11,6 +11,7 @@ namespace App\Modules\Catalog\Application\Dto;
  */
 final readonly class CustomerOptionSelectionDto
 {
+    /** @param list<ResolvedCustomerOptionDto> $options */
     public function __construct(
         public int $productId,
         public array $options,
