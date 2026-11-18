@@ -4,8 +4,6 @@ OptionResolver validates and normalizes customer options for active products
 <?php
 
 use App\Modules\Catalog\Application\OptionResolver;
-use App\Modules\Catalog\Infrastructure\Persistence\DatabaseOptionResolutionRepository;
-use Nette\Database\Explorer;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
 
@@ -16,9 +14,8 @@ require_once $rootDir . '/tests/Support/IntegrationTestBootstrap.php';
 
 $integration = IntegrationTestBootstrap::boot($rootDir);
 
-/** @var Explorer $database */
-$database = $integration->database;
-$resolver = new OptionResolver(new DatabaseOptionResolutionRepository($database));
+/** @var OptionResolver $resolver */
+$resolver = $integration->container->getByType(OptionResolver::class);
 
 $resolved = $resolver->resolve(1, [
     ['optionId' => 1, 'valueId' => 2],
