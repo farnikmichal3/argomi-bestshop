@@ -21,7 +21,8 @@ $integration = IntegrationTestBootstrap::boot($rootDir);
 /** @var Explorer $database */
 $database = $integration->database;
 $pdo = $database->getConnection()->getPdo();
-$reader = new DatabaseMessageTranslationReader($database);
+/** @var MessageTranslationReader $reader */
+$reader = $integration->container->getByType(MessageTranslationReader::class);
 
 Assert::type(MessageTranslationReader::class, $reader);
 
@@ -57,6 +58,9 @@ try {
 
     $custom = $reader->search(TranslationDomain::Catalog, Locale::fromString('cs'), TranslationMessageStatus::Custom);
     Assert::true(count(array_filter($custom, static fn($row): bool => $row->messageKey === $customKey)) === 1);
+
+    $customized = $reader->search(TranslationDomain::Catalog, Locale::fromString('cs'), TranslationMessageStatus::Customized);
+    Assert::true(count(array_filter($customized, static fn($row): bool => $row->messageKey === $customKey)) === 1);
 
     $outdated = $reader->search(TranslationDomain::Catalog, Locale::fromString('cs'), TranslationMessageStatus::Outdated);
     Assert::true(count(array_filter($outdated, static fn($row): bool => $row->messageKey === $outdatedKey)) === 1);
