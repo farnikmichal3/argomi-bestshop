@@ -10,6 +10,7 @@ Toto je vstupní bod pro aktuální dokumentaci projektu. Dokumentace popisuje *
 | [STRUKTURA](STRUKTURA.md) | Skutečné členění aplikace, odpovědnosti modulů a pravidla závislostí |
 | [DATABASE](DATABASE.md) | Aktuální databázové schéma, migrace, konvence a seed data |
 | [TRANSLATIONS](TRANSLATIONS.md) | Cílový překladový model, ochrana systémových textů a přechod ze současného schématu |
+| [Translation module README](../app/Modules/Translation/README.md) | Praktické použití veřejného API, prezentery, formátování, správa jazyků a diagnostika |
 | [ROADMAP](ROADMAP.md) | Jediný aktuální seznam úkolů, stavů a milníků |
 | [ADR](adr/) | Záznamy důležitých architektonických rozhodnutí |
 
