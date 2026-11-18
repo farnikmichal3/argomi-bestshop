@@ -52,7 +52,7 @@ Assert::same(
 $withoutTranslation = $repository->findTree(Locale::fromString('de'));
 Assert::count(2, $withoutTranslation);
 Assert::same(null, $withoutTranslation[0]->translation);
-Assert::same(null, $repository->findTree(Locale::fromString('cs'))[0]->children[0] ?? null);
+Assert::same(null, $withoutTranslation[1]->children[0]->translation);
 
 echo "OK\n";
 ?>
