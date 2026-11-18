@@ -72,10 +72,27 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
-          extensions: intl, mysqli, pdo_mysql
+          extensions: gd, mbstring, exif, intl, mysqli, pdo_mysql
           tools: composer:v2
           coverage: none
 
+      - name: Verify image processing capabilities
+        run: |
+          php -r '
+          if (!extension_loaded("gd") || !extension_loaded("mbstring") || !extension_loaded("exif")) {
+              fwrite(STDERR, "Required image extensions are missing.\\n");
+              exit(1);
+          }
+
+          $formats = gd_info();
+          if (empty($formats["WebP Support"])) {
+              fwrite(STDERR, "GD must support WebP encoding.\\n");
+              exit(1);
+          }
+
+          printf("GD WebP support: yes\\n");
+          printf("GD AVIF support: %s\\n", !empty($formats["AVIF Support"]) ? "yes" : "no (optional)");
+          '
       - name: Validate Composer configuration
         run: composer validate --no-check-publish
 
