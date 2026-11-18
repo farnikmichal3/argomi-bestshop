@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.72 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.74 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 168, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 378, zrušeno 7.
+Celkem **555 kroků**: hotovo 172, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 374, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **554 kroků**: hotovo 168, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 36 | 0 | 0 | 0 | 0 | 0 | 36 | 0 |
+| F5 | Catalog (vlna 1) | 36 | 3 | 1 | 0 | 0 | 0 | 32 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
@@ -503,6 +503,14 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 - Dokončen F4-17: read-only Admin seznam překladů s validovanými filtry domény, jazyka a stavu, limitem 200 řádků a bezpečným escapováním. Po opravě integračního testu systémových seedů uživatel potvrdil `All active checks passed.`
 - F4: **14 hotovo**, **0 rozděláno**, **10 plán**, **4 zrušeno**. Celkem: **159 hotovo**, **0 rozděláno**, **1 k úpravě**, **388 plán**, **6 zrušeno**.
 
+### v3.74 (18. 11. 2026)
+- Zahájen F5-04: rozšiřujeme existující ProductRepository o stránkovaný výpis aktivních produktů přímo přiřazených do aktivní kategorie. Přidány typované volby řazení, lokalizované položky výpisu a integrační testy; čeká se na CI a lokální ověření.
+- F5: **3 hotovo**, **1 rozděláno**, **32 plán**. Celkem: **172 hotovo**, **1 rozděláno**, **1 k úpravě**, **374 plán**, **7 zrušeno**.
+
+### v3.73 (18. 11. 2026)
+- F5-03 dokončen: `CategoryRepository` načítá lokalizovaný strom kategorií v deterministickém pořadí, podporuje aktivní strom a bezpečně detekuje osiřelé/cyklické vazby. Integrační test ověřuje překlady i filtrování; GitHub Actions i lokální `check.bat` uživatel potvrdil jako úspěšné.
+- F5: **3 hotovo**, **0 rozděláno**, **33 plán**. Celkem: **172 hotovo**, **0 rozděláno**, **1 k úpravě**, **375 plán**, **7 zrušeno**.
+
 ### v3.72 (18. 11. 2026)
 - F5-02 dokončen: přidány neměnné doménové objekty `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` a typované enumy. Testy pokrývají platné i neplatné hodnoty; GitHub Actions i lokální `check.bat` uživatel potvrdil jako úspěšné.
 - F5: **2 hotovo**, **0 rozděláno**, **34 plán**. Celkem: **171 hotovo**, **0 rozděláno**, **1 k úpravě**, **376 plán**, **7 zrušeno**.
@@ -563,12 +571,12 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### F5: Catalog (vlna 1)
 
-_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 2 z 36 kroků.
+_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 3 z 36 kroků; 1 krok rozpracován.
 
 - `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
 - `[HOTOVO]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` — typované neměnné modely a enumy stavů/typů; validace identifikátorů, kódů, SHA-256 hashe a fyzických rozměrů; doménový test bez infrastrukturních závislostí.
 - `[HOTOVO]` **F5-03** `CategoryRepository`: lokalizovaný strom kategorií, aktivní strom, deterministické řazení a kontrola integrity hierarchie; integrační test překladů a filtrování.
-- `[PLÁN]` **F5-04** `ProductRepository`: výpis produktů v kategorii, stránkování, řazení
+- `[ROZDĚLÁNO]` **F5-04** `ProductRepository`: výpis aktivních produktů v kategorii, stránkování, lokalizace a typované řazení.
 - `[PLÁN]` **F5-05** `ProductDetailService`: načtení detailu produktu (překlady, varianty, obrázky, atributy, volby)
 - `[PLÁN]` **F5-06** `VariantSelector`: vyhledání varianty podle zvolených hodnot os
 - `[PLÁN]` **F5-07** `OptionResolver`: validace a výpočet ceny voleb zákazníka
