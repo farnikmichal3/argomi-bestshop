@@ -6,7 +6,6 @@ MessageTranslationReader filters all owner domains, active locales and translati
 use App\Modules\Translation\Api\MessageTranslationReader;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslationMessageStatus;
-use App\Modules\Translation\Infrastructure\Persistence\DatabaseMessageTranslationReader;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Database\Explorer;
 use Tester\Assert;
