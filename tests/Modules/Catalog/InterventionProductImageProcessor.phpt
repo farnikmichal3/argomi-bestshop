@@ -16,7 +16,7 @@ imagefill($sourceImage, 0, 0, $color);
 ob_start();
 imagepng($sourceImage);
 $source = ob_get_clean();
-imagedestroy($sourceImage;
+imagedestroy($sourceImage);
 
 $processor = new InterventionProductImageProcessor();
 Assert::type(ProductImageProcessor::class, $processor);
