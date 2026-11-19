@@ -5,6 +5,7 @@ Catalog module DI extension is discovered and compiled by the application Bootst
 
 use App\Core\Module\ModuleRegistry;
 use App\Modules\Catalog\Application\ProductImageStorage;
+use App\Modules\Catalog\Application\ProductImageProcessor;
 use App\Modules\Catalog\Application\ProductRepository;
 use App\Modules\Catalog\Infrastructure\DI\CatalogExtension;
 use Nette\DI\CompilerExtension;
@@ -29,6 +30,7 @@ Assert::true($context->container instanceof Container);
 // Existující čtecí kontrakt musí zůstat dostupný přes automatické vyhledávání služeb.
 Assert::type(ProductRepository::class, $context->container->getByType(ProductRepository::class));
 Assert::type(ProductImageStorage::class, $context->container->getByType(ProductImageStorage::class));
+Assert::type(ProductImageProcessor::class, $context->container->getByType(ProductImageProcessor::class));
 
 echo "OK\\n";
 ?>
