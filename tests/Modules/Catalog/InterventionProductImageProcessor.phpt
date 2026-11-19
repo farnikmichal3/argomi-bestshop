@@ -1,5 +1,5 @@
 --TEST--
-Intervention product image processor normalizes and emits WebP bytes
+Intervention product image processor normalizes and emits WebP bytes and derivatives
 --FILE--
 <?php
 
@@ -31,8 +31,20 @@ Assert::true(strlen($result->contents) > 0);
 $decoded = getimagesizefromstring($result->contents);
 Assert::same('image/webp', $decoded['mime']);
 
+$variants = $processor->toVariants($source);
+Assert::same(['thumbnail', 'listing', 'detail'], array_keys($variants));
+Assert::same([160, 160], [$variants['thumbnail']->width, $variants['thumbnail']->height]);
+Assert::same([480, 480], [$variants['listing']->width, $variants['listing']->height]);
+Assert::same([32, 24], [$variants['detail']->width, $variants['detail']->height]);
+foreach ($variants as $variant) {
+    Assert::same('image/webp', getimagesizefromstring($variant->contents)['mime']);
+    Assert::true(strlen($variant->contents) > 0);
+}
+
 Assert::exception(static fn () => $processor->toWebp('', 82), InvalidArgumentException::class);
 Assert::exception(static fn () => $processor->toWebp($source, 0), InvalidArgumentException::class);
+Assert::exception(static fn () => $processor->toVariants('', 82), InvalidArgumentException::class);
+Assert::exception(static fn () => $processor->toVariants($source, 101), InvalidArgumentException::class);
 
 echo "OK\n";
 ?>

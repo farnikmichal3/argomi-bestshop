@@ -14,4 +14,13 @@ interface ProductImageProcessor
      * @throws \InvalidArgumentException If source image is invalid or outside configured limits.
      */
     public function toWebp(string $source, int $quality = 82): ProcessedProductImageDto;
+
+    /**
+     * Create optimized square catalog derivatives and a detail image.
+     *
+     * @return array{thumbnail: ProcessedProductImageDto, listing: ProcessedProductImageDto, detail: ProcessedProductImageDto}
+     *
+     * @throws \InvalidArgumentException If source image is invalid or outside configured limits.
+     */
+    public function toVariants(string $source, int $quality = 82): array;
 }

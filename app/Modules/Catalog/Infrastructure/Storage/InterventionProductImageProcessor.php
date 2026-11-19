@@ -9,6 +9,7 @@ use App\Modules\Catalog\Application\ProductImageProcessor;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Format;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageInterface;
 use InvalidArgumentException;
 use Throwable;
 
@@ -34,13 +35,27 @@ final class InterventionProductImageProcessor implements ProductImageProcessor
 
     public function toWebp(string $source, int $quality = 82): ProcessedProductImageDto
     {
-        if ($source === '' || strlen($source) > self::MAX_SOURCE_BYTES) {
-            throw new InvalidArgumentException('Zdroj obrázku je prázdný nebo překračuje povolenou velikost 20 MB.');
-        }
+        $this->validateQuality($quality);
+        $image = $this->decodeValidated($source);
 
-        if ($quality < self::MIN_QUALITY || $quality > self::MAX_QUALITY) {
-            throw new InvalidArgumentException('Kvalita WebP musí být v rozsahu 1 až 100.');
-        }
+        return $this->encode($image, $quality);
+    }
+
+    public function toVariants(string $source, int $quality = 82): array
+    {
+        $this->validateSource($source);
+        $this->validateQuality($quality);
+
+        return [
+            'thumbnail' => $this->encode($this->decodeValidated($source)->cover(160, 160), $quality),
+            'listing' => $this->encode($this->decodeValidated($source)->cover(480, 480), $quality),
+            'detail' => $this->encode($this->decodeValidated($source)->scaleDown(1200, 1200), $quality),
+        ];
+    }
+
+    private function decodeValidated(string $source): ImageInterface
+    {
+        $this->validateSource($source);
 
         try {
             $image = $this->manager->decode($source);
@@ -51,20 +66,41 @@ final class InterventionProductImageProcessor implements ProductImageProcessor
                 throw new InvalidArgumentException('Rozměry obrázku jsou neplatné nebo překračují limit 40 megapixelů.');
             }
 
-            $encoded = $image->encodeUsingFormat(Format::WEBP, quality: $quality, strip: true);
-
-            return new ProcessedProductImageDto(
-                (string) $encoded,
-                'webp',
-                'image/webp',
-                'webp',
-                $width,
-                $height,
-            );
+            return $image;
         } catch (InvalidArgumentException $exception) {
             throw $exception;
         } catch (Throwable $exception) {
             throw new InvalidArgumentException('Zdrojová data nelze bezpečně dekódovat nebo převést na WebP.', previous: $exception);
         }
+    }
+
+    private function validateSource(string $source): void
+    {
+        if ($source === '' || strlen($source) > self::MAX_SOURCE_BYTES) {
+            throw new InvalidArgumentException('Zdroj obrázku je prázdný nebo překračuje povolenou velikost 20 MB.');
+        }
+    }
+
+    private function validateQuality(int $quality): void
+    {
+        if ($quality < self::MIN_QUALITY || $quality > self::MAX_QUALITY) {
+            throw new InvalidArgumentException('Kvalita WebP musí být v rozsahu 1 až 100.');
+        }
+    }
+
+    private function encode(ImageInterface $image, int $quality): ProcessedProductImageDto
+    {
+        $width = $image->width();
+        $height = $image->height();
+        $encoded = $image->encodeUsingFormat(Format::WEBP, quality: $quality, strip: true);
+
+        return new ProcessedProductImageDto(
+            (string) $encoded,
+            'webp',
+            'image/webp',
+            'webp',
+            $width,
+            $height,
+        );
     }
 }
