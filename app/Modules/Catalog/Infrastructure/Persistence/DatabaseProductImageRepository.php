@@ -9,6 +9,7 @@ use App\Modules\Catalog\Application\Dto\ProductImageDto;
 use App\Modules\Catalog\Application\Dto\StoredProductImageAssetsDto;
 use App\Modules\Catalog\Application\ProductImageRepository;
 use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
 use UnexpectedValueException;
 
 final class DatabaseProductImageRepository implements ProductImageRepository
@@ -107,6 +108,10 @@ final class DatabaseProductImageRepository implements ProductImageRepository
             'source_height' => $assets->sourceHeight,
             'source_file_size_bytes' => $assets->originalBytes,
         ]);
+
+        if (!$image instanceof ActiveRow) {
+            throw new UnexpectedValueException('Databáze nevrátila vložený obrázek produktu.');
+        }
 
         $imageId = $this->integer($image->id, 'product_image.id');
         foreach (['thumbnail', 'listing', 'detail'] as $kind) {
