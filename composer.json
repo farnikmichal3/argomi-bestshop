@@ -53,7 +53,7 @@
 	},
 	"scripts": {
 		"phpstan": "phpstan analyse",
-		"tester": "tester tests -s",
+		"tester": "tester -j 1 tests -s",
 		"db:reset": "@php bin/console db:reset",
 		"test": "@tester",
 		"cs": "php-cs-fixer fix --dry-run --diff",
