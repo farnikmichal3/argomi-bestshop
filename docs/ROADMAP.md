@@ -598,7 +598,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-05** `ProductDetailService`: načtení lokalizovaného detailu aktivního produktu (překlady, varianty, obrázky, atributy, volby) dávkovanými dotazy; ceny a sklad zůstávají ve vlastních doménách. GitHub Actions i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-06** `VariantSelector`: validace úplné sady os a typů hodnot, kanonický SHA-256 hash, vyhledání odpovídající aktivní varianty aktivního produktu; databázové načítání os bez N+1 dotazů. Integrační test demo trička, kabelu a GaN nabíječky; CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-07** `OptionResolver`: validace a normalizace povinných i volitelných voleb aktivního produktu, kontrola vlastnictví a typů (`choice`/`text`), odmítnutí neznámých, duplicitních a neplatných hodnot; integrační testy nad demo tričkem. Pricing a cenové rozdíly zůstávají mimo Catalog. CI i lokální `check.bat` prošly.
-- `[PLÁN]` **F5-08** Repozitář obrázků a vazba na varianty; zachování originálů a generování responzivních WebP/AVIF variant podle F0-30
+- `[ROZPRACOVÁNO]` **F5-08** Repozitář obrázků a vazba na varianty; zachování originálů a generování responzivních WebP/AVIF variant podle F0-30 — bezpečné uložení originálu + thumbnail/listing/detail; další práce: DB metadata a vazba na produkt/variantu.
 - `[PLÁN]` **F5-09** Správa souvisejících produktů (`product_relation`)
 - `[PLÁN]` **F5-10** Generování a kontrola slugů (unikátnost v rámci jazyka)
 - `[PLÁN]` **F5-11** Výpočet skladové dostupnosti souhrnně za produkt
