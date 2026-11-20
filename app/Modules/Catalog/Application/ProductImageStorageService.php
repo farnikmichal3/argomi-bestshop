@@ -19,7 +19,7 @@ final class ProductImageStorageService
     {
         $processed = $this->processor->toVariants($source, $quality);
         $sourceInfo = getimagesizefromstring($source);
-        if ($sourceInfo === false || !isset($sourceInfo[0], $sourceInfo[1], $sourceInfo['mime'])) {
+        if ($sourceInfo === false) {
             throw new RuntimeException('Nepodařilo se načíst metadata originálního obrázku.');
         }
 
@@ -63,9 +63,9 @@ final class ProductImageStorageService
             ],
             strlen($source),
             hash('sha256', $source),
-            (string) $sourceInfo['mime'],
-            (int) $sourceInfo[0],
-            (int) $sourceInfo[1],
+            $sourceInfo['mime'],
+            $sourceInfo[0],
+            $sourceInfo[1],
         );
     }
 }
