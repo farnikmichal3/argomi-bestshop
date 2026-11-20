@@ -2,13 +2,13 @@
 	"type": "module",
 	"dependencies": {
 		"@popperjs/core": "^2.11.8",
-		"bootstrap": "^5.3.8",
+		"bootstrap": "^5.3.9",
 		"naja": "^3.3.3",
 		"nette-forms": "^3.3"
 	},
 	"devDependencies": {
 		"esbuild": "^0.28.2",
-		"sass": "^1.108.0"
+		"sass": "^1.108.2"
 	},
 	"scripts": {
 		"build:css": "sass --load-path=node_modules --style=compressed assets/scss/front.scss www/assets/front.css && sass --load-path=node_modules --style=compressed assets/scss/admin.scss www/assets/admin.css",
