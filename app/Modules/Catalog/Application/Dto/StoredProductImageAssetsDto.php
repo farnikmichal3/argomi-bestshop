@@ -23,5 +23,6 @@ final readonly class StoredProductImageAssetsDto
         public string $sourceMimeType,
         public int $sourceWidth,
         public int $sourceHeight,
+        public string $recipeSha256,
     ) {}
 }

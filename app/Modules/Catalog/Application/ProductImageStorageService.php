@@ -65,6 +65,11 @@ final class ProductImageStorageService
             throw new RuntimeException('Nepodařilo se uložit kompletní sadu obrázků produktu.', previous: $exception);
         }
 
+        $recipe = sprintf(
+            'catalog-image-derivatives:v1:thumbnail=160x160-crop;listing=480x480-crop;detail=1200x1200-scale-down;format=webp;quality=%d',
+            $quality,
+        );
+
         return new StoredProductImageAssetsDto(
             $paths['original'],
             [
@@ -78,6 +83,7 @@ final class ProductImageStorageService
             $sourceInfo['mime'],
             $sourceInfo[0],
             $sourceInfo[1],
+            hash('sha256', $recipe),
         );
     }
 }
