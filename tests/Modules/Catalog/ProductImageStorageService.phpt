@@ -14,6 +14,9 @@ require __DIR__ . '/../../../vendor/autoload.php';
 $makeDto = static fn (string $bytes, int $width, int $height): ProcessedProductImageDto
     => new ProcessedProductImageDto($bytes, 'webp', 'image/webp', 'webp', $width, $height);
 
+// Valid 1x1 PNG source used to verify original metadata extraction.
+$original = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lX8AAAAASUVORK5CYII=', true);
+Assert::type('string', $original);
 $processor = new class($makeDto) implements ProductImageProcessor {
     public function __construct(private readonly Closure $makeDto) {}
     public function toWebp(string $source, int $quality = 82): ProcessedProductImageDto
@@ -48,7 +51,6 @@ $storage = new class implements ProductImageStorage {
 };
 
 $service = new ProductImageStorageService($processor, $storage);
-$original = "original-source-bytes";
 $result = $service->store($original);
 
 Assert::same(strlen($original), $result->originalBytes);
@@ -56,11 +58,15 @@ Assert::same($original, $storage->read($result->originalPath));
 Assert::same('thumb-bytes', $storage->read($result->derivativePaths['thumbnail']));
 Assert::same('listing-bytes', $storage->read($result->derivativePaths['listing']));
 Assert::same('detail-bytes', $storage->read($result->derivativePaths['detail']));
+Assert::same(hash('sha256', $original), $result->sourceSha256);
+Assert::same('image/png', $result->sourceMimeType);
+Assert::same(1, $result->sourceWidth);
+Assert::same(1, $result->sourceHeight);
 Assert::same(4, count($storage->files));
 Assert::true(preg_match('/\Aproducts\/[a-f0-9]{32}\/original\.bin\z/', $result->originalPath) === 1);
 
 $storage->failAtWrite = $storage->writes + 3;
-Assert::exception(static fn () => $service->store('rollback-source'), RuntimeException::class);
+Assert::exception(static fn () => $service->store($original), RuntimeException::class);
 Assert::same(4, count($storage->files));
 
 echo "OK\n";

@@ -18,6 +18,11 @@ final class ProductImageStorageService
     public function store(string $source, int $quality = 82): StoredProductImageAssetsDto
     {
         $processed = $this->processor->toVariants($source, $quality);
+        $sourceInfo = getimagesizefromstring($source);
+        if ($sourceInfo === false || !isset($sourceInfo[0], $sourceInfo[1], $sourceInfo['mime'])) {
+            throw new RuntimeException('Nepodařilo se načíst metadata originálního obrázku.');
+        }
+
         $base = 'products/' . bin2hex(random_bytes(16));
         $paths = [
             'original' => $base . '/original.bin',
@@ -57,6 +62,10 @@ final class ProductImageStorageService
                 'detail' => $paths['detail'],
             ],
             strlen($source),
+            hash('sha256', $source),
+            (string) $sourceInfo['mime'],
+            (int) $sourceInfo[0],
+            (int) $sourceInfo[1],
         );
     }
 }
