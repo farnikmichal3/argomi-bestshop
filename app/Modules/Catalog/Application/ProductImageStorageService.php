@@ -37,7 +37,10 @@ final class ProductImageStorageService
             'detail' => $processed['detail']->contents,
         ];
         $derivativeMetadata = [];
-        $derivativeRecipeHashes = [];
+        $recipe = sprintf(
+            'catalog-image-derivatives:v1:thumbnail=160x160-crop;listing=480x480-crop;detail=1200x1200-scale-down;format=webp;quality=%d',
+            $quality,
+        );
         foreach (['thumbnail', 'listing', 'detail'] as $type) {
             $image = $processed[$type];
             $derivativeMetadata[$type] = [
@@ -47,7 +50,6 @@ final class ProductImageStorageService
                 'height' => $image->height,
                 'fileSizeBytes' => strlen($image->contents),
             ];
-            $derivativeRecipeHashes[$type] = hash('sha256', $recipe . ';variant=' . $type);
         }
 
         $written = [];
@@ -67,10 +69,7 @@ final class ProductImageStorageService
             throw new RuntimeException('Nepodařilo se uložit kompletní sadu obrázků produktu.', previous: $exception);
         }
 
-        $recipe = sprintf(
-            'catalog-image-derivatives:v1:thumbnail=160x160-crop;listing=480x480-crop;detail=1200x1200-scale-down;format=webp;quality=%d',
-            $quality,
-        );
+
 
         return new StoredProductImageAssetsDto(
             $paths['original'],
