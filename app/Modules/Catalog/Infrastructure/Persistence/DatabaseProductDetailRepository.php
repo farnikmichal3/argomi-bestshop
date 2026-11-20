@@ -12,6 +12,7 @@ use App\Modules\Catalog\Application\Dto\ProductVariantDetailDto;
 use App\Modules\Catalog\Application\Dto\VariantAttributeValueDto;
 use App\Modules\Catalog\Application\ProductDetailRepository;
 use App\Modules\Catalog\Application\ProductImageRepository;
+use App\Modules\Catalog\Application\ProductRelationRepository;
 use App\Modules\Catalog\Application\ProductRepository;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Database\Explorer;
