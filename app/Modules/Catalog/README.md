@@ -24,7 +24,8 @@ První čtecí řez katalogu již obsahuje:
 - `Application/Dto/ProductDto`, `ProductTranslationDto`, `ProductListItemDto` a `ProductListingDto` – neměnné read-model DTO;
 - `Infrastructure/Persistence/DatabaseCategoryRepository` – dávkové načtení kategorií a překladů přes Nette Database Explorer, deterministické řazení a bezpečné sestavení stromu;
 - `Infrastructure/Persistence/DatabaseProductRepository` – implementaci přes Nette Database Explorer včetně stránkovaného výpisu aktivních produktů přímo zařazených do kategorie; podporuje řazení podle pozice v kategorii, kódu a data vytvoření;
-- `Application/ProductDetailService` a `ProductDetailRepository` – lokalizovaný detail aktivního produktu; read model obsahuje překlad produktu, aktivní varianty s lokalizovanými hodnotami os, obrázky, produktové atributy a zákaznické volby včetně hodnot; databázový adaptér načítá související data dávkově a nepoužívá N+1 dotazy;
+- `Application/ProductDetailService` a `ProductDetailRepository` – lokalizovaný detail aktivního produktu; read model obsahuje překlad produktu, aktivní varianty s lokalizovanými hodnotami os, obrázky, produktové atributy, zákaznické volby včetně hodnot a směrové vztahy k dalším aktivním produktům; databázový adaptér načítá související data dávkově a nepoužívá N+1 dotazy;
+- `Application/ProductRelationRepository` – lokalizované čtení souvisejících aktivních produktů; vztahy zachovávají typ (`accessory`, `alternative`, `compatible`) a pořadí, opačný směr se nikdy nevytváří automaticky;
 - `Domain/Variant/VariantCombinationHash` – deterministickou kanonizaci a SHA-256 hash kombinace variant.
 
 Repozitář mapuje databázové řádky na DTO uvnitř persistence vrstvy. Časové údaje převádí do UTC.
