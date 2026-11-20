@@ -13,6 +13,7 @@ final readonly class StoredProductImageAssetsDto
      *     listing: array{format: string, mimeType: string, width: int, height: int, fileSizeBytes: int},
      *     detail: array{format: string, mimeType: string, width: int, height: int, fileSizeBytes: int}
      * } $derivativeMetadata
+     * @param array{thumbnail: string, listing: string, detail: string} $derivativeRecipeHashes
      */
     public function __construct(
         public string $originalPath,

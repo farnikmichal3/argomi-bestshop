@@ -37,6 +37,7 @@ final class ProductImageStorageService
             'detail' => $processed['detail']->contents,
         ];
         $derivativeMetadata = [];
+        $derivativeRecipeHashes = [];
         foreach (['thumbnail', 'listing', 'detail'] as $type) {
             $image = $processed[$type];
             $derivativeMetadata[$type] = [
@@ -46,6 +47,7 @@ final class ProductImageStorageService
                 'height' => $image->height,
                 'fileSizeBytes' => strlen($image->contents),
             ];
+            $derivativeRecipeHashes[$type] = hash('sha256', $recipe . ';variant=' . $type);
         }
 
         $written = [];
