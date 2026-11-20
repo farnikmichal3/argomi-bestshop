@@ -28,6 +28,7 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
         private readonly Explorer $database,
         private readonly ProductRepository $products,
         private readonly ProductImageRepository $images,
+        private readonly ProductRelationRepository $relations,
     ) {}
 
     public function findActiveDetail(int $productId, Locale $locale): ?ProductDetailDto
@@ -273,7 +274,9 @@ final class DatabaseProductDetailRepository implements ProductDetailRepository
             );
         }
 
-        return new ProductDetailDto($product, $translation, $variants, $images, $attributes, $options);
+        $relations = $this->relations->findForProduct($productId, $locale);
+
+        return new ProductDetailDto($product, $translation, $variants, $images, $attributes, $options, $relations);
     }
 
     private function integer(mixed $value, string $field): int
