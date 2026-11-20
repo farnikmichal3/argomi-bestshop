@@ -33,7 +33,7 @@ final class ProductImageRegistrationService
 
         try {
             return $this->transaction->run(
-                fn (): int => $this->images->createForProduct(
+                fn(): int => $this->images->createForProduct(
                     $productId,
                     $variantId,
                     $altText,
