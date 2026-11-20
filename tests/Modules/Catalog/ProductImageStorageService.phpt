@@ -3,11 +3,11 @@ Product image storage service preserves source, stores all derivatives, and roll
 --FILE--
 <?php
 
-use App\Modules\Catalog\Application\Dto\ProcessedProductImageDto;
-use App\Modules\Catalog\Application\ProductImageProcessor;
-use App\Modules\Catalog\Application\ProductImageStorage;
-use App\Modules\Catalog\Application\ProductImageStorageService;
-use Tester\Assert;
+use App\\Modules\\Catalog\\Application\\Dto\\ProcessedProductImageDto;
+use App\\Modules\\Catalog\\Application\\ProductImageProcessor;
+use App\\Modules\\Catalog\\Application\\ProductImageStorage;
+use App\\Modules\\Catalog\\Application\\ProductImageStorageService;
+use Tester\\Assert;
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
@@ -62,8 +62,29 @@ Assert::same(hash('sha256', $original), $result->sourceSha256);
 Assert::same('image/png', $result->sourceMimeType);
 Assert::same(1, $result->sourceWidth);
 Assert::same(1, $result->sourceHeight);
+Assert::same([
+    'format' => 'webp',
+    'mimeType' => 'image/webp',
+    'width' => 160,
+    'height' => 160,
+    'fileSizeBytes' => strlen('thumb-bytes'),
+], $result->derivativeMetadata['thumbnail']);
+Assert::same([
+    'format' => 'webp',
+    'mimeType' => 'image/webp',
+    'width' => 480,
+    'height' => 480,
+    'fileSizeBytes' => strlen('listing-bytes'),
+], $result->derivativeMetadata['listing']);
+Assert::same([
+    'format' => 'webp',
+    'mimeType' => 'image/webp',
+    'width' => 1200,
+    'height' => 900,
+    'fileSizeBytes' => strlen('detail-bytes'),
+], $result->derivativeMetadata['detail']);
 Assert::same(4, count($storage->files));
-Assert::true(preg_match('/\Aproducts\/[a-f0-9]{32}\/original\.bin\z/', $result->originalPath) === 1);
+Assert::true(preg_match('/\\Aproducts\\/[a-f0-9]{32}\\/original\\.bin\\z/', $result->originalPath) === 1);
 
 $storage->failAtWrite = $storage->writes + 3;
 Assert::exception(static fn () => $service->store($original), RuntimeException::class);

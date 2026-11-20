@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Application;
+namespace App\\Modules\\Catalog\\Application;
 
-use App\Modules\Catalog\Application\Dto\StoredProductImageAssetsDto;
+use App\\Modules\\Catalog\\Application\\Dto\\StoredProductImageAssetsDto;
 use RuntimeException;
 use Throwable;
 
@@ -36,6 +36,17 @@ final class ProductImageStorageService
             'listing' => $processed['listing']->contents,
             'detail' => $processed['detail']->contents,
         ];
+        $derivativeMetadata = [];
+        foreach (['thumbnail', 'listing', 'detail'] as $type) {
+            $image = $processed[$type];
+            $derivativeMetadata[$type] = [
+                'format' => $image->format,
+                'mimeType' => $image->mimeType,
+                'width' => $image->width,
+                'height' => $image->height,
+                'fileSizeBytes' => strlen($image->contents),
+            ];
+        }
 
         $written = [];
         try {
@@ -61,6 +72,7 @@ final class ProductImageStorageService
                 'listing' => $paths['listing'],
                 'detail' => $paths['detail'],
             ],
+            $derivativeMetadata,
             strlen($source),
             hash('sha256', $source),
             $sourceInfo['mime'],
