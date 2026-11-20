@@ -43,6 +43,7 @@ Assert::same('S', $variantValues['size']->label);
 // Demo produkt zatím nemá přiřazené obrázky ani produktové atributy.
 Assert::same([], $czech->images);
 Assert::same([], $czech->attributes);
+Assert::same([], $czech->relations);
 
 Assert::count(2, $czech->options);
 Assert::same('print', $czech->options[0]->code);
@@ -65,6 +66,11 @@ Assert::count(1, $charger->attributes);
 Assert::same('gan', $charger->attributes[0]->code);
 Assert::same('Technologie GaN', $charger->attributes[0]->name);
 Assert::same('1.000000', $charger->attributes[0]->value);
+Assert::count(1, $charger->relations);
+Assert::same(2, $charger->relations[0]->productId);
+Assert::same('usb-c-cable', $charger->relations[0]->productCode);
+Assert::same('accessory', $charger->relations[0]->type);
+Assert::same('USB-C kabel', $charger->relations[0]->translation?->name);
 
 Assert::same(null, $service->getById(PHP_INT_MAX, Locale::fromString('cs')));
 Assert::exception(
