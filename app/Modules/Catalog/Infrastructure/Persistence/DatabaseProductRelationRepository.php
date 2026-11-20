@@ -35,7 +35,7 @@ final class DatabaseProductRelationRepository implements ProductRelationReposito
             return [];
         }
 
-        $relationsByProductId = [];
+        $relations = [];
         $relatedProductIds = [];
 
         foreach ($relationRows as $row) {
@@ -47,24 +47,22 @@ final class DatabaseProductRelationRepository implements ProductRelationReposito
                 continue;
             }
 
-            $relationsByProductId[$relatedProductId] = new ProductRelationDto(
-                $relatedProductId,
-                '',
-                $this->string($row->type, 'product_relation.type'),
-                $this->integer($row->sort_order, 'product_relation.sort_order'),
-                null,
-            );
-            $relatedProductIds[] = $relatedProductId;
+            $relations[] = [
+                'productId' => $relatedProductId,
+                'type' => $this->string($row->type, 'product_relation.type'),
+                'sortOrder' => $this->integer($row->sort_order, 'product_relation.sort_order'),
+            ];
+            $relatedProductIds[$relatedProductId] = $relatedProductId;
         }
 
-        if ($relatedProductIds === []) {
+        if ($relations === []) {
             return [];
         }
 
         $productsById = [];
         foreach (
             $this->database->table('product')
-                ->where('id', array_values(array_unique($relatedProductIds)))
+                ->where('id', array_values($relatedProductIds))
                 ->where('status', 'active')
                 ->fetchAll() as $row
         ) {
@@ -85,32 +83,33 @@ final class DatabaseProductRelationRepository implements ProductRelationReposito
                 ->fetchAll() as $row
         ) {
             $translationLocale = $this->string($row->locale, 'product_translation.locale');
-            $translationsByProductId[$this->integer($row->product_id, 'product_translation.product_id')]
-                = new ProductTranslationDto(
-                    $this->integer($row->id, 'product_translation.id'),
-                    $this->integer($row->product_id, 'product_translation.product_id'),
-                    Locale::fromString($translationLocale),
-                    $this->string($row->name, 'product_translation.name'),
-                    $this->string($row->slug, 'product_translation.slug'),
-                    $this->nullableString($row->short_description, 'product_translation.short_description'),
-                    $this->nullableString($row->description, 'product_translation.description'),
-                    $this->nullableString($row->meta_title, 'product_translation.meta_title'),
-                    $this->nullableString($row->meta_description, 'product_translation.meta_description'),
-                );
+            $relatedId = $this->integer($row->product_id, 'product_translation.product_id');
+            $translationsByProductId[$relatedId] = new ProductTranslationDto(
+                $this->integer($row->id, 'product_translation.id'),
+                $relatedId,
+                Locale::fromString($translationLocale),
+                $this->string($row->name, 'product_translation.name'),
+                $this->string($row->slug, 'product_translation.slug'),
+                $this->nullableString($row->short_description, 'product_translation.short_description'),
+                $this->nullableString($row->description, 'product_translation.description'),
+                $this->nullableString($row->meta_title, 'product_translation.meta_title'),
+                $this->nullableString($row->meta_description, 'product_translation.meta_description'),
+            );
         }
 
         $result = [];
-        foreach ($relationsByProductId as $relatedProductId => $relation) {
-            if (!isset($productsById[$relatedProductId])) {
+        foreach ($relations as $relation) {
+            $relatedId = $relation['productId'];
+            if (!isset($productsById[$relatedId])) {
                 continue;
             }
 
             $result[] = new ProductRelationDto(
-                $relatedProductId,
-                $productsById[$relatedProductId],
-                $relation->type,
-                $relation->sortOrder,
-                $translationsByProductId[$relatedProductId] ?? null,
+                $relatedId,
+                $productsById[$relatedId],
+                $relation['type'],
+                $relation['sortOrder'],
+                $translationsByProductId[$relatedId] ?? null,
             );
         }
 
