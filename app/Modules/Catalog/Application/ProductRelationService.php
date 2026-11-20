@@ -60,7 +60,7 @@ final class ProductRelationService
 
         $seen = [];
         foreach ($orderedRelations as $relation) {
-            if (!$relation instanceof ProductRelationOrderDto || $relation->relatedProductId < 1) {
+            if ($relation->relatedProductId < 1) {
                 throw new \InvalidArgumentException('Pořadí obsahuje neplatnou položku vztahu.');
             }
 
