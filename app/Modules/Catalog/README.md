@@ -25,7 +25,7 @@ První čtecí řez katalogu již obsahuje:
 - `Infrastructure/Persistence/DatabaseCategoryRepository` – dávkové načtení kategorií a překladů přes Nette Database Explorer, deterministické řazení a bezpečné sestavení stromu;
 - `Infrastructure/Persistence/DatabaseProductRepository` – implementaci přes Nette Database Explorer včetně stránkovaného výpisu aktivních produktů přímo zařazených do kategorie; podporuje řazení podle pozice v kategorii, kódu a data vytvoření;
 - `Application/ProductDetailService` a `ProductDetailRepository` – lokalizovaný detail aktivního produktu; read model obsahuje překlad produktu, aktivní varianty s lokalizovanými hodnotami os, obrázky, produktové atributy, zákaznické volby včetně hodnot a směrové vztahy k dalším aktivním produktům; databázový adaptér načítá související data dávkově a nepoužívá N+1 dotazy;
-- `Application/ProductRelationRepository` – lokalizované čtení souvisejících aktivních produktů; vztahy zachovávají typ (`accessory`, `alternative`, `compatible`) a pořadí, opačný směr se nikdy nevytváří automaticky;
+- `Application/ProductRelationRepository` a `ProductRelationService` – lokalizované čtení i transakční správa směrových vztahů; přidání vyžaduje dva aktivní různé produkty, odebrání cílí na přesný typ vztahu a přeřazení přijímá úplný seznam bez duplicit; databázová unikátnost zůstává poslední ochranou proti duplicitám; typy (`accessory`, `alternative`, `compatible`) jsou reprezentovány enumem a opačný směr se nikdy nevytváří automaticky;
 - `Domain/Variant/VariantCombinationHash` – deterministickou kanonizaci a SHA-256 hash kombinace variant.
 
 Repozitář mapuje databázové řádky na DTO uvnitř persistence vrstvy. Časové údaje převádí do UTC.
@@ -61,3 +61,16 @@ Historické migrace se neupravují, změny se dodávají dopřednými migracemi.
 ## Další rozvoj
 
 Podrobný postup implementace je veden v `docs/ROADMAP.md` pod F5.
+
+
+## Správa souvisejících produktů
+
+Změny vztahů probíhají přes aplikační `ProductRelationService`, která každou operaci
+obaluje sdílenou transakcí. Zdrojový i cílový produkt při přidání musí být aktivní;
+sebevazba není povolena. Odebrání odstraňuje pouze přesnou kombinaci zdrojového
+produktu, cílového produktu a typu vztahu.
+
+Přeřazení používá úplný seznam `ProductRelationOrderDto`: musí obsahovat všechny
+aktuální vztahy zdrojového produktu právě jednou. Částečné pořadí ani duplicitní
+položky se nepřijímají. Nové pořadí se ukládá jako souvislá řada od nuly. Směrovost
+je zachována a opačný vztah se nikdy nevytváří automaticky.

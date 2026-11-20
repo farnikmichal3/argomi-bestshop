@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
 use App\Modules\Catalog\Application\Dto\ProductRelationDto;
+use App\Modules\Catalog\Application\Dto\ProductRelationOrderDto;
 use App\Modules\Catalog\Application\Dto\ProductTranslationDto;
 use App\Modules\Catalog\Application\ProductRelationRepository;
+use App\Modules\Catalog\Domain\ProductRelationType;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
 use UnexpectedValueException;
 
 /**
- * Dávkové načítání směrových vztahů produktů bez N+1 dotazů.
+ * Dávkové načítání a transakční persistence směrových vztahů produktů.
  */
 final class DatabaseProductRelationRepository implements ProductRelationRepository
 {
@@ -41,8 +44,6 @@ final class DatabaseProductRelationRepository implements ProductRelationReposito
         foreach ($relationRows as $row) {
             $relatedProductId = $this->integer($row->related_product_id, 'product_relation.related_product_id');
 
-            // Sebevazba není pro katalogový výpis užitečná ani při ruční
-            // nebo historické manipulaci s databází.
             if ($relatedProductId === $productId) {
                 continue;
             }
@@ -114,6 +115,85 @@ final class DatabaseProductRelationRepository implements ProductRelationReposito
         }
 
         return $result;
+    }
+
+    public function add(
+        int $productId,
+        int $relatedProductId,
+        ProductRelationType $type,
+        int $sortOrder,
+    ): void {
+        $this->assertActiveProduct($productId);
+        $this->assertActiveProduct($relatedProductId);
+
+        $this->database->table('product_relation')->insert([
+            'product_id' => $productId,
+            'related_product_id' => $relatedProductId,
+            'type' => $type->value,
+            'sort_order' => $sortOrder,
+        ]);
+    }
+
+    public function remove(
+        int $productId,
+        int $relatedProductId,
+        ProductRelationType $type,
+    ): bool {
+        $this->assertActiveProduct($productId);
+
+        return $this->database->table('product_relation')
+            ->where('product_id', $productId)
+            ->where('related_product_id', $relatedProductId)
+            ->where('type', $type->value)
+            ->delete() > 0;
+    }
+
+    public function reorder(int $productId, array $orderedRelations): void
+    {
+        $this->assertActiveProduct($productId);
+
+        $rows = $this->database->table('product_relation')
+            ->where('product_id', $productId)
+            ->fetchAll();
+
+        $rowsByKey = [];
+        foreach ($rows as $row) {
+            $key = $this->relationKey(
+                $this->integer($row->related_product_id, 'product_relation.related_product_id'),
+                ProductRelationType::from($this->string($row->type, 'product_relation.type')),
+            );
+            $rowsByKey[$key] = $row;
+        }
+
+        if (count($rowsByKey) !== count($orderedRelations)) {
+            throw new \DomainException('Nové pořadí musí obsahovat všechny existující vztahy právě jednou.');
+        }
+
+        foreach ($orderedRelations as $position => $relation) {
+            $row = $rowsByKey[$this->relationKey($relation->relatedProductId, $relation->type)] ?? null;
+            if (!$row instanceof ActiveRow) {
+                throw new \DomainException('Nové pořadí obsahuje neexistující vztah produktu.');
+            }
+
+            $row->update(['sort_order' => $position]);
+        }
+    }
+
+    private function assertActiveProduct(int $productId): void
+    {
+        $product = $this->database->table('product')
+            ->where('id', $productId)
+            ->where('status', 'active')
+            ->fetch();
+
+        if (!$product instanceof ActiveRow) {
+            throw new \DomainException(sprintf('Aktivní produkt s ID %d neexistuje.', $productId));
+        }
+    }
+
+    private function relationKey(int $relatedProductId, ProductRelationType $type): string
+    {
+        return $relatedProductId . ':' . $type->value;
     }
 
     private function integer(mixed $value, string $field): int
