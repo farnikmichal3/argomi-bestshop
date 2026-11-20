@@ -1,0 +1,24 @@
+# Lokální konfigurace MySQL integračních testů.
+# Zkopíruj jako config/local.testing.neon a dosaď vlastní hesla.
+# Tento soubor je pouze vzor; nikdy do něj neukládej produkční přihlašovací údaje.
+
+parameters:
+	app:
+		environment: testing
+
+# Aplikační připojení používané Nette Database Explorerem.
+# Účet smí provádět pouze SELECT, INSERT, UPDATE a DELETE.
+database:
+	dsn: 'mysql:host=127.0.0.1;dbname=argomi_bestshop_test;charset=utf8mb4'
+	user: argomi_test_app
+	password: 'REPLACE_WITH_LOCAL_TEST_APP_PASSWORD'
+
+# Samostatné připojení Nextras DBAL používané databázovými migracemi.
+# Účet má DDL oprávnění pouze nad argomi_bestshop_test.
+dbal:
+	driver: mysqli
+	host: 127.0.0.1
+	username: argomi_test_migrator
+	password: 'REPLACE_WITH_LOCAL_TEST_MIGRATOR_PASSWORD'
+	database: argomi_bestshop_test
+	charset: utf8mb4

@@ -1,0 +1,29 @@
+{
+	"type": "module",
+	"dependencies": {
+		"@popperjs/core": "^2.11.8",
+		"bootstrap": "^5.3.8",
+		"naja": "^3.3.3",
+		"nette-forms": "^3.3"
+	},
+	"devDependencies": {
+		"esbuild": "^0.28.2",
+		"sass": "^1.108.0"
+	},
+	"scripts": {
+		"build:css": "sass --load-path=node_modules --style=compressed assets/scss/front.scss www/assets/front.css && sass --load-path=node_modules --style=compressed assets/scss/admin.scss www/assets/admin.css",
+		"build:js": "esbuild assets/js/front.js assets/js/admin.js --bundle --minify --outdir=www/assets --entry-names=[name]",
+		"build": "npm run build:css && npm run build:js",
+		"watch:css": "sass --load-path=node_modules --watch assets/scss/front.scss:www/assets/front.css assets/scss/admin.scss:www/assets/admin.css",
+		"watch:js": "esbuild assets/js/front.js assets/js/admin.js --bundle --outdir=www/assets --entry-names=[name] --watch"
+	},
+	"name": "argomi-bestshop",
+	"version": "1.0.0",
+	"description": "ArgoMi BestShop – modular e-commerce application",
+	"license": "UNLICENSED",
+	"private": true,
+	"engines": {
+		"node": ">=26.13.0 <27",
+		"npm": ">=12.2.2 <13"
+	}
+}
