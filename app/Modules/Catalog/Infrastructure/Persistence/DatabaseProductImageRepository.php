@@ -115,7 +115,7 @@ final class DatabaseProductImageRepository implements ProductImageRepository
                 'product_image_id' => $imageId,
                 'format' => $metadata['format'],
                 'source_sha256' => $assets->sourceSha256,
-                'recipe_sha256' => $assets->recipeSha256,
+                'recipe_sha256' => hash('sha256', $assets->recipeSha256 . ';variant=' . $kind),
                 'width' => $metadata['width'],
                 'height' => $metadata['height'],
                 'file_path' => $assets->derivativePaths[$kind],
