@@ -16,6 +16,7 @@ final readonly class ProductDetailDto
      * @param list<ProductImageDto> $images
      * @param list<ProductAttributeDetailDto> $attributes
      * @param list<CustomerOptionDetailDto> $options
+     * @param list<ProductRelationDto> $relations
      */
     public function __construct(
         public ProductDto $product,
@@ -24,5 +25,6 @@ final readonly class ProductDetailDto
         public array $images,
         public array $attributes,
         public array $options,
+        public array $relations,
     ) {}
 }
