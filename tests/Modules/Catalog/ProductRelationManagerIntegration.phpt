@@ -23,8 +23,6 @@ $service = $integration->container->getByType(ProductRelationService::class);
 $database = $integration->database;
 $pdo = $database->getConnection()->getPdo();
 
-$pdo->beginTransaction();
-
 try {
     // Demo produkty 1, 2 a 3 jsou aktivní. Vztahy se zapisují pouze v jednom směru.
     $service->add(1, 2, ProductRelationType::Accessory, 20);
@@ -76,9 +74,13 @@ try {
         InvalidArgumentException::class,
     );
 } finally {
-    if ($pdo->inTransaction()) {
-        $pdo->rollBack();
-    }
+    // Test neobaluje use-cases vlastní transakcí: každá operace spravuje svou.
+    $pdo->exec(
+        "DELETE FROM product_relation
+         WHERE product_id = 1
+           AND ((related_product_id = 2 AND type = 'accessory')
+             OR (related_product_id = 3 AND type = 'alternative'))",
+    );
 }
 
 echo "OK\n";
