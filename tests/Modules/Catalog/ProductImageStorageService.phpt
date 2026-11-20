@@ -3,11 +3,11 @@ Product image storage service preserves source, stores all derivatives, and roll
 --FILE--
 <?php
 
-use App\\Modules\\Catalog\\Application\\Dto\\ProcessedProductImageDto;
-use App\\Modules\\Catalog\\Application\\ProductImageProcessor;
-use App\\Modules\\Catalog\\Application\\ProductImageStorage;
-use App\\Modules\\Catalog\\Application\\ProductImageStorageService;
-use Tester\\Assert;
+use App\Modules\Catalog\Application\Dto\ProcessedProductImageDto;
+use App\Modules\Catalog\Application\ProductImageProcessor;
+use App\Modules\Catalog\Application\ProductImageStorage;
+use App\Modules\Catalog\Application\ProductImageStorageService;
+use Tester\Assert;
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
@@ -84,7 +84,7 @@ Assert::same([
     'fileSizeBytes' => strlen('detail-bytes'),
 ], $result->derivativeMetadata['detail']);
 Assert::same(4, count($storage->files));
-Assert::true(preg_match('/\\Aproducts\\/[a-f0-9]{32}\\/original\\.bin\\z/', $result->originalPath) === 1);
+Assert::true(preg_match('/\Aproducts\/[a-f0-9]{32}\/original\.bin\z/', $result->originalPath) === 1);
 
 $storage->failAtWrite = $storage->writes + 3;
 Assert::exception(static fn () => $service->store($original), RuntimeException::class);

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Application;
+namespace App\Modules\Catalog\Application;
 
-use App\\Modules\\Catalog\\Application\\Dto\\StoredProductImageAssetsDto;
+use App\Modules\Catalog\Application\Dto\StoredProductImageAssetsDto;
 use RuntimeException;
 use Throwable;
 
