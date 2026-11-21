@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-use App\\Modules\\Catalog\\Api\\CatalogPermission;
-use App\\Modules\\Catalog\\Application\\CategoryManagementService;
-use App\\Modules\\Catalog\\Application\\CategoryRepository;
-use App\\Shared\\Domain\\Locale\\LocaleProvider;
-use App\\UI\\Admin\\Catalog\\CategoriesPresenter;
-use App\\Modules\\Catalog\\Api\\CatalogAccessDeniedException;
-use Nette\\Application\\ForbiddenRequestException;
-use Tester\\Assert;
-use Tests\\Support\\IntegrationTestBootstrap;
+use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Application\CategoryManagementService;
+use App\Modules\Catalog\Application\CategoryRepository;
+use App\Shared\Domain\Locale\LocaleProvider;
+use App\UI\Admin\Catalog\CategoriesPresenter;
+use Nette\Application\ForbiddenRequestException;
+use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 require $rootDir . '/vendor/autoload.php';
@@ -52,7 +51,7 @@ $viewerPresenter->renderDefault();
 Assert::count(2, $viewerPresenter->template->categories);
 Assert::false($viewerPresenter->template->canManage);
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK

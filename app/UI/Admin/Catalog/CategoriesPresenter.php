@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\\UI\\Admin\\Catalog;
+namespace App\UI\Admin\Catalog;
 
-use App\\Modules\\Catalog\\Api\\CatalogPermission;
-use App\\Modules\\Catalog\\Application\\CategoryManagementService;
-use App\\Modules\\Catalog\\Application\\Dto\\CategoryTreeDto;
-use App\\Modules\\Translation\\Api\\TranslationDomain;
-use App\\Presentation\\TranslatedPresenter;
-use App\\Shared\\Domain\\Locale\\LocaleProvider;
-use Nette\\Application\\ForbiddenRequestException;
+use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Application\CategoryManagementService;
+use App\Modules\Catalog\Application\Dto\CategoryTreeDto;
+use App\Modules\Translation\Api\TranslationDomain;
+use App\Presentation\TranslatedPresenter;
+use App\Shared\Domain\Locale\LocaleProvider;
+use Nette\Application\ForbiddenRequestException;
 
 final class CategoriesPresenter extends TranslatedPresenter
 {
