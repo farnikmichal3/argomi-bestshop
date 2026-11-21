@@ -21,7 +21,8 @@ final class DatabaseProductAvailabilityRepository implements ProductAvailability
     {
         $rows = $this->database->query(
             'SELECT pv.id, pv.sku, si.id AS stock_item_id, si.track_stock, '
-            . 'si.allow_backorder, si.quantity_on_hand, si.quantity_reserved '
+            . 'si.allow_backorder, CAST(si.quantity_on_hand AS CHAR) AS quantity_on_hand, '
+            . 'CAST(si.quantity_reserved AS CHAR) AS quantity_reserved '
             . 'FROM product_variant pv '
             . 'LEFT JOIN stock_item si ON si.product_variant_id = pv.id '
             . 'WHERE pv.product_id = ? AND pv.is_active = 1 '
