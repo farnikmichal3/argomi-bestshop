@@ -7,6 +7,7 @@ namespace App\Modules\Catalog\Infrastructure\Persistence;
 use App\Modules\Catalog\Application\CategoryWriteRepository;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
 use UnexpectedValueException;
 
 final class DatabaseCategoryWriteRepository implements CategoryWriteRepository
@@ -49,13 +50,16 @@ final class DatabaseCategoryWriteRepository implements CategoryWriteRepository
 
     public function createCategory(?int $parentId, string $code, int $sortOrder, bool $isActive): int
     {
-        $row = $this->database->table('category')->insert([
+        $inserted = $this->database->table('category')->insert([
             'parent_id' => $parentId,
             'code' => $code,
             'sort_order' => $sortOrder,
             'is_active' => $isActive,
         ]);
-        $id = $row->id;
+        if (!$inserted instanceof ActiveRow) {
+            throw new UnexpectedValueException('Databáze nevrátila řádek nové kategorie.');
+        }
+        $id = $inserted->id;
         if (is_int($id)) {
             return $id;
         }

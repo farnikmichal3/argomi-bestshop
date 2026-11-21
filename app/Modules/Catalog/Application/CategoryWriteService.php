@@ -20,7 +20,7 @@ final class CategoryWriteService
     ) {}
 
     /**
-     * @param array<string, array{name: string, description?: string|null}> $translations
+     * @param array<string, mixed> $translations
      */
     public function create(?int $parentId, string $code, int $sortOrder, bool $isActive, array $translations): int
     {
@@ -39,7 +39,7 @@ final class CategoryWriteService
     }
 
     /**
-     * @param array<string, array{name: string, description?: string|null}> $translations
+     * @param array<string, mixed> $translations
      */
     public function update(int $categoryId, ?int $parentId, string $code, int $sortOrder, bool $isActive, array $translations): void
     {
@@ -60,7 +60,7 @@ final class CategoryWriteService
     }
 
     /**
-     * @param array<string, array{name: string, description?: string|null}> $translations
+     * @param array<string, mixed> $translations
      * @return array<string, array{name: string, description: string|null}>
      */
     private function normalizeTranslations(array $translations): array
