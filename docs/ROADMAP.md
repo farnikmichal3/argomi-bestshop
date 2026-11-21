@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.81 · 21. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.82 · 21. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 179, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 366, zrušeno 7.
+Celkem **554 kroků**: hotovo 181, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 364, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **554 kroků**: hotovo 179, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 36 | 10 | 0 | 0 | 0 | 0 | 26 | 0 |
+| F5 | Catalog (vlna 1) | 36 | 12 | 0 | 0 | 0 | 0 | 24 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
@@ -74,6 +74,12 @@ Celkem **554 kroků**: hotovo 179, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.82 (21. 11. 2026)
+- Dokončeny F5-11 a F5-12: read-only souhrnná skladová dostupnost produktu a veřejné immutable doménové události `ProductCreated`, `ProductUpdated`, `ProductDeleted`. Události nesou pouze validované ID produktu a implementují Shared `DomainEvent`; dispatch bude zapojen při zavedení zapisovacích use-case.
+- Přidán test katalogových událostí, dokumentace modulu Catalog aktualizována.
+- GitHub Actions CI prošlo a uživatel potvrdil lokální `check.bat`: `All active checks passed.`
+- F5: **12 hotovo**, **0 rozpracováno**, **24 plán**. Celkem: **181 hotovo**, **0 rozpracováno**, **1 k úpravě**, **364 plán**, **7 zrušeno**.
 
 ### v3.81 (21. 11. 2026)
 - Dokončen F5-10: společná služba pro generování a validaci slugů produktů a kategorií; transliterace do ASCII, unikátnost v rámci jazyka a typu entity, kolizní suffixy, podpora vyloučení aktuální entity při editaci a databázové unikátní indexy jako konečná ochrana. Integrační testy ověřily kolize, lokalizaci, oddělené jmenné prostory, dlouhé i neplatné vstupy.
@@ -604,7 +610,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### F5: Catalog (vlna 1)
 
-_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 9 z 36 kroků; 1 krok rozpracován.
+_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 12 z 36 kroků; 0 rozpracováno.
 
 - `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
 - `[HOTOVO]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` — typované neměnné modely a enumy stavů/typů; validace identifikátorů, kódů, SHA-256 hashe a fyzických rozměrů; doménový test bez infrastrukturních závislostí.
@@ -615,9 +621,9 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-07** `OptionResolver`: validace a normalizace povinných i volitelných voleb aktivního produktu, kontrola vlastnictví a typů (`choice`/`text`), odmítnutí neznámých, duplicitních a neplatných hodnot; integrační testy nad demo tričkem. Pricing a cenové rozdíly zůstávají mimo Catalog. CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-08** Repozitář obrázků a vazba na varianty; bezpečné uložení originálů mimo webroot, metadata, normalizace orientace a odstranění metadat, WebP deriváty thumbnail/listing/detail, transakční registrace a dávkové načítání bez N+1. CI i lokální check.bat prošly.
 - `[HOTOVO]` **F5-09** Správa souvisejících produktů (`product_relation`) – lokalizovaný dávkový read model v detailu produktu bez N+1; transakční aplikační služba pro přidání/odebrání vztahu a úplné přeřazení; validace aktivních produktů, zákaz self-relace a duplicit, úplnost pořadí a zachování směrovosti bez automatické opačné vazby. GitHub Actions i lokální `check.bat` prošly.
-- `[ROZPRACOVÁNO]` **F5-10** Generování a kontrola slugů (unikátnost v rámci jazyka) – společné řešení pro překlady produktů a kategorií; existující unikátní indexy (locale, slug) zůstávají databázovou garancí.
-- `[PLÁN]` **F5-11** Výpočet skladové dostupnosti souhrnně za produkt
-- `[PLÁN]` **F5-12** Události katalogu (`ProductCreated`, `ProductUpdated`, `ProductDeleted`)
+- `[HOTOVO]` **F5-10** Generování a kontrola slugů (unikátnost v rámci jazyka) – společné řešení pro překlady produktů a kategorií; existující unikátní indexy (locale, slug) zůstávají databázovou garancí.
+- `[HOTOVO]` **F5-11** Výpočet skladové dostupnosti souhrnně za produkt – read-only služba rozlišuje sledované, nesledované a chybějící skladové záznamy; odečítá rezervace, agreguje pouze sledované aktivní varianty a označuje dobjednání.
+- `[HOTOVO]` **F5-12** Události katalogu (`ProductCreated`, `ProductUpdated`, `ProductDeleted`) – veřejné neměnné `DomainEvent` kontrakty v `Catalog/Api/Event`, pouze validované `productId`; dispatch bude připojen k budoucím zápisovým use-case.
 - `[PLÁN]` **F5-13** Admin: formulář vytvoření a úpravy kategorie
 - `[PLÁN]` **F5-14** Admin: strom kategorií s drag & drop řazením
 - `[PLÁN]` **F5-15** Admin: seznam produktů s filtry (kategorie, stav, typ)

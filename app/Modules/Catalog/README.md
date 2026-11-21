@@ -62,7 +62,6 @@ Historické migrace se neupravují, změny se dodávají dopřednými migracemi.
 
 Podrobný postup implementace je veden v `docs/ROADMAP.md` pod F5.
 
-
 ## Správa souvisejících produktů
 
 Změny vztahů probíhají přes aplikační `ProductRelationService`, která každou operaci
@@ -75,7 +74,6 @@ aktuální vztahy zdrojového produktu právě jednou. Částečné pořadí ani
 položky se nepřijímají. Nové pořadí se ukládá jako souvislá řada od nuly. Směrovost
 je zachována a opačný vztah se nikdy nevytváří automaticky.
 
-
 ## Generování slugů
 
 Aplikační `SlugService` vytváří ASCII slug z názvu pomocí ICU transliterace,
@@ -86,3 +84,11 @@ a kategorií; při úpravě lze vyloučit vlastní entitu, aby si zachovala svů
 Dostupnost je předběžná kontrola. Při souběžném zápisu zůstávají konečnou
 ochranou unikátní indexy `(locale, slug)` v tabulkách `product_translation`
 a `category_translation`.
+
+## Doménové události produktu
+
+Veřejné katalogové události v `Api/Event` (`ProductCreated`, `ProductUpdated`,
+`ProductDeleted`) jsou neměnné typované `DomainEvent` kontrakty. Každá nese
+kladné `productId`; nepředává zbytečný stav produktu ani osobní údaje.
+V této fázi jde o event kontrakty, nikoli o automatický dispatch: emitování bude
+zapojeno v příslušných use-case při zavedení produktových zápisů.
