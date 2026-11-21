@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\UI\Admin\Catalog;
 
 use App\Modules\Catalog\Api\CatalogPermission;
-use App\Modules\Catalog\Application\CategoryManagementService;
-use App\Modules\Catalog\Application\Dto\CategoryTreeDto;
+use App\Modules\Catalog\Api\CategoryTreeItem;
+use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Presentation\TranslatedPresenter;
 use App\Shared\Domain\Locale\LocaleProvider;
@@ -15,7 +15,7 @@ use Nette\Application\ForbiddenRequestException;
 final class CategoriesPresenter extends TranslatedPresenter
 {
     public function __construct(
-        private readonly CategoryManagementService $categoryManagement,
+        private readonly CategoryTreeReader $categoryTree,
         private readonly CatalogPermission $catalogPermission,
         private readonly LocaleProvider $localeProvider,
     ) {
@@ -35,7 +35,7 @@ final class CategoriesPresenter extends TranslatedPresenter
 
         $rows = [];
         $this->appendRows(
-            $this->categoryManagement->findTree($this->localeProvider->getDefault()),
+            $this->categoryTree->findTree($this->localeProvider->getDefault()),
             0,
             $rows,
         );
@@ -45,8 +45,8 @@ final class CategoriesPresenter extends TranslatedPresenter
     }
 
     /**
-     * @param list<CategoryTreeDto> $nodes
-     * @param list<array{category: CategoryTreeDto, depth: int, prefix: string}> $rows
+     * @param list<CategoryTreeItem> $nodes
+     * @param list<array{category: CategoryTreeItem, depth: int, prefix: string}> $rows
      */
     private function appendRows(array $nodes, int $depth, array &$rows): void
     {
