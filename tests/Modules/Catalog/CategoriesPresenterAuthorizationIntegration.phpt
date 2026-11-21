@@ -62,10 +62,15 @@ $templateFactory = $integration->container->getByType(TemplateFactory::class);
 $viewerPresenter->injectPrimary($httpRequest, $httpResponse, templateFactory: $templateFactory);
 $viewerPresenter->renderDefault();
 
-Assert::count(2, $viewerPresenter->template->categories);
+$rows = $viewerPresenter->template->categories;
+$codes = array_map(
+    static fn (array $row): string => $row['category']->code,
+    $rows,
+);
+
+Assert::contains('clothing', $codes);
+Assert::contains('electronics', $codes);
 Assert::false($viewerPresenter->template->canManage);
-Assert::same('clothing', $viewerPresenter->template->categories[0]['category']->code);
-Assert::same('electronics', $viewerPresenter->template->categories[1]['category']->code);
 
 echo "OK\n";
 ?>

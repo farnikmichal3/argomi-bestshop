@@ -1,30 +1,38 @@
+{block title}{_'categories.title'}{/block}
+
 {block content}
 <main class="container py-5">
-    <h1>Kategorie katalogu</h1>
+    <h1>{_'categories.title'}</h1>
 
     <div class="table-responsive">
         <table class="table table-striped table-hover align-middle">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Kód</th>
-                    <th>Název</th>
-                    <th>Stav</th>
+                    <th>{_'categories.column.id'}</th>
+                    <th>{_'categories.column.code'}</th>
+                    <th>{_'categories.column.name'}</th>
+                    <th>{_'categories.column.status'}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr n:foreach="$categories as $row">
-                    <td>{$row['category']->category->id}</td>
+                    <td>{$row['category']->id}</td>
                     <td>
                         <span>{$row['prefix']}
-                            <code>{$row['category']->category->code}</code>
+                            <code>{$row['category']->code}</code>
                         </span>
                     </td>
-                    <td>{$row['category']->translation?->name ?? '—'}</td>
-                    <td>{if $row['category']->category->isActive}Aktivní{else}Neaktivní{/if}</td>
+                    <td>{$row['category']->name ?? '—'}</td>
+                    <td>
+                        {if $row['category']->isActive}
+                            {_'categories.status.active'}
+                        {else}
+                            {_'categories.status.inactive'}
+                        {/if}
+                    </td>
                 </tr>
                 <tr n:if="$categories === []">
-                    <td colspan="4">Zatím nejsou vytvořené žádné kategorie.</td>
+                    <td colspan="4">{_'categories.empty'}</td>
                 </tr>
             </tbody>
         </table>
