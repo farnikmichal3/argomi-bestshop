@@ -3,17 +3,17 @@ Catalog module DI extension is discovered and compiled by the application Bootst
 --FILE--
 <?php
 
-use App\\Core\\Module\\ModuleRegistry;
-use App\\Modules\\Catalog\\Api\\CatalogPermission;
-use App\\Modules\\Catalog\\Application\\ProductImageStorage;
-use App\\Modules\\Catalog\\Application\\ProductImageProcessor;
-use App\\Modules\\Catalog\\Application\\ProductRepository;
-use App\\Modules\\Catalog\\Infrastructure\\DI\\CatalogExtension;
-use App\\Modules\\Catalog\\Infrastructure\\Security\\NetteCatalogPermissionService;
-use Nette\\DI\\CompilerExtension;
-use Nette\\DI\\Container;
-use Tests\\Support\\IntegrationTestBootstrap;
-use Tester\\Assert;
+use App\Core\Module\ModuleRegistry;
+use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Application\ProductImageStorage;
+use App\Modules\Catalog\Application\ProductImageProcessor;
+use App\Modules\Catalog\Application\ProductRepository;
+use App\Modules\Catalog\Infrastructure\DI\CatalogExtension;
+use App\Modules\Catalog\Infrastructure\Security\NetteCatalogPermissionService;
+use Nette\DI\CompilerExtension;
+use Nette\DI\Container;
+use Tests\Support\IntegrationTestBootstrap;
+use Tester\Assert;
 
 $rootDir = dirname(__DIR__, 3);
 
@@ -40,7 +40,7 @@ Assert::type(NetteCatalogPermissionService::class, $permission);
 Assert::false($permission->canView());
 Assert::false($permission->canManage());
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK
