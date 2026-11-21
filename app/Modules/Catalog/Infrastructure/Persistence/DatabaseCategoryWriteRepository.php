@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Infrastructure\\Persistence;
+namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\\Modules\\Catalog\\Application\\CategoryWriteRepository;
-use App\\Shared\\Domain\\Locale\\Locale;
-use Nette\\Database\\Explorer;
+use App\Modules\Catalog\Application\CategoryWriteRepository;
+use App\Shared\Domain\Locale\Locale;
+use Nette\Database\Explorer;
 use UnexpectedValueException;
 
 final class DatabaseCategoryWriteRepository implements CategoryWriteRepository

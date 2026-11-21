@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Application;
+namespace App\Modules\Catalog\Application;
 
-use App\\Modules\\Catalog\\Domain\\Slug\\SlugTarget;
-use App\\Shared\\Application\\Transaction\\Transaction;
-use App\\Shared\\Domain\\Locale\\Locale;
-use App\\Shared\\Domain\\Locale\\LocaleProvider;
+use App\Modules\Catalog\Domain\Slug\SlugTarget;
+use App\Shared\Application\Transaction\Transaction;
+use App\Shared\Domain\Locale\Locale;
+use App\Shared\Domain\Locale\LocaleProvider;
 use InvalidArgumentException;
 
 final class CategoryWriteService
@@ -126,7 +126,7 @@ final class CategoryWriteService
     private static function normalizeCode(string $code): string
     {
         $code = strtolower(trim($code));
-        if (preg_match('/\\A[a-z0-9][a-z0-9_-]{0,99}\\z/D', $code) !== 1) {
+        if (preg_match('/\A[a-z0-9][a-z0-9_-]{0,99}\z/D', $code) !== 1) {
             throw new InvalidArgumentException('Kód kategorie musí obsahovat 1 až 100 malých ASCII písmen, číslic, pomlček nebo podtržítek.');
         }
         return $code;

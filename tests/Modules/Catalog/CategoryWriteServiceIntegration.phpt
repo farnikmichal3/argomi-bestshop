@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use App\\Modules\\Catalog\\Application\\CategoryWriteService;
-use InvalidArgumentException;
-use Tester\\Assert;
-use Tests\\Support\\IntegrationTestBootstrap;
+use App\Modules\Catalog\Application\CategoryWriteService;
+use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 require $rootDir . '/vendor/autoload.php';
@@ -19,7 +18,7 @@ Assert::exception(
     InvalidArgumentException::class,
 );
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK
