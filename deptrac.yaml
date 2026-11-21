@@ -247,7 +247,7 @@
     # Interní implementace mohou implementovat vlastní veřejné API;
     # jinak smějí používat pouze Shared a externí knihovny.
     CartInternal: [Shared, External]
-    CatalogInternal: [Shared, External]
+    CatalogInternal: [CatalogApi, Shared, External]
     CheckoutInternal: [Shared, External]
     CustomerInternal: [Shared, External]
     IdentityInternal: [Shared, External]
