@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\CategoryTreeReader;
+use App\Modules\Catalog\Application\CategoryManagementService;
+use App\Modules\Catalog\Application\CategoryRepository;
+use App\Modules\Catalog\Infrastructure\Api\CategoryTreeQueryService;
+use App\Shared\Domain\Locale\LocaleProvider;
 use App\UI\Admin\Catalog\CategoriesPresenter;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\TemplateFactory;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
 
@@ -16,18 +23,49 @@ require_once $rootDir . '/tests/Support/IntegrationTestBootstrap.php';
 $integration = IntegrationTestBootstrap::boot($rootDir);
 /** @var CatalogPermission $deniedPermission */
 $deniedPermission = $integration->container->getByType(CatalogPermission::class);
-/** @var CategoryTreeReader $categoryTree */
-$categoryTree = $integration->container->getByType(CategoryTreeReader::class);
+/** @var CategoryTreeReader $deniedCategoryTree */
+$deniedCategoryTree = $integration->container->getByType(CategoryTreeReader::class);
+/** @var LocaleProvider $localeProvider */
+$localeProvider = $integration->container->getByType(LocaleProvider::class);
 
-$deniedPresenter = new CategoriesPresenter(
-    $categoryTree,
-    $deniedPermission,
-    $integration->container->getByType(\App\Shared\Domain\Locale\LocaleProvider::class),
-);
+$deniedPresenter = new CategoriesPresenter($deniedCategoryTree, $deniedPermission, $localeProvider);
 Assert::exception(
     static fn () => $deniedPresenter->renderDefault(),
     ForbiddenRequestException::class,
 );
+
+$viewerPermission = new class implements CatalogPermission {
+    public function canView(): bool
+    {
+        return true;
+    }
+
+    public function canManage(): bool
+    {
+        return false;
+    }
+};
+
+/** @var CategoryRepository $categoryRepository */
+$categoryRepository = $integration->container->getByType(CategoryRepository::class);
+$categoryManagement = new CategoryManagementService($categoryRepository, $viewerPermission);
+$categoryTree = new CategoryTreeQueryService($categoryManagement);
+$viewerPresenter = new CategoriesPresenter($categoryTree, $viewerPermission, $localeProvider);
+
+/** @var IRequest $httpRequest */
+$httpRequest = $integration->container->getByType(IRequest::class);
+/** @var IResponse $httpResponse */
+$httpResponse = $integration->container->getByType(IResponse::class);
+/** @var TemplateFactory $templateFactory */
+$templateFactory = $integration->container->getByType(TemplateFactory::class);
+
+$viewerPresenter->injectPrimary($httpRequest, $httpResponse, templateFactory: $templateFactory);
+$viewerPresenter->renderDefault();
+
+Assert::count(2, $viewerPresenter->template->categories);
+Assert::false($viewerPresenter->template->canManage);
+Assert::same('clothing', $viewerPresenter->template->categories[0]['category']->code);
+Assert::same('electronics', $viewerPresenter->template->categories[1]['category']->code);
 
 echo "OK\n";
 ?>
