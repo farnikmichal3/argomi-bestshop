@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Modules\Catalog\Api\CatalogAccessDeniedException;
+use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Application\CategoryWriteRepository;
 use App\Modules\Catalog\Application\CategoryWriteService;
+use App\Modules\Catalog\Application\SlugService;
+use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Database\Explorer;
 use Tester\Assert;
@@ -37,6 +42,37 @@ $translations = static function (string $namePrefix) use ($localeProvider, $toke
     }
     return $entries;
 };
+
+// Skutečná DI služba musí před jakýmkoli čtením či zápisem odmítnout anonymního uživatele.
+$deniedCode = 'denied-category-' . $token;
+Assert::exception(
+    fn () => $service->create(null, $deniedCode, 0, true, $translations('denied')),
+    CatalogAccessDeniedException::class,
+);
+Assert::same(null, $database->table('category')->where('code', $deniedCode)->fetch());
+Assert::exception(
+    fn () => $service->update(999999999, null, 'denied-update-' . $token, 0, true, $translations('denied')),
+    CatalogAccessDeniedException::class,
+);
+
+// Ostatní scénáře používají explicitní testovací oprávnění správce.
+$service = new CategoryWriteService(
+    $integration->container->getByType(CategoryWriteRepository::class),
+    $localeProvider,
+    $integration->container->getByType(SlugService::class),
+    $integration->container->getByType(Transaction::class),
+    new class implements CatalogPermission {
+        public function canView(): bool
+        {
+            return true;
+        }
+
+        public function canManage(): bool
+        {
+            return true;
+        }
+    },
+);
 
 try {
     $rootId = $service->create(null, $rootCode, 15, true, $translations('root-category'));

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application;
 
+use App\Modules\Catalog\Api\CatalogAccessDeniedException;
+use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Domain\Slug\SlugTarget;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\Locale\Locale;
@@ -17,6 +19,7 @@ final class CategoryWriteService
         private readonly LocaleProvider $localeProvider,
         private readonly SlugService $slugService,
         private readonly Transaction $transaction,
+        private readonly CatalogPermission $permission,
     ) {}
 
     /**
@@ -24,6 +27,7 @@ final class CategoryWriteService
      */
     public function create(?int $parentId, string $code, int $sortOrder, bool $isActive, array $translations): int
     {
+        $this->assertCanManage();
         $code = self::normalizeCode($code);
         $this->assertParent($parentId, null);
         $localized = $this->normalizeTranslations($translations);
@@ -43,6 +47,7 @@ final class CategoryWriteService
      */
     public function update(int $categoryId, ?int $parentId, string $code, int $sortOrder, bool $isActive, array $translations): void
     {
+        $this->assertCanManage();
         if ($categoryId < 1 || !$this->repository->parentExists($categoryId)) {
             throw new InvalidArgumentException('Kategorie nebyla nalezena.');
         }
