@@ -96,15 +96,7 @@ final class SlugService
 
         $transliterated = $this->transliterator->transliterate(trim($name));
 
-        if (!is_string($transliterated)) {
-            throw new InvalidArgumentException('Název nelze převést na slug.');
-        }
-
         $slug = preg_replace('/[^a-z0-9]+/', '-', strtolower($transliterated));
-
-        if (!is_string($slug)) {
-            throw new InvalidArgumentException('Název nelze převést na slug.');
-        }
 
         $slug = trim($slug, '-');
 
