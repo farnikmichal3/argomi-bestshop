@@ -75,6 +75,11 @@ Celkem **554 kroků**: hotovo 178, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
+### v3.80 (21. 11. 2026)
+- Opraven stav F5-08: ukládání originálních produktových obrázků, metadata, bezpečné WebP deriváty a vazba na produkt/variantu byly již implementovány a ověřeny; předchozí stav rozpracování byl pouze neaktualizovaný zápis roadmapy.
+- Zahájen F5-10: společné generování a kontrola slugů pro překlady produktů a kategorií; kolize se řeší číselným suffixem a databázové indexy zůstávají konečnou garancí unikátnosti.
+- F5: **9 hotovo**, **1 rozpracováno**, **26 plán**. Celkem: **178 hotovo**, **1 rozpracováno**, **1 k úpravě**, **366 plán**, **7 zrušeno**.
+
 ### v3.79 (21. 11. 2026)
 - Dokončen F5-09: správa souvisejících produktů (`product_relation`) podporuje transakční přidání a odebrání vztahů i úplné přeřazení existujícího seznamu. Ověřena validace aktivních produktů, zákaz self-relace a duplicit, úplnost pořadí a zachování směrovosti vztahů bez automatického vytváření opačné vazby. Lokalizovaný dávkový read model zůstává bez N+1 dotazů.
 - GitHub Actions CI prošlo včetně integračních testů, PHPStan, Coding Standard a Architecture. Uživatel potvrdil lokální `check.bat`: `All active checks passed.`
@@ -594,7 +599,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### F5: Catalog (vlna 1)
 
-_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 6 z 36 kroků; 0 kroků rozpracováno.
+_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 9 z 36 kroků; 1 krok rozpracován.
 
 - `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
 - `[HOTOVO]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` — typované neměnné modely a enumy stavů/typů; validace identifikátorů, kódů, SHA-256 hashe a fyzických rozměrů; doménový test bez infrastrukturních závislostí.

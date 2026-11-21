@@ -74,3 +74,15 @@ Přeřazení používá úplný seznam `ProductRelationOrderDto`: musí obsahova
 aktuální vztahy zdrojového produktu právě jednou. Částečné pořadí ani duplicitní
 položky se nepřijímají. Nové pořadí se ukládá jako souvislá řada od nuly. Směrovost
 je zachována a opačný vztah se nikdy nevytváří automaticky.
+
+
+## Generování slugů
+
+Aplikační `SlugService` vytváří ASCII slug z názvu pomocí ICU transliterace,
+sjednocuje oddělovače na pomlčky a kontroluje dostupnost v rámci jazyka.
+Při kolizi zkouší suffixy `-2`, `-3` atd. Kontrola rozlišuje překlady produktů
+a kategorií; při úpravě lze vyloučit vlastní entitu, aby si zachovala svůj slug.
+
+Dostupnost je předběžná kontrola. Při souběžném zápisu zůstávají konečnou
+ochranou unikátní indexy `(locale, slug)` v tabulkách `product_translation`
+a `category_translation`.
