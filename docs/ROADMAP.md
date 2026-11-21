@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.80 · 21. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.81 · 21. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 178, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 366, zrušeno 7.
+Celkem **554 kroků**: hotovo 179, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 366, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **554 kroků**: hotovo 178, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 36 | 9 | 1 | 0 | 0 | 0 | 26 | 0 |
+| F5 | Catalog (vlna 1) | 36 | 10 | 0 | 0 | 0 | 0 | 26 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
@@ -74,6 +74,11 @@ Celkem **554 kroků**: hotovo 178, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.81 (21. 11. 2026)
+- Dokončen F5-10: společná služba pro generování a validaci slugů produktů a kategorií; transliterace do ASCII, unikátnost v rámci jazyka a typu entity, kolizní suffixy, podpora vyloučení aktuální entity při editaci a databázové unikátní indexy jako konečná ochrana. Integrační testy ověřily kolize, lokalizaci, oddělené jmenné prostory, dlouhé i neplatné vstupy.
+- GitHub Actions CI prošlo včetně integračních testů, PHPStan, Coding Standard a Architecture. Uživatel potvrdil lokální `check.bat`: `All active checks passed.`
+- F5: **10 hotovo**, **0 rozpracováno**, **26 plán**. Celkem: **179 hotovo**, **0 rozpracováno**, **1 k úpravě**, **366 plán**, **7 zrušeno**.
 
 ### v3.80 (21. 11. 2026)
 - Opraven stav F5-08: ukládání originálních produktových obrázků, metadata, bezpečné WebP deriváty a vazba na produkt/variantu byly již implementovány a ověřeny; předchozí stav rozpracování byl pouze neaktualizovaný zápis roadmapy.
