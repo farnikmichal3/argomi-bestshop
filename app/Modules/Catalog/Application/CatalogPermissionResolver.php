@@ -32,6 +32,6 @@ final class CatalogPermissionResolver
      */
     public function canManage(bool $authenticated, array $roles): bool
     {
-        return authenticated && array_intersect(self::MANAGE_ROLES, $roles) !== [];
+        return $authenticated && array_intersect(self::MANAGE_ROLES, $roles) !== [];
     }
 }
