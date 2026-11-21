@@ -6,11 +6,11 @@ namespace App\Modules\Inventory\Application\Dto;
 
 use App\Shared\Domain\Quantity\Quantity;
 
-/**
- * @param list<VariantAvailabilityDto> $variants
- */
 final readonly class ProductAvailabilityDto
 {
+    /**
+     * @param list<VariantAvailabilityDto> $variants
+     */
     public function __construct(
         public int $productId,
         public array $variants,
