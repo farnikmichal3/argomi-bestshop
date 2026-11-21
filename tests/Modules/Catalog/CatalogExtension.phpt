@@ -32,6 +32,7 @@ Assert::type(ProductRepository::class, $context->container->getByType(ProductRep
 Assert::type(ProductImageStorage::class, $context->container->getByType(ProductImageStorage::class));
 Assert::type(ProductImageProcessor::class, $context->container->getByType(ProductImageProcessor::class));
 
+// Veřejné oprávnění musí být skutečně navázáno na Nette User přes automatické DI.\n$permission = $context->container->getByType(CatalogPermission::class);\nAssert::type(NetteCatalogPermissionService::class, $permission);\nAssert::false($permission->canView());\nAssert::false($permission->canManage());\n
 echo "OK\\n";
 ?>
 --EXPECT--
