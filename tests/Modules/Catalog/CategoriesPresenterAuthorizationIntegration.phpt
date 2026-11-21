@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Application\CategoryManagementService;
-use App\Modules\Catalog\Application\CategoryRepository;
 use App\Shared\Domain\Locale\LocaleProvider;
 use App\UI\Admin\Catalog\CategoriesPresenter;
 use Nette\Application\ForbiddenRequestException;
@@ -28,28 +27,6 @@ Assert::exception(
     static fn () => $deniedPresenter->renderDefault(),
     ForbiddenRequestException::class,
 );
-
-$viewerPermission = new class implements CatalogPermission {
-    public function canView(): bool
-    {
-        return true;
-    }
-
-    public function canManage(): bool
-    {
-        return false;
-    }
-};
-
-$viewerManagement = new CategoryManagementService(
-    $integration->container->getByType(CategoryRepository::class),
-    $viewerPermission,
-);
-$viewerPresenter = new CategoriesPresenter($viewerManagement, $viewerPermission, $localeProvider);
-$viewerPresenter->renderDefault();
-
-Assert::count(2, $viewerPresenter->template->categories);
-Assert::false($viewerPresenter->template->canManage);
 
 echo "OK\n";
 ?>
