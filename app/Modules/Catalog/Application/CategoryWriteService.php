@@ -128,6 +128,13 @@ final class CategoryWriteService
         }
     }
 
+    private function assertCanManage(): void
+    {
+        if (!$this->permission->canManage()) {
+            throw new CatalogAccessDeniedException();
+        }
+    }
+
     private static function normalizeCode(string $code): string
     {
         $code = strtolower(trim($code));
