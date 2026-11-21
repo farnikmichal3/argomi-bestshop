@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.82 · 21. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.83 · 21. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 181, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 364, zrušeno 7.
+Celkem **554 kroků**: hotovo 181, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 362, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **554 kroků**: hotovo 181, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 36 | 12 | 0 | 0 | 0 | 0 | 24 | 0 |
+| F5 | Catalog (vlna 1) | 36 | 12 | 2 | 0 | 0 | 0 | 22 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
@@ -74,6 +74,10 @@ Celkem **554 kroků**: hotovo 181, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.83 (21. 11. 2026)
+- Zahájen F5-13 (admin kategorií) a F5-26 (oprávnění katalogu): před administračními formuláři vzniká samostatná, testovatelná autorizační vrstva Catalog. První adaptér používá role Nette User; pozdější Identity/RBAC může vyměnit zdroj rolí bez změny aplikačních kontrol.
+- F5: **12 hotovo**, **2 rozpracováno**, **22 plán**. Celkem: **181 hotovo**, **2 rozpracováno**, **1 k úpravě**, **362 plán**, **7 zrušeno**.
 
 ### v3.82 (21. 11. 2026)
 - Dokončeny F5-11 a F5-12: read-only souhrnná skladová dostupnost produktu a veřejné immutable doménové události `ProductCreated`, `ProductUpdated`, `ProductDeleted`. Události nesou pouze validované ID produktu a implementují Shared `DomainEvent`; dispatch bude zapojen při zavedení zapisovacích use-case.
