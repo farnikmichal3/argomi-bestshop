@@ -9,6 +9,4 @@ use RuntimeException;
 /**
  * Thrown when a catalog write operation is attempted without management access.
  */
-final class CatalogAccessDeniedException extends RuntimeException
-{
-}
+final class CatalogAccessDeniedException extends RuntimeException {}
