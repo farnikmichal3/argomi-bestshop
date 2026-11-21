@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.78 · 18. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.79 · 21. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 176, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 369, zrušeno 7.
+Celkem **554 kroků**: hotovo 177, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 368, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **554 kroků**: hotovo 176, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 36 | 7 | 0 | 0 | 0 | 0 | 29 | 0 |
+| F5 | Catalog (vlna 1) | 36 | 8 | 0 | 0 | 0 | 0 | 28 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
@@ -74,6 +74,11 @@ Celkem **554 kroků**: hotovo 176, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.79 (21. 11. 2026)
+- Dokončen F5-09: správa souvisejících produktů (`product_relation`) podporuje transakční přidání a odebrání vztahů i úplné přeřazení existujícího seznamu. Ověřena validace aktivních produktů, zákaz self-relace a duplicit, úplnost pořadí a zachování směrovosti vztahů bez automatického vytváření opačné vazby. Lokalizovaný dávkový read model zůstává bez N+1 dotazů.
+- GitHub Actions CI prošlo včetně integračních testů, PHPStan, Coding Standard a Architecture. Uživatel potvrdil lokální `check.bat`: `All active checks passed.`
+- F5: **8 hotovo**, **0 rozděláno**, **28 plán**. Celkem: **177 hotovo**, **0 rozděláno**, **1 k úpravě**, **368 plán**, **7 zrušeno**.
 
 ### v3.78 (18. 11. 2026)
 - Dokončeno F5-07 `OptionResolver`: validace a normalizace zákaznických voleb aktivního produktu, povinnosti voleb, vlastnictví a typové správnosti hodnot, odmítnutí duplicitních a neznámých voleb. Cenové rozdíly zůstávají ve vlastnictví budoucího modulu Pricing (F6); Catalog pouze vrací ověřený výběr. Integrační test ověřen přes Nette DI kontejner. GitHub Actions i lokální `check.bat` prošly.
@@ -599,7 +604,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-06** `VariantSelector`: validace úplné sady os a typů hodnot, kanonický SHA-256 hash, vyhledání odpovídající aktivní varianty aktivního produktu; databázové načítání os bez N+1 dotazů. Integrační test demo trička, kabelu a GaN nabíječky; CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-07** `OptionResolver`: validace a normalizace povinných i volitelných voleb aktivního produktu, kontrola vlastnictví a typů (`choice`/`text`), odmítnutí neznámých, duplicitních a neplatných hodnot; integrační testy nad demo tričkem. Pricing a cenové rozdíly zůstávají mimo Catalog. CI i lokální `check.bat` prošly.
 - `[ROZPRACOVÁNO]` **F5-08** Repozitář obrázků a vazba na varianty; zachování originálů a generování responzivních WebP/AVIF variant podle F0-30 — bezpečné uložení originálu + thumbnail/listing/detail; další práce: DB metadata a vazba na produkt/variantu.
-- `[ROZPRACOVÁNO]` **F5-09** Správa souvisejících produktů (`product_relation`) – lokalizovaný dávkový read model v detailu produktu; doplněna transakční aplikační služba pro přidání/odebrání vztahu a úplné přeřazení bez duplicit, validace aktivních produktů a směrovosti; čeká na CI a lokální ověření.
+- `[HOTOVO]` **F5-09** Správa souvisejících produktů (`product_relation`) – lokalizovaný dávkový read model v detailu produktu bez N+1; transakční aplikační služba pro přidání/odebrání vztahu a úplné přeřazení; validace aktivních produktů, zákaz self-relace a duplicit, úplnost pořadí a zachování směrovosti bez automatické opačné vazby. GitHub Actions i lokální `check.bat` prošly.
 - `[PLÁN]` **F5-10** Generování a kontrola slugů (unikátnost v rámci jazyka)
 - `[PLÁN]` **F5-11** Výpočet skladové dostupnosti souhrnně za produkt
 - `[PLÁN]` **F5-12** Události katalogu (`ProductCreated`, `ProductUpdated`, `ProductDeleted`)
