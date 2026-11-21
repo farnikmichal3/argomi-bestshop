@@ -16,7 +16,7 @@
                 <tr n:foreach="$categories as $row">
                     <td>{$row['category']->category->id}</td>
                     <td>
-                        <span style="padding-left: {$row['depth'] * 1.5}rem">
+                        <span>{$row['prefix']}
                             <code>{$row['category']->category->code}</code>
                         </span>
                     </td>

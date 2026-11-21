@@ -46,12 +46,12 @@ final class CategoriesPresenter extends TranslatedPresenter
 
     /**
      * @param list<CategoryTreeDto> $nodes
-     * @param list<array{category: CategoryTreeDto, depth: int}> $rows
+     * @param list<array{category: CategoryTreeDto, depth: int, prefix: string}> $rows
      */
     private function appendRows(array $nodes, int $depth, array &$rows): void
     {
         foreach ($nodes as $node) {
-            $rows[] = ['category' => $node, 'depth' => $depth];
+            $rows[] = ['category' => $node, 'depth' => $depth, 'prefix' => str_repeat('— ', $depth)];
             $this->appendRows($node->children, $depth + 1, $rows);
         }
     }
