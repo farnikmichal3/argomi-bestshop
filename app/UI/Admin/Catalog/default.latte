@@ -21,6 +21,7 @@
                     <th>{_'categories.column.code'}</th>
                     <th>{_'categories.column.name'}</th>
                     <th>{_'categories.column.status'}</th>
+                    {if $canManage}<th>{_'categories.action.edit'}</th>{/if}
                 </tr>
             </thead>
             <tbody>
@@ -39,9 +40,10 @@
                             {_'categories.status.inactive'}
                         {/if}
                     </td>
+                    {if $canManage}<td><a class="btn btn-sm btn-outline-primary" n:href="edit, id => $row['category']->id">{_'categories.action.edit'}</a></td>{/if}
                 </tr>
                 <tr n:if="$categories === []">
-                    <td colspan="4">{_'categories.empty'}</td>
+                    <td colspan="{if $canManage}5{else}4{/if}">{_'categories.empty'}</td>
                 </tr>
             </tbody>
         </table>
