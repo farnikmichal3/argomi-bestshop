@@ -13,6 +13,7 @@ use App\Modules\Catalog\Api\CategoryEditorReader;
 use App\Modules\Catalog\Api\CategoryOrderWriter;
 use App\Modules\Catalog\Api\Dto\CategoryEditorData;
 use App\Modules\Translation\Api\TranslationDomain;
+use App\UI\Admin\AdminAccessTrait;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Presentation\TranslatedPresenter;
 use App\Shared\Domain\Locale\LocaleProvider;
@@ -25,6 +26,8 @@ use stdClass;
 
 final class CategoriesPresenter extends TranslatedPresenter
 {
+    use AdminAccessTrait;
+
     private ?CategoryEditorData $editData = null;
     /** @var array<int|string, string> */
     private array $editParentOptions = [];
