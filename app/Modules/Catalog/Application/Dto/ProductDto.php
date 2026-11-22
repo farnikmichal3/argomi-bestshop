@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\Dto;
 
+use App\Modules\Catalog\Domain\Product\ProductType;
 use DateTimeImmutable;
 
 /**
@@ -21,5 +22,6 @@ final readonly class ProductDto
         public int $taxClassId,
         public DateTimeImmutable $createdAt,
         public DateTimeImmutable $updatedAt,
+        public ProductType $type = ProductType::Physical,
     ) {}
 }
