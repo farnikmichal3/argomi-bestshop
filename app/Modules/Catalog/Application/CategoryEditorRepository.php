@@ -7,7 +7,7 @@ namespace App\Modules\Catalog\Application;
 interface CategoryEditorRepository
 {
     /**
-     * @return array<string, mixed>|null
+     * @return array{parent_id: int|null, code: string, sort_order: int, is_active: bool}|null
      */
     public function findCategory(int $categoryId): ?array;
 
