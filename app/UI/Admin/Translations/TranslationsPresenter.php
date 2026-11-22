@@ -11,6 +11,7 @@ use App\Modules\Translation\Api\LocaleManager;
 use App\Modules\Translation\Api\MessageTranslationReader;
 use App\Modules\Translation\Api\MessageTranslationWriter;
 use App\Modules\Translation\Api\TranslationDomain;
+use App\UI\Admin\AdminAccessTrait;
 use App\Modules\Translation\Api\TranslationMessageStatus;
 use App\Modules\Translation\Api\TranslationPermission;
 use App\Modules\Translation\Api\TranslatorFactory;
@@ -26,6 +27,8 @@ use stdClass;
 
 final class TranslationsPresenter extends TranslatedPresenter
 {
+    use AdminAccessTrait;
+
     public function __construct(
         private readonly MessageTranslationReader $translationReader,
         private readonly MessageTranslationWriter $translationWriter,
