@@ -53,9 +53,14 @@ final class DatabaseProductAdminListRepository implements ProductAdminListReader
         $totalPages = intdiv($totalItems, $filter->perPage)
             + ($totalItems % $filter->perPage === 0 ? 0 : 1);
 
+        // Konstruktor filtru garantuje kladné hodnoty; max() navíc poskytne
+        // PHPStanu přesný nezáporný celočíselný typ požadovaný Nette limit().
+        $limit = max(0, $filter->perPage);
+        $offset = max(0, ($filter->page - 1) * $filter->perPage);
+
         $rows = $selection
             ->order('id ASC')
-            ->limit($filter->perPage, ($filter->page - 1) * $filter->perPage)
+            ->limit($limit, $offset)
             ->fetchAll();
 
         if ($rows === []) {
