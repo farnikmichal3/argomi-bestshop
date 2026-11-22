@@ -9,6 +9,7 @@ use App\Modules\Catalog\Api\CategoryTreeItem;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\CategoryWriter;
 use App\Modules\Catalog\Api\CategoryEditorReader;
+use App\Modules\Catalog\Api\CategoryOrderWriter;
 use App\Modules\Catalog\Api\Dto\CategoryEditorData;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslatorFactory;
@@ -18,6 +19,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\UniqueConstraintViolationException;
 use InvalidArgumentException;
+use JsonException;
 use stdClass;
 
 final class CategoriesPresenter extends TranslatedPresenter
@@ -30,6 +32,7 @@ final class CategoriesPresenter extends TranslatedPresenter
         private readonly CategoryTreeReader $categoryTree,
         private readonly CategoryWriter $categoryWriter,
         private readonly CategoryEditorReader $categoryEditorReader,
+        private readonly CategoryOrderWriter $categoryOrderWriter,
         private readonly CatalogPermission $catalogPermission,
         private readonly LocaleProvider $localeProvider,
         private readonly TranslatorFactory $translatorFactory,
@@ -48,14 +51,46 @@ final class CategoriesPresenter extends TranslatedPresenter
             throw new ForbiddenRequestException();
         }
 
-        $rows = [];
+        $groups = [];
         $tree = $this->categoryTree->findTree($this->localeProvider->getDefault());
-        $this->appendRows($tree, 0, $rows);
+        $this->appendSiblingGroups($tree, null, 0, $groups);
 
-        $this->template->categories = $rows;
+        $this->template->categoryGroups = $groups;
         $this->template->canManage = $this->catalogPermission->canManage();
         $this->template->parentOptions = $this->createParentOptions($tree);
         $this->template->locales = $this->localeProvider->getActiveLocales();
+    }
+
+    public function handleReorder(string $parentId, string $orderedCategoryIds): void
+    {
+        if (!$this->catalogPermission->canManage()) {
+            throw new ForbiddenRequestException();
+        }
+
+        $parsedParentId = null;
+        if ($parentId !== '') {
+            $validatedParentId = filter_var($parentId, FILTER_VALIDATE_INT);
+            if (!is_int($validatedParentId) || $validatedParentId < 1) {
+                $this->flashMessage('categories.order.error', 'danger');
+                $this->redirect('default');
+            }
+            $parsedParentId = $validatedParentId;
+        }
+
+        try {
+            $categoryIds = json_decode($orderedCategoryIds, true, 512, JSON_THROW_ON_ERROR);
+            if (!is_array($categoryIds) || !array_is_list($categoryIds)) {
+                throw new InvalidArgumentException('Invalid category order payload.');
+            }
+
+            $this->categoryOrderWriter->reorder($parsedParentId, $categoryIds);
+        } catch (JsonException | InvalidArgumentException) {
+            $this->flashMessage('categories.order.error', 'danger');
+            $this->redirect('default');
+        }
+
+        $this->flashMessage('categories.order.saved', 'success');
+        $this->redirect('default');
     }
 
     public function actionEdit(int $id): void
@@ -233,13 +268,35 @@ final class CategoriesPresenter extends TranslatedPresenter
 
     /**
      * @param list<CategoryTreeItem> $nodes
-     * @param list<array{category: CategoryTreeItem, depth: int, prefix: string}> $rows
+     * @param list<array{parentId: ?int, parentCode: ?string, formId: string, orderedIds: string, rows: list<array{category: CategoryTreeItem, depth: int, prefix: string}>}> $groups
      */
-    private function appendRows(array $nodes, int $depth, array &$rows): void
+    private function appendSiblingGroups(array $nodes, ?int $parentId, int $depth, array &$groups, ?string $parentCode = null): void
     {
+        if ($nodes === []) {
+            return;
+        }
+
+        $rows = [];
+        $ids = [];
         foreach ($nodes as $node) {
-            $rows[] = ['category' => $node, 'depth' => $depth, 'prefix' => str_repeat('— ', $depth)];
-            $this->appendRows($node->children, $depth + 1, $rows);
+            $rows[] = [
+                'category' => $node,
+                'depth' => $depth,
+                'prefix' => str_repeat('— ', $depth),
+            ];
+            $ids[] = $node->id;
+        }
+
+        $groups[] = [
+            'parentId' => $parentId,
+            'parentCode' => $parentCode,
+            'formId' => $parentId === null ? 'category-order-root' : 'category-order-' . $parentId,
+            'orderedIds' => json_encode($ids, JSON_THROW_ON_ERROR),
+            'rows' => $rows,
+        ];
+
+        foreach ($nodes as $node) {
+            $this->appendSiblingGroups($node->children, $node->id, $depth + 1, $groups, $node->code);
         }
     }
 
