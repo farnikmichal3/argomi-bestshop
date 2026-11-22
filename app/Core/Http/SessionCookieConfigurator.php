@@ -17,16 +17,13 @@ final class SessionCookieConfigurator
 
     /**
      * @return array{
+     *     sessionName: string,
      *     http: array{cookiePath: string, cookieSecure: bool},
      *     session: array{cookieSamesite: 'Strict'|'Lax', savePath: string}
      * }
      */
-    public function configure(string $requestUri, string $scriptName, bool $secure): array
+    public function resolvePolicy(string $requestUri, string $scriptName, bool $secure): array
     {
-        if (session_status() === PHP_SESSION_ACTIVE) {
-            throw new LogicException('The session cookie must be configured before the PHP session starts.');
-        }
-
         $requestPath = parse_url($requestUri, PHP_URL_PATH);
 
         if (!is_string($requestPath) || $requestPath === '') {
@@ -50,18 +47,8 @@ final class SessionCookieConfigurator
             throw new LogicException(sprintf('Session storage directory "%s" is not writable.', $sessionDirectory));
         }
 
-        session_name($isAdminRequest ? 'ARGOMI_ADMIN_SESSID' : 'ARGOMI_SESSID');
-        session_save_path($sessionDirectory);
-        session_set_cookie_params([
-            'lifetime' => 0,
-            'path' => $cookiePath,
-            'domain' => '',
-            'secure' => $secure,
-            'httponly' => true,
-            'samesite' => $isAdminRequest ? 'Strict' : 'Lax',
-        ]);
-
         return [
+            'sessionName' => $isAdminRequest ? 'ARGOMI_ADMIN_SESSID' : 'ARGOMI_SESSID',
             'http' => [
                 'cookiePath' => $cookiePath,
                 'cookieSecure' => $secure,
@@ -71,5 +58,43 @@ final class SessionCookieConfigurator
                 'savePath' => $sessionDirectory,
             ],
         ];
+    }
+
+    /**
+     * @return array{
+     *     http: array{cookiePath: string, cookieSecure: bool},
+     *     session: array{cookieSamesite: 'Strict'|'Lax', savePath: string}
+     * }
+     */
+    public function configure(string $requestUri, string $scriptName, bool $secure): array
+    {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            throw new LogicException('The session cookie must be configured before the PHP session starts.');
+        }
+
+        if (headers_sent($file, $line)) {
+            throw new LogicException(sprintf(
+                'The session cookie must be configured before output is sent (output started at %s:%d).',
+                $file,
+                $line,
+            ));
+        }
+
+        $policy = $this->resolvePolicy($requestUri, $scriptName, $secure);
+
+        session_name($policy['sessionName']);
+        session_save_path($policy['session']['savePath']);
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path' => $policy['http']['cookiePath'],
+            'domain' => '',
+            'secure' => $policy['http']['cookieSecure'],
+            'httponly' => true,
+            'samesite' => $policy['session']['cookieSamesite'],
+        ]);
+
+        unset($policy['sessionName']);
+
+        return $policy;
     }
 }
