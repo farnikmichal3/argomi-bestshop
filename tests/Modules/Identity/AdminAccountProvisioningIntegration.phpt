@@ -13,6 +13,9 @@ require $rootDir . '/vendor/autoload.php';
 require_once $rootDir . '/tests/Support/IntegrationTestBootstrap.php';
 
 $integration = IntegrationTestBootstrap::boot($rootDir);
+$securityUser = $integration->container->getByType(User::class);
+Assert::type(AdminAuthenticator::class, $securityUser->getAuthenticator());
+
 $repository = new AdminAuthenticationRepository($integration->database);
 
 $email = 'identity-provision-' . bin2hex(random_bytes(6)) . '@example.test';
