@@ -25,8 +25,8 @@ $filtered = new ProductAdminListFilter(
     perPage: 24,
 );
 Assert::same(7, $filtered->categoryId);
-Assert::same(ProductStatus::Archived, $filtered->status);
-Assert::same(ProductType::Digital, $filtered->type);
+Assert::same(ProductAdminStatus::Archived, $filtered->status);
+Assert::same(ProductAdminType::Digital, $filtered->type);
 Assert::same(3, $filtered->page);
 Assert::same(24, $filtered->perPage);
 

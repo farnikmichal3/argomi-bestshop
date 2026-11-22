@@ -46,8 +46,8 @@ Assert::same([1], array_map(static fn ($item): int => $item->id, $clothing->item
 $physicalActiveClothing = $reader->findProducts(
     new ProductAdminListFilter(
         categoryId: 1,
-        status: ProductStatus::Active,
-        type: ProductType::Physical,
+        status: ProductAdminStatus::Active,
+        type: ProductAdminType::Physical,
     ),
     $locale,
 );
@@ -56,7 +56,7 @@ Assert::same(1, $physicalActiveClothing->items[0]->id);
 
 // Nové typy zatím nemají demo záznamy; filtr nesmí zaměňovat typ za stav.
 $digital = $reader->findProducts(
-    new ProductAdminListFilter(type: ProductType::Digital),
+    new ProductAdminListFilter(type: ProductAdminType::Digital),
     $locale,
 );
 Assert::same(0, $digital->totalItems);
