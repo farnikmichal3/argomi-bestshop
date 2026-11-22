@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UI\Admin\Catalog;
 
 use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Api\CategoryDeletionBlockedException;
 use App\Modules\Catalog\Api\CategoryTreeItem;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\CategoryWriter;
@@ -103,6 +104,35 @@ final class CategoriesPresenter extends TranslatedPresenter
         }
 
         $this->flashMessage($translator->translate('categories.order.saved'), 'success');
+        $this->redirect('default');
+    }
+
+    public function handleDelete(int $id): void
+    {
+        if (!$this->catalogPermission->canManage()) {
+            throw new ForbiddenRequestException();
+        }
+        if ($this->getHttpRequest()->getMethod() !== 'POST') {
+            throw new ForbiddenRequestException();
+        }
+
+        $translator = $this->translatorFactory->createTranslator(
+            TranslationDomain::Catalog,
+            $this->localeProvider->getDefault(),
+        );
+
+        try {
+            $this->categoryWriter->delete($id);
+            $this->flashMessage($translator->translate('categories.delete.deleted'), 'success');
+        } catch (CategoryDeletionBlockedException $exception) {
+            $messageKey = match ($exception->reason) {
+                CategoryDeletionBlockedException::HAS_CHILDREN => 'categories.delete.has_children',
+                CategoryDeletionBlockedException::HAS_PRODUCTS => 'categories.delete.has_products',
+                default => 'categories.delete.not_found',
+            };
+            $this->flashMessage($translator->translate($messageKey), 'danger');
+        }
+
         $this->redirect('default');
     }
 
