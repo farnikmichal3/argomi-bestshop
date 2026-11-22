@@ -67,11 +67,12 @@ final class CategoriesPresenter extends TranslatedPresenter
             throw new ForbiddenRequestException();
         }
 
+        $translator = $this->translatorFactory->createTranslator(TranslationDomain::Catalog, $this->localeProvider->getDefault());
         $parsedParentId = null;
         if ($parentId !== '') {
             $validatedParentId = filter_var($parentId, FILTER_VALIDATE_INT);
             if (!is_int($validatedParentId) || $validatedParentId < 1) {
-                $this->flashMessage('categories.order.error', 'danger');
+                $this->flashMessage($translator->translate('categories.order.error'), 'danger');
                 $this->redirect('default');
             }
             $parsedParentId = $validatedParentId;
@@ -89,7 +90,7 @@ final class CategoriesPresenter extends TranslatedPresenter
             $this->redirect('default');
         }
 
-        $this->flashMessage('categories.order.saved', 'success');
+        $this->flashMessage($translator->translate('categories.order.saved'), 'success');
         $this->redirect('default');
     }
 
