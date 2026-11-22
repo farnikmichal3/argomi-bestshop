@@ -5,29 +5,21 @@ declare(strict_types=1);
 namespace App\UI\Admin\Products;
 
 use App\Modules\Catalog\Api\CatalogPermission;
-use App\Modules\Catalog\Api\CategoryTreeItem;
-use App\Modules\Catalog\Api\CategoryTreeReader;
-use App\Modules\Catalog\Api\Dto\ProductAdminListFilter;
-use App\Modules\Catalog\Api\ProductAdminListReader;
-use App\Modules\Catalog\Api\ProductAdminStatus;
-use App\Modules\Catalog\Api\ProductAdminType;
 use App\Modules\Translation\Api\TranslationDomain;
-use App\Modules\Translation\Api\TranslatorFactory;
 use App\Presentation\TranslatedPresenter;
 use App\Shared\Domain\Locale\InvalidLocaleException;
 use App\Shared\Domain\Locale\Locale;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Control;
 
 final class ProductsPresenter extends TranslatedPresenter
 {
     public function __construct(
-        private readonly ProductAdminListReader $productAdminListReader,
-        private readonly CategoryTreeReader $categoryTreeReader,
+        private readonly ProductAdminDataGridFactory $productAdminDataGridFactory,
         private readonly CatalogPermission $catalogPermission,
         private readonly LocaleProvider $localeProvider,
-        private readonly TranslatorFactory $translatorFactory,
     ) {
         parent::__construct();
     }
@@ -37,112 +29,26 @@ final class ProductsPresenter extends TranslatedPresenter
         return TranslationDomain::Catalog;
     }
 
-    public function renderDefault(
-        ?string $categoryId = null,
-        ?string $status = null,
-        ?string $type = null,
-        ?string $page = null,
-    ): void {
+    public function renderDefault(): void
+    {
         if (!$this->catalogPermission->canView()) {
             throw new ForbiddenRequestException();
         }
 
-        $parsedCategoryId = $this->parseOptionalPositiveInteger($categoryId, 'categoryId');
-        $parsedPage = $page === null || $page === ''
-            ? 1
-            : $this->parsePositiveInteger($page, 'page');
-
-        $selectedStatus = $status === null || $status === ''
-            ? null
-            : ProductAdminStatus::tryFrom($status);
-
-        if ($status !== null && $status !== '' && $selectedStatus === null) {
-            throw new BadRequestException('Neplatný filtr stavu produktu.');
-        }
-
-        $selectedType = $type === null || $type === ''
-            ? null
-            : ProductAdminType::tryFrom($type);
-
-        if ($type !== null && $type !== '' && $selectedType === null) {
-            throw new BadRequestException('Neplatný filtr typu produktu.');
-        }
-
-        $locale = $this->resolveLocale();
-        $listing = $this->productAdminListReader->findProducts(
-            new ProductAdminListFilter(
-                categoryId: $parsedCategoryId,
-                status: $selectedStatus,
-                type: $selectedType,
-                page: $parsedPage,
-            ),
-            $locale,
-        );
-
-        $categoryOptions = [];
-        $this->appendCategoryOptions(
-            $this->categoryTreeReader->findTree($locale),
-            0,
-            $categoryOptions,
-        );
-
-        $translator = $this->translatorFactory->createTranslator(TranslationDomain::Catalog, $locale);
-        $items = [];
-
-        foreach ($listing->items as $item) {
-            $items[] = [
-                'product' => $item,
-                'categoryNames' => implode(', ', $item->categoryNames),
-                'typeLabel' => $translator->translate('products.admin.type.' . $item->type->value),
-                'statusLabel' => $translator->translate('products.admin.status.' . $item->status->value),
-            ];
-        }
-
-        $this->template->items = $items;
-        $this->template->categoryOptions = $categoryOptions;
-        $this->template->selectedCategoryId = $parsedCategoryId === null ? '' : (string) $parsedCategoryId;
-        $this->template->selectedStatus = $status ?? '';
-        $this->template->selectedType = $type ?? '';
-        $this->template->page = $listing->page;
-        $this->template->totalPages = $listing->totalPages;
-        $this->template->totalItems = $listing->totalItems;
-        $this->template->hasPreviousPage = $listing->page > 1;
-        $this->template->hasNextPage = $listing->page < $listing->totalPages;
         $this->template->canManage = $this->catalogPermission->canManage();
-        $this->template->statuses = ProductAdminStatus::cases();
-        $this->template->types = ProductAdminType::cases();
     }
 
-    /**
-     * @param list<CategoryTreeItem> $nodes
-     * @param array<int, string> $options
-     */
-    private function appendCategoryOptions(array $nodes, int $depth, array &$options): void
+    protected function createComponentProductsGrid(string $name): Control
     {
-        foreach ($nodes as $node) {
-            $options[$node->id] = str_repeat('— ', $depth) . ($node->name ?? $node->code);
-            $this->appendCategoryOptions($node->children, $depth + 1, $options);
-        }
-    }
-
-    private function parseOptionalPositiveInteger(?string $value, string $parameter): ?int
-    {
-        if ($value === null || $value === '') {
-            return null;
+        if (!$this->catalogPermission->canView()) {
+            throw new ForbiddenRequestException();
         }
 
-        return $this->parsePositiveInteger($value, $parameter);
-    }
-
-    private function parsePositiveInteger(string $value, string $parameter): int
-    {
-        $parsed = filter_var($value, FILTER_VALIDATE_INT);
-
-        if (!is_int($parsed) || $parsed < 1) {
-            throw new BadRequestException(sprintf('Neplatná hodnota parametru %s.', $parameter));
-        }
-
-        return $parsed;
+        return $this->productAdminDataGridFactory->create(
+            $this,
+            $name,
+            $this->resolveLocale(),
+        );
     }
 
     private function resolveLocale(): Locale
