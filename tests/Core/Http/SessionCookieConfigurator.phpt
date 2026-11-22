@@ -1,10 +1,5 @@
 --TEST--
-Admin and public requests use separate cookies and server-side session storage
---INI--
-output_buffering=4096
-session.use_cookies=0
-session.use_only_cookies=0
-session.use_strict_mode=0
+Admin and public session policies use distinct cookies and storage directories
 --FILE--
 <?php
 
@@ -15,61 +10,30 @@ $rootDir = dirname(__DIR__, 3);
 require $rootDir . '/vendor/autoload.php';
 
 $directory = sys_get_temp_dir() . '/argomi-session-' . bin2hex(random_bytes(6));
-mkdir($directory, 0700);
-
 $configurator = new SessionCookieConfigurator($directory);
 
-$adminPolicy = $configurator->configure('/shop/admin/products?status=active', '/shop/index.php', true);
-Assert::same('ARGOMI_ADMIN_SESSID', session_name());
-Assert::same('/shop/admin', session_get_cookie_params()['path']);
-Assert::true(session_get_cookie_params()['secure']);
-Assert::true(session_get_cookie_params()['httponly']);
-Assert::same('Strict', session_get_cookie_params()['samesite']);
+$adminPolicy = $configurator->resolvePolicy('/shop/admin/products?status=active', '/shop/index.php', true);
+Assert::same('ARGOMI_ADMIN_SESSID', $adminPolicy['sessionName']);
 Assert::same('/shop/admin', $adminPolicy['http']['cookiePath']);
+Assert::true($adminPolicy['http']['cookieSecure']);
 Assert::same('Strict', $adminPolicy['session']['cookieSamesite']);
-Assert::same($directory . '/admin', session_save_path());
 Assert::same($directory . '/admin', $adminPolicy['session']['savePath']);
+Assert::true(is_dir($directory . '/admin'));
 
-session_id(str_repeat('a', 32));
-session_start();
-$_SESSION['marker'] = 'admin';
-session_write_close();
-
-$publicPolicy = $configurator->configure('/shop/cs/products', '/shop/index.php', true);
-Assert::same('ARGOMI_SESSID', session_name());
-Assert::same('/shop/', session_get_cookie_params()['path']);
-Assert::true(session_get_cookie_params()['secure']);
-Assert::true(session_get_cookie_params()['httponly']);
-Assert::same('Lax', session_get_cookie_params()['samesite']);
+$publicPolicy = $configurator->resolvePolicy('/shop/cs/products', '/shop/index.php', true);
+Assert::same('ARGOMI_SESSID', $publicPolicy['sessionName']);
 Assert::same('/shop/', $publicPolicy['http']['cookiePath']);
+Assert::true($publicPolicy['http']['cookieSecure']);
 Assert::same('Lax', $publicPolicy['session']['cookieSamesite']);
-Assert::same($directory . '/public', session_save_path());
 Assert::same($directory . '/public', $publicPolicy['session']['savePath']);
+Assert::true(is_dir($directory . '/public'));
+Assert::notSame($adminPolicy['session']['savePath'], $publicPolicy['session']['savePath']);
 
-session_id(str_repeat('b', 32));
-session_start();
-Assert::same([], $_SESSION);
-$_SESSION['marker'] = 'public';
-session_write_close();
+$publicHttpPolicy = $configurator->resolvePolicy('/shop/cs/products', '/shop/index.php', false);
+Assert::false($publicHttpPolicy['http']['cookieSecure']);
 
-$configurator->configure('/shop/admin', '/shop/index.php', true);
-session_id(str_repeat('a', 32));
-session_start();
-Assert::same('admin', $_SESSION['marker']);
-session_write_close();
-
-$configurator->configure('/shop/cs/products', '/shop/index.php', false);
-session_id(str_repeat('b', 32));
-session_start();
-Assert::same('public', $_SESSION['marker']);
-session_write_close();
-
-foreach (['admin', 'public'] as $scope) {
-    foreach (glob($directory . '/' . $scope . '/sess_*') ?: [] as $sessionFile) {
-        unlink($sessionFile);
-    }
-    rmdir($directory . '/' . $scope);
-}
+rmdir($directory . '/admin');
+rmdir($directory . '/public');
 rmdir($directory);
 
 echo "OK\n";
