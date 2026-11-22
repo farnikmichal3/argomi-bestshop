@@ -42,11 +42,25 @@ final class AdminAuthenticationRepository
             }
         }
 
+        $id = $row->id;
+        $accountEmail = $row->email;
+        $passwordHash = $row->password_hash;
+        $status = $row->status;
+
+        if (
+            (!is_int($id) && (!is_string($id) || !ctype_digit($id)))
+            || !is_string($accountEmail)
+            || !is_string($passwordHash)
+            || !is_string($status)
+        ) {
+            throw new \\UnexpectedValueException('Administrator account data has an invalid format.');
+        }
+
         return new AdminAccountCredentials(
-            (int) $row->id,
-            (string) $row->email,
-            (string) $row->password_hash,
-            (string) $row->status,
+            (int) $id,
+            $accountEmail,
+            $passwordHash,
+            $status,
             $roles,
         );
     }
