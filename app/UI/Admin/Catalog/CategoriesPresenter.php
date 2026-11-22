@@ -245,6 +245,7 @@ final class CategoriesPresenter extends TranslatedPresenter
 
     /**
      * @param list<CategoryTreeItem> $nodes
+     * @param list<int> $excludedIds
      * @return array<int|string, string>
      */
     private function createParentOptions(array $nodes, array $excludedIds = []): array
@@ -257,6 +258,7 @@ final class CategoriesPresenter extends TranslatedPresenter
     /**
      * @param list<CategoryTreeItem> $nodes
      * @param array<int|string, string> $options
+     * @param list<int> $excludedIds
      */
     private function appendParentOptions(array $nodes, int $depth, array &$options, array $excludedIds = []): void
     {
