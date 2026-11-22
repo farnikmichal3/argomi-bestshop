@@ -67,27 +67,29 @@ final class AdminAuthenticationRepository
 
     public function createAdministrator(string $email, string $passwordHash): int
     {
-        return $this->database->getConnection()->transaction(function () use ($email, $passwordHash): int {
-            $user = $this->database->table('admin_user')->insert([
+        $result = $this->database->getConnection()->transaction(function () use ($email, $passwordHash): int {
+            $this->database->table('admin_user')->insert([
                 'email' => $email,
                 'password_hash' => $passwordHash,
                 'status' => 'active',
             ]);
 
+            $userId = $this->database->getConnection()->getInsertId();
+
+            if (!ctype_digit($userId) || $userId === '0') {
+                throw new \\UnexpectedValueException('The created administrator ID has an invalid format.');
+            }
+
             $role = $this->database->table('admin_role')->where('code', 'admin')->fetch();
 
             if ($role === null) {
-                throw new \LogicException('The base administrator role has not been seeded.');
+                throw new \\LogicException('The base administrator role has not been seeded.');
             }
 
-            $userId = $user->id;
             $roleId = $role->id;
 
-            if (
-                (!is_int($userId) && (!is_string($userId) || !ctype_digit($userId)))
-                || (!is_int($roleId) && (!is_string($roleId) || !ctype_digit($roleId)))
-            ) {
-                throw new \UnexpectedValueException('Administrator role assignment identifiers have an invalid format.');
+            if (!is_int($roleId) && (!is_string($roleId) || !ctype_digit($roleId))) {
+                throw new \\UnexpectedValueException('The base administrator role ID has an invalid format.');
             }
 
             $this->database->table('admin_user_role')->insert([
@@ -97,6 +99,12 @@ final class AdminAuthenticationRepository
 
             return (int) $userId;
         });
+
+        if (!is_int($result)) {
+            throw new \\UnexpectedValueException('The administrator provisioning transaction returned an invalid result.');
+        }
+
+        return $result;
     }
 
     public function recordSuccessfulLogin(int $adminUserId): void
