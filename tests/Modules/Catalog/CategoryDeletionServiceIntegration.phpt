@@ -70,14 +70,11 @@ try {
     $parentId = $service->create(null, 'delete-parent-' . $token, 0, true, $translations('delete-parent'));
     $childId = $service->create($parentId, 'delete-child-' . $token, 0, true, $translations('delete-child'));
 
-    Assert::exception(
+    $childBlock = Assert::exception(
         static fn () => $service->delete($parentId),
         CategoryDeletionBlockedException::class,
-        static fn (CategoryDeletionBlockedException $exception) => Assert::same(
-            CategoryDeletionBlockedException::HAS_CHILDREN,
-            $exception->reason,
-        ),
     );
+    Assert::same(CategoryDeletionBlockedException::HAS_CHILDREN, $childBlock->reason);
 
     $service->delete($childId);
     Assert::same(null, $database->table('category')->where('id', $childId)->fetch());
@@ -98,14 +95,11 @@ try {
     ]);
     $productCategoryId = (int) $assignment->id;
 
-    Assert::exception(
+    $productBlock = Assert::exception(
         static fn () => $service->delete($parentId),
         CategoryDeletionBlockedException::class,
-        static fn (CategoryDeletionBlockedException $exception) => Assert::same(
-            CategoryDeletionBlockedException::HAS_PRODUCTS,
-            $exception->reason,
-        ),
     );
+    Assert::same(CategoryDeletionBlockedException::HAS_PRODUCTS, $productBlock->reason);
     Assert::same(1, $database->table('product_category')->where('category_id', $parentId)->count('*'));
     Assert::same(1, $database->table('category')->where('id', $parentId)->count('*'));
 
