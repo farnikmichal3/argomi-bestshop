@@ -5,6 +5,7 @@ First administrator provisioning creates an active account with the base admin r
 
 use App\Modules\Identity\Application\AdminAuthenticationRepository;
 use App\Modules\Identity\Application\AdminAuthenticator;
+use Nette\Security\User;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
 
