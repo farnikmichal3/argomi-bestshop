@@ -65,9 +65,6 @@
                         {if $canManage}
                             <td class="d-flex flex-wrap gap-2">
                                 <a class="btn btn-sm btn-outline-primary" n:href="edit, id => $row['category']->id">{_'categories.action.edit'}</a>
-                                <form method="post" action="{link delete!, id => $row['category']->id}" class="m-0">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">{_'categories.delete.action'}</button>
-                                </form>
                             </td>
                         {/if}
                     </tr>
