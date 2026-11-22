@@ -12,6 +12,8 @@ VALUES
     ('categories.action', 'en', 'Actions', 'core', 0, NULL, 0),
     ('categories.delete.action', 'cs', 'Smazat', 'core', 0, NULL, 0),
     ('categories.delete.action', 'en', 'Delete', 'core', 0, NULL, 0),
+    ('categories.delete.csrf', 'cs', 'Formulář pro odstranění kategorie vypršel. Obnov stránku a zkus to znovu.', 'core', 0, NULL, 0),
+    ('categories.delete.csrf', 'en', 'The category deletion form expired. Refresh the page and try again.', 'core', 0, NULL, 0),
     ('categories.delete.deleted', 'cs', 'Kategorie byla odstraněna.', 'core', 0, NULL, 0),
     ('categories.delete.deleted', 'en', 'The category has been deleted.', 'core', 0, NULL, 0),
     ('categories.delete.has_children', 'cs', 'Kategorii nelze odstranit, protože obsahuje podkategorie. Nejprve přesuň nebo odstraň její podkategorie.', 'core', 0, NULL, 0),
