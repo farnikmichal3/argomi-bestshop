@@ -3,8 +3,6 @@ First administrator provisioning creates an active account with the base admin r
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Modules\Identity\Application\AdminAuthenticationRepository;
 use App\Modules\Identity\Application\AdminAuthenticator;
 use Tester\Assert;
