@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Infrastructure\\Persistence;
+namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\\Modules\\Catalog\\Application\\CategoryEditorRepository;
-use Nette\\Database\\Explorer;
-use Nette\\Database\\Table\\ActiveRow;
+use App\Modules\Catalog\Application\CategoryEditorRepository;
+use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
 use UnexpectedValueException;
 
 final class DatabaseCategoryEditorRepository implements CategoryEditorRepository
@@ -70,7 +70,7 @@ final class DatabaseCategoryEditorRepository implements CategoryEditorRepository
             return $value;
         }
 
-        if (is_string($value) && preg_match('/\\A-?[0-9]+\\z/D', $value) === 1) {
+        if (is_string($value) && preg_match('/\A-?[0-9]+\z/D', $value) === 1) {
             $integer = filter_var($value, FILTER_VALIDATE_INT);
             if ($integer !== false) {
                 return $integer;

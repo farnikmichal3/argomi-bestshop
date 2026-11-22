@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Application;
+namespace App\Modules\Catalog\Application;
 
-use App\\Modules\\Catalog\\Api\\Dto\\CategoryEditorData;
-use App\\Modules\\Catalog\\Api\\CatalogAccessDeniedException;
-use App\\Modules\\Catalog\\Api\\CatalogPermission;
-use App\\Shared\\Domain\\Locale\\LocaleProvider;
+use App\Modules\Catalog\Api\Dto\CategoryEditorData;
+use App\Modules\Catalog\Api\CatalogAccessDeniedException;
+use App\Modules\Catalog\Api\CatalogPermission;
+use App\Shared\Domain\Locale\LocaleProvider;
 
 final class CategoryEditorQueryService
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Api\\Dto;
+namespace App\Modules\Catalog\Api\Dto;
 
 /**
  * Veřejná data kategorie určená pro předvyplnění administrátorského editoru.
