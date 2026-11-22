@@ -3,8 +3,6 @@ Admin and public requests select independent PHP sessions and cookie policies
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Core\Http\SessionCookieConfigurator;
 use Tester\Assert;
 
