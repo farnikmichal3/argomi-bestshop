@@ -5,6 +5,7 @@ services:
   - App\Shared\Infrastructure\Console\DbResetEnvironmentPolicy(%app.environment%)
   - App\Shared\Infrastructure\Console\DbResetCommand
   - App\Shared\Infrastructure\Console\OutboxWorkerCommand
+  - App\Modules\Identity\Infrastructure\Console\CreateAdminAccountCommand
   - App\Modules\Translation\Infrastructure\Diagnostics\TranslationKeyUsageScanner(%appDir%/UI)
   - App\Modules\Translation\Infrastructure\Console\TranslationsCheckCommand
   # Resolver má vlastní název a nespadá do automatického vyhledávání tříd se suffixem Service.
