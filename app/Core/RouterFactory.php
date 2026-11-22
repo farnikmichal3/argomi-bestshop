@@ -45,6 +45,7 @@ final class RouterFactory
         $adminRouter = $router->withModule('Admin');
 
         $adminRouter
+            ->addRoute('admin/login', 'Identity:Login:default')
             ->addRoute('admin', 'Dashboard:default')
             // Diagnostická stránka je navíc chráněna přímo v presenteru kontrolou Tracy debug režimu.
             ->addRoute('admin/development/sql-diagnostics', 'Development:SqlDiagnostics:default')
