@@ -4,6 +4,7 @@ Catalog product repository maps Explorer rows to typed DTOs
 <?php
 
 use App\Modules\Catalog\Application\ProductRepository;
+use App\Modules\Catalog\Domain\Product\ProductType;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Database\Explorer;
 use Tester\Assert;
@@ -31,6 +32,7 @@ Assert::notNull($product);
 Assert::same(1, $product->id);
 Assert::same('tshirt-printed', $product->code);
 Assert::same('active', $product->status);
+Assert::same(ProductType::Physical, $product->type);
 Assert::same(1, $product->taxClassId);
 Assert::same('UTC', $product->createdAt->getTimezone()->getName());
 Assert::same('UTC', $product->updatedAt->getTimezone()->getName());
