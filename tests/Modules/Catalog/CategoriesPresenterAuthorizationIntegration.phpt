@@ -6,6 +6,7 @@ use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\CategoryWriter;
 use App\Modules\Catalog\Api\CategoryEditorReader;
+use App\Modules\Catalog\Api\CategoryOrderWriter;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Modules\Catalog\Application\CategoryManagementService;
 use App\Modules\Catalog\Application\CategoryRepository;
@@ -35,9 +36,11 @@ $localeProvider = $integration->container->getByType(LocaleProvider::class);
 $categoryWriter = $integration->container->getByType(CategoryWriter::class);
 /** @var CategoryEditorReader $categoryEditorReader */
 $categoryEditorReader = $integration->container->getByType(CategoryEditorReader::class);
+/** @var CategoryOrderWriter $categoryOrderWriter */
+$categoryOrderWriter = $integration->container->getByType(CategoryOrderWriter::class);
 /** @var TranslatorFactory $translatorFactory */
 $translatorFactory = $integration->container->getByType(TranslatorFactory::class);
-$deniedPresenter = new CategoriesPresenter($deniedCategoryTree, $categoryWriter, $categoryEditorReader, $deniedPermission, $localeProvider, $translatorFactory);
+$deniedPresenter = new CategoriesPresenter($deniedCategoryTree, $categoryWriter, $categoryEditorReader, $categoryOrderWriter, $deniedPermission, $localeProvider, $translatorFactory);
 Assert::exception(
     static fn () => $deniedPresenter->renderDefault(),
     ForbiddenRequestException::class,
@@ -59,7 +62,7 @@ $viewerPermission = new class implements CatalogPermission {
 $categoryRepository = $integration->container->getByType(CategoryRepository::class);
 $categoryManagement = new CategoryManagementService($categoryRepository, $viewerPermission);
 $categoryTree = new CategoryTreeQueryService($categoryManagement);
-$viewerPresenter = new CategoriesPresenter($categoryTree, $categoryWriter, $categoryEditorReader, $viewerPermission, $localeProvider, $translatorFactory);
+$viewerPresenter = new CategoriesPresenter($categoryTree, $categoryWriter, $categoryEditorReader, $categoryOrderWriter, $viewerPermission, $localeProvider, $translatorFactory);
 
 /** @var IRequest $httpRequest */
 $httpRequest = $integration->container->getByType(IRequest::class);
@@ -71,11 +74,13 @@ $templateFactory = $integration->container->getByType(TemplateFactory::class);
 $viewerPresenter->injectPrimary($httpRequest, $httpResponse, templateFactory: $templateFactory);
 $viewerPresenter->renderDefault();
 
-$rows = $viewerPresenter->template->categories;
-$codes = array_map(
-    static fn (array $row): string => $row['category']->code,
-    $rows,
-);
+$groups = $viewerPresenter->template->categoryGroups;
+$codes = [];
+foreach ($groups as $group) {
+    foreach ($group['rows'] as $row) {
+        $codes[] = $row['category']->code;
+    }
+}
 
 Assert::contains('clothing', $codes);
 Assert::contains('electronics', $codes);
