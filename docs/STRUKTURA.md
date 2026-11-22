@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.12 · 22. 11. 2026  
+**Revize:** 4.13 · 22. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 22. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -179,6 +179,7 @@ app/
 └── UI/
     ├── Admin/
     │   ├── @layout.latte
+    │   ├── README.md
     │   ├── Catalog/
     │   ├── Customers/
     │   ├── Dashboard/
@@ -317,7 +318,8 @@ Outbox je společný mechanismus ve `Shared`; moduly vlastní své doménové ud
 ## 5. Prezentační vrstvy
 
 ### UI/Admin
-Administrace a její presentery, Latte šablony, formuláře, komponenty a datagridy. Například `Admin:Dashboard` se mapuje na `App\UI\Admin\Dashboard\DashboardPresenter` podle pravidla `Admin: App\UI\Admin\**Presenter`. Společný `AdminAccessTrait` je v `UI/Admin/AdminAccessTrait.php`; všechny aktuální chráněné admin presentery jej používají pro serverovou kontrolu přihlášení a POST logout s CSRF ochranou. Veřejně dostupný login je samostatný `Identity:Login`: route `/admin/login` míří na `App\UI\Admin\Identity\Login\LoginPresenter` v `UI/Admin/Identity/Login/LoginPresenter.php` a šablonu `UI/Admin/Identity/Login/default.latte`. Login používá `TranslatorFactory` a výchozí locale; při již přihlášené identitě přesměruje na dashboard. Oprávnění modulů dále kontrolují jejich vlastní permission resolvery; samotné skrytí ovládacího prvku není autorizace.
+Administrace a její presentery, Latte šablony, formuláře, komponenty a datagridy. Například `Admin:Dashboard` se mapuje na `App\UI\Admin\Dashboard\DashboardPresenter` podle pravidla `Admin: App\UI\Admin\**Presenter`. Společný `@layout.latte` poskytuje responzivní Bootstrap navigaci, flash zprávy, skip link, aktivní stav položek a jediný vstupní bod `/assets/admin.js`. Odkazy Přehled, Produkty, Kategorie a Překlady se zobrazují podle `CatalogPermission` a `TranslationPermission`; jejich serverové kontroly v presenterech zůstávají povinné. Překladové texty navigace a dashboardu vlastní doména `Admin` v DB, `html lang` se odvozuje z aktivního výchozího locale. `assets/js/admin.js` importuje `shared.js`, která inicializuje Bootstrap, Naja a Nette Forms; layout skript vkládá právě jednou. Detailní pravidla jsou v `app/UI/Admin/README.md`.
+Společný `AdminAccessTrait` je v `UI/Admin/AdminAccessTrait.php`; všechny aktuální chráněné admin presentery jej používají pro serverovou kontrolu přihlášení, POST logout s CSRF a předání oprávnění navigaci. Veřejně dostupný login je samostatný `Identity:Login`: route `/admin/login` míří na `App\UI\Admin\Identity\Login\LoginPresenter` v `UI/Admin/Identity/Login/LoginPresenter.php` a šablonu `UI/Admin/Identity/Login/default.latte`. Login používá `TranslatorFactory` a výchozí locale; při již přihlášené identitě přesměruje na dashboard. Oprávnění modulů dále kontrolují jejich vlastní permission resolvery; samotné skrytí ovládacího prvku není autorizace.
 
 ### UI/Front
 Zákaznický obchod: katalog, účet, košík, checkout, domovská stránka a zákaznické chybové obrazovky. Například `Front:Home` se mapuje na `App\UI\Front\Home\HomePresenter` podle pravidla `Front: App\UI\Front\**Presenter`.
