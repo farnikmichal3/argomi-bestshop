@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="{$localeProvider->getDefault()->getCode() ?? 'cs'}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{_ identity.login.title} | ArgoMi BestShop</title>
+    <link rel="stylesheet" href="{$basePath}/assets/admin.css">
+</head>
+<body>
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-4">
+                <h1>{_ identity.login.title}</h1>
+                {control loginForm}
+            </div>
+        </div>
+    </main>
+</body>
+</html>
