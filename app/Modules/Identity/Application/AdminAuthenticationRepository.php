@@ -65,6 +65,36 @@ final class AdminAuthenticationRepository
         );
     }
 
+    public function createAdministrator(string $email, string $passwordHash): int
+    {
+        return $this->database->getConnection()->transaction(function () use ($email, $passwordHash): int {
+            $user = $this->database->table('admin_user')->insert([
+                'email' => $email,
+                'password_hash' => $passwordHash,
+                'status' => 'active',
+            ]);
+
+            $role = $this->database->table('admin_role')->where('code', 'admin')->fetch();
+
+            if ($role === null) {
+                throw new \\LogicException('The base administrator role has not been seeded.');
+            }
+
+            $this->database->table('admin_user_role')->insert([
+                'admin_user_id' => $user->id,
+                'admin_role_id' => $role->id,
+            ]);
+
+            $id = $user->id;
+
+            if (!is_int($id) && (!is_string($id) || !ctype_digit($id))) {
+                throw new \\UnexpectedValueException('The created administrator ID has an invalid format.');
+            }
+
+            return (int) $id;
+        });
+    }
+
     public function recordSuccessfulLogin(int $adminUserId): void
     {
         $this->database->query(
