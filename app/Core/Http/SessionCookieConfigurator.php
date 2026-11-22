@@ -11,7 +11,7 @@ use LogicException;
  */
 final class SessionCookieConfigurator
 {
-    public function configure(string $requestUri, string $scriptName, bool $secure): void
+    public function configure(string $requestUri, string $scriptName, bool $secure): string
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
             throw new LogicException('The session cookie must be configured before the PHP session starts.');
@@ -29,13 +29,17 @@ final class SessionCookieConfigurator
         $isAdminRequest = $requestPath === $adminPath || str_starts_with($requestPath, $adminPath . '/');
 
         session_name($isAdminRequest ? 'ARGOMI_ADMIN_SESSID' : 'ARGOMI_SESSID');
+        $cookiePath = $isAdminRequest ? $adminPath : ($basePath === '' ? '/' : $basePath . '/');
+
         session_set_cookie_params([
             'lifetime' => 0,
-            'path' => $isAdminRequest ? $adminPath : ($basePath === '' ? '/' : $basePath . '/'),
+            'path' => $cookiePath,
             'domain' => '',
             'secure' => $secure,
             'httponly' => true,
             'samesite' => $isAdminRequest ? 'Strict' : 'Lax',
         ]);
+
+        return $cookiePath;
     }
 }
