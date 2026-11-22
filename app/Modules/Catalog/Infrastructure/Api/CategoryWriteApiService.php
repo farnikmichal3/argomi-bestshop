@@ -26,6 +26,11 @@ final class CategoryWriteApiService implements CategoryWriter
         return $this->categoryWrite->create($parentId, $code, $sortOrder, $isActive, $translations);
     }
 
+    public function delete(int $categoryId): void
+    {
+        $this->categoryWrite->delete($categoryId);
+    }
+
     public function update(
         int $categoryId,
         ?int $parentId,
