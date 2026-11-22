@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Application;
 
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Api\CategoryDeletionBlockedException;
 use App\Modules\Catalog\Domain\Slug\SlugTarget;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\Locale\Locale;
