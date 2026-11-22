@@ -99,4 +99,40 @@ final class DatabaseCategoryWriteRepository implements CategoryWriteRepository
         }
         $selection->update($data);
     }
+
+    public function findSiblingIds(?int $parentId): array
+    {
+        $selection = $this->database->table('category');
+        if ($parentId === null) {
+            $selection->where('parent_id IS NULL');
+        } else {
+            $selection->where('parent_id', $parentId);
+        }
+
+        $ids = [];
+        foreach ($selection->order('sort_order ASC, id ASC') as $row) {
+            $value = $row->id;
+            if (is_int($value)) {
+                $ids[] = $value;
+                continue;
+            }
+            if (is_string($value) && ctype_digit($value)) {
+                $integer = filter_var($value, FILTER_VALIDATE_INT);
+                if (is_int($integer)) {
+                    $ids[] = $integer;
+                    continue;
+                }
+            }
+            throw new UnexpectedValueException('Databáze vrátila neplatné ID kategorie.');
+        }
+
+        return $ids;
+    }
+
+    public function updateSortOrder(int $categoryId, int $sortOrder): void
+    {
+        $this->database->table('category')->where('id', $categoryId)->update([
+            'sort_order' => $sortOrder,
+        ]);
+    }
 }
