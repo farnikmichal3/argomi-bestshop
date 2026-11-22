@@ -12,7 +12,6 @@ use App\Modules\Catalog\Domain\Product\ProductStatus;
 use App\Modules\Catalog\Domain\Product\ProductType;
 use App\Shared\Domain\Locale\Locale;
 use Nette\Database\Explorer;
-use Nette\Database\Table\ActiveRow;
 use UnexpectedValueException;
 
 /**
