@@ -1,51 +1,58 @@
 # Identity – administrátorská identita
 
-Modul Identity vlastní **administrátorské účty** a jejich autentizaci. Je oddělen od modulu Customer, který bude spravovat zákaznické účty. Identity zatím poskytuje pouze základ autentizace; nejde o kompletní RBAC/ACL ani hotové přihlášení do administrace.
+Modul Identity vlastní **administrátorské účty** a jejich autentizaci. Je oddělen od modulu Customer, který bude spravovat zákaznické účty. Aktuální implementace poskytuje základní přihlášení administrátora a serverovou ochranu existujících admin presenterů; nejde o kompletní RBAC/ACL.
 
 ## Aktuálně implementováno
 
 - Databázové tabulky:
   - `admin_user`: e-mail, password hash, stav `active/disabled`, timestamps a `last_login_at`.
   - `admin_role`: stabilní kód role a systémový příznak.
-  - `admin_user_role`: vazba účtu a rolí, unikátnost přiřazení a FK.
-- SQL migrace: `migrations/structures/2026-11-22-110000-admin-identity-foundation.sql`.
-- Idempotentní seed základních rolí: `migrations/basic-data/2026-11-22-111000-admin-identity-roles.sql`.
-- `AdminAccountCredentials`: read-only DTO pro credentials a role. Password hash se nikdy nevkládá do Nette identity.
-- `AdminAuthenticationRepository`: načtení účtu podle normalizovaného e-mailu, načtení rolí a aktualizace posledního přihlášení.
-- `AdminAuthenticator`: implementace Nette `Authenticator`; ověřuje hash hesla, odmítá disabled účty, vrací generickou chybu a provádí dummy password verification při neznámém/neaktivním účtu.
-- Explicitní registrace authenticatoru v `config/services.neon`.
-- Integrační testy schématu a autentizace: `tests/Modules/Identity/AdminIdentitySchemaIntegration.phpt` a `AdminAuthenticatorIntegration.phpt`.
+  - `admin_user_role`: vazba účtu a rolí.
+- SQL migrace schématu a idempotentní seed základních rolí.
+- `AdminAccountCredentials`: read-only DTO; password hash se nikdy nevkládá do Nette identity.
+- `AdminAuthenticationRepository`: načtení účtu/rolí, záznam posledního přihlášení a transakční vytvoření administrátora s rolí `admin`.
+- `AdminAuthenticator`: ověřuje hash hesla, odmítá disabled účty, vrací generickou chybu a provádí dummy password verification při neznámém/neaktivním účtu.
+- CLI příkaz `php bin/console identity:admin:create` vytvoří účet. Heslo se zadává skrytě a musí mít nejméně 14 znaků. Žádný administrátor ani heslo se neseeduje migrací.
+- Přihlášení na `/admin/login`; po přihlášení se přesměruje na `/admin`.
+- Aktuální admin presentery Dashboard, Products, Translations a Catalog/Categories používají společnou serverovou autentizační ochranu `AdminAccessTrait`.
+- Odhlášení je formulářem POST s Nette Forms CSRF ochranou. Zruší pouze administrátorskou identitu a administrátorskou session.
+- Přihlášení používá Nette `SessionStorage`, který při uložení identity regeneruje session ID. Přihlášení má posuvnou dobu nečinnosti 30 minut.
+- Texty login/logout jsou seedovány do databázových překladů v češtině a angličtině.
 
-## Seedované role
+## Oddělení session a cookie
 
-| Kód | Účel / aktuální rozsah |
+Výběr session probíhá ve `www/index.php` ještě před inicializací Bootstrapu, Tracy a Nette DI. `SessionCookieConfigurator` podle cesty požadavku vybere PHP session name a předá request-specific konfiguraci do `Bootstrap`. Bootstrap ji přidá po lokální konfiguraci a ještě před vytvořením DI kontejneru, tedy před Nette smart session autostartem.
+
+| Část | Session cookie | Path | SameSite |
+|---|---|---|---|
+| Administrace | `ARGOMI_ADMIN_SESSID` | `/admin` (včetně případného base path) | `Strict` |
+| Veřejná část | `ARGOMI_SESSID` | aplikační base path | `Lax` |
+
+Obě cookies mají `HttpOnly`; atribut `Secure` se zapíná podle HTTPS požadavku. Nette dostává odpovídající `http.cookiePath`, `http.cookieSecure` a `session.cookieSamesite` konfiguraci už při sestavení kontejneru. Session data jsou oddělena rozdílnými session names a nezávislými session ID; test ověřuje, že se data jedné session nenačtou do druhé.
+
+## Základní role a oprávnění
+
+| Kód | Účel |
 |---|---|
-| `admin` | základní role administrátora; úplný ACL význam zatím není definován |
-| `catalog_viewer` | čtení katalogu podle aktuálního Catalog resolveru |
-| `catalog_manager` | správa katalogu podle aktuálního Catalog resolveru |
-| `translation_manager` | správa překladů podle aktuální Translation resolveru |
+| `admin` | základní administrátor; v aktuálních Catalog a Translation resolvers má správu těchto modulů |
+| `catalog_viewer` | čtení katalogu |
+| `catalog_manager` | správa katalogu |
+| `translation_manager` | správa překladů |
 
-Role `translation_viewer` zatím není součástí základního role seedu. Nesmí se předpokláávat, že ji přihlášený uživatel automaticky získá.
+Role `admin` je nyní minimální provozní role, nikoliv obecná ACL matice. Moduly nadále kontrolují svá oprávnění přes vlastní permission/resolver kontrakty.
 
-## Bezpečnostní hranice
+## Záměrně mimo aktuální rozsah
 
-- Účty disabled nelze autentizovat.
-- Chybová zpráva neodhaluje, zda účet existuje nebo je deaktivovaný.
-- Do Nette identity se předává pouze ID, role a e-mail jako doplňující data, nikoli heslo/hash.
-- Neexistuje žádný seedovaný výchozí admin účet ani známé heslo.
-- Role se vyhodnocují přes moduly permission/resolver; samotné přihlášení nepřidává oprávnění ke Catalog nebo Translation.
-- Tato základní implementace neřeší kompletní ACL matici, dvoufaktorové ověření, throttling/lockout, auditní log ani reset hesla.
+- Kompletní ACL/RBAC matice a jemnozrnné oprávnění.
+- Správa administrátorských účtů a rolí přes UI.
+- Dvoufaktorové ověření, throttling/lockout a auditní log.
+- Obnova hesla, pozvánky a další lifecycle účtu.
+- Pokročilá politika session a bezpečnostní monitoring.
 
-## Dosud neimplementováno (navazující F8-12 a další)
-
-- Admin login/logout UI, presenter, formulář a šablona.
-- Ochrana administrátorských rout/presenterů a bezpečné přesměrování po přihlášení.
-- Oddělená administrátorská session/cookie, regenerace session ID a časové limity.
-- CSRF a POST-only logout.
-- Bezpečné první zřízení admin účtu (bez seedovaného hesla).
-- Omezení pokusů o přihlášení, audit, 2FA a správa účtů/rolí.
-- Kompletní ACL/RBAC model.
+Tyto části zůstávají v navazujících krocích F8. Základní přihlášení nesmí být zaměňováno za dokončený bezpečnostní program.
 
 ## Ověření
 
-Foundation prošla GitHub Actions CI a uživatel potvrdil lokální `check.bat` s výsledkem `All active checks passed.`. Toto potvrzení se vztahuje pouze na aktuálně implementovaný foundation, nikoli na výše uvedené budoucí části.
+- Integrační testy ověřují schéma, autentizaci, vytvoření administrátora a přiřazení role.
+- Test session konfigurace ověřuje oddělené názvy, cookie parametry a nezávislost uložených session dat.
+- CI a lokální `check.bat` se považují za úspěšné pouze po potvrzení konkrétního běhu.
