@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.45 · 15. 11. 2026
+**Revize:** 1.46 · 22. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -382,6 +382,7 @@ Pro budoucí hostovanou službu stanovujeme tyto základní zásady zálohován�
 | 15. 11. 2026 | F2-16: stanovena kritéria pro umístění kódu do `Shared`; výchozím vlastníkem zůstává konkrétní modul a `Shared` smí záviset pouze na PHP a externích knihovnách. Podrobnosti a příklady jsou v `STRUKTURA.md`. |
 | 15. 11. 2026 | F2-18: synchronní doménové události slouží pouze pro krátké kritické interní reakce; transakci vlastní aplikační use-case a výjimka musí opustit nejvyšší transakční callback, aby nastal rollback. Externí a notifikační účinky se zapisují jako explicitní integrační zprávy do Transactional Outbox ve stejné transakci; worker je zpracuje až po commitu. Interní `DomainEvent` se automaticky neserializuje do Outboxu. Podrobnosti jsou v `STRUKTURA.md`. |
 | 15. 11. 2026 | F2-20: Outbox doručuje at-least-once; handler deduplikuje podle stabilního `messageId`, databázový účinek ukládá atomicky s deduplikačním záznamem a externím API předává idempotency key, pokud jej podporuje. Handler musí skončit před vypršením lease; `dead` zprávy se bez samostatného auditovatelného provozního zásahu automaticky neobnovují. Podrobnosti jsou v `STRUKTURA.md`. |
+| 22. 11. 2026 | F8-12: potvrzeno provozní minimum administrátorské identity: samostatné login workflow, oddělené PHP sessions/cookies a serverová úložiště pro Front/Admin, regenerace session ID, 30minutová nečinnost, POST logout s CSRF a CLI provisioning prvního administrátora bez seedovaného účtu či hesla. Rozsah záměrně nezahrnuje kompletní ACL/RBAC, 2FA, audit ani správu účtů v UI; tyto části zůstávají v navazujících krocích F8. |
 
 ## 17. Historie cen a pravidla pro slevy (Omnibus)
 
