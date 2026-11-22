@@ -61,10 +61,22 @@ final class CategoriesPresenter extends TranslatedPresenter
         $this->template->locales = $this->localeProvider->getActiveLocales();
     }
 
-    public function handleReorder(string $parentId, string $orderedCategoryIds): void
+    public function handleReorder(): void
     {
         if (!$this->catalogPermission->canManage()) {
             throw new ForbiddenRequestException();
+        }
+        if ($this->getHttpRequest()->getMethod() !== 'POST') {
+            throw new ForbiddenRequestException();
+        }
+
+        $post = $this->getHttpRequest()->getPost();
+        $parentId = $post['parentId'] ?? null;
+        $orderedCategoryIds = $post['orderedCategoryIds'] ?? null;
+        if (!is_string($parentId) || !is_string($orderedCategoryIds)) {
+            $translator = $this->translatorFactory->createTranslator(TranslationDomain::Catalog, $this->localeProvider->getDefault());
+            $this->flashMessage($translator->translate('categories.order.error'), 'danger');
+            $this->redirect('default');
         }
 
         $translator = $this->translatorFactory->createTranslator(TranslationDomain::Catalog, $this->localeProvider->getDefault());
@@ -86,7 +98,7 @@ final class CategoriesPresenter extends TranslatedPresenter
 
             $this->categoryOrderWriter->reorder($parsedParentId, $categoryIds);
         } catch (JsonException | InvalidArgumentException) {
-            $this->flashMessage('categories.order.error', 'danger');
+            $this->flashMessage($translator->translate('categories.order.error'), 'danger');
             $this->redirect('default');
         }
 
