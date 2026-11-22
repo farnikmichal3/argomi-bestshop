@@ -4,6 +4,15 @@
 <main class="container py-5">
     <h1>{_'categories.title'}</h1>
 
+    {if $canManage}
+        <section class="card mb-4">
+            <div class="card-body">
+                <h2 class="h4">{_'categories.form.title'}</h2>
+                {control createForm}
+            </div>
+        </section>
+    {/if}
+
     <div class="table-responsive">
         <table class="table table-striped table-hover align-middle">
             <thead>
