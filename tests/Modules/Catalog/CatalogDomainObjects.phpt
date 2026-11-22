@@ -10,6 +10,7 @@ use App\Modules\Catalog\Domain\Option\CustomerOption;
 use App\Modules\Catalog\Domain\Option\CustomerOptionType;
 use App\Modules\Catalog\Domain\Product\Product;
 use App\Modules\Catalog\Domain\Product\ProductStatus;
+use App\Modules\Catalog\Domain\Product\ProductType;
 use App\Modules\Catalog\Domain\Variant\ProductVariant;
 use Tester\Assert;
 
@@ -22,10 +23,17 @@ Assert::same(null, $rootCategory->parentId);
 Assert::same(1, $childCategory->parentId);
 Assert::false($childCategory->isActive);
 
-// Produkt má přesně stavy definované databázovým ENUMem.
+// Produkt má samostatný obchodní typ a stav životního cyklu.
 $draft = new Product(1, 'usb-c-cable', ProductStatus::Draft, 1);
-$active = new Product(2, 'gan-charger', ProductStatus::Active, 1);
+$active = new Product(2, 'gan-charger', ProductStatus::Active, 1, ProductType::Physical);
 $archived = new Product(3, 'old-product', ProductStatus::Archived, 2);
+$digital = new Product(4, 'antivirus', ProductStatus::Active, 1, ProductType::Digital);
+$service = new Product(5, 'installation', ProductStatus::Active, 1, ProductType::Service);
+Assert::same(ProductType::Physical, $draft->type);
+Assert::same(ProductType::Physical, $active->type);
+Assert::same(ProductType::Physical, $archived->type);
+Assert::same(ProductType::Digital, $digital->type);
+Assert::same(ProductType::Service, $service->type);
 Assert::false($draft->isPurchasable());
 Assert::true($active->isPurchasable());
 Assert::true($archived->isArchived());
