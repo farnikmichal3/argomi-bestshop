@@ -97,7 +97,7 @@ final class CategoriesPresenter extends TranslatedPresenter
             }
 
             $this->categoryOrderWriter->reorder($parsedParentId, $categoryIds);
-        } catch (JsonException | InvalidArgumentException) {
+        } catch (JsonException|InvalidArgumentException) {
             $this->flashMessage($translator->translate('categories.order.error'), 'danger');
             $this->redirect('default');
         }
