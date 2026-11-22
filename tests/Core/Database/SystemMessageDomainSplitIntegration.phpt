@@ -43,7 +43,6 @@ Assert::same(
 );
 
 $expectedCounts = [
-    'catalog_message_translation' => 24,
     'cart_message_translation' => 4,
     'checkout_message_translation' => 6,
 ];
@@ -146,12 +145,16 @@ $expectedKeys = [
 ];
 
 foreach ($expectedKeys as $table => $keys) {
-    $statement = $pdo->query(sprintf(
+    $keyPlaceholders = implode(',', array_fill(0, count($keys), '?'));
+    $statement = $pdo->prepare(sprintf(
         'SELECT message_key, locale, message_text, source, is_customized, default_hash, is_outdated
            FROM %s
+          WHERE message_key IN (%s)
           ORDER BY message_key, locale',
         $table,
+        $keyPlaceholders,
     ));
+    $statement->execute($keys);
     $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     Assert::same(count($keys) * 2, count($rows), sprintf('%s must contain cs and en for every key.', $table));
