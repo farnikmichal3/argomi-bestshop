@@ -68,7 +68,7 @@ final class CategoriesPresenter extends TranslatedPresenter
         $form->addInteger('sortOrder', 'categories.form.sort_order')
             ->setHtmlAttribute('class', 'form-control')
             ->setDefaultValue(0)
-            ->addRule(Form::MIN, 'categories.form.error.sort_order', 0);
+            ->addRule(Form::Min, 'categories.form.error.sort_order', 0);
         $form->addCheckbox('isActive', 'categories.form.active')
             ->setDefaultValue(true);
 
@@ -111,8 +111,17 @@ final class CategoriesPresenter extends TranslatedPresenter
                 return;
             }
 
+            $translations = [];
+            foreach ($values->translations as $locale => $translation) {
+                if (!is_string($locale) || !is_array($translation)) {
+                    $form->addError($translator->translate('categories.form.error.invalid'));
+                    return;
+                }
+                $translations[$locale] = $translation;
+            }
+
             try {
-                $this->categoryWriter->create($parentId, $code, $sortOrder, $active, $values->translations);
+                $this->categoryWriter->create($parentId, $code, $sortOrder, $active, $translations);
             } catch (UniqueConstraintViolationException) {
                 $form->addError($translator->translate('categories.form.error.duplicate'));
                 return;
@@ -142,7 +151,7 @@ final class CategoriesPresenter extends TranslatedPresenter
 
     /**
      * @param list<CategoryTreeItem> $nodes
-     * @return array<string, string>
+     * @return array<int|string, string>
      */
     private function createParentOptions(array $nodes): array
     {
@@ -153,7 +162,7 @@ final class CategoriesPresenter extends TranslatedPresenter
 
     /**
      * @param list<CategoryTreeItem> $nodes
-     * @param array<string, string> $options
+     * @param array<int|string, string> $options
      */
     private function appendParentOptions(array $nodes, int $depth, array &$options): void
     {
@@ -164,7 +173,7 @@ final class CategoriesPresenter extends TranslatedPresenter
     }
 
     /**
-     * @return array<string, string>
+     * @return array<int|string, string>
      */
     private function getParentOptions(): array
     {
