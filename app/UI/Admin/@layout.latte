@@ -13,6 +13,10 @@
 <body>
 	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
+    {ifset $showAdminLogout}
+        {control logoutForm}
+    {/ifset}
+
 	{include content}
 
 	 <script src="{$basePath}/assets/admin.js"></script>
