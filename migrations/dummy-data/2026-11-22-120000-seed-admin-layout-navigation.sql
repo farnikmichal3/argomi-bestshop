@@ -24,7 +24,9 @@ VALUES
     ('admin.navigation.translations', 'cs', 'Překlady', 'core', 0, NULL, 0),
     ('admin.navigation.translations', 'en', 'Translations', 'core', 0, NULL, 0),
     ('admin.dashboard.title', 'cs', 'Přehled administrace', 'core', 0, NULL, 0),
-    ('admin.dashboard.title', 'en', 'Administration dashboard', 'core', 0, NULL, 0)
+    ('admin.dashboard.title', 'en', 'Administration dashboard', 'core', 0, NULL, 0),
+    ('admin.flash.close', 'cs', 'Zavřít oznámení', 'core', 0, NULL, 0),
+    ('admin.flash.close', 'en', 'Dismiss notification', 'core', 0, NULL, 0)
 ON DUPLICATE KEY UPDATE
     id = id;
 
