@@ -193,13 +193,16 @@ final class CategoriesPresenter extends TranslatedPresenter
             $container->addText('name', 'categories.form.name')->setHtmlAttribute('class', 'form-control')->setRequired('categories.form.error.required');
             $container->addTextArea('description', 'categories.form.description')->setHtmlAttribute('class', 'form-control')->setHtmlAttribute('rows', 3);
         }
-        $form->setDefaults([
-            'parentId' => $this->editData->parentId === null ? '' : (string) $this->editData->parentId,
+        $defaults = [
             'code' => $this->editData->code,
             'sortOrder' => $this->editData->sortOrder,
             'isActive' => $this->editData->isActive,
             'translations' => $this->editData->translations,
-        ]);
+        ];
+        if ($this->editData->parentId !== null) {
+            $defaults['parentId'] = (string) $this->editData->parentId;
+        }
+        $form->setDefaults($defaults);
         $form->addSubmit('submit', 'categories.form.edit.submit')->setHtmlAttribute('class', 'btn btn-primary');
         $editCategoryId = $this->editData->id;
         $form->onSuccess[] = function (Form $form, stdClass $values) use ($translator, $editCategoryId): void {
