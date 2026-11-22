@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **555 kroků**: hotovo 184, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 361, zrušeno 7.
+Celkem **555 kroků**: hotovo 185, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 360, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -60,7 +60,7 @@ Celkem **555 kroků**: hotovo 184, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F5 | Catalog (vlna 1) | 37 | 15 | 1 | 0 | 0 | 0 | 21 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
-| F8 | Zákazníci a administrátoři | 21 | 0 | 1 | 0 | 0 | 0 | 20 | 0 |
+| F8 | Zákazníci a administrátoři | 21 | 1 | 1 | 0 | 0 | 0 | 19 | 0 |
 | F9 | Orders a Checkout | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F10 | Shipping, Payments, Mailing | 24 | 0 | 0 | 0 | 0 | 0 | 24 | 0 |
 | F11 | Front UI | 23 | 0 | 0 | 0 | 0 | 0 | 23 | 0 |
@@ -77,9 +77,9 @@ Celkem **555 kroků**: hotovo 184, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 
 ### v3.85 (22. 11. 2026)
 - Zahájen F8-11: administrátorská Identity foundation je již částečně implementována, nikoli dokončena. Existují DB tabulky účtů/rolí/vazeb, idempotentní seed základních rolí, repository pro načtení účtu a rolí, credentials DTO, `AdminAuthenticator` (ověření hashovaného hesla, aktivního stavu účtu, generická chyba, dummy hash při neznámém/neaktivním účtu), záznam posledního přihlášení, DI registrace a integrační test autentizátoru.
-- F8-11 zůstává **ROZDĚLÁNO**. Zatím chybí admin UI/login presenter a šablona, zabezpečený logout, skutečné session/cookie oddělení a celkové zabezpečení administrace. Nebyl vytvořen žádný výchozí admin účet ani heslo.
-- F8-12 (autentizace administrátora s oddělenou session/cookie) zatím nezačíná; bude navazovat až po dokončení F8-11 a bude veden jako samostatný krok.
-- F8: **0 hotovo**, **1 rozpracováno**, **20 plán**. Celkem: **184 hotovo**, **2 rozpracováno**, **1 k úpravě**, **361 plán**, **7 zrušeno**.
+- Dokončen F8-11: Identity foundation včetně schématu, rolí, repository, DTO, authenticatoru, DI, integračních testů a modulové README. CI a lokální kontroly potvrzeny uživatelem.
+- Zahájen F8-12. Přihlášení UI, logout, session/cookie izolace, ochrana admin vstupu a bezpečnostní testy jsou rozpracované a zůstávají explicitním checklistem; žádná administrace se nepovažuje za zabezpečenou před jejich dokončením. Bez seedovaného admin účtu/hesla.
+- F8: **1 hotovo**, **1 rozpracováno**, **19 plán**. Celkem: **185 hotovo**, **2 rozpracováno**, **1 k úpravě**, **360 plán**, **7 zrušeno**.
 
 ### v3.84 (22. 11. 2026)
 - Dokončeny F5-13 a F5-14: administrační formulář kategorií, strom kategorií a bezpečné řazení sourozenců metodou drag & drop; ověřena oprávnění, integrační testy, GitHub Actions CI i lokální `check.bat`.
@@ -718,7 +718,7 @@ _Košík jako doménový objekt, ceny přes Pricing a Tax._ Hotovo 0 z 16 kroků
 
 ### F8: Zákazníci a administrátoři
 
-_Dvě oddělené identity: zákazník na frontu a administrátor v administraci._ Hotovo 0 z 21 kroků; 1 rozpracováno; 20 plánováno.
+_Dvě oddělené identity: zákazník na frontu a administrátor v administraci._ Hotovo 1 z 21 kroků; 1 rozpracováno; 19 plánováno.
 
 - `[PLÁN]` **F8-01** Modul `Customer`: struktura, `CustomerFacade`
 - `[PLÁN]` **F8-02** Registrace zákazníka s ověřením e-mailu
@@ -730,13 +730,13 @@ _Dvě oddělené identity: zákazník na frontu a administrátor v administraci.
 - `[PLÁN]` **F8-08** Preferovaný jazyk zákazníka
 - `[PLÁN]` **F8-09** Přehled objednávek v účtu (čte Orders přes API)
 - `[PLÁN]` **F8-10** GDPR: export dat a anonymizace účtu
-- `[ROZDĚLÁNO]` **F8-11** Modul `Identity` pro administrátory (oddělený od zákazníků). Průběžný checklist:
+- `[HOTOVO]` **F8-11** Modul `Identity` – základ administrátorských identit oddělený od zákaznických účtů. Checklist splněn:
   - `[HOTOVO]` DB struktura `admin_user`, `admin_role`, `admin_user_role` a FK/indexy.
   - `[HOTOVO]` Idempotentní seed základních rolí (`admin`, `catalog_viewer`, `catalog_manager`, `translation_manager`); žádný výchozí administrátorský účet ani heslo.
   - `[HOTOVO]` `AdminAccountCredentials` DTO, `AdminAuthenticationRepository` (načítání účtu a rolí, záznam posledního přihlášení) a `AdminAuthenticator` (hash verification, kontrola active/disabled, generická chyba, dummy hash pro neznámý/neaktivní účet).
   - `[HOTOVO]` Explicitní DI registrace autentizátoru a integrační test schématu i autentizace; CI a lokální kontrola potvrzeny.
-  - `[PLÁN]` Login UI a Presenter, propojení formuláře s Nette User/session, bezpečný logout, přístupová ochrana admin rout/presenterů, dokumentace modulu Identity a navazující bezpečnostní ověření. Tyto body se nesmí považovat za hotové jen na základě existujícího Authenticatoru.
-- `[PLÁN]` **F8-12** Autentizace administrátora (oddělená session a cookie). Zatím nezačíná; UI, login/logout, session a cookie oddělení budou evidovány a ověřeny v tomto kroku, až bude dokončen F8-11.
+  - `[HOTOVO]` Modul README popisuje skutečný stav, role, bezpečnostní hranice a nedokončené části.
+- `[ROZDĚLÁNO]` **F8-12** Přihlášení administrátora a oddělená session/cookie. Pracovní checklist: login presenter/form/template; autentizace přes Identity `AdminAuthenticator`; bezpečný logout pouze POST; ochrana admin presenterů/rout před nepřihlášeným přístupem; session fixation/regenerace ID, cookie parametry, časové limity a CSRF; integrační a bezpečnostní testy; aktualizace dokumentace. Implementace musí vycházet z ověřené Nette konfigurace a nesmí obcházet současné role/permission resolvery.
 - `[PLÁN]` **F8-13** Role a oprávnění (ACL), seznam oprávnění po modulech
 - `[PLÁN]` **F8-14** Dvoufaktorové ověření pro všechny administrátorské účty
 - `[PLÁN]` **F8-15** Audit přihlášení a změn v administraci
