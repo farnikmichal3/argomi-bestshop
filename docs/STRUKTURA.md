@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.8 · 18. 11. 2026  
+**Revize:** 4.9 · 22. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 17. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -36,6 +36,11 @@ app/
 │   ├── Checkout/
 │   ├── Customer/
 │   ├── Identity/
+│   ├── Application/
+│   │   ├── AdminAccountCredentials.php
+│   │   ├── AdminAuthenticationRepository.php
+│   │   └── AdminAuthenticator.php
+│   └── README.md
 │   ├── Inventory/
 │   ├── Mailing/
 │   ├── Orders/
@@ -220,7 +225,7 @@ Poznámky:
 | Catalog | Produkty, kategorie, atributy, varianty, volby, obrázky a produktové vztahy |
 | Checkout | Průchod pokladnou, validace objednávkových údajů a koordinace dokončení nákupu |
 | Customer | Zákaznický profil, adresy a zákaznická data |
-| Identity | Přihlášení, administrátorské identity, role, oprávnění, bezpečnost účtů |
+| Identity | Přihlášení, administrátorské identity, role, oprávnění, bezpečnost účtů. Aktuální základ obsahuje credentials DTO, repository a Nette Authenticator; login/logout UI, session/cookie izolace a kompletní ACL jsou navazující práce (viz ROADMAP F8). |
 | Inventory | Skladové položky, pohyby, rezervace a dostupnost |
 | Mailing | E-mailové zprávy, šablony, fronta a bezpečné odesílání |
 | Orders | Objednávky, položky, snapshoty, stavy a historie |
