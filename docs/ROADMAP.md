@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.85 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.86 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -74,6 +74,13 @@ Celkem **555 kroků**: hotovo 185, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.86 (22. 11. 2026)
+- F8-12 zůstává rozpracováno; rozsah byl výslovně omezen na provozní minimum potřebné pro návrat k F5. Kompletní ACL, 2FA, audit, správu účtů/rolí v UI a pokročilou session politiku nyní neimplementujeme.
+- Přidán výběr veřejné a administrátorské PHP session ještě před Nette DI a smart autostartem. Admin používá `ARGOMI_ADMIN_SESSID`, path `/admin`, HttpOnly, SameSite Strict a Secure při HTTPS; veřejná část používá `ARGOMI_SESSID` a SameSite Lax. Request-specific hodnoty se předávají do Nette konfigurace před vytvořením kontejneru.
+- Přidána login route `/admin/login`, login presenter/form, serverová ochrana všech aktuálních admin presenterů, POST logout s CSRF, Nette session fixation ochranou a 30minutovou posuvnou expirací.
+- Přidán CLI provisioning `php bin/console identity:admin:create`; heslo se zadává skrytě, účet dostane roli `admin`, žádný účet/heslo nevzniká seedem. Role `admin` má v aktuálním základním rozsahu správu Catalog a Translation přes existující resolvery.
+- Přidána DB seed migrace textů login/logout, integrační test provisioning a test izolace session dat. GitHub Actions a lokální `check.bat` pro tento celek zatím nejsou potvrzeny; F8-12 se proto nesmí označit jako hotové.
 
 ### v3.85 (22. 11. 2026)
 - Zahájen F8-11: administrátorská Identity foundation je již částečně implementována, nikoli dokončena. Existují DB tabulky účtů/rolí/vazeb, idempotentní seed základních rolí, repository pro načtení účtu a rolí, credentials DTO, `AdminAuthenticator` (ověření hashovaného hesla, aktivního stavu účtu, generická chyba, dummy hash při neznámém/neaktivním účtu), záznam posledního přihlášení, DI registrace a integrační test autentizátoru.
@@ -736,7 +743,7 @@ _Dvě oddělené identity: zákazník na frontu a administrátor v administraci.
   - `[HOTOVO]` `AdminAccountCredentials` DTO, `AdminAuthenticationRepository` (načítání účtu a rolí, záznam posledního přihlášení) a `AdminAuthenticator` (hash verification, kontrola active/disabled, generická chyba, dummy hash pro neznámý/neaktivní účet).
   - `[HOTOVO]` Explicitní DI registrace autentizátoru a integrační test schématu i autentizace; CI a lokální kontrola potvrzeny.
   - `[HOTOVO]` Modul README popisuje skutečný stav, role, bezpečnostní hranice a nedokončené části.
-- `[ROZDĚLÁNO]` **F8-12** Přihlášení administrátora a oddělená session/cookie. Pracovní checklist: login presenter/form/template; autentizace přes Identity `AdminAuthenticator`; bezpečný logout pouze POST; ochrana admin presenterů/rout před nepřihlášeným přístupem; session fixation/regenerace ID, cookie parametry, časové limity a CSRF; integrační a bezpečnostní testy; aktualizace dokumentace. Implementace musí vycházet z ověřené Nette konfigurace a nesmí obcházet současné role/permission resolvery.
+- `[ROZDĚLÁNO]` **F8-12** Základní přihlášení administrátora a oddělená session/cookie. Implementováno: `/admin/login`, `AdminAuthenticator`, CLI provisioning bez seedovaného účtu, serverová ochrana všech aktuálních admin presenterů, POST logout s CSRF, oddělené PHP session names/cookie, Nette session fixation ochrana, 30minutová expirace a základní role `admin` v existujících Catalog/Translation resolvers. Zbývá potvrdit CI, lokální kontroly, projít skutečný HTTP login/logout a doplnit případné opravy. Kompletní ACL, 2FA, audit, admin UI pro správu účtů/rolí a pokročilá session politika jsou mimo tento krok.
 - `[PLÁN]` **F8-13** Role a oprávnění (ACL), seznam oprávnění po modulech
 - `[PLÁN]` **F8-14** Dvoufaktorové ověření pro všechny administrátorské účty
 - `[PLÁN]` **F8-15** Audit přihlášení a změn v administraci
