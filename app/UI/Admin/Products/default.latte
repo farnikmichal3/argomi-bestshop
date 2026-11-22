@@ -1,0 +1,92 @@
+{block title}{_'products.admin.title'}{/block}
+
+{block content}
+<main class="container py-5">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <h1 class="mb-0">{_'products.admin.title'}</h1>
+        <span class="text-muted">{_'products.admin.results'}: {$totalItems}</span>
+    </div>
+
+    <section class="card mb-4" aria-labelledby="product-filters-title">
+        <div class="card-body">
+            <h2 id="product-filters-title" class="h5">{_'products.admin.filters.title'}</h2>
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-12 col-md-4">
+                    <label class="form-label" for="categoryId">{_'products.admin.filter.category'}</label>
+                    <select class="form-select" id="categoryId" name="categoryId">
+                        <option value="">{_'products.admin.filter.all'}</option>
+                        {foreach $categoryOptions as $id => $label}
+                            <option value="{$id}" n:attr="selected => (string) $id === $selectedCategoryId">{$label}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label class="form-label" for="status">{_'products.admin.filter.status'}</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">{_'products.admin.filter.all'}</option>
+                        {foreach $statuses as $statusOption}
+                            <option value="{$statusOption->value}" n:attr="selected => $statusOption->value === $selectedStatus">{_'products.admin.status.' . $statusOption->value}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label class="form-label" for="type">{_'products.admin.filter.type'}</label>
+                    <select class="form-select" id="type" name="type">
+                        <option value="">{_'products.admin.filter.all'}</option>
+                        {foreach $types as $typeOption}
+                            <option value="{$typeOption->value}" n:attr="selected => $typeOption->value === $selectedType">{_'products.admin.type.' . $typeOption->value}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="col-12 col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">{_'products.admin.filter.apply'}</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">{_'products.admin.column.id'}</th>
+                    <th scope="col">{_'products.admin.column.code'}</th>
+                    <th scope="col">{_'products.admin.column.name'}</th>
+                    <th scope="col">{_'products.admin.column.type'}</th>
+                    <th scope="col">{_'products.admin.column.status'}</th>
+                    <th scope="col">{_'products.admin.column.categories'}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr n:foreach="$items as $row">
+                    <td>{$row['product']->id}</td>
+                    <td><code>{$row['product']->code}</code></td>
+                    <td>{$row['product']->name ?? '—'}</td>
+                    <td>{$row['typeLabel']}</td>
+                    <td>{$row['statusLabel']}</td>
+                    <td>{$row['categoryNames'] !== '' ? $row['categoryNames'] : '—'}</td>
+                </tr>
+                <tr n:if="$items === []">
+                    <td colspan="6" class="text-center text-muted py-4">{_'products.admin.empty'}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    {if $totalPages > 1}
+        <nav class="d-flex align-items-center justify-content-between gap-3" aria-label="{_'products.admin.pagination'}">
+            <div>
+                {if $hasPreviousPage}
+                    <a class="btn btn-outline-secondary" n:href="default, categoryId => $selectedCategoryId, status => $selectedStatus, type => $selectedType, page => $page - 1">{_'products.admin.pagination.previous'}</a>
+                {/if}
+            </div>
+            <span class="text-muted">{_'products.admin.pagination.page'} {$page} / {$totalPages}</span>
+            <div>
+                {if $hasNextPage}
+                    <a class="btn btn-outline-secondary" n:href="default, categoryId => $selectedCategoryId, status => $selectedStatus, type => $selectedType, page => $page + 1">{_'products.admin.pagination.next'}</a>
+                {/if}
+            </div>
+        </nav>
+    {/if}
+</main>
+{/block}
