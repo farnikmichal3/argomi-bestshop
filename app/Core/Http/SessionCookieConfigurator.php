@@ -11,7 +11,10 @@ use LogicException;
  */
 final class SessionCookieConfigurator
 {
-    public function configure(string $requestUri, string $scriptName, bool $secure): string
+    /**
+     * @return array{http: array{cookiePath: string, cookieSecure: bool}, session: array{cookieSamesite: 'Strict'|'Lax'}}
+     */
+    public function configure(string $requestUri, string $scriptName, bool $secure): array
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
             throw new LogicException('The session cookie must be configured before the PHP session starts.');
@@ -40,6 +43,14 @@ final class SessionCookieConfigurator
             'samesite' => $isAdminRequest ? 'Strict' : 'Lax',
         ]);
 
-        return $cookiePath;
+        return [
+            'http' => [
+                'cookiePath' => $cookiePath,
+                'cookieSecure' => $secure,
+            ],
+            'session' => [
+                'cookieSamesite' => $isAdminRequest ? 'Strict' : 'Lax',
+            ],
+        ];
     }
 }
