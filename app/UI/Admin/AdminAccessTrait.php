@@ -49,6 +49,7 @@ trait AdminAccessTrait
         $this->template->showAdminLogout = true;
         $this->template->canViewCatalog = $this->adminCatalogPermission->canView();
         $this->template->canViewTranslations = $this->adminTranslationPermission->canView();
+        $this->template->adminLocaleCode = $this->adminLocaleProvider->getDefault()->getCode();
     }
 
     protected function createComponentLogoutForm(): Form
