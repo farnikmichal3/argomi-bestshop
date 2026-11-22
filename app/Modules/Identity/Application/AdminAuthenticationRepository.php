@@ -53,7 +53,7 @@ final class AdminAuthenticationRepository
             || !is_string($passwordHash)
             || !is_string($status)
         ) {
-            throw new \\UnexpectedValueException('Administrator account data has an invalid format.');
+            throw new \UnexpectedValueException('Administrator account data has an invalid format.');
         }
 
         return new AdminAccountCredentials(
