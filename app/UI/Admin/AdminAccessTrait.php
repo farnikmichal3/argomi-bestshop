@@ -47,6 +47,10 @@ trait AdminAccessTrait
     {
         parent::beforeRender();
         $this->template->showAdminLogout = true;
+        $this->template->adminTranslator = $this->adminTranslatorFactory->createTranslator(
+            TranslationDomain::Admin,
+            $this->adminLocaleProvider->getDefault(),
+        );
         $this->template->canViewCatalog = $this->adminCatalogPermission->canView();
         $this->template->canViewTranslations = $this->adminTranslationPermission->canView();
         $this->template->adminLocaleCode = $this->adminLocaleProvider->getDefault()->getCode();
