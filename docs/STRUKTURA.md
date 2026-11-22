@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.11 · 22. 11. 2026  
+**Revize:** 4.12 · 22. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 22. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -182,12 +182,20 @@ app/
     │   ├── Catalog/
     │   ├── Customers/
     │   ├── Dashboard/
+    │   ├── DataGrid/
+    │   │   ├── AdminDataGridFactory.php
+    │   │   └── AdminDataGridTranslator.php
     │   ├── AdminAccessTrait.php
     │   ├── Identity/
     │   │   └── Login/
     │   │       ├── LoginPresenter.php
     │   │       └── default.latte
     │   ├── Orders/
+    │   ├── Products/
+    │   │   ├── ProductAdminDataGridDataSource.php
+    │   │   ├── ProductAdminDataGridFactory.php
+    │   │   ├── ProductsPresenter.php
+    │   │   └── default.latte
     │   ├── Settings/
     │   └── Translations/
     │       ├── TranslationsPresenter.php
