@@ -32,9 +32,11 @@ $localeProvider = $integration->container->getByType(LocaleProvider::class);
 
 /** @var CategoryWriter $categoryWriter */
 $categoryWriter = $integration->container->getByType(CategoryWriter::class);
+/** @var CategoryEditorReader $categoryEditorReader */
+$categoryEditorReader = $integration->container->getByType(CategoryEditorReader::class);
 /** @var TranslatorFactory $translatorFactory */
 $translatorFactory = $integration->container->getByType(TranslatorFactory::class);
-$deniedPresenter = new CategoriesPresenter($deniedCategoryTree, $categoryWriter, $deniedPermission, $localeProvider, $translatorFactory);
+$deniedPresenter = new CategoriesPresenter($deniedCategoryTree, $categoryWriter, $categoryEditorReader, $deniedPermission, $localeProvider, $translatorFactory);
 Assert::exception(
     static fn () => $deniedPresenter->renderDefault(),
     ForbiddenRequestException::class,
@@ -56,7 +58,7 @@ $viewerPermission = new class implements CatalogPermission {
 $categoryRepository = $integration->container->getByType(CategoryRepository::class);
 $categoryManagement = new CategoryManagementService($categoryRepository, $viewerPermission);
 $categoryTree = new CategoryTreeQueryService($categoryManagement);
-$viewerPresenter = new CategoriesPresenter($categoryTree, $categoryWriter, $viewerPermission, $localeProvider, $translatorFactory);
+$viewerPresenter = new CategoriesPresenter($categoryTree, $categoryWriter, $categoryEditorReader, $viewerPermission, $localeProvider, $translatorFactory);
 
 /** @var IRequest $httpRequest */
 $httpRequest = $integration->container->getByType(IRequest::class);
