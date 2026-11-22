@@ -1,3 +1,6 @@
+--TEST--
+Admin and public requests select isolated PHP session cookies
+--FILE--
 <?php
 
 declare(strict_types=1);
@@ -5,7 +8,7 @@ declare(strict_types=1);
 use App\Core\Http\SessionCookieConfigurator;
 use Tester\Assert;
 
-$rootDir = dirname(__DIR__, 2);
+$rootDir = dirname(__DIR__, 3);
 require $rootDir . '/vendor/autoload.php';
 
 $configurator = new SessionCookieConfigurator();
