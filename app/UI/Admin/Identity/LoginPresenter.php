@@ -34,11 +34,11 @@ final class LoginPresenter extends Presenter
     protected function beforeRender(): void
     {
         parent::beforeRender();
-        $translator = $this->translatorFactory->createTranslator(
-            TranslationDomain::Admin,
-            $this->localeProvider->getDefault(),
+        $locale = $this->localeProvider->getDefault();
+        $this->template->locale = $locale->getCode();
+        $this->template->setTranslator(
+            $this->translatorFactory->createTranslator(TranslationDomain::Admin, $locale),
         );
-        $this->template->setTranslator($translator);
     }
 
     protected function createComponentLoginForm(): Form
@@ -65,11 +65,8 @@ final class LoginPresenter extends Presenter
                 return;
             }
 
-            $session = $this->getSession();
-            $session->start();
-            $session->regenerateId();
-
             try {
+                // Nette SessionStorage regenerates the session ID when it persists the authenticated identity.
                 $this->getUser()->login(mb_strtolower(trim($values->email)), $values->password);
                 $this->getUser()->setExpiration('30 minutes', true);
             } catch (AuthenticationException) {
