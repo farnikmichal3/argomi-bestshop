@@ -2,10 +2,14 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && $_SERVER['HTTPS'] !== 'off';
+$httpsValue = $_SERVER['HTTPS'] ?? null;
+$requestUri = $_SERVER['REQUEST_URI'] ?? null;
+$scriptName = $_SERVER['SCRIPT_NAME'] ?? null;
+
+$isHttps = is_string($httpsValue) && $httpsValue !== '' && $httpsValue !== 'off';
 $sessionConfig = (new App\Core\Http\SessionCookieConfigurator())->configure(
-    $_SERVER['REQUEST_URI'] ?? '/',
-    $_SERVER['SCRIPT_NAME'] ?? '/index.php',
+    is_string($requestUri) ? $requestUri : '/',
+    is_string($scriptName) ? $scriptName : '/index.php',
     $isHttps,
 );
 
