@@ -42,10 +42,18 @@ final class RouterFactory
             return new RedirectResponse($basePath . '/' . $defaultLocaleCode, IResponse::S302_Found);
         });
 
-        $router->withModule('Admin')
+        $adminRouter = $router->withModule('Admin');
+
+        $adminRouter
             ->addRoute('admin', 'Dashboard:default')
             // Diagnostická stránka je navíc chráněna přímo v presenteru kontrolou Tracy debug režimu.
             ->addRoute('admin/development/sql-diagnostics', 'Development:SqlDiagnostics:default')
+            // Vnořené presentery musí být před obecnými admin routami, jinak se druhý segment
+            // chybně vyhodnotí jako akce jednosegmentového presenteru (např. Admin:Catalog).
+            ->addRoute(
+                'admin/catalog/categories[/<action>][/<id \\d+>]',
+                'Catalog:Categories:default',
+            )
             // Jednosegmentové admin stránky používají výchozí akci presenteru.
             ->addRoute('admin/<presenter>', [
                 'action' => 'default',
