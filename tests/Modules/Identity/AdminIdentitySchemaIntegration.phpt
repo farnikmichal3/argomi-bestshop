@@ -49,7 +49,7 @@ Assert::true(isset($roleCodes['catalog_manager']));
 Assert::true(isset($roleCodes['translation_manager']));
 
 $assignmentUnique = $pdo->query(
-    "SELECT COUNT(*)
+    "SELECT COUNT(DISTINCT INDEX_NAME)
      FROM information_schema.STATISTICS
      WHERE TABLE_SCHEMA = DATABASE()
        AND TABLE_NAME = 'admin_user_role'
