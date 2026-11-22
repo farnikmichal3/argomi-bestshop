@@ -28,7 +28,7 @@ Výběr session probíhá ve `www/index.php` ještě před inicializací Bootstr
 | Administrace | `ARGOMI_ADMIN_SESSID` | `/admin` (včetně případného base path) | `Strict` |
 | Veřejná část | `ARGOMI_SESSID` | aplikační base path | `Lax` |
 
-Obě cookies mají `HttpOnly`; atribut `Secure` se zapíná podle HTTPS požadavku. Serverová data se navíc ukládají do fyzicky oddělených adresářů `var/sessions/admin` a `var/sessions/public`; ani shodné session ID proto nesdílí stejné úložiště. Nette dostává odpovídající `http.cookiePath`, `http.cookieSecure`, `session.cookieSamesite` a `session.savePath` konfiguraci už při sestavení kontejneru. Test ověřuje rozdílné názvy, cesty, save paths a nezávislé načítání session dat.
+Obě cookies mají `HttpOnly`; atribut `Secure` se zapíná podle HTTPS požadavku. Serverová data se navíc ukládají do fyzicky oddělených adresářů `var/sessions/admin` a `var/sessions/public`; ani shodné session ID proto nesdílí stejné úložiště. Nette dostává odpovídající `http.cookiePath`, `http.cookieSecure`, `session.cookieSamesite` a `session.savePath` konfiguraci už při sestavení kontejneru. Test ověřuje mapování cesty požadavku na názvy, cookie parametry a fyzicky oddělené save paths.
 
 ## Základní role a oprávnění
 
