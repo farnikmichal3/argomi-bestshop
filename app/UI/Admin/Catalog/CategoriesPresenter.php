@@ -139,7 +139,6 @@ final class CategoriesPresenter extends TranslatedPresenter
         $form->setTranslator($translator);
         $form->addHidden('categoryId')
             ->setDefaultValue((string) $this->editData->id);
-        $form->addProtection('categories.delete.csrf');
         $form->addSubmit('delete', 'categories.delete.action')
             ->setHtmlAttribute('class', 'btn btn-outline-danger');
 
