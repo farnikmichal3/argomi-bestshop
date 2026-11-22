@@ -36,7 +36,7 @@ class Bootstrap
 
 
     /**
-     * @param array{http: array{cookiePath: string, cookieSecure: bool}, session: array{cookieSamesite: 'Strict'|'Lax'}}|null $sessionConfig
+     * @param array{http: array{cookiePath: string, cookieSecure: bool}, session: array{cookieSamesite: 'Strict'|'Lax', savePath: string}}|null $sessionConfig
      */
     public function bootWebApplication(?array $sessionConfig = null): Nette\DI\Container
     {
@@ -75,7 +75,7 @@ class Bootstrap
 
 
     /**
-     * @param array{http: array{cookiePath: string, cookieSecure: bool}, session: array{cookieSamesite: 'Strict'|'Lax'}}|null $sessionConfig
+     * @param array{http: array{cookiePath: string, cookieSecure: bool}, session: array{cookieSamesite: 'Strict'|'Lax', savePath: string}}|null $sessionConfig
      */
     private function setupContainer(?array $sessionConfig): void
     {
