@@ -10,7 +10,7 @@ $rootDir = dirname(__DIR__, 3);
 require $rootDir . '/vendor/autoload.php';
 
 $directory = sys_get_temp_dir() . '/argomi-session-' . bin2hex(random_bytes(6));
-$normalizePath = static fn (string $path): string => str_replace('\\\\', '/', $path);
+$normalizePath = static fn (string $path): string => str_replace('\\', '/', $path);
 $configurator = new SessionCookieConfigurator($directory);
 
 $adminPolicy = $configurator->resolvePolicy('/shop/admin/products?status=active', '/shop/index.php', true);
