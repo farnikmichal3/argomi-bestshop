@@ -676,7 +676,8 @@ _Ceny, daně a skladové hospodářství pro vlnu 1._ Hotovo 0 z 27 kroků.
 - `[PLÁN]` **F6-17** Rezervace skladu (vytvoření, uvolnění, vypršení)
 - `[PLÁN]` **F6-18** Odpis skladu při objednávce
 - `[PLÁN]` **F6-19** Pohyby skladu pro každou změnu
-- `[PLÁN]` **F6-20** Souběh: dvě objednávky na poslední kus (zámek nebo podmíněný update) a test- `[PLÁN]` **F6-21** Události `StockLow` a `OutOfStock`
+- `[PLÁN]` **F6-20** Souběh: dvě objednávky na poslední kus (zámek nebo podmíněný update) a test
+- `[PLÁN]` **F6-21** Události `StockLow` a `OutOfStock`
 - `[PLÁN]` **F6-22** Admin: příjem zboží a korekce skladu
 - `[PLÁN]` **F6-23** Testy rezervace a odpisu- `[PLÁN]` **F6-24** Texty modulů (cs, en)
 - `[PLÁN]` **F6-25** Dokumentace modulů Tax, Pricing, Inventory
