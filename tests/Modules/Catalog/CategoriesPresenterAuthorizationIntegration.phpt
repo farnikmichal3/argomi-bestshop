@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\CategoryWriter;
+use App\Modules\Catalog\Api\CategoryEditorReader;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Modules\Catalog\Application\CategoryManagementService;
 use App\Modules\Catalog\Application\CategoryRepository;
