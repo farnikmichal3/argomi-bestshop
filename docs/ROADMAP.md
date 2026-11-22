@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.83 · 21. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.84 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **554 kroků**: hotovo 181, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 362, zrušeno 7.
+Celkem **555 kroků**: hotovo 184, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 362, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **554 kroků**: hotovo 181, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 36 | 12 | 2 | 0 | 0 | 0 | 22 | 0 |
+| F5 | Catalog (vlna 1) | 37 | 15 | 1 | 0 | 0 | 0 | 21 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 0 | 0 | 0 | 0 | 0 | 21 | 0 |
@@ -74,6 +74,12 @@ Celkem **554 kroků**: hotovo 181, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.84 (22. 11. 2026)
+- Dokončeny F5-13 a F5-14: administrační formulář kategorií, strom kategorií a bezpečné řazení sourozenců metodou drag & drop; ověřena oprávnění, integrační testy, GitHub Actions CI i lokální `check.bat`.
+- Doplněn nový krok F5-37: bezpečné mazání kategorií je dokončeno; mazání blokují podkategorie a přiřazené produkty, databáze chrání vazbu produkt–kategorie pomocí `ON DELETE RESTRICT` a překlady se mažou přes FK `ON DELETE CASCADE`. CI i lokální `check.bat` prošly.
+- F5-15 zůstává dalším krokem: admin seznam produktů s filtry (kategorie, stav, typ). F5-26 zůstává rozpracováno.
+- F5: **15 hotovo**, **1 rozpracováno**, **21 plán**. Celkem: **184 hotovo**, **1 rozpracováno**, **1 k úpravě**, **362 plán**, **7 zrušeno**.
 
 ### v3.83 (21. 11. 2026)
 - Zahájen F5-13 (admin kategorií) a F5-26 (oprávnění katalogu): před administračními formuláři vzniká samostatná, testovatelná autorizační vrstva Catalog. První adaptér používá role Nette User; pozdější Identity/RBAC může vyměnit zdroj rolí bez změny aplikačních kontrol.
@@ -614,7 +620,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### F5: Catalog (vlna 1)
 
-_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 12 z 36 kroků; 0 rozpracováno.
+_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 15 z 37 kroků; 1 rozpracováno.
 
 - `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
 - `[HOTOVO]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` — typované neměnné modely a enumy stavů/typů; validace identifikátorů, kódů, SHA-256 hashe a fyzických rozměrů; doménový test bez infrastrukturních závislostí.
@@ -628,8 +634,8 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-10** Generování a kontrola slugů (unikátnost v rámci jazyka) – společné řešení pro překlady produktů a kategorií; existující unikátní indexy (locale, slug) zůstávají databázovou garancí.
 - `[HOTOVO]` **F5-11** Výpočet skladové dostupnosti souhrnně za produkt – read-only služba rozlišuje sledované, nesledované a chybějící skladové záznamy; odečítá rezervace, agreguje pouze sledované aktivní varianty a označuje dobjednání.
 - `[HOTOVO]` **F5-12** Události katalogu (`ProductCreated`, `ProductUpdated`, `ProductDeleted`) – veřejné neměnné `DomainEvent` kontrakty v `Catalog/Api/Event`, pouze validované `productId`; dispatch bude připojen k budoucím zápisovým use-case.
-- `[PLÁN]` **F5-13** Admin: formulář vytvoření a úpravy kategorie
-- `[PLÁN]` **F5-14** Admin: strom kategorií s drag & drop řazením
+- `[HOTOVO]` **F5-13** Admin: formulář vytvoření a úpravy kategorie — formulář vytvoření a úpravy kategorie včetně lokalizovaných překladů, oprávnění a integračních testů; CI i lokální `check.bat` prošly.
+- `[HOTOVO]` **F5-14** Admin: strom kategorií s drag & drop řazením — strom kategorií s bezpečným drag & drop řazením sourozenců, transakčním pořadím, oprávněními a integračními testy; CI i lokální `check.bat` prošly.
 - `[PLÁN]` **F5-15** Admin: seznam produktů s filtry (kategorie, stav, typ)
 - `[PLÁN]` **F5-16** Admin: základní záložka produktu (názvy, popisy, zařazení)
 - `[PLÁN]` **F5-17** Admin: matice variant (generování kombinací z os)
@@ -641,7 +647,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[PLÁN]` **F5-23** Admin: správa souvisejících a doporučených produktů
 - `[PLÁN]` **F5-24** Validace: kontrola povinných údajů při aktivaci produktu
 - `[PLÁN]` **F5-25** Zákaz přímého mazání: označení produktu jako archivovaný
-- `[PLÁN]` **F5-26** Oprávnění pro správu katalogu
+- `[ROZDĚLÁNO]` **F5-26** Oprávnění pro správu katalogu
 - `[PLÁN]` **F5-27** Test: načtení demo produktu 1 – bavlněné tričko (varianty velikost × barva)
 - `[PLÁN]` **F5-28** Test: načtení demo produktu 2 – GaN nabíječka (varianty výkon × počet portů × barva)
 - `[PLÁN]` **F5-29** Test: načtení demo produktu 3 – USB-C kabel (varianty délky, konektorů a barvy)
