@@ -6,6 +6,7 @@ namespace App\UI\Admin\Products;
 
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Translation\Api\TranslationDomain;
+use App\UI\Admin\AdminAccessTrait;
 use App\Presentation\TranslatedPresenter;
 use App\Shared\Domain\Locale\InvalidLocaleException;
 use App\Shared\Domain\Locale\Locale;
@@ -16,6 +17,8 @@ use Nette\Application\UI\Control;
 
 final class ProductsPresenter extends TranslatedPresenter
 {
+    use AdminAccessTrait;
+
     public function __construct(
         private readonly ProductAdminDataGridFactory $productAdminDataGridFactory,
         private readonly CatalogPermission $catalogPermission,
