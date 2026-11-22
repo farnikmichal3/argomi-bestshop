@@ -8,7 +8,6 @@ use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Application\UI\Form;
-use Nette\Security\AuthenticationException;
 use stdClass;
 
 /**
