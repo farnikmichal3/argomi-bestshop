@@ -130,6 +130,7 @@ final class ProductAdminDataGridDataSource implements IDataSource
         return $rows;
     }
 
+    /** @param array<array-key, mixed> $condition */
     public function filterOne(array $condition): self
     {
         $this->singleProductId = $this->parsePositiveInteger($condition['id'] ?? null, 'id');
