@@ -11,11 +11,13 @@ namespace App\Modules\Catalog\Application;
 final class CatalogPermissionResolver
 {
     private const VIEW_ROLES = [
+        'admin',
         'catalog_viewer',
         'catalog_manager',
     ];
 
     private const MANAGE_ROLES = [
+        'admin',
         'catalog_manager',
     ];
 
