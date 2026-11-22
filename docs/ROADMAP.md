@@ -76,7 +76,7 @@ Celkem **555 kroků**: hotovo 186, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
 ### v3.88 (22. 11. 2026)
-- Zahájena závěrečná kontrola F5-15. V repozitáři již existuje admin seznam produktů na `/admin/products`, Ublaboo DataGrid adaptér, filtry kategorie/stav/typ, stránkovaný veřejný read model Catalog, dávkové načítání lokalizovaných názvů a testy filtru, persistence, DataGrid adaptéru i překladů cs/en.
+- Zahájena závěrečná kontrola F5-15. V repozitáři již existuje admin seznam produktů na `/admin/products`, Ublaboo DataGrid adaptér, filtry kategorie/stav/typ, stránkovaný veřejný read model Catalog, dávkové načítání lokalizovaných názvů a testy filtru, persistence, DataGrid adaptéru i překladů cs/en. GitHub Actions run `44989934317` pro testy této implementace prošel; následný aktuální běh `45012311688` rovněž prošel a uživatel potvrdil úspěšný lokální `check.bat`.
 - Doplněna dokumentace modulu Catalog o veřejný kontrakt `ProductAdminListReader`, DTO, filtry, stránkování, rozsah výsledků, autorizační hranici a konkrétní testy. `STRUKTURA.md` nyní zachycuje skutečné soubory `UI/Admin/Products` a společnou infrastrukturu `UI/Admin/DataGrid`.
 - F5-15 zůstává rozpracováno do závěrečného ověření skutečného zobrazení stránky a filtrů v prohlížeči. F5-26 (oprávnění katalogu) zůstává rozpracováno.
 - Souhrn: F5 **15 hotovo**, **2 rozpracováno**, **20 plán**. Celkem **186 hotovo**, **2 rozpracováno**, **1 k úpravě**, **359 plán**, **7 zrušeno**.
