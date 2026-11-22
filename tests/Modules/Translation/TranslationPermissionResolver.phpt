@@ -19,6 +19,9 @@ Assert::false($resolver->canManage(true, ['translation_viewer']));
 Assert::true($resolver->canView(true, ['translation_manager']));
 Assert::true($resolver->canManage(true, ['translation_manager']));
 
+Assert::true($resolver->canView(true, ['admin']));
+Assert::true($resolver->canManage(true, ['admin']));
+
 Assert::false($resolver->canView(true, ['customer']));
 Assert::false($resolver->canManage(true, ['customer']));
 
