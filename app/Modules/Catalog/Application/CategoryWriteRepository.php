@@ -14,6 +14,9 @@ interface CategoryWriteRepository
     public function createCategory(?int $parentId, string $code, int $sortOrder, bool $isActive): int;
     public function updateCategory(int $categoryId, ?int $parentId, string $code, int $sortOrder, bool $isActive): void;
     public function saveTranslation(int $categoryId, Locale $locale, string $name, string $slug, ?string $description): void;
+    public function hasChildren(int $categoryId): bool;
+    public function hasProductAssignments(int $categoryId): bool;
+    public function deleteCategory(int $categoryId): void;
 
     /** @return list<int> ID všech přímých potomků daného rodiče v aktuálním pořadí. */
     public function findSiblingIds(?int $parentId): array;
