@@ -64,6 +64,28 @@ final class CategoryWriteService
         });
     }
 
+    public function delete(int $categoryId): void
+    {
+        $this->assertCanManage();
+        if ($categoryId < 1) {
+            throw new CategoryDeletionBlockedException(CategoryDeletionBlockedException::NOT_FOUND);
+        }
+
+        $this->transaction->run(function () use ($categoryId): void {
+            if (!$this->repository->parentExists($categoryId)) {
+                throw new CategoryDeletionBlockedException(CategoryDeletionBlockedException::NOT_FOUND);
+            }
+            if ($this->repository->hasChildren($categoryId)) {
+                throw new CategoryDeletionBlockedException(CategoryDeletionBlockedException::HAS_CHILDREN);
+            }
+            if ($this->repository->hasProductAssignments($categoryId)) {
+                throw new CategoryDeletionBlockedException(CategoryDeletionBlockedException::HAS_PRODUCTS);
+            }
+
+            $this->repository->deleteCategory($categoryId);
+        });
+    }
+
     /**
      * @param array<string, mixed> $translations
      * @return array<string, array{name: string, description: string|null}>
