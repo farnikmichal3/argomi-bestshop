@@ -75,7 +75,7 @@
     <div class="container-fluid pt-3" n:if="$flashes !== []">
         <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} alert-dismissible fade show" role="alert">
             {$flash->message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{_'admin.flash.close'}"></button>
         </div>
     </div>
 
