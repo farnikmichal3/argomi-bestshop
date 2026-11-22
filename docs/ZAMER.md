@@ -193,6 +193,13 @@ Závazná rozhodnutí:
 
 Bezpečnost se zavádí postupně podle ROADMAP; dokumentace nesmí tvrdit, že neimplementované prvky již fungují.
 
+### Identity a administrátorské účty
+- Zákaznická identita a administrátorská identita jsou dvě oddělené oblasti; administrátorské účty se nepoužívají jako zákaznické účty a nebudou sdílet jejich přihlašovací workflow.
+- Administrátor se autentizuje pomocí e-mailu a bezpečně uloženého hashovaného hesla. Do identity Nette se nesmí ukládat samotné heslo ani jeho hash; identity obsahuje ID, role a nezbytné bezpečné údaje.
+- Role jsou stabilní kódy. Aplikační moduly vyhodnocují přístup přes své permission/resolver kontrakty, nikoliv pouze skrytím prvků UI. První role/permission integrace je záměrně jednoduchá a není kompletní ACL/RBAC matice.
+- Cílový návrh vyžaduje oddělené administrátorské session/cookie od zákaznické session, session fixation ochranu, časové limity, bezpečný logout, CSRF a omezení pokusů o přihlášení. Tyto ochrany se implementují a ověřují postupně; aktuální stav a nedokončené části jsou vedeny v ROADMAP, zejména F8-11 a F8-12.
+- Nezakládá se výchozí administrátor ani známé heslo seedem. První účet musí být zřízen bezpečným, explicitním postupem, který bude navržen a zdokumentován před zpřístupněním administrace.
+
 ### Prostředí a destruktivní nástroje
 - Aplikační prostředí (`development`, `testing`, `staging`, `production`) musí být určeno explicitní konfigurací `parameters.app.environment`; nesmí se odvozovat pouze z `debugMode`. Výchozí hodnota v `common.neon` je `null` (fail-closed). Každé nasazení musí prostředí výslovně nastavit ve své lokální/deploy konfiguraci.
 - Destruktivní vývojové příkazy, zejména `db:reset`, jsou aktuálně povoleny pouze při přesné hodnotě `development`. Prostředí `testing` lze povolit až samostatnou změnou, a to výhradně pro izolovanou testovací databázi. Příkaz musí nejprve ověřit explicitní allowlist prostředí a při neznámém, chybějícím, testing, stagingovém nebo produkčním prostředí okamžitě skončit chybou ještě před databázovými dotazy a jakoukoliv změnou dat.
