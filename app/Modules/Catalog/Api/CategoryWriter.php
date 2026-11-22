@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Api;
 
 /**
- * Veřejné API pro vytvoření a úpravu kategorií.
+ * Veřejné API pro vytvoření, úpravu a bezpečné odstranění kategorií.
  *
  * Administrátorské UI zapisuje do katalogu výhradně přes tento kontrakt,
  * bez závislosti na aplikačních službách modulu.
@@ -34,4 +34,6 @@ interface CategoryWriter
         bool $isActive,
         array $translations,
     ): void;
+
+    public function delete(int $categoryId): void;
 }
