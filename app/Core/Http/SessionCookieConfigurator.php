@@ -23,7 +23,7 @@ final class SessionCookieConfigurator
             throw new LogicException('Unable to determine the request path for session selection.');
         }
 
-        $scriptDirectory = str_replace('\\\\', '/', dirname($scriptName));
+        $scriptDirectory = str_replace('\\', '/', dirname($scriptName));
         $basePath = $scriptDirectory === '/' || $scriptDirectory === '.' ? '' : rtrim($scriptDirectory, '/');
         $adminPath = $basePath . '/admin';
         $isAdminRequest = $requestPath === $adminPath || str_starts_with($requestPath, $adminPath . '/');
