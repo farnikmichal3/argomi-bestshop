@@ -80,18 +80,22 @@ final class AdminAuthenticationRepository
                 throw new \LogicException('The base administrator role has not been seeded.');
             }
 
-            $this->database->table('admin_user_role')->insert([
-                'admin_user_id' => $user->id,
-                'admin_role_id' => $role->id,
-            ]);
+            $userId = $user->id;
+            $roleId = $role->id;
 
-            $id = $user->id;
-
-            if (!is_int($id) && (!is_string($id) || !ctype_digit($id))) {
-                throw new \UnexpectedValueException('The created administrator ID has an invalid format.');
+            if (
+                (!is_int($userId) && (!is_string($userId) || !ctype_digit($userId)))
+                || (!is_int($roleId) && (!is_string($roleId) || !ctype_digit($roleId)))
+            ) {
+                throw new \UnexpectedValueException('Administrator role assignment identifiers have an invalid format.');
             }
 
-            return (int) $id;
+            $this->database->table('admin_user_role')->insert([
+                'admin_user_id' => (int) $userId,
+                'admin_role_id' => (int) $roleId,
+            ]);
+
+            return (int) $userId;
         });
     }
 
