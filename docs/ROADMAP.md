@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.89 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.90 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -75,13 +75,13 @@ Celkem **556 kroků**: hotovo 187, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.89 (22. 11. 2026)
+### v3.90 (22. 11. 2026)
 - Dokončen F5-15: administrační seznam produktů na `/admin/products` včetně filtrů kategorie/stav/typ a stránkování byl ověřen uživatelem přímo v prohlížeči; zobrazení i filtrování fungují správně.
-- Zahájen mezikrok F5-38 před F5-16: společný admin `@layout.latte` s responzivní Bootstrap navigací, aktivní položkou, flash zprávami, přístupným skip linkem a POST odhlášením. Zatímní odkazy: Přehled, Produkty, Kategorie a Překlady; viditelnost katalogových/překladových odkazů vychází z permission kontraktů, cílové presentery nadále kontrolují oprávnění serverově.
-- Dashboard převeden na `TranslatedPresenter` s doménou `Admin`; `html lang` se získává z výchozího aktivního locale. Přidán idempotentní seed `2026-11-22-120000-seed-admin-layout-navigation.sql` pro cs/en texty navigace, přístupnosti, flash ovládání a dashboardu.
-- Zdokumentováno pořadí skriptů: layout vkládá pouze `/assets/admin.js`; ten importuje `shared.js`, které inicializuje Bootstrap, Naja a Nette Forms. Presenterové skripty patří do bloku `scripts` za společný bundle; jednotlivé šablony nesmějí znovu inicializovat knihovny.
-- Doplněn `app/UI/Admin/README.md` a aktualizován `docs/STRUKTURA.md`. F5-38 zůstává rozpracováno do CI, lokální migrace/kontrol a HTTP ověření layoutu, navigace, responzivity a chování JS. F5-16 začne až po uzavření tohoto mezikroku.
-- Souhrn: F5 **16 hotovo**, **2 rozpracováno**, **20 plán**. Celkem **187 hotovo**, **2 rozpracováno**, **1 k úpravě**, **359 plán**, **7 zrušeno**.
+- F5-38 zůstává rozpracováno a před F5-16 nyní zahrnuje skutečné nasazení odsouhlasené šablony **AdminLTE 4**, nikoliv pouze dočasný horní Bootstrap navbar. Cílový shell používá `app-wrapper`, horní lištu, responzivní levý sidebar, hlavní obsah a patičku.
+- Navigace používá samostatný překladač domény `Admin`, takže popisky Produkty a Kategorie nejsou závislé na doméně aktuálně otevřeného presenteru. Odkazy se zobrazují podle permission kontraktů; serverové kontroly zůstávají povinné.
+- AdminLTE 4.10.2 a Bootstrap Icons 1.13.2 jsou připraveny jako lokální npm závislosti přes stávající esbuild. Bootstrap, Naja a Nette Forms zůstávají inicializovány pouze v existujícím společném vstupním bodu; vlastní Sass/DataGrid styly se sestavují odděleně.
+- Přidán idempotentní seed cs/en popisků sekcí postranní navigace. Layout, dokumentace a závislosti čekají na CI, lokální instalaci/build, migraci a ověření v prohlížeči (desktop i mobil).
+- F5-16 nezačne, dokud nebude AdminLTE layout a navigace plně ověřena a F5-38 uzavřeno. Souhrn zůstává F5 **16 hotovo**, **2 rozpracováno**, **20 plán**; celkem **187 hotovo**, **2 rozpracováno**, **1 k úpravě**, **359 plán**, **7 zrušeno**.
 
 ### v3.88 (22. 11. 2026)
 - Zahájena závěrečná kontrola F5-15. V repozitáři již existuje admin seznam produktů na `/admin/products`, Ublaboo DataGrid adaptér, filtry kategorie/stav/typ, stránkovaný veřejný read model Catalog, dávkové načítání lokalizovaných názvů a testy filtru, persistence, DataGrid adaptéru i překladů cs/en. GitHub Actions run `44989934317` pro testy této implementace prošel; následný aktuální běh `45012311688` rovněž prošel a uživatel potvrdil úspěšný lokální `check.bat`.
@@ -695,7 +695,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[PLÁN]` **F5-35** Test: načtení demo produktu 4 – kniha / výběrová káva (jednoduchý produkt s výchozí variantou)
 - `[PLÁN]` **F5-36** Test: načtení demo produktu 5 – hrnek s vlastním potiskem (zákaznické volby a příplatky)
 - `[HOTOVO]` **F5-37** Admin: bezpečné mazání kategorií — smazat lze pouze kategorii bez podkategorií a přiřazených produktů; databáze vynucuje `ON DELETE RESTRICT`, překlady se odstraní přes FK `ON DELETE CASCADE`; integrační testy, CI i lokální `check.bat` prošly.
-- `[ROZDĚLÁNO]` **F5-38** Admin: společný `@layout.latte`, responzivní navigace a jednotný vstup pro JS/CSS — postupné přidávání odkazů podle oprávnění, překlady cs/en v DB, aktivní stav, flash zprávy, skip link a ověření bez duplicitní inicializace Bootstrap/Naja/Nette Forms. Tento mezikrok předchází F5-16.
+- `[ROZDĚLÁNO]` **F5-38** Admin: společný `@layout.latte` na AdminLTE 4, responzivní postranní navigace, jednotný vstup JS/CSS a překlady nezávislé na doméně stránky; ověřit desktop, mobil, oprávnění a bezkolizní inicializaci Bootstrap/Naja/Nette Forms. Tento mezikrok předchází F5-16.
 
 ### F6: Tax, Pricing, Inventory
 
