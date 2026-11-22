@@ -77,19 +77,19 @@ final class AdminAuthenticationRepository
             $userId = $this->database->getConnection()->getInsertId();
 
             if (!ctype_digit($userId) || $userId === '0') {
-                throw new \\UnexpectedValueException('The created administrator ID has an invalid format.');
+                throw new \UnexpectedValueException('The created administrator ID has an invalid format.');
             }
 
             $role = $this->database->table('admin_role')->where('code', 'admin')->fetch();
 
             if ($role === null) {
-                throw new \\LogicException('The base administrator role has not been seeded.');
+                throw new \LogicException('The base administrator role has not been seeded.');
             }
 
             $roleId = $role->id;
 
             if (!is_int($roleId) && (!is_string($roleId) || !ctype_digit($roleId))) {
-                throw new \\UnexpectedValueException('The base administrator role ID has an invalid format.');
+                throw new \UnexpectedValueException('The base administrator role ID has an invalid format.');
             }
 
             $this->database->table('admin_user_role')->insert([
@@ -101,7 +101,7 @@ final class AdminAuthenticationRepository
         });
 
         if (!is_int($result)) {
-            throw new \\UnexpectedValueException('The administrator provisioning transaction returned an invalid result.');
+            throw new \UnexpectedValueException('The administrator provisioning transaction returned an invalid result.');
         }
 
         return $result;
