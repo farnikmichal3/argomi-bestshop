@@ -47,23 +47,19 @@ final class CreateAdminAccountCommand extends Command
         $password = $io->askHidden('Heslo (minimálně 14 znaků)');
         $confirmation = $io->askHidden('Zopakuj heslo');
 
-        if (
-            !is_string($confirmation)
-            || mb_strlen($password) < 14
-            || !hash_equals($password, $confirmation)
-        ) {
+        if (!is_string($password) || !is_string($confirmation)) {
+            $io->error('Zadané heslo není platné.');
+
+            return Command::FAILURE;
+        }
+
+        if (mb_strlen($password) < 14 || !hash_equals($password, $confirmation)) {
             $io->error('Hesla nesouhlasí nebo nesplňují minimální délku 14 znaků.');
 
             return Command::FAILURE;
         }
 
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-
-        if (!is_string($passwordHash)) {
-            $io->error('Bezpečné uložení hesla se nezdařilo.');
-
-            return Command::FAILURE;
-        }
 
         try {
             $adminId = $this->repository->createAdministrator($email, $passwordHash);
