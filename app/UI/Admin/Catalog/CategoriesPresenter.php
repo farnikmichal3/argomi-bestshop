@@ -107,35 +107,6 @@ final class CategoriesPresenter extends TranslatedPresenter
         $this->redirect('default');
     }
 
-    public function handleDelete(int $id): void
-    {
-        if (!$this->catalogPermission->canManage()) {
-            throw new ForbiddenRequestException();
-        }
-        if ($this->getHttpRequest()->getMethod() !== 'POST') {
-            throw new ForbiddenRequestException();
-        }
-
-        $translator = $this->translatorFactory->createTranslator(
-            TranslationDomain::Catalog,
-            $this->localeProvider->getDefault(),
-        );
-
-        try {
-            $this->categoryWriter->delete($id);
-            $this->flashMessage($translator->translate('categories.delete.deleted'), 'success');
-        } catch (CategoryDeletionBlockedException $exception) {
-            $messageKey = match ($exception->reason) {
-                CategoryDeletionBlockedException::HAS_CHILDREN => 'categories.delete.has_children',
-                CategoryDeletionBlockedException::HAS_PRODUCTS => 'categories.delete.has_products',
-                default => 'categories.delete.not_found',
-            };
-            $this->flashMessage($translator->translate($messageKey), 'danger');
-        }
-
-        $this->redirect('default');
-    }
-
     public function actionEdit(int $id): void
     {
         if (!$this->catalogPermission->canManage()) {
@@ -152,6 +123,53 @@ final class CategoriesPresenter extends TranslatedPresenter
         $this->template->parentOptions = $this->editParentOptions;
         $this->template->category = $this->editData;
         $this->template->locales = $this->localeProvider->getActiveLocales();
+    }
+
+    protected function createComponentDeleteForm(): Form
+    {
+        if ($this->editData === null) {
+            throw new ForbiddenRequestException();
+        }
+
+        $translator = $this->translatorFactory->createTranslator(
+            TranslationDomain::Catalog,
+            $this->localeProvider->getDefault(),
+        );
+        $form = new Form();
+        $form->setTranslator($translator);
+        $form->addHidden('categoryId')
+            ->setDefaultValue((string) $this->editData->id);
+        $form->addProtection('categories.delete.csrf');
+        $form->addSubmit('delete', 'categories.delete.action')
+            ->setHtmlAttribute('class', 'btn btn-outline-danger');
+
+        $categoryId = $this->editData->id;
+        $form->onSuccess[] = function (Form $form, stdClass $values) use ($translator, $categoryId): void {
+            if (!$this->catalogPermission->canManage()) {
+                throw new ForbiddenRequestException();
+            }
+            if (!is_string($values->categoryId) || $values->categoryId !== (string) $categoryId) {
+                $form->addError($translator->translate('categories.delete.not_found'));
+                return;
+            }
+
+            try {
+                $this->categoryWriter->delete($categoryId);
+            } catch (CategoryDeletionBlockedException $exception) {
+                $messageKey = match ($exception->reason) {
+                    CategoryDeletionBlockedException::HAS_CHILDREN => 'categories.delete.has_children',
+                    CategoryDeletionBlockedException::HAS_PRODUCTS => 'categories.delete.has_products',
+                    default => 'categories.delete.not_found',
+                };
+                $form->addError($translator->translate($messageKey));
+                return;
+            }
+
+            $this->flashMessage($translator->translate('categories.delete.deleted'), 'success');
+            $this->redirect('default');
+        };
+
+        return $form;
     }
 
     protected function createComponentEditForm(): Form
