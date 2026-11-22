@@ -81,7 +81,7 @@ final class AdminAuthenticationRepository
                 ->fetch();
 
             if ($createdUser === null) {
-                throw new \\UnexpectedValueException('The created administrator could not be reloaded.');
+                throw new \UnexpectedValueException('The created administrator could not be reloaded.');
             }
 
             $userId = $createdUser->id;
@@ -90,7 +90,7 @@ final class AdminAuthenticationRepository
                 (!is_int($userId) && (!is_string($userId) || !ctype_digit($userId)))
                 || (int) $userId < 1
             ) {
-                throw new \\UnexpectedValueException('The created administrator ID has an invalid format.');
+                throw new \UnexpectedValueException('The created administrator ID has an invalid format.');
             }
 
             $role = $this->database->table('admin_role')->where('code', 'admin')->fetch();
