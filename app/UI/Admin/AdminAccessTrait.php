@@ -4,26 +4,34 @@ declare(strict_types=1);
 
 namespace App\UI\Admin;
 
+use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Translation\Api\TranslationDomain;
+use App\Modules\Translation\Api\TranslationPermission;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Application\UI\Form;
 use stdClass;
 
 /**
- * Shared authentication boundary for every protected admin presenter.
+ * Shared authentication boundary and navigation state for protected admin presenters.
  */
 trait AdminAccessTrait
 {
     private TranslatorFactory $adminTranslatorFactory;
     private LocaleProvider $adminLocaleProvider;
+    private CatalogPermission $adminCatalogPermission;
+    private TranslationPermission $adminTranslationPermission;
 
     public function injectAdminAccess(
         TranslatorFactory $translatorFactory,
         LocaleProvider $localeProvider,
+        CatalogPermission $catalogPermission,
+        TranslationPermission $translationPermission,
     ): void {
         $this->adminTranslatorFactory = $translatorFactory;
         $this->adminLocaleProvider = $localeProvider;
+        $this->adminCatalogPermission = $catalogPermission;
+        $this->adminTranslationPermission = $translationPermission;
     }
 
     protected function startup(): void
@@ -39,6 +47,8 @@ trait AdminAccessTrait
     {
         parent::beforeRender();
         $this->template->showAdminLogout = true;
+        $this->template->canViewCatalog = $this->adminCatalogPermission->canView();
+        $this->template->canViewTranslations = $this->adminTranslationPermission->canView();
     }
 
     protected function createComponentLogoutForm(): Form
@@ -50,7 +60,9 @@ trait AdminAccessTrait
 
         $form = new Form();
         $form->setTranslator($translator);
-        $form->addSubmit('logout', 'identity.logout.submit');
+        $form->setHtmlAttribute('class', 'd-flex');
+        $form->addSubmit('logout', 'identity.logout.submit')
+            ->setHtmlAttribute('class', 'btn btn-outline-secondary btn-sm');
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
             $this->getUser()->logout(true);
