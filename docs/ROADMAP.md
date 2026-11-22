@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.87 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.88 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **555 kroků**: hotovo 186, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 360, zrušeno 7.
+Celkem **555 kroků**: hotovo 186, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 359, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **555 kroků**: hotovo 186, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 37 | 15 | 1 | 0 | 0 | 0 | 21 | 0 |
+| F5 | Catalog (vlna 1) | 37 | 15 | 2 | 0 | 0 | 0 | 20 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -74,6 +74,12 @@ Celkem **555 kroků**: hotovo 186, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.88 (22. 11. 2026)
+- Zahájena závěrečná kontrola F5-15. V repozitáři již existuje admin seznam produktů na `/admin/products`, Ublaboo DataGrid adaptér, filtry kategorie/stav/typ, stránkovaný veřejný read model Catalog, dávkové načítání lokalizovaných názvů a testy filtru, persistence, DataGrid adaptéru i překladů cs/en.
+- Doplněna dokumentace modulu Catalog o veřejný kontrakt `ProductAdminListReader`, DTO, filtry, stránkování, rozsah výsledků, autorizační hranici a konkrétní testy. `STRUKTURA.md` nyní zachycuje skutečné soubory `UI/Admin/Products` a společnou infrastrukturu `UI/Admin/DataGrid`.
+- F5-15 zůstává rozpracováno do závěrečného ověření skutečného zobrazení stránky a filtrů v prohlížeči. F5-26 (oprávnění katalogu) zůstává rozpracováno.
+- Souhrn: F5 **15 hotovo**, **2 rozpracováno**, **20 plán**. Celkem **186 hotovo**, **2 rozpracováno**, **1 k úpravě**, **359 plán**, **7 zrušeno**.
 
 ### v3.87 (22. 11. 2026)
 - Dokončen F8-12: provozní minimum administrátorské autentizace je implementováno a ověřeno. Přihlášení na `/admin/login`, serverová ochrana aktuálních chráněných admin presenterů, POST logout s CSRF, oddělené PHP sessions/cookies a úložiště, regenerace session ID, 30minutová posuvná expirace a CLI vytvoření prvního administrátora.
@@ -658,7 +664,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-12** Události katalogu (`ProductCreated`, `ProductUpdated`, `ProductDeleted`) – veřejné neměnné `DomainEvent` kontrakty v `Catalog/Api/Event`, pouze validované `productId`; dispatch bude připojen k budoucím zápisovým use-case.
 - `[HOTOVO]` **F5-13** Admin: formulář vytvoření a úpravy kategorie — formulář vytvoření a úpravy kategorie včetně lokalizovaných překladů, oprávnění a integračních testů; CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-14** Admin: strom kategorií s drag & drop řazením — strom kategorií s bezpečným drag & drop řazením sourozenců, transakčním pořadím, oprávněními a integračními testy; CI i lokální `check.bat` prošly.
-- `[PLÁN]` **F5-15** Admin: seznam produktů s filtry (kategorie, stav, typ)
+- `[ROZDĚLÁNO]` **F5-15** Admin: seznam produktů s filtry (kategorie, stav, typ) — implementace read modelu, DataGridu a testů existuje; dokončit kontrolu skutečného HTTP zobrazení a funkčnosti filtrů.
 - `[PLÁN]` **F5-16** Admin: základní záložka produktu (názvy, popisy, zařazení)
 - `[PLÁN]` **F5-17** Admin: matice variant (generování kombinací z os)
 - `[PLÁN]` **F5-18** Admin: úprava konkrétní varianty (SKU, EAN, váha, výchozí)
