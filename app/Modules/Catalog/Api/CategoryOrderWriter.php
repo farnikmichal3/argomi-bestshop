@@ -9,6 +9,6 @@ namespace App\Modules\Catalog\Api;
  */
 interface CategoryOrderWriter
 {
-    /** @param list<int> $orderedCategoryIds Úplný seznam sourozenců v požadovaném pořadí. */
+    /** @param array<mixed> $orderedCategoryIds Úplný seznam sourozenců v požadovaném pořadí. */
     public function reorder(?int $parentId, array $orderedCategoryIds): void;
 }
