@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.86 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.87 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **555 kroků**: hotovo 185, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 360, zrušeno 7.
+Celkem **555 kroků**: hotovo 186, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 360, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -60,7 +60,7 @@ Celkem **555 kroků**: hotovo 185, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F5 | Catalog (vlna 1) | 37 | 15 | 1 | 0 | 0 | 0 | 21 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
-| F8 | Zákazníci a administrátoři | 21 | 1 | 1 | 0 | 0 | 0 | 19 | 0 |
+| F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
 | F9 | Orders a Checkout | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F10 | Shipping, Payments, Mailing | 24 | 0 | 0 | 0 | 0 | 0 | 24 | 0 |
 | F11 | Front UI | 23 | 0 | 0 | 0 | 0 | 0 | 23 | 0 |
@@ -75,12 +75,21 @@ Celkem **555 kroků**: hotovo 185, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
+### v3.87 (22. 11. 2026)
+- Dokončen F8-12: provozní minimum administrátorské autentizace je implementováno a ověřeno. Přihlášení na `/admin/login`, serverová ochrana aktuálních chráněných admin presenterů, POST logout s CSRF, oddělené PHP sessions/cookies a úložiště, regenerace session ID, 30minutová posuvná expirace a CLI vytvoření prvního administrátora.
+- Opravena Nette presenter mapping cesta loginu: `Admin:Identity:Login` nyní odpovídá třídě `App\\UI\\Admin\\Identity\\Login\\LoginPresenter` v adresáři `UI/Admin/Identity/Login`; šablona zůstává v odpovídající podsložce. GitHub Actions run `45011639290` prošel a uživatel potvrdil funkční HTTP login i logout.
+- Ověřeno oddělení session: admin cookie `ARGOMI_ADMIN_SESSID`, path `/admin`, HttpOnly, SameSite Strict a Secure při HTTPS; veřejná cookie `ARGOMI_SESSID`, SameSite Lax. Serverová data jsou fyzicky oddělena v `var/sessions/admin` a `var/sessions/public`. Výběr probíhá před Nette DI a smart autostartem; request-specific `session.savePath` se předává do konfigurace kontejneru.
+- První administrátor se vytváří pouze příkazem `php bin/console identity:admin:create`; heslo se zadává skrytě, minimální délka je 14 znaků a žádný účet ani heslo se neseeduje. Role `admin` používá existující permission resolvery Catalog a Translation.
+- GitHub Actions run `45012311688` pro následnou opravu výchozí hodnoty nullable `parentId` v editačním formuláři kategorií prošel; uživatel potvrdil lokální testy a funkční úpravu kategorií. Nebyla potřeba databázová migrace.
+- Rozsah F8-12 je záměrně provozní minimum. Kompletní ACL/RBAC, 2FA, throttling/lockout, audit, správa účtů/rolí v UI, obnova hesla a pokročilá session politika zůstávají samostatnou budoucí prací. Navazujeme zpět na F5; dalším krokem je F5-15 – administrační seznam produktů s filtry. F5-26 (oprávnění katalogu) zůstává rozpracováno.
+- Souhrn: F5 **15 hotovo**, **1 rozpracováno**, **21 plán**. F8 **2 hotovo**, **0 rozpracováno**, **19 plán**. Celkem **186 hotovo**, **1 rozpracováno**, **1 k úpravě**, **360 plán**, **7 zrušeno**.
+
 ### v3.86 (22. 11. 2026)
-- F8-12 zůstává rozpracováno; rozsah byl výslovně omezen na provozní minimum potřebné pro návrat k F5. Kompletní ACL, 2FA, audit, správu účtů/rolí v UI a pokročilou session politiku nyní neimplementujeme.
+- Zahájení F8-12: schváleno provozní minimum administrátorské autentizace potřebné pro bezpečný návrat k F5. Kompletní ACL/RBAC, 2FA, audit, správu účtů/rolí v UI a pokročilou session politiku odkládáme.
 - Přidán výběr veřejné a administrátorské PHP session ještě před Nette DI a smart autostartem. Admin používá `ARGOMI_ADMIN_SESSID`, path `/admin`, HttpOnly, SameSite Strict a Secure při HTTPS; veřejná část používá `ARGOMI_SESSID` a SameSite Lax. Serverová data se ukládají do fyzicky oddělených `var/sessions/admin` a `var/sessions/public`. Request-specific hodnoty včetně `session.savePath` se předávají do Nette konfigurace před vytvořením kontejneru.
 - Přidána login route `/admin/login`, login presenter/form, serverová ochrana všech aktuálních admin presenterů, POST logout s CSRF, Nette session fixation ochranou a 30minutovou posuvnou expirací.
 - Přidán CLI provisioning `php bin/console identity:admin:create`; heslo se zadává skrytě, účet dostane roli `admin`, žádný účet/heslo nevzniká seedem. Role `admin` má v aktuálním základním rozsahu správu Catalog a Translation přes existující resolvery.
-- Přidána DB seed migrace textů login/logout, integrační test provisioning a test mapování session policy na oddělené save paths. GitHub Actions a lokální `check.bat` pro tento celek zatím nejsou potvrzeny; F8-12 se proto nesmí označit jako hotové.
+- Přidána DB seed migrace textů login/logout, integrační test provisioning a test mapování session policy na oddělené save paths.
 
 ### v3.85 (22. 11. 2026)
 - Zahájen F8-11: administrátorská Identity foundation je již částečně implementována, nikoli dokončena. Existují DB tabulky účtů/rolí/vazeb, idempotentní seed základních rolí, repository pro načtení účtu a rolí, credentials DTO, `AdminAuthenticator` (ověření hashovaného hesla, aktivního stavu účtu, generická chyba, dummy hash při neznámém/neaktivním účtu), záznam posledního přihlášení, DI registrace a integrační test autentizátoru.
@@ -743,7 +752,7 @@ _Dvě oddělené identity: zákazník na frontu a administrátor v administraci.
   - `[HOTOVO]` `AdminAccountCredentials` DTO, `AdminAuthenticationRepository` (načítání účtu a rolí, záznam posledního přihlášení) a `AdminAuthenticator` (hash verification, kontrola active/disabled, generická chyba, dummy hash pro neznámý/neaktivní účet).
   - `[HOTOVO]` Explicitní DI registrace autentizátoru a integrační test schématu i autentizace; CI a lokální kontrola potvrzeny.
   - `[HOTOVO]` Modul README popisuje skutečný stav, role, bezpečnostní hranice a nedokončené části.
-- `[ROZDĚLÁNO]` **F8-12** Základní přihlášení administrátora a oddělená session/cookie. Implementováno: `/admin/login`, `AdminAuthenticator`, CLI provisioning bez seedovaného účtu, serverová ochrana všech aktuálních admin presenterů, POST logout s CSRF, oddělené PHP session names/cookie, Nette session fixation ochrana, 30minutová expirace a základní role `admin` v existujících Catalog/Translation resolvers. Zbývá potvrdit CI, lokální kontroly, projít skutečný HTTP login/logout a doplnit případné opravy. Kompletní ACL, 2FA, audit, admin UI pro správu účtů/rolí a pokročilá session politika jsou mimo tento krok.
+- `[HOTOVO]` **F8-12** Základní přihlášení administrátora a oddělená session/cookie. Checklist splněn: login `/admin/login` s presenterem `App\\UI\\Admin\\Identity\\Login\\LoginPresenter`; serverová ochrana všech aktuálních chráněných admin presenterů přes `AdminAccessTrait`; POST logout s CSRF; oddělené PHP session names, cookies a fyzická úložiště; regenerace session ID; 30minutová posuvná expirace; CLI provisioning prvního administrátora bez seedovaného účtu/hesla. GitHub Actions runy `45011639290` a `45012311688` prošly, uživatel potvrdil funkční HTTP login/logout, funkční editaci kategorií a úspěšné lokální testy. Kompletní ACL/RBAC, 2FA, throttling/lockout, audit, správa účtů/rolí v UI, obnova hesla a pokročilá session politika zůstávají mimo tento krok.
 - `[PLÁN]` **F8-13** Role a oprávnění (ACL), seznam oprávnění po modulech
 - `[PLÁN]` **F8-14** Dvoufaktorové ověření pro všechny administrátorské účty
 - `[PLÁN]` **F8-15** Audit přihlášení a změn v administraci
