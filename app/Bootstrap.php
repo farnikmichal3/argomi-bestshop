@@ -35,7 +35,10 @@ class Bootstrap
     }
 
 
-    public function bootWebApplication(): Nette\DI\Container
+    /**
+     * @param array{http: array{cookiePath: string, cookieSecure: bool}, session: array{cookieSamesite: 'Strict'|'Lax'}}|null $sessionConfig
+     */
+    public function bootWebApplication(?array $sessionConfig = null): Nette\DI\Container
     {
         $this->initializeEnvironment();
         $this->setupContainer($sessionConfig);
