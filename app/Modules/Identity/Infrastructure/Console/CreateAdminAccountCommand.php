@@ -48,8 +48,7 @@ final class CreateAdminAccountCommand extends Command
         $confirmation = $io->askHidden('Zopakuj heslo');
 
         if (
-            !is_string($password)
-            || !is_string($confirmation)
+            !is_string($confirmation)
             || mb_strlen($password) < 14
             || !hash_equals($password, $confirmation)
         ) {
