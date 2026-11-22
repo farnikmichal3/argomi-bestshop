@@ -46,6 +46,10 @@ final class RouterFactory
             ->addRoute('admin', 'Dashboard:default')
             // Diagnostická stránka je navíc chráněna přímo v presenteru kontrolou Tracy debug režimu.
             ->addRoute('admin/development/sql-diagnostics', 'Development:SqlDiagnostics:default')
+            // Jednosegmentové admin stránky používají výchozí akci presenteru.
+            ->addRoute('admin/<presenter>', [
+                'action' => 'default',
+            ])
             ->addRoute('admin/<presenter>/<action>');
 
         // Povolené jazykové prefixy se vždy sestavují z aktivních záznamů v databázi.
