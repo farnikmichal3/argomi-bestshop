@@ -43,7 +43,7 @@ Assert::same(
 );
 
 $expectedCounts = [
-    'catalog_message_translation' => 24,
+    'catalog_message_translation' => 52,
     'cart_message_translation' => 4,
     'checkout_message_translation' => 6,
 ];
@@ -133,6 +133,20 @@ $expectedKeys = [
         'categories.status.active',
         'categories.status.inactive',
         'categories.empty',
+        'categories.form.title',
+        'categories.form.parent',
+        'categories.form.parent.none',
+        'categories.form.code',
+        'categories.form.sort_order',
+        'categories.form.active',
+        'categories.form.name',
+        'categories.form.description',
+        'categories.form.submit',
+        'categories.form.created',
+        'categories.form.error.required',
+        'categories.form.error.sort_order',
+        'categories.form.error.invalid',
+        'categories.form.error.duplicate',
     ],
     'cart_message_translation' => [
         'empty.message',
