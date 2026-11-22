@@ -1,6 +1,3 @@
---TEST--
-Catalog category ordering requires management permission and reorders complete sibling sets atomically
---FILE--
 <?php
 
 declare(strict_types=1);
@@ -94,6 +91,3 @@ try {
         $database->table('category')->where('id', $categoryId)->delete();
     }
 }
-?>
---EXPECT--
-OK
