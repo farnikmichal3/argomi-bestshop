@@ -1,8 +1,8 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.9 · 22. 11. 2026  
-**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 17. 11. 2026
+**Revize:** 4.10 · 22. 11. 2026  
+**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 22. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
 
@@ -15,6 +15,8 @@ app/
 │   ├── Logging/
 │   │   ├── LoggerFactory.php
 │   │   └── SensitiveDataProcessor.php
+│   ├── Http/
+│   │   └── SessionCookieConfigurator.php
 │   ├── Module/
 │   │   └── ModuleRegistry.php
 │   └── RouterFactory.php
@@ -36,11 +38,14 @@ app/
 │   ├── Checkout/
 │   ├── Customer/
 │   ├── Identity/
-│   ├── Application/
-│   │   ├── AdminAccountCredentials.php
-│   │   ├── AdminAuthenticationRepository.php
-│   │   └── AdminAuthenticator.php
-│   └── README.md
+│   │   ├── Application/
+│   │   │   ├── AdminAccountCredentials.php
+│   │   │   ├── AdminAuthenticationRepository.php
+│   │   │   └── AdminAuthenticator.php
+│   │   ├── Infrastructure/
+│   │   │   └── Console/
+│   │   │       └── CreateAdminAccountCommand.php
+│   │   └── README.md
 │   ├── Inventory/
 │   ├── Mailing/
 │   ├── Orders/
@@ -225,7 +230,7 @@ Poznámky:
 | Catalog | Produkty, kategorie, atributy, varianty, volby, obrázky a produktové vztahy |
 | Checkout | Průchod pokladnou, validace objednávkových údajů a koordinace dokončení nákupu |
 | Customer | Zákaznický profil, adresy a zákaznická data |
-| Identity | Přihlášení, administrátorské identity, role, oprávnění, bezpečnost účtů. Aktuální základ obsahuje credentials DTO, repository a Nette Authenticator; login/logout UI, session/cookie izolace a kompletní ACL jsou navazující práce (viz ROADMAP F8). |
+| Identity | Přihlášení a administrátorské identity. Základ obsahuje credentials DTO, repository, Nette Authenticator, login/logout UI, oddělenou session/cookie a CLI provisioning prvního administrátora. Kompletní ACL, 2FA, audit a správa účtů v UI zůstávají navazující prací (viz ROADMAP F8). |
 | Inventory | Skladové položky, pohyby, rezervace a dostupnost |
 | Mailing | E-mailové zprávy, šablony, fronta a bezpečné odesílání |
 | Orders | Objednávky, položky, snapshoty, stavy a historie |
@@ -300,7 +305,7 @@ Outbox je společný mechanismus ve `Shared`; moduly vlastní své doménové ud
 ## 5. Prezentační vrstvy
 
 ### UI/Admin
-Administrace a její presentery, Latte šablony, formuláře, komponenty a datagridy. Například `Admin:Dashboard` se mapuje na `App\UI\Admin\Dashboard\DashboardPresenter` podle pravidla `Admin: App\UI\Admin\**Presenter`. Oprávnění kontroluje Identity; samotné skrytí ovládacího prvku není autorizace.
+Administrace a její presentery, Latte šablony, formuláře, komponenty a datagridy. Například `Admin:Dashboard` se mapuje na `App\UI\Admin\Dashboard\DashboardPresenter` podle pravidla `Admin: App\UI\Admin\**Presenter`. Všechny aktuální chráněné presentery používají `AdminAccessTrait`, který vyžaduje přihlášení na serveru a poskytuje POST logout s CSRF ochranou. Výjimkou je pouze veřejně dostupný `Identity:Login`. Oprávnění modulů dále kontrolují jejich vlastní permission resolvery; samotné skrytí ovládacího prvku není autorizace.
 
 ### UI/Front
 Zákaznický obchod: katalog, účet, košík, checkout, domovská stránka a zákaznické chybové obrazovky. Například `Front:Home` se mapuje na `App\UI\Front\Home\HomePresenter` podle pravidla `Front: App\UI\Front\**Presenter`.
