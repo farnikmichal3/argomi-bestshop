@@ -100,6 +100,27 @@ final class DatabaseCategoryWriteRepository implements CategoryWriteRepository
         $selection->update($data);
     }
 
+    public function hasChildren(int $categoryId): bool
+    {
+        return $this->database->table('category')
+            ->where('parent_id', $categoryId)
+            ->fetch() !== null;
+    }
+
+    public function hasProductAssignments(int $categoryId): bool
+    {
+        return $this->database->table('product_category')
+            ->where('category_id', $categoryId)
+            ->fetch() !== null;
+    }
+
+    public function deleteCategory(int $categoryId): void
+    {
+        $this->database->table('category')
+            ->where('id', $categoryId)
+            ->delete();
+    }
+
     public function findSiblingIds(?int $parentId): array
     {
         $selection = $this->database->table('category');
