@@ -17,7 +17,7 @@ final class AdminAuthenticator implements Authenticator
     private const INVALID_CREDENTIALS_MESSAGE = 'Invalid administrator credentials.';
 
     // Valid bcrypt hash used for unknown/disabled accounts to reduce timing differences.
-    private const DUMMY_PASSWORD_HASH = '$2y$10$5F4m1w2m8Qz0v6a9s1p4eO7dX3uLkG8bH2cR9tV6aP0qW5yZ1nM3K';
+    private const DUMMY_PASSWORD_HASH = '$2y$12$lTkY4nSQXEOIhfEkSuGHkevaX7CAFvC7Mmz1NmJpWhXLvVU4/Eib2';
 
     public function __construct(
         private readonly AdminAuthenticationRepository $repository,
