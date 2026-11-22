@@ -1,1 +1,17 @@
 @use 'shared';
+
+.category-drag-handle {
+    cursor: grab;
+    display: inline-block;
+    font-size: 1.25rem;
+    line-height: 1;
+    user-select: none;
+}
+
+tr[draggable="true"] {
+    cursor: grab;
+}
+
+tr[draggable="true"]:active {
+    cursor: grabbing;
+}
