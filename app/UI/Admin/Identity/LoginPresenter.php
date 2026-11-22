@@ -50,7 +50,6 @@ final class LoginPresenter extends Presenter
 
         $form = new Form();
         $form->setTranslator($translator);
-        $form->addProtection('identity.login.expired');
         $form->addEmail('email', 'identity.login.email')
             ->setHtmlAttribute('autocomplete', 'username')
             ->setRequired('identity.login.required');
