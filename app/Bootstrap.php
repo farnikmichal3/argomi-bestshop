@@ -38,7 +38,7 @@ class Bootstrap
     public function bootWebApplication(): Nette\DI\Container
     {
         $this->initializeEnvironment();
-        $this->setupContainer();
+        $this->setupContainer($sessionConfig);
         $container = $this->configurator->createContainer();
         $container->getByType(TranslationDiagnostics::class)->register();
 
@@ -71,12 +71,20 @@ class Bootstrap
     }
 
 
-    private function setupContainer(): void
+    /**
+     * @param array{http: array{cookiePath: string, cookieSecure: bool}, session: array{cookieSamesite: 'Strict'|'Lax'}}|null $sessionConfig
+     */
+    private function setupContainer(?array $sessionConfig): void
     {
         $configDir = $this->rootDir . '/config';
         $this->configurator->addConfig($configDir . '/common.neon');
         $this->configurator->addConfig($configDir . '/services.neon');
         $this->configurator->addConfig($configDir . '/' . $this->localConfigFile);
+
+        // Request-specific cookie settings must be present before Nette smart session autostart.
+        if ($sessionConfig !== null) {
+            $this->configurator->addConfig($sessionConfig);
+        }
 
         $this->configurator->onCompile[] = static function (Configurator $configurator, Compiler $compiler): void {
             foreach (ModuleRegistry::MODULES as $module) {
