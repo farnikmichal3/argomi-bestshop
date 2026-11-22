@@ -1,49 +1,36 @@
 # Admin UI
 
-Administrace používá společný Latte layout `@layout.latte`. Všechny chráněné admin presentery jej sdílejí; login zůstává samostatnou stránkou bez administrační navigace.
+Administrace používá společný Latte layout \`@layout.latte\` postavený na **AdminLTE 4**. Login zůstává samostatnou stránkou bez administrační navigace.
 
-## Společný layout
+## AdminLTE 4
 
-Layout odpovídá za:
+- Verze šablony: \`admin-lte@4.10.2\` (MIT).
+- Základ: Bootstrap 5.3; jQuery není používáno.
+- Ikony: Bootstrap Icons \`1.13.2\`.
+- Struktura layoutu: \`app-wrapper\`, \`app-header\`, \`app-sidebar\`, \`app-main\`, \`app-footer\`.
+- Responzivní levé menu ovládá AdminLTE PushMenu přes \`data-lte-toggle="sidebar"\`.
+- Navigace se vykresluje z jediného sdíleného layoutu a nové odkazy se doplňují postupně s oprávněním a překlady.
 
-- responzivní Bootstrap navigaci a značku aplikace;
-- odkazy na Přehled, Produkty, Kategorie a Překlady;
-- zvýraznění aktuální sekce a `aria-current="page"`;
-- zobrazení pouze těch odkazů, ke kterým má přihlášený administrátor právo čtení;
-- POST formulář odhlášení s CSRF ochranou;
-- Bootstrap flash zprávy a přístupný odkaz pro přeskočení na obsah;
-- jediný vstupní bod pro administrační CSS a JavaScript.
+## Navigace a překlady
 
-Texty navigace, přístupnostní popisky a nadpis dashboardu vlastní překladová doména `Admin` v databázi. Výchozí jazyk dokumentu `html lang` se získává z `LocaleProvider`; jazyk není pevně zakódován v šabloně.
+\`AdminAccessTrait\` ověřuje přihlášení při startu presenteru a před vykreslením poskytuje layoutu:
 
-## Oprávnění navigace
+- \`canViewCatalog\` z \`CatalogPermission::canView()\`;
+- \`canViewTranslations\` z \`TranslationPermission::canView()\`;
+- \`adminLocaleCode\` z výchozího aktivního locale;
+- \`adminTranslator\`, překladač domény \`Admin\` nezávislý na překladové doméně aktuální stránky.
 
-`AdminAccessTrait` ověřuje přihlášení při startu presenteru a před vykreslením poskytuje layoutu:
-
-- `canViewCatalog` z `CatalogPermission::canView()`;
-- `canViewTranslations` z `TranslationPermission::canView()`;
-- `adminLocaleCode` z výchozího aktivního locale.
-
-Skrytí odkazu je pouze prezentační pomůcka. Každý cílový presenter nadále samostatně ověřuje oprávnění při každém požadavku i při zápisu.
+Navigační popisky Produkty a Kategorie se proto vždy překládají přes doménu Admin, nikoliv přes doménu Catalog právě otevřeného presenteru. Skrytí odkazu je pouze prezentační pomůcka; cílové presentery nadále samostatně kontrolují oprávnění.
 
 ## JavaScript a CSS
 
-- `assets/scss/admin.scss` skládá Bootstrap/shared styly a styly DataGridu.
-- `assets/js/admin.js` je jediný vstupní bod Adminu a importuje `assets/js/shared.js`.
-- `shared.js` inicializuje Bootstrap, Naja a Nette Forms.
-- Admin layout vkládá `/assets/admin.js` právě jednou. Šablony nesmějí znovu vkládat Bootstrap, Naja ani Nette Forms.
-- Presenterové rozšíření JavaScriptu patří do Latte bloku `scripts`, který se vykreslí až po společném `admin.js`.
-- Naja a Nette Forms se neinicializují znovu v jednotlivých šablonách.
+- \`assets/js/admin.js\` je jediný vstupní bod Adminu. Načte AdminLTE CSS, Bootstrap Icons, \`shared.js\` a AdminLTE JavaScript v tomto pořadí.
+- \`shared.js\` inicializuje Bootstrap, Naja a Nette Forms právě jednou.
+- esbuild z JS vstupu vytvoří \`www/assets/admin.js\` a společný CSS bundle \`www/assets/admin.css\`.
+- \`assets/scss/admin.scss\` obsahuje pouze vlastní styly administrace a DataGridu; Sass jej sestavuje do \`www/assets/admin-custom.css\`.
+- Layout načítá \`admin.css\` a \`admin-custom.css\` právě jednou. Jednotlivé šablony nesmějí znovu vkládat ani inicializovat Bootstrap, Naja, Nette Forms nebo AdminLTE.
+- Presenterové skripty patří do Latte bloku \`scripts\`, který se vykreslí až po společném bundle.
 
-Nové administrační sekce se přidávají postupně: doplní se route odkaz v layoutu, oprávnění pro jeho viditelnost, překlady cs/en a test skutečného vykreslení. Tím se zachovává jeden navigační bod a kontrola pořadí skriptů.
+## Login
 
-## Překladové klíče
-
-Seed `migrations/dummy-data/2026-11-22-120000-seed-admin-layout-navigation.sql` dodává idempotentně české a anglické texty pro:
-
-- `admin.layout.skip`, `admin.flash.close`;
-- `admin.navigation.label`, `admin.navigation.toggle`;
-- `admin.navigation.dashboard`, `admin.navigation.products`, `admin.navigation.categories`, `admin.navigation.translations`;
-- `admin.dashboard.title`.
-
-Login používá vlastní jednoduchou šablonu bez administračního layoutu a navigace.
+Login používá vlastní jednoduchou šablonu bez administračního layoutu a navigace. Sdílí pouze CSS bundle a formulářové styly.

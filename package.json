@@ -4,17 +4,19 @@
 		"@popperjs/core": "^2.11.8",
 		"bootstrap": "^5.3.8",
 		"naja": "^3.3.3",
-		"nette-forms": "^3.3"
+		"nette-forms": "^3.3",
+		"admin-lte": "4.10.2",
+		"bootstrap-icons": "1.13.2"
 	},
 	"devDependencies": {
 		"esbuild": "^0.28.2",
 		"sass": "^1.108.0"
 	},
 	"scripts": {
-		"build:css": "sass --load-path=node_modules --style=compressed assets/scss/front.scss www/assets/front.css && sass --load-path=node_modules --style=compressed assets/scss/admin.scss www/assets/admin.css",
+		"build:css": "sass --load-path=node_modules --style=compressed assets/scss/front.scss www/assets/front.css && sass --load-path=node_modules --style=compressed assets/scss/admin.scss www/assets/admin-custom.css",
 		"build:js": "esbuild assets/js/front.js assets/js/admin.js --bundle --minify --outdir=www/assets --entry-names=[name]",
 		"build": "npm run build:css && npm run build:js",
-		"watch:css": "sass --load-path=node_modules --watch assets/scss/front.scss:www/assets/front.css assets/scss/admin.scss:www/assets/admin.css",
+		"watch:css": "sass --load-path=node_modules --watch assets/scss/front.scss:www/assets/front.css assets/scss/admin.scss:www/assets/admin-custom.css",
 		"watch:js": "esbuild assets/js/front.js assets/js/admin.js --bundle --outdir=www/assets --entry-names=[name] --watch"
 	},
 	"name": "argomi-bestshop",
