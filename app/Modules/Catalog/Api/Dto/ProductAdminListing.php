@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Api\\Dto;
+namespace App\Modules\Catalog\Api\Dto;
 
 /**
  * Neměnný stránkovaný výsledek administrátorského výpisu produktů.
