@@ -41,7 +41,7 @@ application:
 	mapping:
 		*: App\Presentation\*\**Presenter
 		Front: App\UI\Front\**Presenter
-		Admin: [App\UI\Admin, '', **Presenter]
+		Admin: [App\UI\Admin, *, **Presenter]
 
 
 latte:
