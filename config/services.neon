@@ -11,6 +11,8 @@ services:
   - App\Modules\Catalog\Application\OptionResolver
   # Autorizační policy je explicitní služba, protože nespadá pod automatické suffixové vyhledávání.
   - App\Modules\Catalog\Application\CatalogPermissionResolver
+  # Identity authenticator is registered explicitly for Nette Security.
+  - App\Modules\Identity\Application\AdminAuthenticator
   # Dispatcher dostává všechny služby označené tagem domainEventListener už při kompilaci DI kontejneru.
   - App\Shared\Infrastructure\Event\SynchronousEventDispatcher(
     listeners: tagged(domainEventListener)
