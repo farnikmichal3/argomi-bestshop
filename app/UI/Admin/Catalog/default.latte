@@ -11,39 +11,66 @@
                 {control createForm}
             </div>
         </section>
+
+        <section class="mb-3" aria-label="{_'categories.order.title'}">
+            <h2 class="h4">{_'categories.order.title'}</h2>
+            <p class="text-muted">{_'categories.order.help'}</p>
+            <div n:foreach="$categoryGroups as $group" class="d-flex flex-wrap align-items-center gap-3 mb-2">
+                <span>
+                    {if $group['parentCode'] === null}
+                        {_'categories.order.root'}
+                    {else}
+                        {_'categories.order.parent'} <code>{$group['parentCode']}</code>
+                    {/if}
+                </span>
+                <form id="{$group['formId']}" method="post" action="{link reorder!}" class="m-0">
+                    <input type="hidden" name="parentId" value="{$group['parentId'] ?? ''}">
+                    <input type="hidden" name="orderedCategoryIds" value="{$group['orderedIds']}">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">{_'categories.order.save'}</button>
+                </form>
+            </div>
+        </section>
     {/if}
 
     <div class="table-responsive">
         <table class="table table-striped table-hover align-middle">
             <thead>
                 <tr>
-                    <th>{_'categories.column.id'}</th>
-                    <th>{_'categories.column.code'}</th>
-                    <th>{_'categories.column.name'}</th>
-                    <th>{_'categories.column.status'}</th>
-                    {if $canManage}<th>{_'categories.action.edit'}</th>{/if}
+                    {if $canManage}<th scope="col">{_'categories.order.drag'}</th>{/if}
+                    <th scope="col">{_'categories.column.id'}</th>
+                    <th scope="col">{_'categories.column.code'}</th>
+                    <th scope="col">{_'categories.column.name'}</th>
+                    <th scope="col">{_'categories.column.status'}</th>
+                    {if $canManage}<th scope="col">{_'categories.action.edit'}</th>{/if}
                 </tr>
             </thead>
-            <tbody>
-                <tr n:foreach="$categories as $row">
-                    <td>{$row['category']->id}</td>
-                    <td>
-                        <span>{$row['prefix']}
-                            <code>{$row['category']->code}</code>
-                        </span>
-                    </td>
-                    <td>{$row['category']->name ?? '—'}</td>
-                    <td>
-                        {if $row['category']->isActive}
-                            {_'categories.status.active'}
-                        {else}
-                            {_'categories.status.inactive'}
+            {foreach $categoryGroups as $group}
+                <tbody n:attr="data-category-sortable => $canManage ? true : null, data-form-id => $canManage ? $group['formId'] : null">
+                    <tr n:foreach="$group['rows'] as $row" n:attr="data-category-id => $canManage ? $row['category']->id : null, draggable => $canManage ? 'true' : null">
+                        {if $canManage}
+                            <td><span class="category-drag-handle" title="{_'categories.order.drag'}" aria-hidden="true">⠿</span></td>
                         {/if}
-                    </td>
-                    {if $canManage}<td><a class="btn btn-sm btn-outline-primary" n:href="edit, id => $row['category']->id">{_'categories.action.edit'}</a></td>{/if}
-                </tr>
-                <tr n:if="$categories === []">
-                    <td colspan="{if $canManage}5{else}4{/if}">{_'categories.empty'}</td>
+                        <td>{$row['category']->id}</td>
+                        <td>
+                            <span>{$row['prefix']}<code>{$row['category']->code}</code></span>
+                        </td>
+                        <td>{$row['category']->name ?? '—'}</td>
+                        <td>
+                            {if $row['category']->isActive}
+                                {_'categories.status.active'}
+                            {else}
+                                {_'categories.status.inactive'}
+                            {/if}
+                        </td>
+                        {if $canManage}
+                            <td><a class="btn btn-sm btn-outline-primary" n:href="edit, id => $row['category']->id">{_'categories.action.edit'}</a></td>
+                        {/if}
+                    </tr>
+                </tbody>
+            {/foreach}
+            <tbody n:if="$categoryGroups === []">
+                <tr>
+                    <td colspan="{if $canManage}6{else}4{/if}">{_'categories.empty'}</td>
                 </tr>
             </tbody>
         </table>
