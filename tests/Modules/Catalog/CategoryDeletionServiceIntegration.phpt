@@ -51,7 +51,6 @@ $service = new CategoryWriteService(
 $token = bin2hex(random_bytes(4));
 $parentId = null;
 $childId = null;
-$productCategoryId = null;
 $productId = null;
 
 $translations = static function (string $name) use ($localeProvider, $token): array {
@@ -74,6 +73,9 @@ try {
         static fn () => $service->delete($parentId),
         CategoryDeletionBlockedException::class,
     );
+    if (!$childBlock instanceof CategoryDeletionBlockedException) {
+        throw new RuntimeException('Expected a category deletion block for child categories.');
+    }
     Assert::same(CategoryDeletionBlockedException::HAS_CHILDREN, $childBlock->reason);
 
     $service->delete($childId);
@@ -85,28 +87,32 @@ try {
     Assert::same(0, $database->table('category_translation')->where('category_id', $parentId)->count('*'));
 
     $product = $database->table('product')->fetch();
-    Assert::notNull($product);
+    if ($product === null) {
+        throw new RuntimeException('The integration database must contain a demo product.');
+    }
     $productId = (int) $product->id;
     $parentId = $service->create(null, 'delete-assigned-' . $token, 0, true, $translations('delete-assigned'));
-    $assignment = $database->table('product_category')->insert([
+    $database->table('product_category')->insert([
         'product_id' => $productId,
         'category_id' => $parentId,
         'sort_order' => 0,
     ]);
-    $productCategoryId = (int) $assignment->id;
 
     $productBlock = Assert::exception(
         static fn () => $service->delete($parentId),
         CategoryDeletionBlockedException::class,
     );
+    if (!$productBlock instanceof CategoryDeletionBlockedException) {
+        throw new RuntimeException('Expected a category deletion block for product assignments.');
+    }
     Assert::same(CategoryDeletionBlockedException::HAS_PRODUCTS, $productBlock->reason);
     Assert::same(1, $database->table('product_category')->where('category_id', $parentId)->count('*'));
     Assert::same(1, $database->table('category')->where('id', $parentId)->count('*'));
 
     echo "OK\n";
 } finally {
-    if ($productCategoryId !== null) {
-        $database->table('product_category')->where('id', $productCategoryId)->delete();
+    if ($parentId !== null) {
+        $database->table('product_category')->where('category_id', $parentId)->delete();
     }
     if ($childId !== null) {
         $database->table('category')->where('id', $childId)->delete();
