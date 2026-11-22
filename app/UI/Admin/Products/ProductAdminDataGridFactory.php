@@ -52,16 +52,18 @@ final readonly class ProductAdminDataGridFactory
             $categoryOptions,
         );
 
+        $allLabel = (string) $catalogTranslator->translate('products.admin.filter.all');
+
         $grid->addFilterSelect(
             'categoryId',
             'products.admin.filter.category',
             $categoryOptions,
             'categoryId',
-        )->setPrompt($catalogTranslator->translate('products.admin.filter.all'));
+        )->setPrompt($allLabel);
 
         $statusOptions = [];
         foreach (\App\Modules\Catalog\Api\ProductAdminStatus::cases() as $status) {
-            $statusOptions[$status->value] = $catalogTranslator->translate('products.admin.status.' . $status->value);
+            $statusOptions[$status->value] = (string) $catalogTranslator->translate('products.admin.status.' . $status->value);
         }
 
         $grid->addFilterSelect(
@@ -69,11 +71,11 @@ final readonly class ProductAdminDataGridFactory
             'products.admin.filter.status',
             $statusOptions,
             'status',
-        )->setPrompt($catalogTranslator->translate('products.admin.filter.all'));
+        )->setPrompt($allLabel);
 
         $typeOptions = [];
         foreach (\App\Modules\Catalog\Api\ProductAdminType::cases() as $type) {
-            $typeOptions[$type->value] = $catalogTranslator->translate('products.admin.type.' . $type->value);
+            $typeOptions[$type->value] = (string) $catalogTranslator->translate('products.admin.type.' . $type->value);
         }
 
         $grid->addFilterSelect(
@@ -81,7 +83,7 @@ final readonly class ProductAdminDataGridFactory
             'products.admin.filter.type',
             $typeOptions,
             'type',
-        )->setPrompt($catalogTranslator->translate('products.admin.filter.all'));
+        )->setPrompt($allLabel);
 
         return $grid;
     }

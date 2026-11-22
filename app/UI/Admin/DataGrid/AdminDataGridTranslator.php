@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\UI\Admin\DataGrid;
 
+use InvalidArgumentException;
 use Nette\Localization\Translator;
+use Stringable;
 
 /**
  * Překládá interní klíče Ublaboo DataGrid přes databázovou doménu Admin.
@@ -51,16 +53,17 @@ final readonly class AdminDataGridTranslator implements Translator
 
     public function translate(mixed $message, mixed ...$parameters): string
     {
-        if (!is_string($message)) {
-            return $this->agendaTranslator->translate($message, ...$parameters);
+        if (!is_string($message) && !$message instanceof Stringable) {
+            throw new InvalidArgumentException('Překladový klíč musí být text nebo Stringable.');
         }
 
+        $message = (string) $message;
         $adminKey = self::MESSAGE_KEYS[$message] ?? null;
 
         if ($adminKey !== null) {
-            return $this->adminTranslator->translate($adminKey, ...$parameters);
+            return (string) $this->adminTranslator->translate($adminKey, ...$parameters);
         }
 
-        return $this->agendaTranslator->translate($message, ...$parameters);
+        return (string) $this->agendaTranslator->translate($message, ...$parameters);
     }
 }

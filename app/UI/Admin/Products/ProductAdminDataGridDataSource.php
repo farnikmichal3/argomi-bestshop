@@ -121,8 +121,8 @@ final class ProductAdminDataGridDataSource implements IDataSource
                 'id' => $item->id,
                 'code' => $item->code,
                 'name' => $item->name ?? '—',
-                'type' => $this->translator->translate('products.admin.type.' . $item->type->value),
-                'status' => $this->translator->translate('products.admin.status.' . $item->status->value),
+                'type' => (string) $this->translator->translate('products.admin.type.' . $item->type->value),
+                'status' => (string) $this->translator->translate('products.admin.status.' . $item->status->value),
                 'categories' => implode(', ', $item->categoryNames),
             ];
         }
@@ -130,9 +130,6 @@ final class ProductAdminDataGridDataSource implements IDataSource
         return $rows;
     }
 
-    /**
-     * @param array<string, mixed> $condition
-     */
     public function filterOne(array $condition): self
     {
         $this->singleProductId = $this->parsePositiveInteger($condition['id'] ?? null, 'id');
