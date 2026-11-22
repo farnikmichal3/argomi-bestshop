@@ -101,8 +101,8 @@ final class ProductsPresenter extends TranslatedPresenter
         $this->template->items = $items;
         $this->template->categoryOptions = $categoryOptions;
         $this->template->selectedCategoryId = $parsedCategoryId === null ? '' : (string) $parsedCategoryId;
-        $this->template->selectedStatus = $selectedStatus?->value ?? '';
-        $this->template->selectedType = $selectedType?->value ?? '';
+        $this->template->selectedStatus = $status ?? '';
+        $this->template->selectedType = $type ?? '';
         $this->template->page = $listing->page;
         $this->template->totalPages = $listing->totalPages;
         $this->template->totalItems = $listing->totalItems;
