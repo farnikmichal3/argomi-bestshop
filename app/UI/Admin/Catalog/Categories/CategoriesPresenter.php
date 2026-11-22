@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Admin\CatalogModule\Categories;
+namespace App\UI\Admin\Catalog\Categories;
 
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\CategoryDeletionBlockedException;

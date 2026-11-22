@@ -12,7 +12,7 @@ use App\Modules\Catalog\Application\CategoryManagementService;
 use App\Modules\Catalog\Application\CategoryRepository;
 use App\Modules\Catalog\Infrastructure\Api\CategoryTreeQueryService;
 use App\Shared\Domain\Locale\LocaleProvider;
-use App\UI\Admin\CatalogModule\Categories\CategoriesPresenter;
+use App\UI\Admin\Catalog\Categories\CategoriesPresenter;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\TemplateFactory;
 use Nette\Http\IRequest;
