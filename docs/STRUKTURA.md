@@ -230,7 +230,7 @@ Poznámky:
 | Catalog | Produkty, kategorie, atributy, varianty, volby, obrázky a produktové vztahy |
 | Checkout | Průchod pokladnou, validace objednávkových údajů a koordinace dokončení nákupu |
 | Customer | Zákaznický profil, adresy a zákaznická data |
-| Identity | Přihlášení a administrátorské identity. Základ obsahuje credentials DTO, repository, Nette Authenticator, login/logout UI, oddělenou session/cookie a CLI provisioning prvního administrátora. Kompletní ACL, 2FA, audit a správa účtů v UI zůstávají navazující prací (viz ROADMAP F8). |
+| Identity | Přihlášení a administrátorské identity. Základ obsahuje credentials DTO, repository, Nette Authenticator, login/logout UI, oddělenou session/cookie i serverové úložiště (`var/sessions/admin`, `var/sessions/public`) a CLI provisioning prvního administrátora. Kompletní ACL, 2FA, audit a správa účtů v UI zůstávají navazující prací (viz ROADMAP F8). |
 | Inventory | Skladové položky, pohyby, rezervace a dostupnost |
 | Mailing | E-mailové zprávy, šablony, fronta a bezpečné odesílání |
 | Orders | Objednávky, položky, snapshoty, stavy a historie |
