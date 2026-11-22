@@ -74,10 +74,23 @@ final class AdminAuthenticationRepository
                 'status' => 'active',
             ]);
 
-            $userId = $this->database->getConnection()->getInsertId();
+            // Resolve the new ID through the unique email key instead of relying
+            // on driver-specific lastInsertId() return semantics.
+            $createdUser = $this->database->table('admin_user')
+                ->where('email', $email)
+                ->fetch();
 
-            if (!ctype_digit($userId) || $userId === '0') {
-                throw new \UnexpectedValueException('The created administrator ID has an invalid format.');
+            if ($createdUser === null) {
+                throw new \\UnexpectedValueException('The created administrator could not be reloaded.');
+            }
+
+            $userId = $createdUser->id;
+
+            if (
+                (!is_int($userId) && (!is_string($userId) || !ctype_digit($userId)))
+                || (int) $userId < 1
+            ) {
+                throw new \\UnexpectedValueException('The created administrator ID has an invalid format.');
             }
 
             $role = $this->database->table('admin_role')->where('code', 'admin')->fetch();
