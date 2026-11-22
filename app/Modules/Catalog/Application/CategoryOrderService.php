@@ -20,7 +20,7 @@ final class CategoryOrderService
         private readonly CatalogPermission $permission,
     ) {}
 
-    /** @param list<int> $orderedCategoryIds */
+    /** @param array<mixed> $orderedCategoryIds */
     public function reorder(?int $parentId, array $orderedCategoryIds): void
     {
         if (!$this->permission->canManage()) {
