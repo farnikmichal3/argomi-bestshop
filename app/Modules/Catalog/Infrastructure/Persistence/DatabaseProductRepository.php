@@ -10,6 +10,7 @@ use App\Modules\Catalog\Application\Dto\ProductListItemDto;
 use App\Modules\Catalog\Application\Dto\ProductTranslationDto;
 use App\Modules\Catalog\Application\ProductRepository;
 use App\Modules\Catalog\Application\ProductSortOrder;
+use App\Modules\Catalog\Domain\Product\ProductType;
 use App\Shared\Domain\Locale\Locale;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -239,9 +240,16 @@ final class DatabaseProductRepository implements ProductRepository
     {
         $status = $row->status;
         $code = $row->code;
+        $type = $row->type;
 
-        if (!is_string($status) || !is_string($code)) {
-            throw new UnexpectedValueException('Databázový produkt obsahuje neplatný stav nebo kód.');
+        if (!is_string($status) || !is_string($code) || !is_string($type)) {
+            throw new UnexpectedValueException('Databázový produkt obsahuje neplatný stav, kód nebo typ.');
+        }
+
+        $productType = ProductType::tryFrom($type);
+
+        if ($productType === null) {
+            throw new UnexpectedValueException('Databázový produkt obsahuje nepodporovaný typ.');
         }
 
         return new ProductDto(
@@ -251,6 +259,7 @@ final class DatabaseProductRepository implements ProductRepository
             $this->mapInteger($row->tax_class_id, 'product.tax_class_id'),
             $this->mapDateTime($row->created_at, 'product.created_at'),
             $this->mapDateTime($row->updated_at, 'product.updated_at'),
+            $productType,
         );
     }
 
