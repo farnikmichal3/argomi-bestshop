@@ -50,7 +50,6 @@ trait AdminAccessTrait
 
         $form = new Form();
         $form->setTranslator($translator);
-        $form->addProtection('identity.logout.expired');
         $form->addSubmit('logout', 'identity.logout.submit');
 
         $form->onSuccess[] = function (Form $form, stdClass $values): void {
