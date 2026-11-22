@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Api;
+namespace App\Modules\Catalog\Api;
 
-use App\\Modules\\Catalog\\Api\\Dto\\ProductAdminListFilter;
-use App\\Modules\\Catalog\\Api\\Dto\\ProductAdminListing;
-use App\\Shared\\Domain\\Locale\\Locale;
+use App\Modules\Catalog\Api\Dto\ProductAdminListFilter;
+use App\Modules\Catalog\Api\Dto\ProductAdminListing;
+use App\Shared\Domain\Locale\Locale;
 
 /**
  * Veřejný čtecí kontrakt administrátorského katalogového výpisu.
