@@ -1,0 +1,13 @@
+{block title}{_'categories.edit.title'}{/block}
+
+{block content}
+<main class="container py-5">
+    <h1>{_'categories.edit.title'}</h1>
+    <section class="card">
+        <div class="card-body">
+            {control editForm}
+            <a class="btn btn-outline-secondary mt-3" n:href="default">{_'categories.edit.cancel'}</a>
+        </div>
+    </section>
+</main>
+{/block}
