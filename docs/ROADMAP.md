@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.90 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.91 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -75,12 +75,12 @@ Celkem **556 kroků**: hotovo 187, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.90 (22. 11. 2026)
+### v3.91 (22. 11. 2026)
 - Dokončen F5-15: administrační seznam produktů na `/admin/products` včetně filtrů kategorie/stav/typ a stránkování byl ověřen uživatelem přímo v prohlížeči; zobrazení i filtrování fungují správně.
 - F5-38 zůstává rozpracováno a před F5-16 nyní zahrnuje skutečné nasazení odsouhlasené šablony **AdminLTE 4**, nikoliv pouze dočasný horní Bootstrap navbar. Cílový shell používá `app-wrapper`, horní lištu, responzivní levý sidebar, hlavní obsah a patičku.
 - Navigace používá samostatný překladač domény `Admin`, takže popisky Produkty a Kategorie nejsou závislé na doméně aktuálně otevřeného presenteru. Odkazy se zobrazují podle permission kontraktů; serverové kontroly zůstávají povinné.
 - AdminLTE 4.10.2 a Bootstrap Icons 1.13.2 jsou připraveny jako lokální npm závislosti přes stávající esbuild. Bootstrap, Naja a Nette Forms zůstávají inicializovány pouze v existujícím společném vstupním bodu; vlastní Sass/DataGrid styly se sestavují odděleně.
-- Přidán idempotentní seed cs/en popisků sekcí postranní navigace. Layout, dokumentace a závislosti čekají na CI, lokální instalaci/build, migraci a ověření v prohlížeči (desktop i mobil).
+- Přidán idempotentní seed cs/en popisků sekcí postranní navigace. GitHub Actions na sloučené větvi main úspěšně ověřily Composer/MySQL migrace, integrační testy, PHPStan, coding standard, architekturu, npm ci, produkční build assetů a npm audit (runs `45015053106`, `45015053052`, `45015052975`). Zbývá lokální instalace/build, aplikace migrace a HTTP ověření v prohlížeči (desktop i mobil).
 - F5-16 nezačne, dokud nebude AdminLTE layout a navigace plně ověřena a F5-38 uzavřeno. Souhrn zůstává F5 **16 hotovo**, **2 rozpracováno**, **20 plán**; celkem **187 hotovo**, **2 rozpracováno**, **1 k úpravě**, **359 plán**, **7 zrušeno**.
 
 ### v3.88 (22. 11. 2026)
