@@ -23,6 +23,8 @@ use stdClass;
 final class CategoriesPresenter extends TranslatedPresenter
 {
     private ?CategoryEditorData $editData = null;
+    /** @var array<int|string, string> */
+    private array $editParentOptions = [];
 
     public function __construct(
         private readonly CategoryTreeReader $categoryTree,
@@ -68,7 +70,8 @@ final class CategoriesPresenter extends TranslatedPresenter
         $tree = $this->categoryTree->findTree($this->localeProvider->getDefault());
         $excludedIds = $this->collectExcludedIds($tree, $id);
         $excludedIds[] = $id;
-        $this->template->parentOptions = $this->createParentOptions($tree, $excludedIds);
+        $this->editParentOptions = $this->createParentOptions($tree, $excludedIds);
+        $this->template->parentOptions = $this->editParentOptions;
         $this->template->category = $this->editData;
         $this->template->locales = $this->localeProvider->getActiveLocales();
     }
@@ -81,7 +84,7 @@ final class CategoriesPresenter extends TranslatedPresenter
         $translator = $this->translatorFactory->createTranslator(TranslationDomain::Catalog, $this->localeProvider->getDefault());
         $form = new Form();
         $form->setTranslator($translator);
-        $form->addSelect('parentId', 'categories.form.parent', $this->template->parentOptions)->setHtmlAttribute('class', 'form-select')->setPrompt('categories.form.parent.none');
+        $form->addSelect('parentId', 'categories.form.parent', $this->editParentOptions)->setHtmlAttribute('class', 'form-select')->setPrompt('categories.form.parent.none');
         $form->addText('code', 'categories.form.code')->setHtmlAttribute('class', 'form-control')->setRequired('categories.form.error.required');
         $form->addInteger('sortOrder', 'categories.form.sort_order')->setHtmlAttribute('class', 'form-control')->addRule(Form::Min, 'categories.form.error.sort_order', 0);
         $form->addCheckbox('isActive', 'categories.form.active');
@@ -100,7 +103,8 @@ final class CategoriesPresenter extends TranslatedPresenter
             'translations' => $this->editData->translations,
         ]);
         $form->addSubmit('submit', 'categories.form.edit.submit')->setHtmlAttribute('class', 'btn btn-primary');
-        $form->onSuccess[] = function (Form $form, stdClass $values) use ($translator): void {
+        $editCategoryId = $this->editData->id;
+        $form->onSuccess[] = function (Form $form, stdClass $values) use ($translator, $editCategoryId): void {
             if (!$this->catalogPermission->canManage()) {
                 throw new ForbiddenRequestException();
             }
@@ -126,7 +130,7 @@ final class CategoriesPresenter extends TranslatedPresenter
                 $translations[$locale] = $translation;
             }
             try {
-                $this->categoryWriter->update($this->editData->id, $parentId, $values->code, $values->sortOrder, $values->isActive, $translations);
+                $this->categoryWriter->update($editCategoryId, $parentId, $values->code, $values->sortOrder, $values->isActive, $translations);
             } catch (UniqueConstraintViolationException) {
                 $form->addError($translator->translate('categories.form.error.duplicate'));
                 return;
