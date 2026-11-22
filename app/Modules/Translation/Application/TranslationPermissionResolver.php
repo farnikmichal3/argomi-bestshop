@@ -10,11 +10,13 @@ namespace App\Modules\Translation\Application;
 final class TranslationPermissionResolver
 {
     private const VIEW_ROLES = [
+        'admin',
         'translation_viewer',
         'translation_manager',
     ];
 
     private const MANAGE_ROLES = [
+        'admin',
         'translation_manager',
     ];
 
