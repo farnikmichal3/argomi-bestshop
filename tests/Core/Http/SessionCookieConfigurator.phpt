@@ -1,5 +1,10 @@
 --TEST--
 Admin and public requests use separate cookies and server-side session storage
+--INI--
+output_buffering=4096
+session.use_cookies=0
+session.use_only_cookies=0
+session.use_strict_mode=0
 --FILE--
 <?php
 
@@ -11,9 +16,6 @@ require $rootDir . '/vendor/autoload.php';
 
 $directory = sys_get_temp_dir() . '/argomi-session-' . bin2hex(random_bytes(6));
 mkdir($directory, 0700);
-ini_set('session.use_cookies', '0');
-ini_set('session.use_only_cookies', '0');
-ini_set('session.use_strict_mode', '0');
 
 $configurator = new SessionCookieConfigurator($directory);
 
