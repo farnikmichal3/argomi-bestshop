@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Api\Dto;
 
-use App\Modules\Catalog\Domain\Product\ProductStatus;
-use App\Modules\Catalog\Domain\Product\ProductType;
+use App\Modules\Catalog\Api\ProductAdminStatus;
+use App\Modules\Catalog\Api\ProductAdminType;
 use InvalidArgumentException;
 
 /**
@@ -15,8 +15,8 @@ final readonly class ProductAdminListFilter
 {
     public function __construct(
         public ?int $categoryId = null,
-        public ?ProductStatus $status = null,
-        public ?ProductType $type = null,
+        public ?ProductAdminStatus $status = null,
+        public ?ProductAdminType $type = null,
         public int $page = 1,
         public int $perPage = 12,
     ) {

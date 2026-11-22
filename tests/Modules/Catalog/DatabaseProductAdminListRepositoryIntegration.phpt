@@ -5,8 +5,8 @@ Catalog admin product listing includes all lifecycle states and batches localize
 
 use App\Modules\Catalog\Api\Dto\ProductAdminListFilter;
 use App\Modules\Catalog\Api\ProductAdminListReader;
-use App\Modules\Catalog\Domain\Product\ProductStatus;
-use App\Modules\Catalog\Domain\Product\ProductType;
+use App\Modules\Catalog\Api\ProductAdminStatus;
+use App\Modules\Catalog\Api\ProductAdminType;
 use App\Shared\Domain\Locale\Locale;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
@@ -30,8 +30,8 @@ Assert::same(12, $all->perPage);
 Assert::same(1, $all->items[0]->id);
 Assert::same('tshirt-printed', $all->items[0]->code);
 Assert::same('Tričko s potiskem', $all->items[0]->name);
-Assert::same(ProductType::Physical, $all->items[0]->type);
-Assert::same(ProductStatus::Active, $all->items[0]->status);
+Assert::same(ProductAdminType::Physical, $all->items[0]->type);
+Assert::same(ProductAdminStatus::Active, $all->items[0]->status);
 Assert::same(['Oblečení'], $all->items[0]->categoryNames);
 
 // Kategorie omezuje výsledky na produkty přímo přiřazené do dané kategorie.

@@ -9,8 +9,8 @@ use App\Modules\Catalog\Api\CategoryTreeItem;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\Dto\ProductAdminListFilter;
 use App\Modules\Catalog\Api\ProductAdminListReader;
-use App\Modules\Catalog\Domain\Product\ProductStatus;
-use App\Modules\Catalog\Domain\Product\ProductType;
+use App\Modules\Catalog\Api\ProductAdminStatus;
+use App\Modules\Catalog\Api\ProductAdminType;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Presentation\TranslatedPresenter;
@@ -54,7 +54,7 @@ final class ProductsPresenter extends TranslatedPresenter
 
         $selectedStatus = $status === null || $status === ''
             ? null
-            : ProductStatus::tryFrom($status);
+            : ProductAdminStatus::tryFrom($status);
 
         if ($status !== null && $status !== '' && $selectedStatus === null) {
             throw new BadRequestException('Neplatný filtr stavu produktu.');
@@ -62,7 +62,7 @@ final class ProductsPresenter extends TranslatedPresenter
 
         $selectedType = $type === null || $type === ''
             ? null
-            : ProductType::tryFrom($type);
+            : ProductAdminType::tryFrom($type);
 
         if ($type !== null && $type !== '' && $selectedType === null) {
             throw new BadRequestException('Neplatný filtr typu produktu.');
@@ -109,8 +109,8 @@ final class ProductsPresenter extends TranslatedPresenter
         $this->template->hasPreviousPage = $listing->page > 1;
         $this->template->hasNextPage = $listing->page < $listing->totalPages;
         $this->template->canManage = $this->catalogPermission->canManage();
-        $this->template->statuses = ProductStatus::cases();
-        $this->template->types = ProductType::cases();
+        $this->template->statuses = ProductAdminStatus::cases();
+        $this->template->types = ProductAdminType::cases();
     }
 
     /**

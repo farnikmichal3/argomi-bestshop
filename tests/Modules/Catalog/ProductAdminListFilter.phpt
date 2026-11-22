@@ -4,8 +4,8 @@ Catalog admin list filter validates category and pagination boundaries
 <?php
 
 use App\Modules\Catalog\Api\Dto\ProductAdminListFilter;
-use App\Modules\Catalog\Domain\Product\ProductStatus;
-use App\Modules\Catalog\Domain\Product\ProductType;
+use App\Modules\Catalog\Api\ProductAdminStatus;
+use App\Modules\Catalog\Api\ProductAdminType;
 use Tester\Assert;
 
 require dirname(__DIR__, 3) . '/vendor/autoload.php';
@@ -19,8 +19,8 @@ Assert::same(12, $default->perPage);
 
 $filtered = new ProductAdminListFilter(
     categoryId: 7,
-    status: ProductStatus::Archived,
-    type: ProductType::Digital,
+    status: ProductAdminStatus::Archived,
+    type: ProductAdminType::Digital,
     page: 3,
     perPage: 24,
 );

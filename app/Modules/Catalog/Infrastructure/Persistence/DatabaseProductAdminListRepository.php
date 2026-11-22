@@ -8,6 +8,8 @@ use App\Modules\Catalog\Api\Dto\ProductAdminListFilter;
 use App\Modules\Catalog\Api\Dto\ProductAdminListing;
 use App\Modules\Catalog\Api\Dto\ProductAdminListItem;
 use App\Modules\Catalog\Api\ProductAdminListReader;
+use App\Modules\Catalog\Api\ProductAdminStatus;
+use App\Modules\Catalog\Api\ProductAdminType;
 use App\Modules\Catalog\Domain\Product\ProductStatus;
 use App\Modules\Catalog\Domain\Product\ProductType;
 use App\Shared\Domain\Locale\Locale;
@@ -103,8 +105,8 @@ final class DatabaseProductAdminListRepository implements ProductAdminListReader
                 $productId,
                 $code,
                 $productNames[$productId] ?? null,
-                $type,
-                $status,
+                ProductAdminType::from($type->value),
+                ProductAdminStatus::from($status->value),
                 $categoryNames[$productId] ?? [],
             );
         }

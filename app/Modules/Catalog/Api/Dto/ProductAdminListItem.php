@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Api\Dto;
 
-use App\Modules\Catalog\Domain\Product\ProductStatus;
-use App\Modules\Catalog\Domain\Product\ProductType;
+use App\Modules\Catalog\Api\ProductAdminStatus;
+use App\Modules\Catalog\Api\ProductAdminType;
 
 /**
  * Veřejná položka administrátorského výpisu produktu.
@@ -19,8 +19,8 @@ final readonly class ProductAdminListItem
         public int $id,
         public string $code,
         public ?string $name,
-        public ProductType $type,
-        public ProductStatus $status,
+        public ProductAdminType $type,
+        public ProductAdminStatus $status,
         public array $categoryNames,
     ) {}
 }
