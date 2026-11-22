@@ -77,7 +77,7 @@ final class AdminAuthenticationRepository
             $role = $this->database->table('admin_role')->where('code', 'admin')->fetch();
 
             if ($role === null) {
-                throw new \\LogicException('The base administrator role has not been seeded.');
+                throw new \LogicException('The base administrator role has not been seeded.');
             }
 
             $this->database->table('admin_user_role')->insert([
@@ -88,7 +88,7 @@ final class AdminAuthenticationRepository
             $id = $user->id;
 
             if (!is_int($id) && (!is_string($id) || !ctype_digit($id))) {
-                throw new \\UnexpectedValueException('The created administrator ID has an invalid format.');
+                throw new \UnexpectedValueException('The created administrator ID has an invalid format.');
             }
 
             return (int) $id;
