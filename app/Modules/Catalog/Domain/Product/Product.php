@@ -14,6 +14,7 @@ final readonly class Product
         public string $code,
         public ProductStatus $status,
         public int $taxClassId,
+        public ProductType $type = ProductType::Physical,
     ) {
         if ($id < 1) {
             throw new InvalidArgumentException('ID produktu musí být kladné.');
