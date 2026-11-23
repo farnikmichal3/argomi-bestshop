@@ -14,10 +14,10 @@
 	},
 	"scripts": {
 		"build:css": "sass --load-path=node_modules --style=compressed assets/scss/front.scss www/assets/front.css && sass --load-path=node_modules --style=compressed assets/scss/admin.scss www/assets/admin-custom.css",
-		"build:js": "esbuild assets/js/front.js assets/js/admin.js assets/css/admin.css --bundle --minify --outdir=www/assets --entry-names=[name] --loader:.woff=file --loader:.woff2=file --asset-names=fonts/[name]-[hash]",
+		"build:js": "esbuild assets/js/front.js assets/js/admin.js --bundle --minify --outdir=www/assets --entry-names=[name] --loader:.woff=file --loader:.woff2=file --asset-names=fonts/[name]-[hash]",
 		"build": "npm run build:css && npm run build:js",
 		"watch:css": "sass --load-path=node_modules --watch assets/scss/front.scss:www/assets/front.css assets/scss/admin.scss:www/assets/admin-custom.css",
-		"watch:js": "esbuild assets/js/front.js assets/js/admin.js assets/css/admin.css --bundle --outdir=www/assets --entry-names=[name] --watch --loader:.woff=file --loader:.woff2=file --asset-names=fonts/[name]-[hash]"
+		"watch:js": "esbuild assets/js/front.js assets/js/admin.js --bundle --outdir=www/assets --watch --loader:.woff=file --loader:.woff2=file --asset-names=fonts/[name]-[hash]"
 	},
 	"name": "argomi-bestshop",
 	"version": "1.0.0",
