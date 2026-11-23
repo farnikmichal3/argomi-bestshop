@@ -1,6 +1,4 @@
 import './shared.js';
-import 'admin-lte/dist/css/adminlte.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'admin-lte';
 
 document.querySelectorAll('tbody[data-category-sortable]').forEach((group) => {
