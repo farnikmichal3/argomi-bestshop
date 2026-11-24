@@ -56,7 +56,10 @@ final class VariantsPresenter extends TranslatedPresenter
                 $this->localeProvider->getDefault(),
             );
             $this->flashMessage($translator->translate('products.variants.limit'), 'warning');
-            $this->redirect(':Admin:Products:edit', ['id' => $id]);
+            if ($this->catalogPermission->canManage()) {
+                $this->redirect(':Admin:Products:edit', ['id' => $id]);
+            }
+            $this->redirect(':Admin:Products:default');
         }
 
         if ($this->matrix === null) {
