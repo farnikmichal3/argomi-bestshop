@@ -205,25 +205,25 @@ final class CategoriesPresenter extends TranslatedPresenter
         $form->setDefaults($defaults);
         $form->addSubmit('submit', 'categories.form.edit.submit')->setHtmlAttribute('class', 'btn btn-primary');
         $editCategoryId = $this->editData->id;
-        $form->onSuccess[] = function (Form $form, stdClass $values) use ($translator, $editCategoryId): void {
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator, $editCategoryId): void {
             if (!$this->catalogPermission->canManage()) {
                 throw new ForbiddenRequestException();
             }
             $parentId = null;
-            if (is_string($values->parentId) && $values->parentId !== '') {
-                $parsed = filter_var($values->parentId, FILTER_VALIDATE_INT);
+            if (is_string($values['parentId']) && $values['parentId'] !== '') {
+                $parsed = filter_var($values['parentId'], FILTER_VALIDATE_INT);
                 if (!is_int($parsed) || $parsed < 1) {
                     $form->addError($translator->translate('categories.form.error.invalid'));
                     return;
                 }
                 $parentId = $parsed;
             }
-            if (!is_string($values->code) || !is_int($values->sortOrder) || !is_bool($values->isActive) || !is_array($values->translations)) {
+            if (!is_string($values['code']) || !is_int($values['sortOrder']) || !is_bool($values['isActive']) || !is_array($values['translations'])) {
                 $form->addError($translator->translate('categories.form.error.invalid'));
                 return;
             }
             $translations = [];
-            foreach ($values->translations as $locale => $translation) {
+            foreach ($values['translations'] as $locale => $translation) {
                 if (!is_string($locale) || !is_array($translation)) {
                     $form->addError($translator->translate('categories.form.error.invalid'));
                     return;
@@ -231,7 +231,7 @@ final class CategoriesPresenter extends TranslatedPresenter
                 $translations[$locale] = $translation;
             }
             try {
-                $this->categoryWriter->update($editCategoryId, $parentId, $values->code, $values->sortOrder, $values->isActive, $translations);
+                $this->categoryWriter->update($editCategoryId, $parentId, $values['code'], $values['sortOrder'], $values['isActive'], $translations);
             } catch (UniqueConstraintViolationException) {
                 $form->addError($translator->translate('categories.form.error.duplicate'));
                 return;
@@ -282,12 +282,12 @@ final class CategoriesPresenter extends TranslatedPresenter
         $form->addSubmit('submit', 'categories.form.submit')
             ->setHtmlAttribute('class', 'btn btn-primary');
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) use ($translator): void {
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
             if (!$this->catalogPermission->canManage()) {
                 throw new ForbiddenRequestException();
             }
 
-            $parentValue = $values->parentId;
+            $parentValue = $values['parentId'];
             $parentId = null;
             if (is_string($parentValue) && $parentValue !== '') {
                 $parsedParentId = filter_var($parentValue, FILTER_VALIDATE_INT);
@@ -298,16 +298,16 @@ final class CategoriesPresenter extends TranslatedPresenter
                 $parentId = $parsedParentId;
             }
 
-            $code = $values->code;
-            $sortOrder = $values->sortOrder;
-            $active = $values->isActive;
-            if (!is_string($code) || !is_int($sortOrder) || !is_bool($active) || !is_array($values->translations)) {
+            $code = $values['code'];
+            $sortOrder = $values['sortOrder'];
+            $active = $values['isActive'];
+            if (!is_string($code) || !is_int($sortOrder) || !is_bool($active) || !is_array($values['translations'])) {
                 $form->addError($translator->translate('categories.form.error.invalid'));
                 return;
             }
 
             $translations = [];
-            foreach ($values->translations as $locale => $translation) {
+            foreach ($values['translations'] as $locale => $translation) {
                 if (!is_string($locale) || !is_array($translation)) {
                     $form->addError($translator->translate('categories.form.error.invalid'));
                     return;
