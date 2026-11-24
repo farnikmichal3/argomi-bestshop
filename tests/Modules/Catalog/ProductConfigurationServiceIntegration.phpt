@@ -69,10 +69,10 @@ try {
     $service->save($productId, [
         ['attributeId' => $attributeIds['material'], 'value' => 'Linen'],
     ], [$attributeIds['waterproof'], $attributeIds['finish']]);
-    Assert::same([$attributeIds['waterproof'], $attributeIds['finish']], array_map(
+    Assert::same([$attributeIds['waterproof'], $attributeIds['finish']], array_values(array_map(
         static fn($row): int => (int) $row->attribute_id,
         $database->table('product_variant_axis')->where('product_id', $productId)->order('sort_order ASC')->fetchAll(),
-    ));
+    )));
 
     Assert::exception(
         fn () => $service->save($productId, [], [$attributeIds['waterproof']]),
