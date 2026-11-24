@@ -66,6 +66,7 @@
                                     <th scope="col">{_'products.variants.combinations'}</th>
                                     <th scope="col">{_'products.variants.sku'}</th>
                                     <th scope="col">{_'products.variants.state'}</th>
+                                    <th scope="col" class="text-end">{_'products.variant_editor.title'}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,6 +87,16 @@
                                                 {/if}
                                             {else}
                                                 <span class="badge text-bg-light border">{_'products.variants.missing'}</span>
+                                            {/if}
+                                        </td>
+                                        <td class="text-end">
+                                            {if $row['variantId'] !== null}
+                                                <a class="btn btn-sm btn-outline-primary" n:href=":Admin:Products:Variant:edit, id => $row['variantId']">
+                                                    <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                                                    {_'products.variant_editor.title'}
+                                                </a>
+                                            {else}
+                                                —
                                             {/if}
                                         </td>
                                     </tr>
