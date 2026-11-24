@@ -31,7 +31,8 @@ app/
 │   │   │   │   └── VariantMatrixValue.php
 │   │   │   ├── Event/
 │   │   │   ├── ProductVariantGenerator.php
-│   │   │   └── ProductVariantMatrixReader.php
+│   │   │   ├── ProductVariantMatrixReader.php
+│   │   │   └── VariantMatrixTooLargeException.php
 │   │   ├── Application/
 │   │   │   ├── Dto/
 │   │   │   │   ├── ProductDto.php
