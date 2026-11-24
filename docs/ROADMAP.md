@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.103 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.104 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -74,6 +74,12 @@ Celkem **556 kroků**: hotovo 191, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.104 (24. 11. 2026)
+- F5-20: HugeRTE 1.0.15 (MIT) je přidán jako lokální npm závislost a sestavuje se přes stávající esbuild; dlouhé popisy aktivních jazyků používají editor bez CDN. Serverový ProductDescriptionSanitizer používá HTMLPurifier s explicitním allowlistem strukturálních prvků, formátování, odkazů a tabulek; odmítá skripty, nebezpečná URL schémata, event handlery a vložené CSS. Integrační test ověřuje škodlivé HTML při create/update i opětovném načtení.
+- Produktový create/edit dostal první profesionální kartu, oddělenou hlavičku a responzivní základní styly. Jde o první vizuální iteraci; rozdělení polí do pracovních sekcí/tabs, produktové atributy a samostatné osy variant zůstávají součástí F5-20.
+- CI: run `45375909468` prošel dopřednými migracemi MySQL 8.4, integračními testy, PHPStan, coding standardem a Deptrac; frontend build `45375892779` i JavaScript checks `45375892385` prošly. HugeRTE je hostován lokálně a není načítán z CDN.
+- Uživatel potvrdil lokální testy před touto iterací; novou kartu a bezpečné ukládání popisů je třeba ještě ověřit v prohlížeči. F5-20 zůstává ROZDĚLÁNO.
 
 ### v3.103 (24. 11. 2026)
 - Uživatel potvrdil úplnou funkčnost F5-19 – administrační správy katalogových atributů a enum hodnot – včetně zobrazení a ukládání. Krok je označen jako HOTOVO; databázové schéma nebylo nutné měnit.
@@ -714,8 +720,8 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-16** Admin: základní záložka produktu (názvy, popisy, zařazení) — transakční editor identifikačních údajů, překladů, SEO metadat a kategorií; uživatel ověřil ukládání, opětovné načtení i flash zprávy v prohlížeči.
 - `[HOTOVO]` **F5-17** Admin: matice variant (generování kombinací z os) — read model, výběr a transakční generování chybějících kombinací přes `ProductVariantGenerator`; limit 256 kombinací, SHA-256 přes `VariantCombinationHash`, existující varianty zůstávají nedotčené; CI prošlo (79 testů, PHPStan, coding standard, architektura) a uživatel potvrdil lokální testy i funkčnost matice v prohlížeči.
 - `[HOTOVO]` **F5-18** Admin: úprava konkrétní varianty (SKU, EAN, váha, výchozí) — veřejné API a transakční editor; dopředná migrace EAN, kontrolní číslice a unikátnost; výchozí varianta měněna atomicky v rámci produktu. CI, lokální aktivní kontroly i ruční ověření v prohlížeči uživatelem potvrzeny.
-- `[ROZDĚLÁNO]` **F5-19** Admin: správa atributů a jejich hodnot — CRUD atributů, překlady pro aktivní jazyky, typy text/number/enum/bool, měrná jednotka pouze pro number a transakční správu lokalizovaných enum hodnot; ochrana používaných os a hodnot variant.
-- `[PLÁN]` **F5-20** Admin: přiřazení atributů k produktu
+- `[HOTOVO]` **F5-19** Admin: správa atributů a jejich hodnot — CRUD atributů, překlady pro aktivní jazyky, typy text/number/enum/bool, měrná jednotka pouze pro number a transakční správu lokalizovaných enum hodnot; ochrana používaných os a hodnot variant.
+- `[ROZDĚLÁNO]` **F5-20** Admin: přiřazení atributů k produktu, výběr a řazení os variant, profesionální karta editoru produktu, HugeRTE pro lokalizované dlouhé popisy a serverová sanitizace HTML; příprava napojení na Media modul bez uploadu v této fázi.
 - `[PLÁN]` **F5-21** Admin: konfigurace voleb zákazníka pro produkt
 - `[PLÁN]` **F5-22** Admin: nahrání obrázků a přiřazení k variantám
 - `[PLÁN]` **F5-23** Admin: správa souvisejících a doporučených produktů
