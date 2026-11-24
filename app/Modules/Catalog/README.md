@@ -146,6 +146,32 @@ i funkčnost matice v prohlížeči. Kanonizaci
 a shodu PHP/MySQL SHA-256 dále ověřují existující testy
 `VariantCombinationHash.phpt`, `VariantCombinationHashIntegration.phpt`
 a `VariantSelectorIntegration.phpt`.
+## Správa konkrétní varianty (F5-18)
+
+Veřejný čtecí kontrakt `Api/ProductVariantEditorReader` vrací
+`ProductVariantEditorData` pro konkrétní variantu a explicitní locale.
+Zápis probíhá přes `Api/ProductVariantWriter`, který implementuje
+`Application/ProductVariantWriteService` a interní
+`ProductVariantWriteRepository`. Databázovým adaptérem je
+`DatabaseProductVariantEditorRepository`; ActiveRow zůstává uvnitř
+persistence vrstvy.
+
+- SKU se validuje jako 1–64 povolených ASCII znaků a jeho globální unikátnost
+  chrání aplikační kontrola i databázový unikátní index.
+- EAN je volitelný; podporován je EAN-8 a EAN-13 včetně ověření kontrolní
+  číslice. Globální unikátnost a formát délky/číselných znaků chrání databáze.
+- Hmotnost je volitelná v celých gramech a odpovídá `INT UNSIGNED`.
+- Výchozí variantou může být pouze aktivní varianta. Změna nejprve zruší
+  dosavadní výchozí příznak produktu a následně nastaví vybranou variantu
+  uvnitř jedné transakce; unikátní databázový index zůstává konečnou ochranou.
+- Úprava nezasahuje do kombinace atributů, cen, skladu ani dalších vazeb.
+- Dopředná migrace `2026-11-24-080000-product-variant-ean.sql` přidává
+  nullable EAN a globální unikátní index. Texty cs/en dodává seed
+  `2026-11-24-080000-seed-catalog-product-variant-editor.sql`.
+
+Integrační ověření pokrývá `ProductVariantWriteIntegration.phpt`;
+kontrolní číslice EAN-8/EAN-13 ověřuje `VariantEan.phpt`.
+
 ## DI registrace
 
 `Infrastructure/DI/CatalogExtension` je automaticky objevena konvencí
