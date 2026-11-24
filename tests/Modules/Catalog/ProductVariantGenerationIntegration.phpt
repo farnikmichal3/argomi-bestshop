@@ -97,7 +97,7 @@ try {
         );
 
         Assert::exception(
-            static fn () => $service->generate($productId, [[
+            fn () => $service->generate($productId, [[
                 'color' => ['type' => 'enum', 'value' => 'unknown'],
                 'size' => ['type' => 'enum', 'value' => 'l'],
             ]]),
