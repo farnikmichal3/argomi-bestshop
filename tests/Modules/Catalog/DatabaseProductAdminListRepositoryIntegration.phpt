@@ -54,13 +54,20 @@ $physicalActiveClothing = $reader->findProducts(
 Assert::same(1, $physicalActiveClothing->totalItems);
 Assert::same(1, $physicalActiveClothing->items[0]->id);
 
-// Nové typy zatím nemají demo záznamy; filtr nesmí zaměňovat typ za stav.
+// Filtr typu musí vrátit právě digitální produkty. Integrační testy
+// produkty záměrně nemažou (produkty se archivují), proto výsledek
+// porovnáváme s aktuálním databázovým stavem místo předpokladu prázdné tabulky.
 $digital = $reader->findProducts(
     new ProductAdminListFilter(type: ProductAdminType::Digital),
     $locale,
 );
-Assert::same(0, $digital->totalItems);
-Assert::same([], $digital->items);
+$expectedDigitalCount = $integration->database->table('product')
+    ->where('type', ProductAdminType::Digital->value)
+    ->count('*');
+Assert::same($expectedDigitalCount, $digital->totalItems);
+foreach ($digital->items as $digitalItem) {
+    Assert::same(ProductAdminType::Digital, $digitalItem->type);
+}
 
 // Stránkování je deterministické podle ID a probíhá před načtením překladů.
 $firstPage = $reader->findProducts(
