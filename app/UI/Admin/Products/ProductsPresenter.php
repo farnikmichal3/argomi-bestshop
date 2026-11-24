@@ -46,7 +46,7 @@ final class ProductsPresenter extends TranslatedPresenter
         private readonly LocaleProvider $localeProvider,
         private readonly ProductEditorReader $productEditorReader,
         private readonly TaxClassOptionReader $taxClassOptionReader,
-        private readonly ProductWriteService $productWriter,
+        private readonly ProductWriter $productWriter,
         private readonly CategoryTreeReader $categoryTreeReader,
         private readonly TranslatorFactory $translatorFactory,
     ) {
@@ -131,7 +131,7 @@ final class ProductsPresenter extends TranslatedPresenter
             ->setRequired('products.editor.error.required');
 
         $statusOptions = [];
-        foreach (ProductStatus::cases() as $status) {
+        foreach (ProductAdminStatus::cases() as $status) {
             $statusOptions[$status->value] = 'products.admin.status.' . $status->value;
         }
         $form->addSelect('status', 'products.editor.status', $statusOptions)
@@ -139,7 +139,7 @@ final class ProductsPresenter extends TranslatedPresenter
             ->setRequired();
 
         $typeOptions = [];
-        foreach (ProductType::cases() as $type) {
+        foreach (ProductAdminType::cases() as $type) {
             $typeOptions[$type->value] = 'products.admin.type.' . $type->value;
         }
         $form->addSelect('type', 'products.editor.type', $typeOptions)
@@ -175,8 +175,8 @@ final class ProductsPresenter extends TranslatedPresenter
         }
 
         $defaults = [
-            'status' => ProductStatus::Draft->value,
-            'type' => ProductType::Physical->value,
+            'status' => ProductAdminStatus::Draft->value,
+            'type' => ProductAdminType::Physical->value,
             'categoryIds' => [],
         ];
         if ($this->editData !== null) {
@@ -213,8 +213,8 @@ final class ProductsPresenter extends TranslatedPresenter
                 return;
             }
 
-            $status = ProductStatus::tryFrom($values->status);
-            $type = ProductType::tryFrom($values->type);
+            $status = ProductAdminStatus::tryFrom($values->status);
+            $type = ProductAdminType::tryFrom($values->type);
             $taxClassId = filter_var($values->taxClassId, FILTER_VALIDATE_INT);
             if ($status === null || $type === null || !is_int($taxClassId) || $taxClassId < 1) {
                 $form->addError($translator->translate('products.editor.error.invalid'));
