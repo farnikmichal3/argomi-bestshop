@@ -39,7 +39,7 @@ final class ProductWriteService
         $this->assertCanManage();
         $code = self::normalizeCode($code);
         $localized = $this->normalizeTranslations($translations);
-        $categories = $this->normalizeCategoryIds($categoryIds);
+        $categories = self::normalizeCategoryIds($categoryIds);
         $this->assertReferences($taxClassId, $categories);
 
         if (!$this->repository->isCodeAvailable($code)) {
