@@ -173,6 +173,18 @@ Integrační ověření pokrývá `ProductVariantWriteIntegration.phpt`;
 kontrolní číslice EAN-8/EAN-13 ověřuje `VariantEan.phpt`. GitHub Actions run
 `45344682171` prošel: 81 testů, PHPStan, coding standard, architektura a dopředné migrace MySQL 8.4; test pokrývá také samostatný DB unikátní index EAN.
 
+
+## Administrační správa atributů (F5-19)
+
+Administrační čtení používá veřejný kontrakt `Api/AttributeAdminReader` a zápisy `Api/AttributeWriter`. Interní `AttributeAdminQueryService` a `AttributeWriteService` oddělují read model od transakční správy; adaptér `DatabaseAttributeRepository` implementuje databázové kontrakty přes Nette Database Explorer. `ActiveRow` neopouští persistence vrstvu.
+
+- Atribut má unikátní strojový kód, typ `text`, `number`, `enum` nebo `bool`, volitelnou měrnou jednotku (pouze pro `number`), příznak filtru a pořadí.
+- Název atributu i popisky enum hodnot jsou povinné pro každý aktivní jazyk. Aktivní jazyky se získávají dynamicky z `LocaleProvider`; UI ani aplikační služba nemají pevně zakódovaný seznam cs/en.
+- Enum hodnoty mají vlastní kód, pořadí a lokalizované popisky. Ostatní typy hodnoty v číselníku nepoužívají.
+- Vytvoření, úprava a mazání probíhá přes aplikační službu a sdílenou `Transaction`. Duplicitní kódy chrání aplikační kontrola i unikátní indexy.
+- Typ atributu nelze změnit, pokud má již hodnoty nebo je použit jako osa variant. Atribut použitý jako osa nelze odstranit; enum hodnotu použitou existující variantou nelze odstranit. Databázové FK `RESTRICT` zůstávají poslední ochranou obchodních vazeb.
+- F5-19 nevyžaduje změnu struktury databáze; systémové texty administrace dodávají idempotentní seedy `2026-11-24-090000-seed-catalog-attribute-admin.sql` a `2026-11-24-100000-seed-admin-attributes-navigation.sql`.
+
 ## DI registrace
 
 `Infrastructure/DI/CatalogExtension` je automaticky objevena konvencí
