@@ -7,7 +7,7 @@ namespace App\Modules\Catalog\Application;
 use App\Modules\Catalog\Api\Dto\AttributeAdminItem;
 use App\Modules\Catalog\Api\Dto\AttributeEditorData;
 use App\Modules\Catalog\Api\Dto\AttributeValueEditorData;
-use App\Modules\Catalog\Domain\Attribute\AttributeType;
+use App\Modules\Catalog\Api\AttributeDataType;
 use App\Shared\Domain\Locale\Locale;
 
 final readonly class AttributeAdminQueryService
@@ -40,7 +40,7 @@ final readonly class AttributeAdminQueryService
         return new AttributeEditorData(
             $data['id'],
             $data['code'],
-            AttributeType::from($data['type']),
+            AttributeDataType::from($data['type']),
             $data['unitId'],
             $data['isFilterable'],
             $data['sortOrder'],
