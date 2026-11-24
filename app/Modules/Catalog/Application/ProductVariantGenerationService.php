@@ -117,7 +117,7 @@ final readonly class ProductVariantGenerationService implements ProductVariantGe
             $values = [];
             foreach ($axes as $code => $axis) {
                 $entry = $combination[$code] ?? null;
-                if ($entry['type'] !== $axis['type']) {
+                if ($entry === null || $entry['type'] !== $axis['type']) {
                     throw new InvalidArgumentException(sprintf('Hodnota osy %s nemá platný datový typ.', $code));
                 }
 
