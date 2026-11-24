@@ -19,7 +19,7 @@ interface ProductVariantGenerationRepository
 
     public function nextSortOrder(int $productId): int;
 
-    public function createVariant(int $productId, string $sku, string $combinationHash, int $sortOrder): void;
+    public function createVariant(int $productId, string $sku, string $combinationHash, int $sortOrder): int;
 
     public function insertVariantAttributeValue(
         int $productId,
