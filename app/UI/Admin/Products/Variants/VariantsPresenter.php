@@ -97,7 +97,7 @@ final class VariantsPresenter extends TranslatedPresenter
             }
         }
 
-        $this->template->setFile(__DIR__ . '/variants.latte');
+        $this->template->setFile(__DIR__ . '/../variants.latte');
         $this->template->matrix = $this->matrix;
         $this->template->combinationRows = $rows;
         $this->template->hasAxes = $this->matrix->axes !== [];
