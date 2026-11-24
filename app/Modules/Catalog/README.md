@@ -57,8 +57,11 @@ Ověření pokrývají `ProductAdminListFilter.phpt`, `DatabaseProductAdminListR
 
 ## Administrační editor produktu – základní údaje (F5-16)
 
-Zápis základních údajů produktu probíhá přes aplikační `ProductWriteService`
-a kontrakt `ProductWriteRepository`. Prezentační vrstva nikdy nezapisuje
+Zápis základních údajů produktu zpřístupňuje veřejný kontrakt
+`Api/ProductWriter` s veřejnými enumy `ProductAdminStatus` a `ProductAdminType`.
+Jeho interní implementací je aplikační `ProductWriteService`, který převádí
+veřejné hodnoty na doménové enumy a používá `ProductWriteRepository`.
+Prezentační vrstva nezná aplikační službu ani doménové typy a nikdy nezapisuje
 přímo do databáze. Databázový adaptér používá Nette Database Explorer a
 nepředává `ActiveRow` mimo persistence vrstvu.
 
@@ -74,7 +77,8 @@ nepředává `ActiveRow` mimo persistence vrstvu.
   pořadí odpovídá pořadí odeslanému z editoru. Duplicitní a neexistující ID
   jsou odmítnuta aplikační vrstvou.
 - Editor načítá produkt, překlady a přiřazení přes veřejný kontrakt
-  `ProductEditorReader`. Seznam daňových tříd je pouze čtecí nabídka;
+  `ProductEditorReader`. Zápis provádí přes veřejný `ProductWriter`. Seznam
+  daňových tříd je pouze čtecí nabídka;
   platnost ID při zápisu znovu ověřuje persistence vrstva.
 - Admin UI nabízí vytvoření a úpravu na samostatných stránkách; seznam
   produktů zůstává odděleným DataGrid read modelem.
