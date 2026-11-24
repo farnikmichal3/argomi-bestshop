@@ -170,7 +170,8 @@ persistence vrstvy.
   `2026-11-24-080000-seed-catalog-product-variant-editor.sql`.
 
 Integrační ověření pokrývá `ProductVariantWriteIntegration.phpt`;
-kontrolní číslice EAN-8/EAN-13 ověřuje `VariantEan.phpt`.
+kontrolní číslice EAN-8/EAN-13 ověřuje `VariantEan.phpt`. GitHub Actions run
+`45344360718` prošel: 81 testů, PHPStan, coding standard, architektura a dopředné migrace MySQL 8.4.
 
 ## DI registrace
 
