@@ -51,8 +51,8 @@ final readonly class AttributeAdminQueryService
     }
 
     /** @return array<int|string, string> */
-    public function findUnitOptions(): array
+    public function findUnitOptions(Locale $locale): array
     {
-        return $this->repository->findUnitOptions();
+        return $this->repository->findUnitOptions($locale);
     }
 }
