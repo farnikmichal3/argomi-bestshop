@@ -236,3 +236,17 @@ Veřejné katalogové události v `Api/Event` (`ProductCreated`, `ProductUpdated
 kladné `productId`; nepředává zbytečný stav produktu ani osobní údaje.
 V této fázi jde o event kontrakty, nikoli o automatický dispatch: emitování bude
 zapojeno v příslušných use-case při zavedení produktových zápisů.
+
+
+## Bezpečné HTML popisů produktů (F5-20)
+
+Dlouhé lokalizované popisy se před uložením vždy čistí na serveru přes
+Application/ProductDescriptionSanitizer (HTMLPurifier). Klientský editor
+HugeRTE není bezpečnostní hranice a jeho výstup se nikdy nepovažuje za důvěryhodný.
+
+Povolené jsou pouze základní strukturální a formátovací prvky, seznamy,
+odkazy a tabulky. Skripty, obslužné atributy událostí, nebezpečná URL schémata,
+vkládané styly a další nepovolený obsah jsou odstraněny. Povolená URL schémata
+jsou HTTP, HTTPS a mailto. Sanitizace probíhá uvnitř transakční aplikační služby
+před předáním popisu do persistence vrstvy; ostatní SEO a krátké texty zůstávají
+prostým textem a jsou escapovány při výstupu.
