@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.17 · 24. 11. 2026  
+**Revize:** 4.18 · 24. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 24. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -232,6 +232,8 @@ app/
         ├── Form/
         └── Latte/
 ```
+
+F5-18 doplňuje veřejné kontrakty `ProductVariantEditorReader` a `ProductVariantWriter`, DTO `ProductVariantEditorData`, doménový validátor `VariantEan`, transakční `ProductVariantWriteService`, databázový adaptér a administrační `UI/Admin/Products/Variant/VariantPresenter` s šablonou `edit.latte`. EAN-8/EAN-13 je volitelný a unikátní; hmotnost je v celých gramech; výchozí varianta musí být aktivní.
 
 F5-17 doplňuje veřejný read kontrakt `Catalog/Api/ProductVariantMatrixReader`, DTO matice, kontrakt `ProductVariantGenerator`, transakční `ProductVariantGenerationService`, dva databázové adaptéry a administrační `UI/Admin/Products/Variants/VariantsPresenter` s šablonou `UI/Admin/Products/variants.latte`. Generování používá existující `VariantCombinationHash`; databázové schéma se nemění. Testy jsou `ProductVariantMatrixIntegration.phpt` a `ProductVariantGenerationIntegration.phpt`.
 
