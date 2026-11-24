@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Api\Dto;
 
-use App\Modules\Catalog\Domain\Attribute\AttributeType;
+use App\Modules\Catalog\Api\AttributeDataType;
 
 final readonly class AttributeEditorData
 {
@@ -15,7 +15,7 @@ final readonly class AttributeEditorData
     public function __construct(
         public int $id,
         public string $code,
-        public AttributeType $type,
+        public AttributeDataType $type,
         public ?int $unitId,
         public bool $isFilterable,
         public int $sortOrder,
