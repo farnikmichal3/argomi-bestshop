@@ -40,7 +40,8 @@ final class DatabaseMessageTranslationReader implements MessageTranslationReader
         ?Locale $locale = null,
         ?TranslationMessageStatus $status = null,
     ): array {
-        $translations = [];
+        /** @var array<string, list<MessageTranslation>> $byDomain */
+        $byDomain = [];
 
         foreach (self::TABLES as $table => $tableDomain) {
             if ($domain !== null && $domain !== $tableDomain) {
@@ -63,10 +64,30 @@ final class DatabaseMessageTranslationReader implements MessageTranslationReader
                 $selection->where('source', 'core')->where('is_outdated', 1);
             }
 
+            $byDomain[$tableDomain->value] = [];
             foreach ($selection->order('message_key ASC')->limit(self::MAX_RESULTS)->fetchAll() as $row) {
-                $translations[] = $this->map($tableDomain, $row);
+                $byDomain[$tableDomain->value][] = $this->map($tableDomain, $row);
             }
         }
+
+        // A global alphabetical slice would let a busy owner (usually Catalog)
+        // hide every result from later domains. Merge domains fairly first,
+        // then apply the global cap and restore the public deterministic order.
+        $translations = [];
+        $offset = 0;
+        do {
+            $added = false;
+            foreach ($byDomain as $domainTranslations) {
+                if (isset($domainTranslations[$offset])) {
+                    $translations[] = $domainTranslations[$offset];
+                    $added = true;
+                    if (count($translations) >= self::MAX_RESULTS) {
+                        break 2;
+                    }
+                }
+            }
+            $offset++;
+        } while ($added);
 
         usort(
             $translations,
@@ -75,7 +96,7 @@ final class DatabaseMessageTranslationReader implements MessageTranslationReader
                 <=> [$right->domain->value, $right->locale, $right->messageKey],
         );
 
-        return array_slice($translations, 0, self::MAX_RESULTS);
+        return $translations;
     }
 
     private function map(TranslationDomain $domain, ActiveRow $row): MessageTranslation
