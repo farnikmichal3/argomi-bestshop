@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Application;
 
 use App\Modules\Catalog\Api\AttributeInUseException;
+use App\Modules\Catalog\Api\AttributeDataType;
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Domain\Attribute\AttributeType;
@@ -21,11 +22,12 @@ final readonly class AttributeWriteService
         private CatalogPermission $permission,
     ) {}
 
-    public function create(string $code, AttributeType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): int
+    public function create(string $code, AttributeDataType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): int
     {
         $this->assertCanManage();
         $code = self::normalizeCode($code);
-        self::assertTypeAndUnit($type, $unitId);
+        $domainType = AttributeType::from($type->value);
+        self::assertTypeAndUnit($domainType, $unitId);
         self::assertSortOrder($sortOrder);
         $localized = $this->normalizeTranslations($translations, 'name');
         if (!$this->repository->isCodeAvailable($code)) {
@@ -35,8 +37,8 @@ final readonly class AttributeWriteService
             throw new InvalidArgumentException('Měrná jednotka neexistuje nebo není aktivní.');
         }
 
-        return $this->transaction->run(function () use ($code, $type, $unitId, $isFilterable, $sortOrder, $localized): int {
-            $id = $this->repository->createAttribute($code, $type, $unitId, $isFilterable, $sortOrder);
+        return $this->transaction->run(function () use ($code, $domainType, $unitId, $isFilterable, $sortOrder, $localized): int {
+            $id = $this->repository->createAttribute($code, $domainType, $unitId, $isFilterable, $sortOrder);
             foreach ($localized as $locale => $name) {
                 $this->repository->saveAttributeTranslation($id, $locale, $name);
             }
@@ -44,14 +46,15 @@ final readonly class AttributeWriteService
         });
     }
 
-    public function update(int $attributeId, string $code, AttributeType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): void
+    public function update(int $attributeId, string $code, AttributeDataType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): void
     {
         $this->assertCanManage();
         if ($attributeId < 1 || !$this->repository->attributeExists($attributeId)) {
             throw new InvalidArgumentException('Atribut nebyl nalezen.');
         }
         $code = self::normalizeCode($code);
-        self::assertTypeAndUnit($type, $unitId);
+        $domainType = AttributeType::from($type->value);
+        self::assertTypeAndUnit($domainType, $unitId);
         self::assertSortOrder($sortOrder);
         $localized = $this->normalizeTranslations($translations, 'name');
         if (!$this->repository->isCodeAvailable($code, $attributeId)) {
@@ -65,12 +68,12 @@ final readonly class AttributeWriteService
         if ($currentType === null) {
             throw new InvalidArgumentException('Atribut nebyl nalezen.');
         }
-        if ($currentType !== $type && ($this->repository->hasAttributeAxes($attributeId) || $this->repository->hasAttributeValues($attributeId))) {
+        if ($currentType !== $domainType && ($this->repository->hasAttributeAxes($attributeId) || $this->repository->hasAttributeValues($attributeId))) {
             throw new InvalidArgumentException('Typ atributu nelze změnit, dokud obsahuje hodnoty nebo je použit jako osa variant.');
         }
 
-        $this->transaction->run(function () use ($attributeId, $code, $type, $unitId, $isFilterable, $sortOrder, $localized): void {
-            $this->repository->updateAttribute($attributeId, $code, $type, $unitId, $isFilterable, $sortOrder);
+        $this->transaction->run(function () use ($attributeId, $code, $domainType, $unitId, $isFilterable, $sortOrder, $localized): void {
+            $this->repository->updateAttribute($attributeId, $code, $domainType, $unitId, $isFilterable, $sortOrder);
             foreach ($localized as $locale => $name) {
                 $this->repository->saveAttributeTranslation($attributeId, $locale, $name);
             }
