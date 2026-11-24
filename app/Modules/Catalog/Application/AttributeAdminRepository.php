@@ -23,5 +23,5 @@ interface AttributeAdminRepository
     public function findForEdit(int $attributeId): ?array;
 
     /** @return array<int|string, string> */
-    public function findUnitOptions(): array;
+    public function findUnitOptions(Locale $locale): array;
 }
