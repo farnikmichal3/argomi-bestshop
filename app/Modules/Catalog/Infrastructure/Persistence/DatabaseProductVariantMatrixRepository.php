@@ -281,8 +281,7 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
         array $values,
         array $existingByHash,
         array &$combinations,
-    ): void
-    {
+    ): void {
         if (count($combinations) >= self::MAX_COMBINATIONS) {
             throw new VariantMatrixTooLargeException('Matice variant překračuje bezpečný limit 256 kombinací.');
         }
