@@ -371,7 +371,7 @@ final class AttributesPresenter extends TranslatedPresenter
         if (
             !is_string($values['code'] ?? null)
             || !is_string($values['type'] ?? null)
-            || !is_string($values['unitId'] ?? null) && !is_int($values['unitId'] ?? null)
+            || ($values['unitId'] ?? null) !== null && !is_string($values['unitId']) && !is_int($values['unitId'])
             || !is_bool($values['isFilterable'] ?? null)
             || !is_int($values['sortOrder'] ?? null)
             || !is_array($values['translations'] ?? null)
@@ -382,7 +382,7 @@ final class AttributesPresenter extends TranslatedPresenter
         if ($type === null) {
             return null;
         }
-        $unitInput = (string) $values['unitId'];
+        $unitInput = $values['unitId'] === null ? '' : (string) $values['unitId'];
         $unitId = null;
         if ($unitInput !== '') {
             $parsed = filter_var($unitInput, FILTER_VALIDATE_INT);
