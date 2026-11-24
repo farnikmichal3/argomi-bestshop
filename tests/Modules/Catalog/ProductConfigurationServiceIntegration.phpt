@@ -19,18 +19,19 @@ $integration = IntegrationTestBootstrap::boot($rootDir);
 /** @var Explorer $database */
 $database = $integration->database;
 $token = bin2hex(random_bytes(4));
-$database->beginTransaction();
-$product = $database->table('product')->insert([
+$productId = 0;
+try {
+    $database->transaction(function () use ($database, $integration, $token, &$productId): void {
+        $product = $database->table('product')->insert([
     'code' => 'test-config-' . $token,
     'status' => 'draft',
     'type' => 'physical',
     'tax_class_id' => $database->table('tax_class')->order('id ASC')->fetch()->id,
-]);
-$productId = (int) $product->id;
-$attributeIds = [];
-$enumValueId = null;
-try {
-    foreach ([['text', 'material'], ['number', 'length'], ['enum', 'finish'], ['bool', 'waterproof']] as [$type, $code]) {
+        ]);
+        $productId = (int) $product->id;
+        $attributeIds = [];
+        $enumValueId = null;
+        foreach ([['text', 'material'], ['number', 'length'], ['enum', 'finish'], ['bool', 'waterproof']] as [$type, $code]) {
         $row = $database->table('attribute')->insert(['code' => 'test-' . $code . '-' . $token, 'type' => $type]);
         $attributeIds[$code] = (int) $row->id;
     }
@@ -86,12 +87,13 @@ try {
         InvalidArgumentException::class,
     );
 
-    echo "OK\n";
-} finally {
-    // Testovací data se vrátí zpět transakcí. Fyzické mazání produktů
-    // a variant je záměrně zakázané databázovými ochrannými triggery.
-    $database->rollback();
+        throw new RuntimeException('rollback product configuration fixture');
+    });
+} catch (RuntimeException $exception) {
+    Assert::same('rollback product configuration fixture', $exception->getMessage());
 }
+
+echo "OK\n";
 ?>
 --EXPECT--
 OK
