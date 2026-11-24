@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application;
 
+use App\Modules\Catalog\Api\CatalogAccessDeniedException;
+use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Application\Dto\ProductRelationOrderDto;
 use App\Modules\Catalog\Domain\ProductRelationType;
 use App\Shared\Application\Transaction\Transaction;
@@ -16,6 +18,7 @@ final class ProductRelationService
     public function __construct(
         private readonly ProductRelationRepository $relations,
         private readonly Transaction $transaction,
+        private readonly CatalogPermission $permission,
     ) {}
 
     public function add(
@@ -24,6 +27,7 @@ final class ProductRelationService
         ProductRelationType $type,
         int $sortOrder = 0,
     ): void {
+        $this->assertCanManage();
         $this->validateProductIds($productId, $relatedProductId);
 
         if ($sortOrder < 0 || $sortOrder > 2_147_483_647) {
@@ -40,6 +44,7 @@ final class ProductRelationService
         int $relatedProductId,
         ProductRelationType $type,
     ): bool {
+        $this->assertCanManage();
         $this->validateProductIds($productId, $relatedProductId);
 
         return $this->transaction->run(
@@ -54,6 +59,7 @@ final class ProductRelationService
      */
     public function reorder(int $productId, array $orderedRelations): void
     {
+        $this->assertCanManage();
         if ($productId < 1) {
             throw new \InvalidArgumentException('ID produktu musí být kladné.');
         }
@@ -75,6 +81,13 @@ final class ProductRelationService
         $this->transaction->run(function () use ($productId, $orderedRelations): void {
             $this->relations->reorder($productId, $orderedRelations);
         });
+    }
+
+    private function assertCanManage(): void
+    {
+        if (!$this->permission->canManage()) {
+            throw new CatalogAccessDeniedException();
+        }
     }
 
     private function validateProductIds(int $productId, int $relatedProductId): void
