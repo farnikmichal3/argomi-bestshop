@@ -354,7 +354,7 @@ final class ProductsPresenter extends TranslatedPresenter
 
             $axisField = 'axis_' . $attribute->id;
             $orderField = 'axis_order_' . $attribute->id;
-            $form->addCheckbox($axisField, $attribute->name . ' — products.configuration.axis')
+            $form->addCheckbox($axisField, $attribute->name . ' — ' . $translator->translate('products.configuration.axis'))
                 ->setHtmlAttribute('class', 'form-check-input');
             $form->addInteger($orderField, 'products.configuration.axis_order')
                 ->setHtmlAttribute('class', 'form-control form-control-sm')
