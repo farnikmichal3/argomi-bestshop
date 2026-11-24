@@ -31,6 +31,12 @@ $localeProvider = $integration->container->getByType(LocaleProvider::class);
 /** @var AttributeAdminReader $reader */
 $reader = $integration->container->getByType(AttributeAdminReader::class);
 
+$unitOptions = $reader->findUnitOptions($localeProvider->getDefault());
+Assert::true($unitOptions !== []);
+foreach ($unitOptions as $unitLabel) {
+    Assert::false(str_contains($unitLabel, '{count, plural'));
+}
+
 $permission = new class implements CatalogPermission {
     public function canView(): bool
     {
