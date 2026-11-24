@@ -229,7 +229,7 @@ final class AttributesPresenter extends TranslatedPresenter
             if (!$this->catalogPermission->canManage()) {
                 throw new ForbiddenRequestException();
             }
-            if (!is_string($values['code'] ?? null) || !is_int($values['sortOrder'] ?? null) || !($translations = $this->normalizeTranslations($values['translations'] ?? null)) !== null) {
+            if (!is_string($values['code'] ?? null) || !is_int($values['sortOrder'] ?? null) || ($translations = $this->normalizeTranslations($values['translations'] ?? null)) === null) {
                 $form->addError($translator->translate('attributes.form.error.invalid'));
                 return;
             }
