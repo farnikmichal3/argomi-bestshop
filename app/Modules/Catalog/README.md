@@ -99,38 +99,49 @@ a převádí je na validované celé číslo před voláním veřejného `Produc
 
 ## Administrační matice variant (F5-17)
 
-F5-17 navazuje na existující doménové a databázové základy; nevytváří paralelní
-model variant. `product_variant_axis` určuje osy konkrétního produktu,
-`product_variant` uchovává prodejní variantu a
-`product_variant_attribute_value` její typované hodnoty. Doménová
-`VariantCombinationHash` zajišťuje deterministickou kanonizaci a SHA-256 hash;
-`VariantSelector` ověřuje úplnost os a vyhledává odpovídající aktivní variantu.
+Veřejný read kontrakt `Api/ProductVariantMatrixReader` vrací osy produktu,
+dostupné hodnoty, existující varianty a chybějící kombinace jako neměnná DTO.
+Databázovou implementací je `Infrastructure/Persistence/DatabaseProductVariantMatrixRepository`.
+Read model zahrnuje i neaktivní varianty, aby matice nikdy neztratila jejich
+identitu ani obchodní vazby.
 
-Implementace administrační matice musí zachovat následující invarianty:
+Dostupné hodnoty se v této iteraci získávají podle typu osy:
+- `enum`: všechny hodnoty příslušného atributu z `attribute_value` v pořadí
+  definovaném číselníkem; popisky se načítají pro explicitní locale.
+- `bool`: pevné hodnoty false a true.
+- `number` a `text`: unikátní hodnoty, které jsou již uloženy
+  u existujících variant produktu. Pokud zatím žádná taková hodnota neexistuje,
+  matice generování zablokuje a zobrazí vysvětlení. Vstup nových hodnot pro
+  tyto typy je navazující práce správy atributů/os; nesmí se odvozovat
+  z klientského payloadu bez serverové validace.
 
-- Kombinace se počítá výhradně přes `VariantCombinationHash`; vlastní ani
-  alternativní formát hashe není přípustný.
-- Varianta patří přesně jednomu produktu a každá její hodnota musí odpovídat
-  ose tohoto produktu i datovému typu atributu.
-- Unikátnost kombinace chrání `(product_id, combination_hash)` a globální
-  unikátnost SKU chrání databázový index.
-- Již existující varianty se nesmějí při generování přepisovat ani fyzicky
-  mazat. Zachovat se musí jejich identita a navázaná cenová, skladová,
-  obrázková i historická data; varianty se deaktivují, nikoli mažou.
-- Nastavení výchozí varianty musí respektovat jedinou výchozí variantu na
-  produkt a existující transakční přepínání.
-- Zápis musí být transakční, autorizovaný přes `CatalogPermission::canManage()`
-  v prezentační i aplikační vrstvě a oddělený od UI přes veřejné API Catalog.
-- Ceny a sklad zůstávají vlastnictvím modulů Pricing a Inventory; generátor
-  kombinací je nesmí zapisovat ani odvozovat.
+Kartézský součin dostupných hodnot je omezen na 256 kombinací. Matice zobrazí
+všechny kombinace a umožní vybrat pouze chybějící; existující kombinace jsou
+pouze ke čtení. Veřejný zápisový kontrakt `Api/ProductVariantGenerator`
+implementuje `Application/ProductVariantGenerationService` a jeho
+`DatabaseProductVariantGenerationRepository`:
+- před zápisem znovu ověří produkt, úplnou sadu os, datové typy a vlastnictví
+  enum hodnot;
+- vypočítá identitu výhradně přes `VariantCombinationHash`;
+- v jedné transakci vytvoří pouze dosud neexistující kombinace a jejich
+  typované hodnoty; opakované odeslání stejné kombinace je idempotentní;
+- nové varianty dostanou aktivní stav, nejsou výchozí a dostanou dočasné
+  deterministické SKU `V{productId}-{prvních 40 znaků SHA-256}`;
+  ruční správa SKU, EAN, hmotnosti a výchozí varianty patří do F5-18;
+- existující varianty ani jejich SKU, aktivitu, výchozí příznak, ceny, sklad,
+  obrázky a historické vazby se nemění.
 
-Součástí F5-17 je nejprve administrační read model matice a validace úplné
-sady os/hodnot, poté bezpečné vytvoření chybějících kombinací. Správa globálních
-definic atributů a jejich číselníků zůstává samostatným F5-19; přiřazení os
-k produktu zůstává F5-20. Pokud bude pro generování potřeba zadat nové hodnoty
-nečíselníkového typu, musí být jejich zdroj výslovně součástí kontraktu a nesmí
-se domýšlet z prezentační vrstvy.
+Aplikační zápis je chráněn `CatalogPermission::canManage()` a používá
+sdílený `Transaction`. Ceny a sklad zůstávají vlastnictvím modulů
+Pricing a Inventory. Implementace nevyžaduje změnu databázového schématu;
+nové cs/en texty matice dodává idempotentní seed
+`migrations/dummy-data/2026-11-24-060000-seed-catalog-product-variants-admin.sql`.
 
+Ověření pokrývají `ProductVariantMatrixIntegration.phpt` a
+`ProductVariantGenerationIntegration.phpt`; kanonizaci
+a shodu PHP/MySQL SHA-256 dále ověřují existující testy
+`VariantCombinationHash.phpt`, `VariantCombinationHashIntegration.phpt`
+a `VariantSelectorIntegration.phpt`.
 ## DI registrace
 
 `Infrastructure/DI/CatalogExtension` je automaticky objevena konvencí
