@@ -14,7 +14,7 @@ use App\Shared\Domain\Locale\Locale;
 use App\Shared\Domain\Locale\LocaleProvider;
 use InvalidArgumentException;
 
-final class ProductWriteService
+final class ProductWriteService implements ProductWriter
 {
     public function __construct(
         private readonly ProductWriteRepository $repository,
@@ -30,8 +30,8 @@ final class ProductWriteService
      */
     public function create(
         string $code,
-        ProductStatus $status,
-        ProductType $type,
+        ProductAdminStatus $status,
+        ProductAdminType $type,
         int $taxClassId,
         array $translations,
         array $categoryIds,
