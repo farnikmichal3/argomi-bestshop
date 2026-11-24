@@ -3,6 +3,11 @@
 declare(strict_types=1);
 
 use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Api\CategoryTreeReader;
+use App\Modules\Catalog\Api\ProductEditorReader;
+use App\Modules\Catalog\Application\ProductWriteService;
+use App\Modules\Tax\Api\TaxClassOptionReader;
+use App\Modules\Translation\Api\TranslatorFactory;
 use App\Shared\Domain\Locale\LocaleProvider;
 use App\UI\Admin\Products\ProductAdminDataGridFactory;
 use App\UI\Admin\Products\ProductsPresenter;
@@ -33,10 +38,26 @@ $deniedPermission = new class implements CatalogPermission {
     }
 };
 
+/** @var ProductEditorReader $productEditorReader */
+$productEditorReader = $integration->container->getByType(ProductEditorReader::class);
+/** @var TaxClassOptionReader $taxClassOptionReader */
+$taxClassOptionReader = $integration->container->getByType(TaxClassOptionReader::class);
+/** @var ProductWriteService $productWriter */
+$productWriter = $integration->container->getByType(ProductWriteService::class);
+/** @var CategoryTreeReader $categoryTreeReader */
+$categoryTreeReader = $integration->container->getByType(CategoryTreeReader::class);
+/** @var TranslatorFactory $translatorFactory */
+$translatorFactory = $integration->container->getByType(TranslatorFactory::class);
+
 $presenter = new ProductsPresenter(
     $gridFactory,
     $deniedPermission,
     $localeProvider,
+    $productEditorReader,
+    $taxClassOptionReader,
+    $productWriter,
+    $categoryTreeReader,
+    $translatorFactory,
 );
 
 Assert::exception(
