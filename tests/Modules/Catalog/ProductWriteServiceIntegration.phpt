@@ -89,6 +89,15 @@ try {
     Assert::count(count($localeProvider->getActiveLocales()), $database->table('product_translation')->where('product_id', $productId)->fetchAll());
     Assert::same(1, $database->table('product_category')->where('product_id', $productId)->count('*'));
 
+    /** @var ProductEditorReader $editorReader */
+    $editorReader = $integration->container->getByType(ProductEditorReader::class);
+    $editorData = $editorReader->findForEdit($productId);
+    Assert::notNull($editorData);
+    Assert::same($productId, $editorData->id);
+    Assert::same([$categoryId], $editorData->categoryIds);
+    Assert::count(count($localeProvider->getActiveLocales()), $editorData->translations);
+    Assert::true(count($editorReader->findTaxClasses()) > 0);
+
     $service->update(
         $productId,
         $code,
