@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.102 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.103 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -75,9 +75,12 @@ Celkem **556 kroků**: hotovo 191, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.102 (24. 11. 2026)
-- Zahájen F5-19: administrační správa katalogových atributů a enum hodnot. Databázové schéma již obsahovalo potřebné tabulky a vazby, proto nebyla měněna historická ani strukturální migrace. Přidány veřejné read/write kontrakty, DTO, aplikační služby, databázový adaptér, Admin UI, cs/en seedy a integrační testy. Zápisy jsou transakční; změna typu je blokována při existujících hodnotách nebo osách variant, mazání atributu při použití jako osy a mazání enum hodnoty při použití variantou.
-- F5-19 zatím čeká na CI, lokální kontroly a ruční ověření administrace. Souhrn F5: **20 hotovo**, **2 rozpracováno**, **16 plán**. Celkem: **191 hotovo**, **2 rozpracováno**, **1 k úpravě**, **355 plán**, **7 zrušeno**.
+### v3.103 (24. 11. 2026)
+- Uživatel potvrdil úplnou funkčnost F5-19 – administrační správy katalogových atributů a enum hodnot – včetně zobrazení a ukládání. Krok je označen jako HOTOVO; databázové schéma nebylo nutné měnit.
+- Zahájen F5-20: rozšíření editoru produktu do profesionální administrační pracovní plochy. Schválen lokálně hostovaný WYSIWYG editor HugeRTE pod licencí MIT; popisy zůstávají lokalizované a jejich HTML bude vždy sanitizováno na serveru přes HtmlPurifier.
+- F5-20 zahrnuje přiřazení běžných produktových atributů a hodnot, oddělené nastavení os variant, moderní kartu/tabs editoru produktu a integraci HugeRTE. V této fázi se připraví pouze stabilní integrační bod pro budoucí knihovnu médií; vlastní nahrávání a správu obrázků neimplementujeme.
+- F5-22 je vymezen jako samostatný Media workflow: vlastní knihovna médií, bezpečné nahrávání, originály a odvozené WebP/volitelně AVIF varianty, náhledy, řazení, hlavní obrázek, ALT text, vazby na produkt/variantu a výběr médií přímo z HugeRTE. Projekt již obsahuje intervention/image 4.4, ext-gd a ezyang/htmlpurifier; nové PHP knihovny pro základní zpracování obrázků nyní nejsou potřeba.
+- Souhrn F5 zůstává **20 hotovo**, **2 rozpracováno**, **16 plán**. Celkem: **191 hotovo**, **2 rozpracováno**, **1 k úpravě**, **355 plán**, **7 zrušeno**.
 
 ### v3.101 (24. 11. 2026)
 - Dokončen F5-18: uživatel potvrdil úspěšné lokální testy i funkčnost editoru konkrétní varianty v prohlížeči. SKU, EAN, hmotnost a výchozí varianta jsou editovatelné přes veřejné Catalog API a transakční aplikační službu; EAN-8/EAN-13 se validuje včetně kontrolní číslice a globální unikátnosti, výchozí varianta se mění atomicky.
