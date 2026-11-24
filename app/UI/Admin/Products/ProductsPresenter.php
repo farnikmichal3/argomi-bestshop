@@ -204,7 +204,7 @@ final class ProductsPresenter extends TranslatedPresenter
                 !is_string($values['code'])
                 || !is_string($values['status'])
                 || !is_string($values['type'])
-                || !is_string($values['taxClassId'])
+                || (!is_string($values['taxClassId']) && !is_int($values['taxClassId']))
                 || !is_array($values['translations'])
                 || !is_array($values['categoryIds'])
             ) {
@@ -214,7 +214,7 @@ final class ProductsPresenter extends TranslatedPresenter
 
             $status = ProductAdminStatus::tryFrom($values['status']);
             $type = ProductAdminType::tryFrom($values['type']);
-            $taxClassId = filter_var($values['taxClassId'], FILTER_VALIDATE_INT);
+            $taxClassId = filter_var((string) $values['taxClassId'], FILTER_VALIDATE_INT);
             if ($status === null || $type === null || !is_int($taxClassId) || $taxClassId < 1) {
                 $form->addError($translator->translate('products.editor.error.invalid'));
                 return;
