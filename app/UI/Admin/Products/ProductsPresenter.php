@@ -437,7 +437,7 @@ final class ProductsPresenter extends TranslatedPresenter
                 $form->addError($translator->translate('products.editor.error.invalid'));
                 return;
             }
-            $axisIds = array_map(static fn (array $axis): int => $axis['id'], $orderedAxes);
+            $axisIds = array_map(static fn(array $axis): int => $axis['id'], $orderedAxes);
 
             try {
                 $this->productConfigurationWriter->save($this->editData->id, $attributes, $axisIds);
