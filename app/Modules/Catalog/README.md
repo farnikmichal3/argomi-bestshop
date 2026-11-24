@@ -276,3 +276,40 @@ vkládané styly a další nepovolený obsah jsou odstraněny. Povolená URL sch
 jsou HTTP, HTTPS a mailto. Sanitizace probíhá uvnitř transakční aplikační služby
 před předáním popisu do persistence vrstvy; ostatní SEO a krátké texty zůstávají
 prostým textem a jsou escapovány při výstupu.
+
+
+## Oprávnění správy katalogu (F5-26)
+
+Veřejný kontrakt `Api/CatalogPermission` odděluje čtení katalogu
+(`canView()`) od správy (`canManage()`). Aplikační
+`CatalogPermissionResolver` používá výhradně explicitní role:
+
+- `admin`: úplný přístup ke čtení i správě;
+- `catalog_viewer`: pouze čtení;
+- `catalog_manager`: čtení i správa;
+- nepřihlášený uživatel a ostatní role: bez přístupu ke katalogu.
+
+Role jsou součástí základních dat Identity. Adaptér
+`NetteCatalogPermissionService` předává autentizaci a role z Nette Identity
+resolveru; budoucí výměna Identity/RBAC tak nemění veřejný kontrakt Catalogu.
+Tato vrstva představuje základní modulová oprávnění, nikoli úplnou ACL matici
+nebo administrační správu účtů a rolí.
+
+Admin presentery kontrolují oprávnění při každé chráněné akci a znovu při
+zpracování formulářů/POST handlerů. Čtecí role může prohlížet produkty,
+kategorie, atributy a matici variant; nemůže vytvářet ani upravovat záznamy,
+přeřazovat kategorie, upravovat varianty nebo generovat jejich kombinace.
+Navigace a akční odkazy jsou pouze UX vrstva, nikoli bezpečnostní hranice.
+
+Zapisovací aplikační služby znovu kontrolují `canManage()`: produkty,
+produktovou konfiguraci, kategorie a jejich pořadí, atributy a enum hodnoty,
+generování i editaci variant, produktové vztahy a registraci produktových
+obrázků. Přímé volání aplikační služby proto nemůže obejít prezentační
+autorizaci.
+
+Ověření pokrývá `CatalogPermissionResolver.phpt`,
+`CategoriesPresenterAuthorizationIntegration.phpt`,
+`ProductsPresenterAuthorizationIntegration.phpt`,
+`VariantsPresenterAuthorizationIntegration.phpt`,
+`ProductRelationManagerIntegration.phpt` a
+`ProductImageRegistrationAuthorization.phpt`.
