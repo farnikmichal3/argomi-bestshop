@@ -162,7 +162,7 @@ final readonly class DatabaseProductVariantGenerationRepository implements Produ
         if (!is_bool($value)) {
             throw new UnexpectedValueException('Logická hodnota musí být boolean.');
         }
-        return $this->database->table('product_variant_attribute_value')->insert([
+        return $this->insertAttributeValue([
             'product_variant_id' => $variantId,
             'product_id' => $productId,
             'attribute_id' => $attributeId,
