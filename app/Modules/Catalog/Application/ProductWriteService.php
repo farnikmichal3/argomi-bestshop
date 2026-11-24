@@ -40,6 +40,8 @@ final class ProductWriteService implements ProductWriter
         array $categoryIds,
     ): int {
         $this->assertCanManage();
+        $domainStatus = ProductStatus::from($status->value);
+        $domainType = ProductType::from($type->value);
         $code = self::normalizeCode($code);
         $localized = $this->normalizeTranslations($translations);
         $categories = self::normalizeCategoryIds($categoryIds);
@@ -49,8 +51,8 @@ final class ProductWriteService implements ProductWriter
             throw new InvalidArgumentException('Kód produktu již existuje.');
         }
 
-        return $this->transaction->run(function () use ($code, $status, $type, $taxClassId, $localized, $categories): int {
-            $productId = $this->repository->createProduct($code, $status, $type, $taxClassId);
+        return $this->transaction->run(function () use ($code, $domainStatus, $domainType, $taxClassId, $localized, $categories): int {
+            $productId = $this->repository->createProduct($code, $domainStatus, $domainType, $taxClassId);
             $this->saveTranslations($productId, $localized);
             $this->repository->replaceCategories($productId, $categories);
             return $productId;
@@ -64,13 +66,15 @@ final class ProductWriteService implements ProductWriter
     public function update(
         int $productId,
         string $code,
-        ProductStatus $status,
-        ProductType $type,
+        ProductAdminStatus $status,
+        ProductAdminType $type,
         int $taxClassId,
         array $translations,
         array $categoryIds,
     ): void {
         $this->assertCanManage();
+        $domainStatus = ProductStatus::from($status->value);
+        $domainType = ProductType::from($type->value);
         if ($productId < 1 || !$this->repository->productExists($productId)) {
             throw new InvalidArgumentException('Produkt nebyl nalezen.');
         }
@@ -84,8 +88,8 @@ final class ProductWriteService implements ProductWriter
             throw new InvalidArgumentException('Kód produktu již existuje.');
         }
 
-        $this->transaction->run(function () use ($productId, $code, $status, $type, $taxClassId, $localized, $categories): void {
-            $this->repository->updateProduct($productId, $code, $status, $type, $taxClassId);
+        $this->transaction->run(function () use ($productId, $code, $domainStatus, $domainType, $taxClassId, $localized, $categories): void {
+            $this->repository->updateProduct($productId, $code, $domainStatus, $domainType, $taxClassId);
             $this->saveTranslations($productId, $localized);
             $this->repository->replaceCategories($productId, $categories);
         });
