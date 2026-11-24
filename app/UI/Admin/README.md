@@ -33,6 +33,11 @@ Navigační popisky Produkty a Kategorie se proto vždy překládají přes dom�
   databázové dotazy ani vlastní transakční logiku.
 - Oprávnění `CatalogPermission::canManage()` se kontroluje v presenteru
   i znovu v aplikační zapisovací službě.
+- Vnořené hodnoty formuláře (jazykové kontejnery a výběr kategorií) se
+  předávají handleru jako pole pomocí typovaného `array` návratového mapování
+  Nette Forms; výchozí `ArrayHash` se nesmí zaměňovat za PHP pole.
+- Po úspěšném zápisu následuje Post/Redirect/Get a potvrzení přes Nette flash
+  session, které vykresluje společný administrační layout.
 
 ## JavaScript a CSS
 
