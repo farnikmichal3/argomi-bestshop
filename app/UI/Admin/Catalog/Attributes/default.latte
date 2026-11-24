@@ -28,7 +28,7 @@
                     <td>{$attribute->id}</td>
                     <td>{$attribute->name ?? '—'}</td>
                     <td><code>{$attribute->code}</code></td>
-                    <td>{_'attributes.type.' . $attribute->type}</td>
+                    <td>{if $attribute->type === 'text'}{_'attributes.type.text'}{elseif $attribute->type === 'number'}{_'attributes.type.number'}{elseif $attribute->type === 'enum'}{_'attributes.type.enum'}{else}{_'attributes.type.bool'}{/if}</td>
                     <td>{$attribute->valueCount}</td>
                     <td>{if $attribute->isFilterable}{_'attributes.yes'}{else}{_'attributes.no'}{/if}</td>
                     <td>{$attribute->axisCount}</td>
