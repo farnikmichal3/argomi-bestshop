@@ -17,7 +17,7 @@ final readonly class AttributeWriteApiService implements AttributeWriter
         return $this->writeService->create($code, $type, $unitId, $isFilterable, $sortOrder, $translations);
     }
 
-    public function update(int $attributeId, string $code, AttributeType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): void
+    public function update(int $attributeId, string $code, AttributeDataType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): void
     {
         $this->writeService->update($attributeId, $code, $type, $unitId, $isFilterable, $sortOrder, $translations);
     }
