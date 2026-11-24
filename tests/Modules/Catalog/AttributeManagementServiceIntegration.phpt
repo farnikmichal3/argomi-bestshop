@@ -101,6 +101,27 @@ try {
         Assert::same(7, $data->sortOrder);
         Assert::false($data->isFilterable);
         Assert::same(count($localeProvider->getActiveLocales()), count($data->translations));
+        foreach ($localeProvider->getActiveLocales() as $locale) {
+            $localeCode = $locale->getCode();
+            $expectedName = 'updated-' . $token . '-' . $localeCode;
+            Assert::same($expectedName, $data->translations[$localeCode] ?? null);
+            $translationRow = $database->table('attribute_translation')
+                ->where('attribute_id', $attributeId)
+                ->where('locale', $localeCode)
+                ->fetch();
+            Assert::notNull($translationRow);
+            Assert::same($expectedName, $translationRow->name);
+        }
+        $defaultLocaleCode = $localeProvider->getDefault()->getCode();
+        $listedAttribute = null;
+        foreach ($reader->findAll($localeProvider->getDefault()) as $item) {
+            if ($item->id === $attributeId) {
+                $listedAttribute = $item;
+                break;
+            }
+        }
+        Assert::notNull($listedAttribute);
+        Assert::same('updated-' . $token . '-' . $defaultLocaleCode, $listedAttribute->name);
         Assert::count(1, $data->values);
         Assert::same($valueCode, $data->values[0]->code);
         Assert::same(3, $data->values[0]->sortOrder);
