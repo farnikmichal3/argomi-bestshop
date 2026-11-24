@@ -213,7 +213,7 @@ app/
     │   │       └── default.latte
     │   ├── Orders/
     │   ├── Products/
-    │   │   ├── Product/
+    │   │   ├── Variant/
     │   │   │   ├── VariantPresenter.php
     │   │   │   └── edit.latte
     │   │   ├── ProductAdminDataGridDataSource.php
