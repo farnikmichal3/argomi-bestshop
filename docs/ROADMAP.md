@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.95 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.96 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -74,6 +74,9 @@ Celkem **556 kroků**: hotovo 189, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.96 (24. 11. 2026)
+- Opravena Nette presenter mapping cesta administrační matice variant: třída `Admin:Products:Variants` nyní leží v namespace `App\\UI\\Admin\\Products\\Variants` a odpovídající podsložce `UI/Admin/Products/Variants/VariantsPresenter.php`. Odkaz z editoru produktu tak odpovídá konfiguraci `Admin: [App\\UI\\Admin, *, **Presenter]`; šablona matice zůstává explicitně načítána z `UI/Admin/Products/variants.latte`. F5-17 zůstává rozpracováno do lokálního ověření v prohlížeči.
 
 ### v3.93 (24. 11. 2026)
 - Dokončen F5-16: administrační editor základních údajů produktu. Identifikační údaje, lokalizované názvy a popisy, SEO metadata i přiřazení ke kategoriím se ukládají transakčně přes veřejné API Catalog; uživatel ověřil v prohlížeči opětovné načtení uložených změn a funkční flash zprávy. Oprava formuláře navíc pokrývá číselné ID selectů vracené Nette Forms jako `int` i `string`; CI a lokální aktivní kontroly prošly.
