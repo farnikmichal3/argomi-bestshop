@@ -50,8 +50,13 @@ final readonly class ProductConfigurationService implements ProductConfiguration
         foreach ($normalizedAttributes as $entry) {
             $definition = $definitions[$entry['attributeId']];
             $value = $this->normalizeValue($definition['type'], $entry['value'], $entry['attributeId']);
-            if ($definition['type'] === 'enum' && !$this->repository->enumValueBelongsToAttribute($entry['attributeId'], $value)) {
-                throw new InvalidArgumentException('Vybraná enum hodnota nepatří k danému atributu.');
+            if ($definition['type'] === 'enum') {
+                if (!is_int($value)) {
+                    throw new InvalidArgumentException('Enum hodnota atributu musí být celé číslo.');
+                }
+                if (!$this->repository->enumValueBelongsToAttribute($entry['attributeId'], $value)) {
+                    throw new InvalidArgumentException('Vybraná enum hodnota nepatří k danému atributu.');
+                }
             }
             $typedAttributes[] = [
                 'attributeId' => $entry['attributeId'],
