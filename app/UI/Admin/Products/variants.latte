@@ -8,13 +8,16 @@
             <h2 class="h4 mb-0">{$matrix->productName ?? $matrix->productCode}</h2>
         </div>
         {if $canManage}
-        <a class="btn btn-outline-secondary" n:href=":Admin:Products:edit, id => $matrix->productId">
+            <a class="btn btn-outline-secondary" n:href=":Admin:Products:edit, id => $matrix->productId">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                {_'products.variants.back_to_product'}
+            </a>
         {else}
-        <a class="btn btn-outline-secondary" n:href=":Admin:Products:default">
+            <a class="btn btn-outline-secondary" n:href=":Admin:Products:default">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                {_'products.variants.back_to_product'}
+            </a>
         {/if}
-            <i class="bi bi-arrow-left" aria-hidden="true"></i>
-            {_'products.variants.back_to_product'}
-        </a>
     </div>
 
     <section class="card mb-3">
