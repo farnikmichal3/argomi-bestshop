@@ -86,3 +86,17 @@ Administrace atributů je dostupná přes `Admin:Catalog:Attributes` a použív�
 ## Login
 
 Login používá vlastní jednoduchou šablonu bez administračního layoutu a navigace. Sdílí pouze CSS bundle a formulářové styly.
+
+
+## Oprávnění katalogu (F5-26)
+
+Role `catalog_viewer` smí prohlížet seznam produktů, kategorie, atributy
+a matici variant. V seznamu produktů má dostupnou akci Varianty, ale nemá
+akci Úprava; v matici variant nevidí odkazy na editaci konkrétní varianty
+ani formulář generování kombinací. Zpět se vrací na seznam produktů, nikoliv
+do editoru, ke kterému nemá přístup.
+
+Role `catalog_manager` a `admin` mají plný přístup ke správě. Všechny
+prezentační akce a formulářové/POST handlery kontrolují oprávnění na serveru;
+aplikační zapisovací služby provádějí vlastní kontrolu znovu. Skrytí odkazu
+nebo tlačítka nikdy nenahrazuje serverovou autorizaci.
