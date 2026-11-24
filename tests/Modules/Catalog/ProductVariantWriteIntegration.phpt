@@ -80,6 +80,11 @@ try {
 
         $firstId = (int) $first->id;
         $secondId = (int) $second->id;
+        $service->update($firstId, 'F518A-' . $token, '96385074', 100, true);
+        Assert::exception(
+            fn () => $service->update($secondId, 'F518B-' . $token, '96385074', 250, false),
+            InvalidArgumentException::class,
+        );
         $service->update($secondId, 'F518B-UPDATED-' . $token, '4006381333931', 250, true);
 
         $firstReloaded = $database->table('product_variant')->get($firstId);
