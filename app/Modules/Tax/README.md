@@ -5,8 +5,10 @@ minimální veřejný read kontrakt `Api/TaxClassOptionReader` pro administračn
 výběry daňové třídy produktu.
 
 - Veřejné DTO `Api/Dto/TaxClassOption` obsahuje pouze ID, stabilní kód a název.
-- `Infrastructure/Persistence/TaxClassOptionQueryService` čte nabídku přes
-  Nette Database Explorer a mapuje řádky na DTO.
+- `Infrastructure/Persistence/TaxClassOptionQueryService` implementuje veřejný
+  kontrakt, čte nabídku přes Nette Database Explorer a mapuje řádky na DTO.
+  Interní vrstva Tax smí implementovat vlastní veřejné API, ale zůstává
+  nepřístupná ostatním modulům.
 - Katalogový editor používá pouze veřejné Tax API; modul Catalog nečte tabulku
   `tax_class` přímo.
 - Správa daňových tříd, sazeb, zemí a časové platnosti zůstává samostatným
