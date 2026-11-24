@@ -41,16 +41,24 @@ Navigační popisky Produkty a Kategorie se proto vždy překládají přes dom�
 
 ## Matice variant (F5-17)
 
-F5-17 rozšiřuje administraci produktu o správu kombinací variant. UI bude
-pouze prezentační adaptér veřejných kontraktů Catalog; nesmí přímo číst ani
-zapisovat tabulky variant. Serverová kontrola `CatalogPermission::canManage()`
-platí pro načtení i změnu matice. Výpočet kombinací a hashů zůstává v Catalog,
-nikoli v Latte nebo JavaScriptu.
+Z editoru produktu vede odkaz na presenter `Admin:Products:Variants`.
+Matice načítá veřejný `ProductVariantMatrixReader` a změny předává
+veřejnému `ProductVariantGenerator`; UI neobsahuje databázové
+dotazy ani vlastní výpočet hashů. Serverová kontrola
+`CatalogPermission::canManage()` platí pro načtení i změnu.
 
-Matice musí zobrazovat existující varianty i chybějící kombinace bez ztráty
-identity existujících variant. Generování nesmí měnit SKU, aktivitu, výchozí
-příznak, ceny, sklad, obrázky ani historické vazby již uložených variant.
+Stránka zobrazuje existující i chybějící kombinace. Obchodník vybírá pouze
+chybějící kombinace, které chce vytvořit. Generování je transakční a idempotentní;
+existující varianty ani jejich SKU, aktivita, výchozí příznak, ceny, sklad,
+obrázky a historické vazby se nemění. Nové varianty dostanou dočasné SKU,
+aktivní stav a nejsou automaticky označeny jako výchozí; ruční správa údajů
+konkrétní varianty navazuje ve F5-18.
 
+Enum hodnoty se načítají z číselníku, logické osy mají hodnoty Ano/Ne a
+číselné/textové hodnoty se v této iteraci odvozují z existujících variant.
+Pokud taková osa zatím nemá žádnou hodnotu, stránka generování zablokuje;
+zadávání nových hodnot naváže na správu atributů a os. Matice je omezena
+na 256 kombinací.
 ## JavaScript a CSS
 
 - \`assets/js/admin.js\` je jediný vstupní bod Adminu. Načte AdminLTE CSS, Bootstrap Icons, \`shared.js\` a AdminLTE JavaScript v tomto pořadí.
