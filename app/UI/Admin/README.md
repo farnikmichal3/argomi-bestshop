@@ -58,7 +58,8 @@ Enum hodnoty se načítají z číselníku, logické osy mají hodnoty Ano/Ne a
 číselné/textové hodnoty se v této iteraci odvozují z existujících variant.
 Pokud taková osa zatím nemá žádnou hodnotu, stránka generování zablokuje;
 zadávání nových hodnot naváže na správu atributů a os. Matice je omezena
-na 256 kombinací.
+na 256 kombinací. F5-17 je dokončeno; lokální testy i funkčnost stránky
+v prohlížeči byly potvrzeny uživatelem.
 ## JavaScript a CSS
 
 - \`assets/js/admin.js\` je jediný vstupní bod Adminu. Načte AdminLTE CSS, Bootstrap Icons, \`shared.js\` a AdminLTE JavaScript v tomto pořadí.
