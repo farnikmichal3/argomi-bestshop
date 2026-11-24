@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Api;
 
-
-
 interface AttributeWriter
 {
     /** @param array<string, mixed> $translations */
     public function create(string $code, AttributeDataType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): int;
 
     /** @param array<string, mixed> $translations */
-    public function update(int $attributeId, string $code, AttributeType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): void;
+    public function update(int $attributeId, string $code, AttributeDataType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): void;
 
     public function delete(int $attributeId): void;
 
