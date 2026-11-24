@@ -85,7 +85,6 @@ final class AttributesPresenter extends TranslatedPresenter
         $this->attribute = $this->attributeReader->findForEdit($id);
         if ($this->attribute === null || $this->attribute->type !== AttributeDataType::Enum) {
             $this->redirect('default');
-            return;
         }
         foreach ($this->attribute->values as $value) {
             if ($value->id === $valueId) {
