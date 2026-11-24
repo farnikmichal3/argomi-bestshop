@@ -65,7 +65,7 @@ final readonly class DatabaseProductConfigurationRepository implements ProductCo
                 'enum' => $values['attribute_value_id'] = $entry['value'],
                 'number' => $values['value_number'] = $entry['value'],
                 'text' => $values['value_text'] = $entry['value'],
-                'bool' => $values['value_number'] = $entry['value'] ? 1 : 0,
+                'bool' => $values['value_number'] = $entry['value'] === true ? 1 : 0,
                 default => throw new UnexpectedValueException('Nepodporovaný typ produktového atributu.'),
             };
             $this->database->table('product_attribute_value')->insert($values);
