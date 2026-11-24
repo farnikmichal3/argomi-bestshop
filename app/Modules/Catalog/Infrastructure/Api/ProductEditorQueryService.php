@@ -64,6 +64,7 @@ final readonly class ProductEditorQueryService implements ProductEditorReader
         );
     }
 
+    /** @return list<array{id: int, code: string, name: string}> */
     public function findTaxClasses(): array
     {
         $options = [];
