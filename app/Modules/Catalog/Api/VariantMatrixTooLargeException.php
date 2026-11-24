@@ -6,6 +6,4 @@ namespace App\Modules\Catalog\Api;
 
 use RuntimeException;
 
-final class VariantMatrixTooLargeException extends RuntimeException
-{
-}
+final class VariantMatrixTooLargeException extends RuntimeException {}
