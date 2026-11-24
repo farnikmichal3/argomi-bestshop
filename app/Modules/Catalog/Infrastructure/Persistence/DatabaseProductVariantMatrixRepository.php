@@ -9,6 +9,7 @@ use App\Modules\Catalog\Api\Dto\VariantMatrixAxis;
 use App\Modules\Catalog\Api\Dto\VariantMatrixCombination;
 use App\Modules\Catalog\Api\Dto\VariantMatrixValue;
 use App\Modules\Catalog\Api\ProductVariantMatrixReader;
+use App\Modules\Catalog\Api\VariantMatrixTooLargeException;
 use App\Modules\Catalog\Domain\Variant\VariantCombinationHash;
 use App\Shared\Domain\Locale\Locale;
 use InvalidArgumentException;
@@ -245,7 +246,7 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
     private function appendCombinations(array $axes, int $index, array $values, array $existingByHash, array &$combinations): void
     {
         if (count($combinations) >= self::MAX_COMBINATIONS) {
-            throw new InvalidArgumentException('Matice variant překračuje bezpečný limit 256 kombinací.');
+            throw new VariantMatrixTooLargeException('Matice variant překračuje bezpečný limit 256 kombinací.');
         }
         if ($index === count($axes)) {
             $hash = VariantCombinationHash::create($values);
