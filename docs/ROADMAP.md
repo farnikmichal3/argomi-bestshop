@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.107 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.108 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -74,6 +74,13 @@ Celkem **556 kroků**: hotovo 192, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.108 (24. 11. 2026)
+- F5-26: rozšířeno a sjednoceno základní oprávnění katalogu. Role `catalog_viewer` má read-only přístup k produktům, kategoriím, atributům a matici variant; `catalog_manager` a `admin` mohou katalog spravovat. Matice variant je dostupná i z výpisu produktů, ale čtecí role nevidí editaci variant ani generování kombinací.
+- Serverové kontroly zůstávají v presenterech, formulářových handlerech a POST akcích. Oprávnění `canManage()` nově vynucují také aplikační služby produktových vztahů a registrace obrázků; stávající zápisy produktů, kategorií, atributů, konfigurace a variant již kontrolu obsahují.
+- Přidány integrační testy pro read-only/manager přístup k matici variant, zákaz přímé editace variant, ochranu produktových vztahů a registrace obrázků. Doplněna dokumentace Catalogu a Admin UI i idempotentní cs/en seed akce Varianty.
+- GitHub Actions CI run `45405915577` prošel: dopředné migrace MySQL 8.4, automatické testy, PHPStan, coding standard a architektonická kontrola. F5-26 zůstává ROZDĚLÁNO do lokálního `check.bat` a ověření administrace; F5-20 je HOTOVO.
+- Souhrn F5: **21 hotovo**, **1 rozpracováno**, **16 plán**. Celkem: **192 hotovo**, **1 rozpracováno**, **1 k úpravě**, **355 plán**, **7 zrušeno**.
 
 ### v3.107 (24. 11. 2026)
 - Dokončen F5-20: produktový editor nyní vedle základních a lokalizovaných údajů podporuje typované hodnoty katalogových atributů (enum/text/number/bool) a samostatnou konfiguraci os variant včetně explicitního pořadí. Čtení i zápis probíhají přes veřejné Catalog kontrakty; aplikační vrstva zachovává typové validace a ochranu konfigurace u produktů s existujícími variantami.
