@@ -108,6 +108,7 @@ final class ProductsPresenter extends TranslatedPresenter
             $this,
             $name,
             $this->resolveLocale(),
+            $this->catalogPermission->canManage(),
         );
     }
 
