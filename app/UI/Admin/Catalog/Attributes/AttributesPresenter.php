@@ -86,6 +86,7 @@ final class AttributesPresenter extends TranslatedPresenter
         $this->attribute = $this->attributeReader->findForEdit($id);
         if ($this->attribute === null || $this->attribute->type !== AttributeDataType::Enum) {
             $this->redirect('default');
+            return;
         }
         foreach ($this->attribute->values as $value) {
             if ($value->id === $valueId) {
@@ -360,6 +361,10 @@ final class AttributesPresenter extends TranslatedPresenter
 
     /** @param array<string, mixed> $values
      *  @return array{string, AttributeDataType, ?int, bool, int, array<string, mixed>}|null
+     */
+    /**
+     * @param array<string, mixed> $values
+     * @return array{string, AttributeDataType, ?int, bool, int, array<string, mixed>}|null
      */
     private function parseAttributeValues(array $values): ?array
     {
