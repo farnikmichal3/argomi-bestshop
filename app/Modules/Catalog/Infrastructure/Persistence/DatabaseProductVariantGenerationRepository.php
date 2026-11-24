@@ -88,9 +88,6 @@ final readonly class DatabaseProductVariantGenerationRepository implements Produ
             'is_active' => 1,
             'sort_order' => $sortOrder,
         ]);
-        if (!$row instanceof ActiveRow) {
-            throw new UnexpectedValueException('Databáze nepotvrdila vytvoření varianty.');
-        }
         return $this->toInt($row->id, 'product_variant.id');
     }
 
@@ -102,16 +99,13 @@ final readonly class DatabaseProductVariantGenerationRepository implements Produ
         string $type,
         string|bool $value,
     ): void {
-        $row = match ($type) {
+        match ($type) {
             'enum' => $this->insertEnumValue($productId, $attributeId, $variantId, $value),
             'number' => $this->insertNumberValue($productId, $attributeId, $variantId, $value),
             'text' => $this->insertTextValue($productId, $attributeId, $variantId, $value),
             'bool' => $this->insertBooleanValue($productId, $attributeId, $variantId, $value),
             default => throw new UnexpectedValueException(sprintf('Atribut %s má nepodporovaný typ.', $attributeCode)),
         };
-        if (!$row instanceof ActiveRow) {
-            throw new UnexpectedValueException('Databáze nepotvrdila uložení hodnoty varianty.');
-        }
     }
 
     private function insertEnumValue(int $productId, int $attributeId, int $variantId, string|bool $value): ActiveRow
@@ -126,7 +120,7 @@ final readonly class DatabaseProductVariantGenerationRepository implements Produ
         if ($enum === null) {
             throw new UnexpectedValueException('Enum hodnota nebyla nalezena.');
         }
-        return $this->database->table('product_variant_attribute_value')->insert([
+        return $this->insertAttributeValue([
             'product_variant_id' => $variantId,
             'product_id' => $productId,
             'attribute_id' => $attributeId,
@@ -171,6 +165,18 @@ final readonly class DatabaseProductVariantGenerationRepository implements Produ
             'attribute_id' => $attributeId,
             'value_number' => $value ? 1 : 0,
         ]);
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     */
+    private function insertAttributeValue(array $values): ActiveRow
+    {
+        $row = $this->database->table('product_variant_attribute_value')->insert($values);
+        if (!$row instanceof ActiveRow) {
+            throw new UnexpectedValueException('Databáze nepotvrdila uložení hodnoty varianty.');
+        }
+        return $row;
     }
 
     private function toInt(mixed $value, string $field): int
