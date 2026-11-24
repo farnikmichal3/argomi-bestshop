@@ -18,6 +18,7 @@ use InvalidArgumentException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\UniqueConstraintViolationException;
+use Nette\Localization\Translator;
 
 final class VariantsPresenter extends TranslatedPresenter
 {
