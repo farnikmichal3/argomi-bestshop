@@ -134,8 +134,11 @@ implementuje `Application/ProductVariantGenerationService` a jeho
 Aplikační zápis je chráněn `CatalogPermission::canManage()` a používá
 sdílený `Transaction`. Ceny a sklad zůstávají vlastnictvím modulů
 Pricing a Inventory. Implementace nevyžaduje změnu databázového schématu;
-nové cs/en texty matice dodává idempotentní seed
-`migrations/dummy-data/2026-11-24-060000-seed-catalog-product-variants-admin.sql`.
+nové cs/en texty matice dodávají idempotentní seedy
+`migrations/dummy-data/2026-11-24-060000-seed-catalog-product-variants-admin.sql`
+a `migrations/dummy-data/2026-11-24-070000-seed-catalog-variant-matrix-limit.sql`.
+Překročení limitu vrací veřejnou výjimku `Api/VariantMatrixTooLargeException`,
+kterou Admin UI převádí na lokalizované upozornění.
 
 Ověření pokrývají `ProductVariantMatrixIntegration.phpt` a
 `ProductVariantGenerationIntegration.phpt`; kanonizaci
