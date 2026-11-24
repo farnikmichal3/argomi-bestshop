@@ -137,7 +137,11 @@ final class VariantsPresenter extends TranslatedPresenter
             ->setHtmlAttribute('class', 'btn btn-primary');
 
         $productId = $this->matrix->productId;
-        $form->onSuccess[] = function (Form $form, array $values) use ($translator, $candidateByHash, $productId): void {
+        $form->onSuccess[] = function (Form $form, array $values) use (
+            $translator,
+            $candidateByHash,
+            $productId,
+        ): void {
             if (!$this->catalogPermission->canManage()) {
                 throw new ForbiddenRequestException();
             }
