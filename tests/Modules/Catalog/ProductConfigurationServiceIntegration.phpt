@@ -78,7 +78,8 @@ try {
         fn () => $service->save($productId, [], [$attributeIds['waterproof']]),
         InvalidArgumentException::class,
     );
-    Assert::same(4, $database->table('product_attribute_value')->where('product_id', $productId)->count('*'));
+    Assert::same(1, $database->table('product_attribute_value')->where('product_id', $productId)->count('*'));
+    Assert::same('Linen', $database->table('product_attribute_value')->where('product_id', $productId)->where('attribute_id', $attributeIds['material'])->fetch()->value_text);
 
     Assert::exception(
         fn () => $service->save($productId, [
