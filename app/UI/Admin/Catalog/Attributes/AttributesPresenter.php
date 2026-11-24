@@ -142,14 +142,17 @@ final class AttributesPresenter extends TranslatedPresenter
         $form = new Form();
         $form->setTranslator($translator);
         $this->addAttributeFields($form);
-        $form->setDefaults([
+        $defaults = [
             'code' => $attribute->code,
             'type' => $attribute->type->value,
-            'unitId' => $attribute->unitId === null ? '' : (string) $attribute->unitId,
             'isFilterable' => $attribute->isFilterable,
             'sortOrder' => $attribute->sortOrder,
             'translations' => array_map(static fn(string $name): array => ['name' => $name], $attribute->translations),
-        ]);
+        ];
+        if ($attribute->unitId !== null) {
+            $defaults['unitId'] = (string) $attribute->unitId;
+        }
+        $form->setDefaults($defaults);
         $form->addSubmit('submit', 'attributes.form.edit.submit')->setHtmlAttribute('class', 'btn btn-primary');
         $attributeId = $attribute->id;
         $form->onSuccess[] = function (Form $form, array $values) use ($translator, $attributeId): void {
