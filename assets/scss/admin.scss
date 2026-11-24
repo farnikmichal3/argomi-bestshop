@@ -15,3 +15,53 @@ tr[draggable="true"] {
 tr[draggable="true"]:active {
     cursor: grabbing;
 }
+
+.product-editor-card {
+    overflow: hidden;
+    border: 1px solid var(--bs-border-color-translucent);
+    border-radius: 0.85rem;
+    box-shadow: 0 0.35rem 1.25rem rgb(0 0 0 / 4%);
+}
+
+.product-editor-card > .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.15rem 1.35rem;
+    background: var(--bs-body-bg);
+    border-bottom: 1px solid var(--bs-border-color-translucent);
+}
+
+.product-editor-card > .card-body {
+    padding: clamp(1rem, 2vw, 1.75rem);
+}
+
+.product-editor-card form {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.product-editor-card form .form-group,
+.product-editor-card form .mb-3 {
+    min-width: 0;
+}
+
+.product-editor-card textarea[data-hugerte] {
+    min-height: 26rem;
+}
+
+.product-editor-card .tox,
+.product-editor-card .hugerte {
+    max-width: 100%;
+}
+
+.product-editor-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--bs-border-color-translucent);
+}
