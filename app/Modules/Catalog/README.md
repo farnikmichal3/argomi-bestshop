@@ -171,7 +171,7 @@ persistence vrstvy.
 
 Integrační ověření pokrývá `ProductVariantWriteIntegration.phpt`;
 kontrolní číslice EAN-8/EAN-13 ověřuje `VariantEan.phpt`. GitHub Actions run
-`45344360718` prošel: 81 testů, PHPStan, coding standard, architektura a dopředné migrace MySQL 8.4.
+`45344682171` prošel: 81 testů, PHPStan, coding standard, architektura a dopředné migrace MySQL 8.4; test pokrývá také samostatný DB unikátní index EAN.
 
 ## DI registrace
 
