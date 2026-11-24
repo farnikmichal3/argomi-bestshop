@@ -13,7 +13,6 @@ use App\Modules\Catalog\Api\ProductEditorConfigurationReader;
 use App\Modules\Catalog\Api\ProductConfigurationWriter;
 use App\Modules\Catalog\Api\AttributeDataType;
 use App\Modules\Catalog\Api\Dto\ProductEditorConfigurationData;
-use App\Modules\Catalog\Api\Dto\ProductEditorAttributeOption;
 use App\Modules\Catalog\Api\ProductAdminStatus;
 use App\Modules\Catalog\Api\ProductAdminType;
 use App\Modules\Catalog\Api\ProductWriter;
@@ -427,7 +426,7 @@ final class ProductsPresenter extends TranslatedPresenter
                 $form->addError($translator->translate('products.editor.error.invalid'));
                 return;
             }
-            $axisIds = array_column($orderedAxes, 'id');
+            $axisIds = array_map(static fn (array $axis): int => $axis['id'], $orderedAxes);
 
             try {
                 $this->productConfigurationWriter->save($this->editData->id, $attributes, $axisIds);
