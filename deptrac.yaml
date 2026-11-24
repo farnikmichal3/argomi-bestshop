@@ -258,5 +258,5 @@
     PricingInternal: [Shared, External]
     SettingsInternal: [Shared, External]
     ShippingInternal: [Shared, External]
-    TaxInternal: [Shared, External]
+    TaxInternal: [TaxApi, Shared, External]
     TranslationInternal: [TranslationApi, Shared, External]
