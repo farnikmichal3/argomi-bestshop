@@ -78,7 +78,7 @@ final readonly class DatabaseProductVariantGenerationRepository implements Produ
         return $row === null ? 0 : $this->toInt($row->sort_order, 'product_variant.sort_order') + 1;
     }
 
-    public function createVariant(int $productId, string $sku, string $combinationHash, int $sortOrder): void
+    public function createVariant(int $productId, string $sku, string $combinationHash, int $sortOrder): int
     {
         $row = $this->database->table('product_variant')->insert([
             'product_id' => $productId,
@@ -91,6 +91,7 @@ final readonly class DatabaseProductVariantGenerationRepository implements Produ
         if (!$row instanceof ActiveRow) {
             throw new UnexpectedValueException('Databáze nepotvrdila vytvoření varianty.');
         }
+        return $this->toInt($row->id, 'product_variant.id');
     }
 
     public function insertVariantAttributeValue(
