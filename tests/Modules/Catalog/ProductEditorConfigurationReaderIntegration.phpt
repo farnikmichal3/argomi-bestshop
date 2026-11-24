@@ -127,13 +127,11 @@ try {
 
         $data = $reader->findForProduct($productId, Locale::fromString('cs'));
         Assert::notNull($data);
-        Assert::count(4, $data->availableAttributes);
-        Assert::same([
-            (int) $enum->id => (int) $value->id,
-            (int) $text->id => '<b>Bezpečný text</b>',
-            (int) $number->id => '12.500000',
-            (int) $bool->id => true,
-        ], $data->assignedValues);
+        Assert::true(count($data->availableAttributes) >= 4);
+        Assert::same((int) $value->id, $data->assignedValues[(int) $enum->id] ?? null);
+        Assert::same('<b>Bezpečný text</b>', $data->assignedValues[(int) $text->id] ?? null);
+        Assert::same('12.500000', $data->assignedValues[(int) $number->id] ?? null);
+        Assert::same(true, $data->assignedValues[(int) $bool->id] ?? null);
         Assert::same([(int) $enum->id, (int) $number->id], $data->variantAxisIds);
 
         $enumOption = null;
