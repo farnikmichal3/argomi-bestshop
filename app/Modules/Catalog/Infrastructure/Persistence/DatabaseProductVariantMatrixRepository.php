@@ -147,9 +147,9 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
             $valueId = $this->nullableInteger($row->attribute_value_id, 'product_variant_attribute_value.attribute_value_id');
             $value = match ($type) {
                 'enum' => $this->enumValue($valueId, $row->value_number_text, $row->value_text, $enumValuesById),
-                'number' => $this->numberValue($valueId, $row->value_number, $row->value_text, $attribute['code']),
-                'text' => $this->textValue($valueId, $row->value_number, $row->value_text),
-                'bool' => $this->booleanValue($valueId, $row->value_number, $row->value_text),
+                'number' => $this->numberValue($valueId, $row->value_number_text, $row->value_text, $attribute['code']),
+                'text' => $this->textValue($valueId, $row->value_number_text, $row->value_text),
+                'bool' => $this->booleanValue($valueId, $row->value_number_text, $row->value_text),
                 default => throw new UnexpectedValueException('Atribut má nepodporovaný datový typ.'),
             };
 
@@ -316,7 +316,7 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
         if ($valueId !== null || $number === null || $text !== null) {
             throw new UnexpectedValueException('Logická hodnota varianty je neplatná.');
         }
-        $raw = $this->string($number, 'product_variant_attribute_value.value_number');
+        $raw = $this->string($number, 'product_variant_attribute_value.value_number_text');
         $normalized = rtrim(rtrim($raw, '0'), '.');
         if ($normalized !== '0' && $normalized !== '1') {
             throw new UnexpectedValueException('Logická hodnota varianty musí být 0 nebo 1.');
