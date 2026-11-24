@@ -9,6 +9,7 @@ use App\Modules\Catalog\Api\CategoryTreeItem;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\Dto\ProductEditorData;
 use App\Modules\Catalog\Api\ProductEditorReader;
+use App\Modules\Tax\Api\TaxClassOptionReader;
 use App\Modules\Catalog\Application\ProductRepository;
 use App\Modules\Catalog\Application\ProductWriteService;
 use App\Modules\Catalog\Domain\Product\ProductStatus;
@@ -45,6 +46,7 @@ final class ProductsPresenter extends TranslatedPresenter
         private readonly CatalogPermission $catalogPermission,
         private readonly LocaleProvider $localeProvider,
         private readonly ProductEditorReader $productEditorReader,
+        private readonly TaxClassOptionReader $taxClassOptionReader,
         private readonly ProductWriteService $productWriter,
         private readonly CategoryTreeReader $categoryTreeReader,
         private readonly TranslatorFactory $translatorFactory,
@@ -288,8 +290,9 @@ final class ProductsPresenter extends TranslatedPresenter
     {
         $this->categoryOptions = [];
         $this->appendCategoryOptions($this->categoryTreeReader->findTree($this->localeProvider->getDefault()), 0);
-        foreach ($this->productEditorReader->findTaxClasses() as $taxClass) {
-            $this->taxClassOptions[$taxClass['id']] = $taxClass['name'] . ' (' . $taxClass['code'] . ')';
+        $this->taxClassOptions = [];
+        foreach ($this->taxClassOptionReader->findOptions() as $taxClass) {
+            $this->taxClassOptions[$taxClass->id] = $taxClass->name . ' (' . $taxClass->code . ')';
         }
     }
 
