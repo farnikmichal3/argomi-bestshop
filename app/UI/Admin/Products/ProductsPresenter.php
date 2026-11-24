@@ -294,7 +294,7 @@ final class ProductsPresenter extends TranslatedPresenter
             if ($this->creating) {
                 $this->redirect('edit', $productId);
             }
-            $this->redirect('edit', $this->editData?->id ?? 0);
+            $this->redirect('edit', $this->editData->id);
         };
 
         return $form;
@@ -382,6 +382,10 @@ final class ProductsPresenter extends TranslatedPresenter
                 }
 
                 if ($attribute->type === AttributeDataType::Enum) {
+                    if (!is_string($rawValue) && !is_int($rawValue)) {
+                        $form->addError($translator->translate('products.editor.error.invalid'));
+                        return;
+                    }
                     $parsed = filter_var((string) $rawValue, FILTER_VALIDATE_INT);
                     if (!is_int($parsed) || $parsed < 1) {
                         $form->addError($translator->translate('products.editor.error.invalid'));
@@ -420,7 +424,14 @@ final class ProductsPresenter extends TranslatedPresenter
                 }
                 $orderedAxes[] = ['id' => $attribute->id, 'order' => $order];
             }
-            usort($orderedAxes, static fn (array $left, array $right): int => $left['order'] <=> $right['order'] ?: $left['id'] <=> $right['id']);
+            usort($orderedAxes, static function (array $left, array $right): int {
+                $orderComparison = $left['order'] <=> $right['order'];
+                if ($orderComparison !== 0) {
+                    return $orderComparison;
+                }
+
+                return $left['id'] <=> $right['id'];
+            });
             $orders = array_column($orderedAxes, 'order');
             if (count($orders) !== count(array_unique($orders))) {
                 $form->addError($translator->translate('products.editor.error.invalid'));
