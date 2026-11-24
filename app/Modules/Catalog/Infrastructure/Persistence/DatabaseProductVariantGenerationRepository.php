@@ -88,6 +88,9 @@ final readonly class DatabaseProductVariantGenerationRepository implements Produ
             'is_active' => 1,
             'sort_order' => $sortOrder,
         ]);
+        if (!$row instanceof ActiveRow) {
+            throw new UnexpectedValueException('Databáze nepotvrdila vytvoření varianty.');
+        }
         return $this->toInt($row->id, 'product_variant.id');
     }
 
@@ -133,7 +136,7 @@ final readonly class DatabaseProductVariantGenerationRepository implements Produ
         if (!is_string($value)) {
             throw new UnexpectedValueException('Číselná hodnota musí být desetinný řetězec.');
         }
-        return $this->database->table('product_variant_attribute_value')->insert([
+        return $this->insertAttributeValue([
             'product_variant_id' => $variantId,
             'product_id' => $productId,
             'attribute_id' => $attributeId,
