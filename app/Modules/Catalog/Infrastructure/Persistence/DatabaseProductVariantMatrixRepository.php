@@ -48,7 +48,13 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
             ->fetchAll();
 
         if ($axisRows === []) {
-            return new ProductVariantMatrix($productId, $this->string($product->code, 'product.code'), $productName, [], []);
+            return new ProductVariantMatrix(
+                $productId,
+                $this->string($product->code, 'product.code'),
+                $productName,
+                [],
+                [],
+            );
         }
 
         $attributeIds = [];
@@ -109,7 +115,11 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
         foreach ($enumRows as $row) {
             $id = $this->integer($row->id, 'attribute_value.id');
             $attributeId = $this->integer($row->attribute_id, 'attribute_value.attribute_id');
-            $value = new VariantMatrixValue($this->string($row->code, 'attribute_value.code'), $enumLabels[$id] ?? null, $id);
+            $value = new VariantMatrixValue(
+                $this->string($row->code, 'attribute_value.code'),
+                $enumLabels[$id] ?? null,
+                $id,
+            );
             $enumValuesByAttribute[$attributeId][] = $value;
             $enumValuesById[$id] = $value;
         }
@@ -124,7 +134,10 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
             $variantIds[] = $this->integer($row->id, 'product_variant.id');
         }
         $variantValueRows = $variantIds === [] ? [] : $this->database->table('product_variant_attribute_value')
-            ->select('id, product_variant_id, product_id, attribute_id, attribute_value_id, CAST(value_number AS CHAR) AS value_number_text, value_text')
+            ->select(
+                'id, product_variant_id, product_id, attribute_id, attribute_value_id, '
+                . 'CAST(value_number AS CHAR) AS value_number_text, value_text',
+            )
             ->where('product_variant_id', $variantIds)
             ->fetchAll();
 
@@ -145,7 +158,10 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
             }
 
             $type = $attribute['type'];
-            $valueId = $this->nullableInteger($row->attribute_value_id, 'product_variant_attribute_value.attribute_value_id');
+            $valueId = $this->nullableInteger(
+                $row->attribute_value_id,
+                'product_variant_attribute_value.attribute_value_id',
+            );
             $value = match ($type) {
                 'enum' => $this->enumValue($valueId, $row->value_number_text, $row->value_text, $enumValuesById),
                 'number' => $this->numberValue($valueId, $row->value_number_text, $row->value_text, $attribute['code']),
@@ -177,7 +193,13 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
                 default => throw new UnexpectedValueException('Osa má nepodporovaný datový typ.'),
             };
             if ($type === 'number' || $type === 'text') {
-                usort($values, static fn (VariantMatrixValue $a, VariantMatrixValue $b): int => strcmp((string) $a->value, (string) $b->value));
+                usort(
+                    $values,
+                    static fn (VariantMatrixValue $a, VariantMatrixValue $b): int => strcmp(
+                        (string) $a->value,
+                        (string) $b->value,
+                    ),
+                );
             }
             $axes[] = new VariantMatrixAxis(
                 $attributeId,
@@ -193,7 +215,9 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
             $id = $this->integer($row->id, 'product_variant.id');
             $storedValues = $variantValuesById[$id] ?? [];
             if (count($storedValues) !== count($axes)) {
-                throw new UnexpectedValueException('Existující varianta nemá právě jednu hodnotu pro každou osu produktu.');
+                throw new UnexpectedValueException(
+                    'Existující varianta nemá právě jednu hodnotu pro každou osu produktu.',
+                );
             }
             $hashInput = [];
             foreach ($axes as $axis) {
@@ -243,7 +267,13 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
      * @param array<string, array{id: int, sku: string, isActive: bool, isDefault: bool}> $existingByHash
      * @param list<VariantMatrixCombination> $combinations
      */
-    private function appendCombinations(array $axes, int $index, array $values, array $existingByHash, array &$combinations): void
+    private function appendCombinations(
+        array $axes,
+        int $index,
+        array $values,
+        array $existingByHash,
+        array &$combinations,
+    ): void
     {
         if (count($combinations) >= self::MAX_COMBINATIONS) {
             throw new VariantMatrixTooLargeException('Matice variant překračuje bezpečný limit 256 kombinací.');
