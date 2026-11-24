@@ -1,8 +1,8 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.14 · 22. 11. 2026  
-**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 22. 11. 2026
+**Revize:** 4.15 · 24. 11. 2026  
+**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 24. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
 
@@ -24,17 +24,30 @@ app/
 │   ├── Cart/
 │   ├── Catalog/
 │   │   ├── Api/
-│   │   │   └── Event/
+│   │   │   ├── Dto/
+│   │   │   │   ├── ProductVariantMatrix.php
+│   │   │   │   ├── VariantMatrixAxis.php
+│   │   │   │   ├── VariantMatrixCombination.php
+│   │   │   │   └── VariantMatrixValue.php
+│   │   │   ├── Event/
+│   │   │   ├── ProductVariantGenerator.php
+│   │   │   └── ProductVariantMatrixReader.php
 │   │   ├── Application/
 │   │   │   ├── Dto/
 │   │   │   │   ├── ProductDto.php
 │   │   │   │   └── ProductTranslationDto.php
-│   │   │   └── ProductRepository.php
+│   │   │   ├── ProductRepository.php
+│   │   │   ├── ProductVariantGenerationRepository.php
+│   │   │   └── ProductVariantGenerationService.php
 │   │   ├── Domain/
+│   │   │   ├── Attribute/
+│   │   │   └── Variant/
 │   │   └── Infrastructure/
 │   │       ├── DI/
 │   │       └── Persistence/
-│   │           └── DatabaseProductRepository.php
+│   │           ├── DatabaseProductRepository.php
+│   │           ├── DatabaseProductVariantGenerationRepository.php
+│   │           └── DatabaseProductVariantMatrixRepository.php
 │   ├── Checkout/
 │   ├── Customer/
 │   ├── Identity/
@@ -196,9 +209,11 @@ app/
     │   │   ├── ProductAdminDataGridDataSource.php
     │   │   ├── ProductAdminDataGridFactory.php
     │   │   ├── ProductsPresenter.php
+    │   │   ├── VariantsPresenter.php
     │   │   ├── create.latte
     │   │   ├── edit.latte
-    │   │   └── default.latte
+    │   │   ├── default.latte
+    │   │   └── variants.latte
     │   ├── Settings/
     │   └── Translations/
     │       ├── TranslationsPresenter.php
@@ -216,6 +231,8 @@ app/
         ├── Form/
         └── Latte/
 ```
+
+F5-17 doplňuje veřejný read kontrakt `Catalog/Api/ProductVariantMatrixReader`, DTO matice, kontrakt `ProductVariantGenerator`, transakční `ProductVariantGenerationService`, dva databázové adaptéry a administrační `UI/Admin/Products/VariantsPresenter` s šablonou `variants.latte`. Generování používá existující `VariantCombinationHash`; databázové schéma se nemění. Testy jsou `ProductVariantMatrixIntegration.phpt` a `ProductVariantGenerationIntegration.phpt`.
 
 Poznámky:
 - `Shared/Domain/Exception` obsahuje společnou hierarchii výjimek: abstraktní `DomainException` navazuje na nativní PHP `DomainException`, `NotFoundException` označuje nenalezený doménový objekt a `InvalidInputException` zachovává dědičnost nativní `InvalidArgumentException`. Výjimky nejsou registrovány v DI; existující specializované výjimky se převádějí pouze při zachování jejich významu.
