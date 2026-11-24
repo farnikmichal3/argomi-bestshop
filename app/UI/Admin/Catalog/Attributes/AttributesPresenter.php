@@ -77,7 +77,7 @@ final class AttributesPresenter extends TranslatedPresenter
         }
         $this->template->attribute = $this->attribute;
         $this->template->locales = $this->localeProvider->getActiveLocales();
-        $this->template->unitOptions = $this->attributeReader->findUnitOptions($this->localeProvider->getDefault());
+        $this->template->unitOptions = $this->getFormattedUnitOptions();
     }
 
     public function actionEditValue(int $id, int $valueId): void
@@ -341,7 +341,7 @@ final class AttributesPresenter extends TranslatedPresenter
             'enum' => 'attributes.type.enum',
             'bool' => 'attributes.type.bool',
         ])->setHtmlAttribute('class', 'form-select')->setRequired('attributes.form.error.required');
-        $form->addSelect('unitId', 'attributes.form.unit', $this->attributeReader->findUnitOptions($this->localeProvider->getDefault()))
+        $form->addSelect('unitId', 'attributes.form.unit', $this->getFormattedUnitOptions())
             ->setHtmlAttribute('class', 'form-select')->setPrompt('attributes.form.unit.none');
         $form->addCheckbox('isFilterable', 'attributes.form.filterable');
         $form->addInteger('sortOrder', 'attributes.form.sort_order')->setHtmlAttribute('class', 'form-control')->setDefaultValue(0)->addRule(Form::Min, 'attributes.form.error.invalid', 0);
