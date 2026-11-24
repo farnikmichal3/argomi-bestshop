@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.108 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.109 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **556 kroků**: hotovo 192, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 355, zrušeno 7.
+Celkem **556 kroků**: hotovo 193, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 355, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **556 kroků**: hotovo 192, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 38 | 21 | 1 | 0 | 0 | 0 | 16 | 0 |
+| F5 | Catalog (vlna 1) | 38 | 22 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -75,12 +75,17 @@ Celkem **556 kroků**: hotovo 192, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
+### v3.109 (24. 11. 2026)
+- Uživatel potvrdil úspěšné lokální testy i funkčnost oprávnění katalogu v administračním rozhraní. F5-26 je dokončeno: read-only přístup role `catalog_viewer`, správa pro `catalog_manager`/`admin`, ochrana presenterů, formulářů, POST akcí i aplikačních zápisových služeb.
+- GitHub Actions CI pro implementaci i následnou dokumentační aktualizaci prošlo. Po lokálním ověření je F5-26 označeno jako HOTOVO; F5 nemá žádný rozpracovaný krok.
+- Souhrn F5: **22 hotovo**, **0 rozpracováno**, **16 plán**. Celkem: **193 hotovo**, **0 rozpracováno**, **1 k úpravě**, **355 plán**, **7 zrušeno**.
+
 ### v3.108 (24. 11. 2026)
 - F5-26: rozšířeno a sjednoceno základní oprávnění katalogu. Role `catalog_viewer` má read-only přístup k produktům, kategoriím, atributům a matici variant; `catalog_manager` a `admin` mohou katalog spravovat. Matice variant je dostupná i z výpisu produktů, ale čtecí role nevidí editaci variant ani generování kombinací.
 - Serverové kontroly zůstávají v presenterech, formulářových handlerech a POST akcích. Oprávnění `canManage()` nově vynucují také aplikační služby produktových vztahů a registrace obrázků; stávající zápisy produktů, kategorií, atributů, konfigurace a variant již kontrolu obsahují.
 - Přidány integrační testy pro read-only/manager přístup k matici variant, zákaz přímé editace variant, ochranu produktových vztahů a registrace obrázků. Doplněna dokumentace Catalogu a Admin UI i idempotentní cs/en seed akce Varianty.
-- GitHub Actions CI run `45405915577` prošel: dopředné migrace MySQL 8.4, automatické testy, PHPStan, coding standard a architektonická kontrola. F5-26 zůstává ROZDĚLÁNO do lokálního `check.bat` a ověření administrace; F5-20 je HOTOVO.
-- Souhrn F5: **21 hotovo**, **1 rozpracováno**, **16 plán**. Celkem: **192 hotovo**, **1 rozpracováno**, **1 k úpravě**, **355 plán**, **7 zrušeno**.
+- GitHub Actions CI run `45405915577` prošel: dopředné migrace MySQL 8.4, automatické testy, PHPStan, coding standard a architektonická kontrola. Následně uživatel potvrdil úspěšné lokální testy i funkčnost administrace; F5-26 je uzavřeno. F5-20 je HOTOVO.
+- Souhrn F5: **22 hotovo**, **0 rozpracováno**, **16 plán**. Celkem: **193 hotovo**, **0 rozpracováno**, **1 k úpravě**, **355 plán**, **7 zrušeno**.
 
 ### v3.107 (24. 11. 2026)
 - Dokončen F5-20: produktový editor nyní vedle základních a lokalizovaných údajů podporuje typované hodnoty katalogových atributů (enum/text/number/bool) a samostatnou konfiguraci os variant včetně explicitního pořadí. Čtení i zápis probíhají přes veřejné Catalog kontrakty; aplikační vrstva zachovává typové validace a ochranu konfigurace u produktů s existujícími variantami.
@@ -748,7 +753,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[PLÁN]` **F5-23** Admin: správa souvisejících a doporučených produktů
 - `[PLÁN]` **F5-24** Validace: kontrola povinných údajů při aktivaci produktu
 - `[PLÁN]` **F5-25** Zákaz přímého mazání: označení produktu jako archivovaný
-- `[ROZDĚLÁNO]` **F5-26** Oprávnění pro správu katalogu
+- `[HOTOVO]` **F5-26** Oprávnění pro správu katalogu
 - `[PLÁN]` **F5-27** Test: načtení demo produktu 1 – bavlněné tričko (varianty velikost × barva)
 - `[PLÁN]` **F5-28** Test: načtení demo produktu 2 – GaN nabíječka (varianty výkon × počet portů × barva)
 - `[PLÁN]` **F5-29** Test: načtení demo produktu 3 – USB-C kabel (varianty délky, konektorů a barvy)
