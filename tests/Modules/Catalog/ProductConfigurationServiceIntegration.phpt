@@ -19,6 +19,7 @@ $integration = IntegrationTestBootstrap::boot($rootDir);
 /** @var Explorer $database */
 $database = $integration->database;
 $token = bin2hex(random_bytes(4));
+$database->beginTransaction();
 $product = $database->table('product')->insert([
     'code' => 'test-config-' . $token,
     'status' => 'draft',
@@ -87,13 +88,9 @@ try {
 
     echo "OK\n";
 } finally {
-    $database->table('product_variant')->where('product_id', $productId)->delete();
-    $database->table('product_attribute_value')->where('product_id', $productId)->delete();
-    $database->table('product_variant_axis')->where('product_id', $productId)->delete();
-    foreach ($attributeIds as $id) {
-        $database->table('attribute')->where('id', $id)->delete();
-    }
-    $database->table('product')->where('id', $productId)->delete();
+    // Testovací data se vrátí zpět transakcí. Fyzické mazání produktů
+    // a variant je záměrně zakázané databázovými ochrannými triggery.
+    $database->rollback();
 }
 ?>
 --EXPECT--
