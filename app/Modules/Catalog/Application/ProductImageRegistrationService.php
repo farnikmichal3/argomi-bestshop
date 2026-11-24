@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application;
 
+use App\Modules\Catalog\Api\CatalogAccessDeniedException;
+use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Application\Dto\StoredProductImageAssetsDto;
 use App\Shared\Application\Transaction\Transaction;
 use Throwable;
@@ -15,6 +17,7 @@ final class ProductImageRegistrationService
         private readonly ProductImageStorage $storage,
         private readonly ProductImageRepository $images,
         private readonly Transaction $transaction,
+        private readonly CatalogPermission $permission,
     ) {}
 
     public function register(
@@ -25,6 +28,9 @@ final class ProductImageRegistrationService
         int $sortOrder = 0,
         int $quality = 82,
     ): int {
+        if (!$this->permission->canManage()) {
+            throw new CatalogAccessDeniedException();
+        }
         if ($productId < 1 || ($variantId !== null && $variantId < 1) || $sortOrder < 0) {
             throw new \InvalidArgumentException('Produkt, varianta a pořadí obrázku mají neplatnou hodnotu.');
         }
