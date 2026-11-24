@@ -24,7 +24,7 @@ final readonly class ProductAdminDataGridFactory
         private TranslatorFactory $translatorFactory,
     ) {}
 
-    public function create(IContainer $parent, string $name, Locale $locale): Control
+    public function create(IContainer $parent, string $name, Locale $locale, bool $canManage): Control
     {
         $catalogTranslator = $this->translatorFactory->createTranslator(TranslationDomain::Catalog, $locale);
         $adminTranslator = $this->translatorFactory->createTranslator(TranslationDomain::Admin, $locale);
@@ -44,7 +44,9 @@ final readonly class ProductAdminDataGridFactory
         $grid->addColumnText('type', 'products.admin.column.type');
         $grid->addColumnText('status', 'products.admin.column.status');
         $grid->addColumnText('categories', 'products.admin.column.categories');
-        $grid->addAction('edit', 'products.admin.action.edit', 'edit', ['id' => 'id']);
+        if ($canManage) {
+            $grid->addAction('edit', 'products.admin.action.edit', 'edit', ['id' => 'id']);
+        }
 
         $categoryOptions = [];
         $this->appendCategoryOptions(
