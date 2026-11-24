@@ -14,6 +14,7 @@ $translations = $form->addContainer('translations');
 $cs = $translations->addContainer('cs');
 $cs->addText('name');
 $cs->addTextArea('description');
+$form->addSelect('taxClassId', null, [1 => 'Standard', 2 => 'Reduced']);
 $form->addMultiSelect('categoryIds', null, [1 => 'Category 1', 2 => 'Category 2']);
 
 $form->setDefaults([
@@ -24,6 +25,7 @@ $form->setDefaults([
             'description' => 'Popis produktu',
         ],
     ],
+    'taxClassId' => '2',
     'categoryIds' => ['1', '2'],
 ]);
 
@@ -33,6 +35,7 @@ Assert::true(is_array($values['translations']));
 Assert::true(is_array($values['translations']['cs']));
 Assert::same('Testovací produkt', $values['translations']['cs']['name']);
 Assert::same('Popis produktu', $values['translations']['cs']['description']);
+Assert::same(2, $values['taxClassId']);
 Assert::same([1, 2], $values['categoryIds']);
 
 echo "OK\n";
