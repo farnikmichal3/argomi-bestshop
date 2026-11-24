@@ -60,6 +60,15 @@ Pokud taková osa zatím nemá žádnou hodnotu, stránka generování zablokuje
 zadávání nových hodnot naváže na správu atributů a os. Matice je omezena
 na 256 kombinací. F5-17 je dokončeno; lokální testy i funkčnost stránky
 v prohlížeči byly potvrzeny uživatelem.
+## Editor konkrétní varianty (F5-18)
+
+Z matice variant vede akce úpravy existující varianty na
+`Admin:Products:Variant:edit`. Presenter používá veřejné kontrakty
+`ProductVariantEditorReader` a `ProductVariantWriter`; databázové dotazy
+ani transakční logika nejsou součástí UI. Formulář spravuje SKU, EAN,
+hmotnost v gramech a výchozí příznak. Výchozí může být pouze aktivní varianta
+a změna výchozí varianty probíhá atomicky. Texty jsou v doméně Catalog.
+
 ## JavaScript a CSS
 
 - \`assets/js/admin.js\` je jediný vstupní bod Adminu. Načte AdminLTE CSS, Bootstrap Icons, \`shared.js\` a AdminLTE JavaScript v tomto pořadí.
