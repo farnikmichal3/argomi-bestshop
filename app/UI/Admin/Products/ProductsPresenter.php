@@ -24,7 +24,6 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Database\UniqueConstraintViolationException;
 use InvalidArgumentException;
-use stdClass;
 
 final class ProductsPresenter extends TranslatedPresenter
 {
@@ -196,33 +195,33 @@ final class ProductsPresenter extends TranslatedPresenter
         $form->addSubmit('submit', 'products.editor.submit')
             ->setHtmlAttribute('class', 'btn btn-primary');
 
-        $form->onSuccess[] = function (Form $form, stdClass $values) use ($translator): void {
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
             if (!$this->catalogPermission->canManage()) {
                 throw new ForbiddenRequestException();
             }
 
             if (
-                !is_string($values->code)
-                || !is_string($values->status)
-                || !is_string($values->type)
-                || !is_string($values->taxClassId)
-                || !is_array($values->translations)
-                || !is_array($values->categoryIds)
+                !is_string($values['code'])
+                || !is_string($values['status'])
+                || !is_string($values['type'])
+                || !is_string($values['taxClassId'])
+                || !is_array($values['translations'])
+                || !is_array($values['categoryIds'])
             ) {
                 $form->addError($translator->translate('products.editor.error.invalid'));
                 return;
             }
 
-            $status = ProductAdminStatus::tryFrom($values->status);
-            $type = ProductAdminType::tryFrom($values->type);
-            $taxClassId = filter_var($values->taxClassId, FILTER_VALIDATE_INT);
+            $status = ProductAdminStatus::tryFrom($values['status']);
+            $type = ProductAdminType::tryFrom($values['type']);
+            $taxClassId = filter_var($values['taxClassId'], FILTER_VALIDATE_INT);
             if ($status === null || $type === null || !is_int($taxClassId) || $taxClassId < 1) {
                 $form->addError($translator->translate('products.editor.error.invalid'));
                 return;
             }
 
             $categoryIds = [];
-            foreach ($values->categoryIds as $categoryId) {
+            foreach ($values['categoryIds'] as $categoryId) {
                 if (!is_string($categoryId) && !is_int($categoryId)) {
                     $form->addError($translator->translate('products.editor.error.invalid'));
                     return;
@@ -236,7 +235,7 @@ final class ProductsPresenter extends TranslatedPresenter
             }
 
             $translations = [];
-            foreach ($values->translations as $locale => $translation) {
+            foreach ($values['translations'] as $locale => $translation) {
                 if (!is_string($locale) || !is_array($translation)) {
                     $form->addError($translator->translate('products.editor.error.invalid'));
                     return;
@@ -247,7 +246,7 @@ final class ProductsPresenter extends TranslatedPresenter
             try {
                 if ($this->creating) {
                     $this->productWriter->create(
-                        $values->code,
+                        $values['code'],
                         $status,
                         $type,
                         $taxClassId,
@@ -257,7 +256,7 @@ final class ProductsPresenter extends TranslatedPresenter
                 } elseif ($this->editData !== null) {
                     $this->productWriter->update(
                         $this->editData->id,
-                        $values->code,
+                        $values['code'],
                         $status,
                         $type,
                         $taxClassId,
