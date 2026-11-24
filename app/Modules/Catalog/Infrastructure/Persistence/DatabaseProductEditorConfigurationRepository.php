@@ -158,10 +158,10 @@ final readonly class DatabaseProductEditorConfigurationRepository implements Pro
         if ($value === null) {
             return null;
         }
-        if ($value === 0 || $value === '0') {
+        if ($value === 0 || (is_string($value) && preg_match('/^0(?:\\.0+)?$/D', $value) === 1)) {
             return false;
         }
-        if ($value === 1 || $value === '1') {
+        if ($value === 1 || (is_string($value) && preg_match('/^1(?:\\.0+)?$/D', $value) === 1)) {
             return true;
         }
         throw new UnexpectedValueException('Databáze vrátila neplatnou logickou hodnotu atributu.');
