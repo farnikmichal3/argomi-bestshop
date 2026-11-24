@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.46 · 22. 11. 2026
+**Revize:** 1.47 · 24. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -56,6 +56,7 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 | Testy | Nette Tester; unit, integrační a architektonické testy podle potřeby |
 | Front-end CSS | Sass |
 | Bundling | esbuild |
+| WYSIWYG editor | HugeRTE (MIT), lokálně hostovaný; vlastní integrace přes Nette Forms a projektový Admin JS |
 | Administrační datagrid | Ublaboo Datagrid; vlastní aplikační obal pro omezení přímé závislosti na knihovně |
 | Front-end framework | Bootstrap 5.3.8 + Bootswatch Cosmo 5.3.8 |
 | AJAX | Naja 3 |
@@ -107,6 +108,14 @@ Pravidla:
 - E-mailové šablony se budou ukládat jako **soubory Latte** v repozitáři, nikoliv do databáze.
 - Šablony jsou verzované společně s aplikací a jejich změny procházejí běžnou kontrolou kódu.
 - Administrátor nebude v první verzi upravovat zdrojové Latte šablony přímo v administraci; případná správa textového obsahu e-mailů se řeší odděleně od šablonovací logiky.
+
+### Rich-text editor produktových popisů
+- Pro administrační WYSIWYG editor produktových popisů je schválen **HugeRTE** pod licencí MIT.
+- Editor se hostuje lokálně v projektu; nepoužívá se CDN, vzdálené fonty ani externí upload služba. Integrace využívá stávající esbuild a Admin JavaScript.
+- HugeRTE je pouze prezentační editor. Autoritativní validace a sanitizace HTML probíhá na serveru přes HtmlPurifier s explicitním allowlistem značek, atributů a bezpečných URL. Klientský editor ani jeho konfigurace nejsou bezpečnostní hranicí.
+- Obsah se ukládá jako HTML v lokalizovaných překladech produktu. Editor nesmí zavádět proprietární datový formát ani obcházet Nette Forms, oprávnění, CSRF nebo aplikační validační kontrakty.
+- Vkládání obrázků bude napojeno na vlastní Media modul F5-22; do jeho dokončení se nepřidává externí upload ani veřejně zapisovatelné URL.
+- Knihovna médií a obrazových variant používá již schválený intervention/image a centrální pravidla generování uvedená níže.
 
 ### Generování a velikosti miniatur obrázků
 
