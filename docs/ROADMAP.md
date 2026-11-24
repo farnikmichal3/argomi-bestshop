@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.106 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.107 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **556 kroků**: hotovo 191, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 355, zrušeno 7.
+Celkem **556 kroků**: hotovo 192, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 355, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **556 kroků**: hotovo 191, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 38 | 20 | 2 | 0 | 0 | 0 | 16 | 0 |
+| F5 | Catalog (vlna 1) | 38 | 21 | 1 | 0 | 0 | 0 | 16 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -75,11 +75,13 @@ Celkem **556 kroků**: hotovo 191, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
+### v3.107 (24. 11. 2026)
+- Dokončen F5-20: produktový editor nyní vedle základních a lokalizovaných údajů podporuje typované hodnoty katalogových atributů (enum/text/number/bool) a samostatnou konfiguraci os variant včetně explicitního pořadí. Čtení i zápis probíhají přes veřejné Catalog kontrakty; aplikační vrstva zachovává typové validace a ochranu konfigurace u produktů s existujícími variantami.
+- Zachována povinná serverová sanitizace HTML popisů přes HtmlPurifier; hodnoty atributů jsou typovaná data a při vykreslení escapovaný prostý text. Přidány cs/en překlady, idempotentní seed, integrační testy a aktualizace dokumentace Catalogu.
+- Ověření dokončeno: GitHub Actions CI prošlo, uživatel potvrdil `All active checks passed.`, dopředná migrace proběhla úspěšně a uživatel potvrdil funkčnost ukládání i opětovného načtení konfigurace v administračním editoru.
+- F5-26 (oprávnění katalogu) zůstává jediným rozpracovaným krokem F5. Souhrn F5: **21 hotovo**, **1 rozpracováno**, **16 plán**. Celkem: **192 hotovo**, **1 rozpracováno**, **1 k úpravě**, **355 plán**, **7 zrušeno**.
+
 ### v3.106 (24. 11. 2026)
-- F5-20: čtecí kontrakt konfigurace produktu je připojen k administračnímu editoru. Samostatná karta načítá dostupné atributy a jejich lokalizované enum hodnoty/jednotky, předvyplní uložené hodnoty a umožňuje nastavit osy variant včetně explicitního pořadí.
-- Zápis používá samostatný formulář a veřejný `ProductConfigurationWriter`; typové kontroly a ochrana proti změně množiny os u produktů s existujícími variantami zůstávají v aplikační službě. Základní editor po vytvoření produktu přesměruje do jeho editace.
-- Přidán idempotentní seed cs/en textů `2026-11-24-110000-seed-catalog-product-configuration-editor.sql`, aktualizován README Catalogu a autorizační integrační test pro nové závislosti presenteru.
-- HtmlPurifier zůstává povinný pro HTML popisy. Atributy se ukládají jako typovaná data a zobrazují jako escapovaný prostý text. F5-20 zůstává ROZDĚLÁNO do CI, lokálních kontrol a ověření editoru v prohlížeči.
 
 ### v3.105 (24. 11. 2026)
 - F5-20: přidán veřejný čtecí kontrakt `ProductEditorConfigurationReader` a typované DTO pro dostupné atributy, lokalizované názvy/jednotky/enum hodnoty, již uložené produktové hodnoty a pořadí os variant.
