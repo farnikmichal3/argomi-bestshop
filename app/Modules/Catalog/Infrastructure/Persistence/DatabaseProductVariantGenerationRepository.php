@@ -149,7 +149,7 @@ final readonly class DatabaseProductVariantGenerationRepository implements Produ
         if (!is_string($value)) {
             throw new UnexpectedValueException('Textová hodnota musí být řetězec.');
         }
-        return $this->database->table('product_variant_attribute_value')->insert([
+        return $this->insertAttributeValue([
             'product_variant_id' => $variantId,
             'product_id' => $productId,
             'attribute_id' => $attributeId,
