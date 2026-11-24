@@ -90,7 +90,7 @@ try {
             ->count('*'));
 
         Assert::exception(
-            static fn () => $service->generate($productId, [[
+            fn () => $service->generate($productId, [[
                 'color' => ['type' => 'enum', 'value' => 'white'],
             ]]),
             InvalidArgumentException::class,
