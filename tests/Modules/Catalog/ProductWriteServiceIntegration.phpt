@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Api\ProductEditorReader;
 use App\Modules\Catalog\Application\ProductWriteRepository;
 use App\Modules\Catalog\Application\ProductWriteService;
 use App\Modules\Catalog\Application\SlugService;
