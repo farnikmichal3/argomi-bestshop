@@ -1,7 +1,10 @@
 {block title}{_'products.admin.title'}{/block}
 
 {block content}
-<div class="py-3">
-    {control productsGrid}
+<div class="d-flex justify-content-end py-3">
+    <a n:if="$canManage" class="btn btn-primary" n:href="create">
+        <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>{_'products.admin.action.create'}
+    </a>
 </div>
+{control productsGrid}
 {/block}
