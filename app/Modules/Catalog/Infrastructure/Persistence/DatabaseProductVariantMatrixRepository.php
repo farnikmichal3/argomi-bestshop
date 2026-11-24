@@ -123,6 +123,7 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
             $variantIds[] = $this->integer($row->id, 'product_variant.id');
         }
         $variantValueRows = $variantIds === [] ? [] : $this->database->table('product_variant_attribute_value')
+            ->select('id, product_variant_id, product_id, attribute_id, attribute_value_id, CAST(value_number AS CHAR) AS value_number_text, value_text')
             ->where('product_variant_id', $variantIds)
             ->fetchAll();
 
@@ -145,7 +146,7 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
             $type = $attribute['type'];
             $valueId = $this->nullableInteger($row->attribute_value_id, 'product_variant_attribute_value.attribute_value_id');
             $value = match ($type) {
-                'enum' => $this->enumValue($valueId, $row->value_number, $row->value_text, $enumValuesById),
+                'enum' => $this->enumValue($valueId, $row->value_number_text, $row->value_text, $enumValuesById),
                 'number' => $this->numberValue($valueId, $row->value_number, $row->value_text, $attribute['code']),
                 'text' => $this->textValue($valueId, $row->value_number, $row->value_text),
                 'bool' => $this->booleanValue($valueId, $row->value_number, $row->value_text),
@@ -296,7 +297,7 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
         if ($valueId !== null || $number === null || $text !== null) {
             throw new UnexpectedValueException('Číselná hodnota varianty je neplatná.');
         }
-        $raw = $this->string($number, 'product_variant_attribute_value.value_number');
+        $raw = $this->string($number, 'product_variant_attribute_value.value_number_text');
         $canonical = VariantCombinationHash::canonicalize([$code => ['type' => 'number', 'value' => $raw]]);
         $normalized = substr($canonical, strlen($code) + 1);
         return new VariantMatrixValue($normalized, $normalized);
