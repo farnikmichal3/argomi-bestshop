@@ -77,7 +77,9 @@ final readonly class DatabaseProductEditorConfigurationRepository implements Pro
     public function findAssignedValues(int $productId): array
     {
         $result = [];
-        foreach ($this->database->table('product_attribute_value')->where('product_id', $productId) as $row) {
+        foreach ($this->database->table('product_attribute_value')
+            ->select('*, CAST(value_number AS CHAR) AS value_number_string')
+            ->where('product_id', $productId) as $row) {
             $attributeId = self::toInt($row->attribute_id);
             $attribute = $this->database->table('attribute')->get($attributeId);
             if (!$attribute instanceof ActiveRow) {
@@ -87,9 +89,9 @@ final readonly class DatabaseProductEditorConfigurationRepository implements Pro
             $type = self::toString($attribute->type);
             $value = match ($type) {
                 'enum' => self::nullableInt($row->attribute_value_id),
-                'number' => self::nullableDecimal($row->value_number),
+                'number' => self::nullableDecimal($row->value_number_string),
                 'text' => self::nullableString($row->value_text),
-                'bool' => self::nullableBool($row->value_number),
+                'bool' => self::nullableBool($row->value_number_string),
                 default => throw new UnexpectedValueException('Datový typ produktového atributu není podporován.'),
             };
             if ($value !== null) {
