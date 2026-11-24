@@ -11,6 +11,7 @@ use App\Modules\Catalog\Application\ProductVariantWriteService;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Database\Explorer;
+use Nette\Database\UniqueConstraintViolationException;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
 
@@ -90,7 +91,7 @@ try {
                 'is_default' => 0,
                 'is_active' => 1,
             ]),
-            Nette\\Database\\UniqueConstraintViolationException::class,
+            UniqueConstraintViolationException::class,
         );
         Assert::exception(
             fn () => $service->update($secondId, 'F518B-' . $token, '96385074', 250, false),
