@@ -33,7 +33,7 @@ Assert::true(is_array($values['translations']));
 Assert::true(is_array($values['translations']['cs']));
 Assert::same('Testovací produkt', $values['translations']['cs']['name']);
 Assert::same('Popis produktu', $values['translations']['cs']['description']);
-Assert::same(['1', '2'], $values['categoryIds']);
+Assert::same([1, 2], $values['categoryIds']);
 
 echo "OK\n";
 ?>
