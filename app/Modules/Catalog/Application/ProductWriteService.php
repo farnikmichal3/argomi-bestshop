@@ -6,6 +6,9 @@ namespace App\Modules\Catalog\Application;
 
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Api\ProductAdminStatus;
+use App\Modules\Catalog\Api\ProductAdminType;
+use App\Modules\Catalog\Api\ProductWriter;
 use App\Modules\Catalog\Domain\Product\ProductStatus;
 use App\Modules\Catalog\Domain\Product\ProductType;
 use App\Modules\Catalog\Domain\Slug\SlugTarget;
