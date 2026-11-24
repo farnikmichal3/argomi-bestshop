@@ -123,7 +123,9 @@ try {
     echo "OK\n";
 } finally {
     if ($productId !== null) {
-        $database->table('product')->where('id', $productId)->delete();
+        // Products are retained by design; remove the test assignment and archive the product.
+        $database->table('product_category')->where('product_id', $productId)->delete();
+        $database->table('product')->where('id', $productId)->update(['status' => ProductStatus::Archived->value]);
     }
     $database->table('category')->where('id', $categoryId)->delete();
 }
