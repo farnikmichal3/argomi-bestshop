@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.99 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.100 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -74,6 +74,9 @@ Celkem **556 kroků**: hotovo 190, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.100 (24. 11. 2026)
+- Závěrečný CI běh po doplnění přímého testu databázového unikátního indexu EAN (`45344682171`, commit `936b59f`) prošel: **81 testů**, PHPStan bez chyb, coding standard, Deptrac a dopředné migrace MySQL 8.4. Ověřena aplikační kontrola duplicity EAN i samostatná ochrana unikátním DB indexem.
 
 ### v3.99 (24. 11. 2026)
 - F5-18: GitHub Actions run `45344360718` úspěšně ověřil dopředné migrace MySQL 8.4, **81 testů**, PHPStan bez chyb, coding standard a Deptrac. Zahrnuje i test globální unikátnosti EAN-8/EAN-13. Implementace čeká na lokální `check.bat` a ruční ověření editoru v prohlížeči.
