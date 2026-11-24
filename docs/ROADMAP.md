@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.91 · 22. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.92 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **556 kroků**: hotovo 187, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 359, zrušeno 7.
+Celkem **556 kroků**: hotovo 188, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 359, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **556 kroků**: hotovo 187, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 38 | 16 | 2 | 0 | 0 | 0 | 20 | 0 |
+| F5 | Catalog (vlna 1) | 38 | 17 | 1 | 0 | 0 | 0 | 20 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -74,6 +74,10 @@ Celkem **556 kroků**: hotovo 187, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.92 (24. 11. 2026)
+- Dokončen F5-38: společný administrační layout na AdminLTE 4, responzivní postranní navigace, jednotné načítání JS/CSS a překlady navigace nezávislé na doméně stránky. Uživatel potvrdil funkčnost celého layoutu v prohlížeči bez problémů; po vyřešení zastaralé cache se načítají správné AdminLTE styly. Upozornění prohlížeče k nepodporovaným direktivám `Permissions-Policy` nemají vliv na aplikaci a nejsou blokující.
+- F5-16 je nyní dalším krokem; F5-26 (oprávnění katalogu) zůstává rozpracováno. Souhrn F5: **17 hotovo**, **1 rozpracováno**, **20 plán**. Celkem: **188 hotovo**, **1 rozpracováno**, **1 k úpravě**, **359 plán**, **7 zrušeno**.
 
 ### v3.91 (22. 11. 2026)
 - Dokončen F5-15: administrační seznam produktů na `/admin/products` včetně filtrů kategorie/stav/typ a stránkování byl ověřen uživatelem přímo v prohlížeči; zobrazení i filtrování fungují správně.
@@ -695,7 +699,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[PLÁN]` **F5-35** Test: načtení demo produktu 4 – kniha / výběrová káva (jednoduchý produkt s výchozí variantou)
 - `[PLÁN]` **F5-36** Test: načtení demo produktu 5 – hrnek s vlastním potiskem (zákaznické volby a příplatky)
 - `[HOTOVO]` **F5-37** Admin: bezpečné mazání kategorií — smazat lze pouze kategorii bez podkategorií a přiřazených produktů; databáze vynucuje `ON DELETE RESTRICT`, překlady se odstraní přes FK `ON DELETE CASCADE`; integrační testy, CI i lokální `check.bat` prošly.
-- `[ROZDĚLÁNO]` **F5-38** Admin: společný `@layout.latte` na AdminLTE 4, responzivní postranní navigace, jednotný vstup JS/CSS a překlady nezávislé na doméně stránky; ověřit desktop, mobil, oprávnění a bezkolizní inicializaci Bootstrap/Naja/Nette Forms. Tento mezikrok předchází F5-16.
+- `[HOTOVO]` **F5-38** Admin: společný `@layout.latte` na AdminLTE 4, responzivní postranní navigace, jednotný vstup JS/CSS a překlady nezávislé na doméně stránky; uživatel potvrdil bezproblémové fungování kompletní administrace v prohlížeči. Tento mezikrok předchází F5-16.
 
 ### F6: Tax, Pricing, Inventory
 
