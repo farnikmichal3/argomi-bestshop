@@ -1,0 +1,12 @@
+{block title}{_'attributes.create.title'}{/block}
+
+{block content}
+<div class="py-3">
+    <section class="card">
+        <div class="card-body">
+            {control createForm}
+            <a class="btn btn-outline-secondary mt-3" n:href="default">{_'attributes.form.cancel'}</a>
+        </div>
+    </section>
+</div>
+{/block}
