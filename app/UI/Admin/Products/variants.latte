@@ -7,7 +7,11 @@
             <div class="text-body-secondary small">{$matrix->productCode}</div>
             <h2 class="h4 mb-0">{$matrix->productName ?? $matrix->productCode}</h2>
         </div>
+        {if $canManage}
         <a class="btn btn-outline-secondary" n:href=":Admin:Products:edit, id => $matrix->productId">
+        {else}
+        <a class="btn btn-outline-secondary" n:href=":Admin:Products:default">
+        {/if}
             <i class="bi bi-arrow-left" aria-hidden="true"></i>
             {_'products.variants.back_to_product'}
         </a>
@@ -90,11 +94,13 @@
                                             {/if}
                                         </td>
                                         <td class="text-end">
-                                            {if $row['variantId'] !== null}
+                                            {if $row['variantId'] !== null && $canManage}
                                                 <a class="btn btn-sm btn-outline-primary" n:href=":Admin:Products:Variant:edit, id => $row['variantId']">
                                                     <i class="bi bi-pencil-square" aria-hidden="true"></i>
                                                     {_'products.variant_editor.title'}
                                                 </a>
+                                            {elseif $row['variantId'] !== null}
+                                                {_'products.variants.existing'}
                                             {else}
                                                 —
                                             {/if}
@@ -130,9 +136,15 @@
     {/if}
 
     <div class="mt-3">
-        <a class="btn btn-outline-secondary" n:href=":Admin:Products:edit, id => $matrix->productId">
-            {_'products.variants.cancel'}
-        </a>
+        {if $canManage}
+            <a class="btn btn-outline-secondary" n:href=":Admin:Products:edit, id => $matrix->productId">
+                {_'products.variants.cancel'}
+            </a>
+        {else}
+            <a class="btn btn-outline-secondary" n:href=":Admin:Products:default">
+                {_'products.variants.cancel'}
+            </a>
+        {/if}
     </div>
 </div>
 {/block}
