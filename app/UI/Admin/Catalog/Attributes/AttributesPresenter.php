@@ -10,7 +10,7 @@ use App\Modules\Catalog\Api\AttributeWriter;
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\Dto\AttributeEditorData;
 use App\Modules\Catalog\Api\Dto\AttributeValueEditorData;
-use App\Modules\Catalog\Domain\Attribute\AttributeType;
+use App\Modules\Catalog\Api\AttributeDataType;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Presentation\TranslatedPresenter;
@@ -83,7 +83,7 @@ final class AttributesPresenter extends TranslatedPresenter
             throw new ForbiddenRequestException();
         }
         $this->attribute = $this->attributeReader->findForEdit($id);
-        if ($this->attribute === null || $this->attribute->type !== AttributeType::Enum) {
+        if ($this->attribute === null || $this->attribute->type !== AttributeDataType::Enum) {
             $this->redirect('default');
         }
         foreach ($this->attribute->values as $value) {
@@ -368,7 +368,7 @@ final class AttributesPresenter extends TranslatedPresenter
         ) {
             return null;
         }
-        $type = AttributeType::tryFrom($values['type']);
+        $type = AttributeDataType::tryFrom($values['type']);
         if ($type === null) {
             return null;
         }
