@@ -69,6 +69,11 @@ ani transakční logika nejsou součástí UI. Formulář spravuje SKU, EAN,
 hmotnost v gramech a výchozí příznak. Výchozí může být pouze aktivní varianta
 a změna výchozí varianty probíhá atomicky. Texty jsou v doméně Catalog.
 
+
+## Správa katalogových atributů (F5-19)
+
+Administrace atributů je dostupná přes `Admin:Catalog:Attributes` a používá veřejné kontrakty `AttributeAdminReader` a `AttributeWriter`. Stránka nabízí seznam a vytvoření/úpravu/bezpečné odstranění atributu; u typu `enum` také samostatnou správu lokalizovaných hodnot. Formuláře pracují s aktivními jazyky z `LocaleProvider`, jednotky načítají z databáze a zápisy předávají transakční aplikační službě. Oprávnění `CatalogPermission` se kontroluje v presenteru i aplikační vrstvě. Navigační popisek patří do domény Admin, obsah stránky do domény Catalog.
+
 ## JavaScript a CSS
 
 - \`assets/js/admin.js\` je jediný vstupní bod Adminu. Načte AdminLTE CSS, Bootstrap Icons, \`shared.js\` a AdminLTE JavaScript v tomto pořadí.
