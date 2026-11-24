@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.100 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.101 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **556 kroků**: hotovo 190, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 356, zrušeno 7.
+Celkem **556 kroků**: hotovo 191, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 356, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **556 kroků**: hotovo 190, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 38 | 19 | 2 | 0 | 0 | 0 | 17 | 0 |
+| F5 | Catalog (vlna 1) | 38 | 20 | 1 | 0 | 0 | 0 | 17 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -74,6 +74,11 @@ Celkem **556 kroků**: hotovo 190, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.101 (24. 11. 2026)
+- Dokončen F5-18: uživatel potvrdil úspěšné lokální testy i funkčnost editoru konkrétní varianty v prohlížeči. SKU, EAN, hmotnost a výchozí varianta jsou editovatelné přes veřejné Catalog API a transakční aplikační službu; EAN-8/EAN-13 se validuje včetně kontrolní číslice a globální unikátnosti, výchozí varianta se mění atomicky.
+- CI run `45344682171` prošel: **81 testů**, PHPStan bez chyb, coding standard, Deptrac a dopředné migrace MySQL 8.4. Následuje F5-19 – administrační správa atributů a jejich hodnot.
+- Souhrn F5: **20 hotovo**, **1 rozpracováno**, **17 plán**. Celkem: **191 hotovo**, **1 rozpracováno**, **1 k úpravě**, **356 plán**, **7 zrušeno**.
 
 ### v3.100 (24. 11. 2026)
 - Závěrečný CI běh po doplnění přímého testu databázového unikátního indexu EAN (`45344682171`, commit `936b59f`) prošel: **81 testů**, PHPStan bez chyb, coding standard, Deptrac a dopředné migrace MySQL 8.4. Ověřena aplikační kontrola duplicity EAN i samostatná ochrana unikátním DB indexem.
@@ -701,7 +706,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-15** Admin: seznam produktů s filtry (kategorie, stav, typ) — stránkovaný read model, Ublaboo DataGrid, lokalizované názvy a kombinovatelné filtry; CI a lokální kontroly prošly, uživatel potvrdil funkční stránku i filtrování v prohlížeči.
 - `[HOTOVO]` **F5-16** Admin: základní záložka produktu (názvy, popisy, zařazení) — transakční editor identifikačních údajů, překladů, SEO metadat a kategorií; uživatel ověřil ukládání, opětovné načtení i flash zprávy v prohlížeči.
 - `[HOTOVO]` **F5-17** Admin: matice variant (generování kombinací z os) — read model, výběr a transakční generování chybějících kombinací přes `ProductVariantGenerator`; limit 256 kombinací, SHA-256 přes `VariantCombinationHash`, existující varianty zůstávají nedotčené; CI prošlo (79 testů, PHPStan, coding standard, architektura) a uživatel potvrdil lokální testy i funkčnost matice v prohlížeči.
-- `[ROZDĚLÁNO]` **F5-18** Admin: úprava konkrétní varianty (SKU, EAN, váha, výchozí) — veřejné API a transakční editor; dopředná migrace EAN, kontrolní číslice a unikátnost; výchozí varianta měněna atomicky v rámci produktu.
+- `[HOTOVO]` **F5-18** Admin: úprava konkrétní varianty (SKU, EAN, váha, výchozí) — veřejné API a transakční editor; dopředná migrace EAN, kontrolní číslice a unikátnost; výchozí varianta měněna atomicky v rámci produktu. CI, lokální aktivní kontroly i ruční ověření v prohlížeči uživatelem potvrzeny.
 - `[PLÁN]` **F5-19** Admin: správa atributů a jejich hodnot
 - `[PLÁN]` **F5-20** Admin: přiřazení atributů k produktu
 - `[PLÁN]` **F5-21** Admin: konfigurace voleb zákazníka pro produkt
