@@ -82,6 +82,17 @@ try {
         $secondId = (int) $second->id;
         $service->update($firstId, 'F518A-' . $token, '96385074', 100, true);
         Assert::exception(
+            fn () => $database->table('product_variant')->insert([
+                'product_id' => $productId,
+                'sku' => 'F518C-' . $token,
+                'combination_hash' => hash('sha256', 'f518-c-' . $token),
+                'ean' => '96385074',
+                'is_default' => 0,
+                'is_active' => 1,
+            ]),
+            Nette\\Database\\UniqueConstraintViolationException::class,
+        );
+        Assert::exception(
             fn () => $service->update($secondId, 'F518B-' . $token, '96385074', 250, false),
             InvalidArgumentException::class,
         );
