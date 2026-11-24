@@ -55,6 +55,35 @@ Catalog poskytuje veřejný čtecí kontrakt `Api/ProductAdminListReader` pro ad
 
 Ověření pokrývají `ProductAdminListFilter.phpt`, `DatabaseProductAdminListRepositoryIntegration.phpt` a `ProductAdminDataGridDataSource.phpt`. Integrační překlady DataGridu v češtině a angličtině ověřuje `AdminDataGridTranslatorIntegration.phpt`.
 
+## Administrační editor produktu – základní údaje (F5-16)
+
+Zápis základních údajů produktu probíhá přes aplikační `ProductWriteService`
+a kontrakt `ProductWriteRepository`. Prezentační vrstva nikdy nezapisuje
+přímo do databáze. Databázový adaptér používá Nette Database Explorer a
+nepředává `ActiveRow` mimo persistence vrstvu.
+
+- Vytvoření a úprava produktu probíhá v jedné sdílené transakci.
+- Serverová kontrola `CatalogPermission::canManage()` je součástí use-case;
+  skrytí tlačítka ani ochrana presenteru ji nenahrazují.
+- Kód produktu se normalizuje a validuje; unikátnost chrání také databázový index.
+- Pro každý aktivní jazyk musí být dodán neprázdný název. Krátký popis,
+  dlouhý popis a SEO metadata jsou volitelná a ukládají se samostatně pro jazyk.
+- Slug se generuje přes existující `SlugService`; kolize řeší suffix a
+  konečnou ochranu poskytuje unikátní index `(locale, slug)`.
+- Přiřazení kategorií se v rámci stejné transakce kompletně nahradí a jejich
+  pořadí odpovídá pořadí odeslanému z editoru. Duplicitní a neexistující ID
+  jsou odmítnuta aplikační vrstvou.
+- Editor načítá produkt, překlady a přiřazení přes veřejný kontrakt
+  `ProductEditorReader`. Seznam daňových tříd je pouze čtecí nabídka;
+  platnost ID při zápisu znovu ověřuje persistence vrstva.
+- Admin UI nabízí vytvoření a úpravu na samostatných stránkách; seznam
+  produktů zůstává odděleným DataGrid read modelem.
+
+Ověření zapisovací vrstvy pokrývá
+`tests/Modules/Catalog/ProductWriteServiceIntegration.phpt`: odmítnutí
+anonymního zápisu, vytvoření produktu a překladů pro aktivní jazyky,
+přiřazení kategorií, úprava stavu/typu, odstranění přiřazení a validace kódu.
+
 ## DI registrace
 
 `Infrastructure/DI/CatalogExtension` je automaticky objevena konvencí
