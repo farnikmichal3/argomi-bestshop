@@ -81,8 +81,8 @@ try {
 
     $productId = $service->create(
         $code,
-        ProductStatus::Draft,
-        ProductType::Physical,
+        ProductAdminStatus::Draft,
+        ProductAdminType::Physical,
         $taxClassId,
         $translations('created-product'),
         [$categoryId],
@@ -117,7 +117,7 @@ try {
     Assert::same(0, $database->table('product_category')->where('product_id', $productId)->count('*'));
 
     Assert::exception(
-        fn () => $service->update($productId, 'invalid code', ProductStatus::Draft, ProductType::Physical, $taxClassId, $translations('invalid'), []),
+        fn () => $service->update($productId, 'invalid code', ProductAdminStatus::Draft, ProductAdminType::Physical, $taxClassId, $translations('invalid'), []),
         InvalidArgumentException::class,
     );
 
