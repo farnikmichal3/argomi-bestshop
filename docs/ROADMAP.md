@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.92 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.93 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -57,7 +57,7 @@ Celkem **556 kroků**: hotovo 188, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 38 | 17 | 1 | 0 | 0 | 0 | 20 | 0 |
+| F5 | Catalog (vlna 1) | 38 | 17 | 2 | 0 | 0 | 0 | 19 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -74,6 +74,10 @@ Celkem **556 kroků**: hotovo 188, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.93 (24. 11. 2026)
+- Zahájen F5-16: administrační editor základních údajů produktu. Rozsah zahrnuje identifikační údaje, lokalizované názvy a popisy, SEO metadata a přiřazení ke kategoriím; implementace musí zachovat modulovou hranici Catalog, transakční zápisy, aktivní jazyky z databáze a serverové oprávnění.
+- F5-26 (oprávnění katalogu) zůstává rozpracováno. Souhrn F5: **17 hotovo**, **2 rozpracováno**, **19 plán**. Celkem: **188 hotovo**, **2 rozpracováno**, **1 k úpravě**, **358 plán**, **7 zrušeno**.
 
 ### v3.92 (24. 11. 2026)
 - Dokončen F5-38: společný administrační layout na AdminLTE 4, responzivní postranní navigace, jednotné načítání JS/CSS a překlady navigace nezávislé na doméně stránky. Uživatel potvrdil funkčnost celého layoutu v prohlížeči bez problémů; po vyřešení zastaralé cache se načítají správné AdminLTE styly. Upozornění prohlížeče k nepodporovaným direktivám `Permissions-Policy` nemají vliv na aplikaci a nejsou blokující.
@@ -677,7 +681,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-13** Admin: formulář vytvoření a úpravy kategorie — formulář vytvoření a úpravy kategorie včetně lokalizovaných překladů, oprávnění a integračních testů; CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-14** Admin: strom kategorií s drag & drop řazením — strom kategorií s bezpečným drag & drop řazením sourozenců, transakčním pořadím, oprávněními a integračními testy; CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-15** Admin: seznam produktů s filtry (kategorie, stav, typ) — stránkovaný read model, Ublaboo DataGrid, lokalizované názvy a kombinovatelné filtry; CI a lokální kontroly prošly, uživatel potvrdil funkční stránku i filtrování v prohlížeči.
-- `[PLÁN]` **F5-16** Admin: základní záložka produktu (názvy, popisy, zařazení)
+- `[ROZDĚLÁNO]` **F5-16** Admin: základní záložka produktu (názvy, popisy, zařazení)
 - `[PLÁN]` **F5-17** Admin: matice variant (generování kombinací z os)
 - `[PLÁN]` **F5-18** Admin: úprava konkrétní varianty (SKU, EAN, váha, výchozí)
 - `[PLÁN]` **F5-19** Admin: správa atributů a jejich hodnot
