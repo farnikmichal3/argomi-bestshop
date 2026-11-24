@@ -6,13 +6,13 @@ namespace App\Modules\Catalog\Infrastructure\Api;
 
 use App\Modules\Catalog\Api\AttributeWriter;
 use App\Modules\Catalog\Application\AttributeWriteService;
-use App\Modules\Catalog\Domain\Attribute\AttributeType;
+use App\Modules\Catalog\Api\AttributeDataType;
 
 final readonly class AttributeWriteApiService implements AttributeWriter
 {
     public function __construct(private AttributeWriteService $writeService) {}
 
-    public function create(string $code, AttributeType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): int
+    public function create(string $code, AttributeDataType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): int
     {
         return $this->writeService->create($code, $type, $unitId, $isFilterable, $sortOrder, $translations);
     }
