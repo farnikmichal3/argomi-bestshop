@@ -368,10 +368,11 @@ final class AttributesPresenter extends TranslatedPresenter
      */
     private function parseAttributeValues(array $values): ?array
     {
+        $unitValue = $values['unitId'] ?? null;
         if (
             !is_string($values['code'] ?? null)
             || !is_string($values['type'] ?? null)
-            || ($values['unitId'] ?? null) !== null && !is_string($values['unitId']) && !is_int($values['unitId'])
+            || ($unitValue !== null && !is_string($unitValue) && !is_int($unitValue))
             || !is_bool($values['isFilterable'] ?? null)
             || !is_int($values['sortOrder'] ?? null)
             || !is_array($values['translations'] ?? null)
@@ -382,7 +383,7 @@ final class AttributesPresenter extends TranslatedPresenter
         if ($type === null) {
             return null;
         }
-        $unitInput = $values['unitId'] === null ? '' : (string) $values['unitId'];
+        $unitInput = is_string($unitValue) || is_int($unitValue) ? (string) $unitValue : '';
         $unitId = null;
         if ($unitInput !== '') {
             $parsed = filter_var($unitInput, FILTER_VALIDATE_INT);
