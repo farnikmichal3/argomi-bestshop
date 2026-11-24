@@ -103,18 +103,32 @@ try {
     $taxClassOptionReader = $integration->container->getByType(TaxClassOptionReader::class);
     Assert::true(count($taxClassOptionReader->findOptions()) > 0);
 
+    $updatedTranslations = $translations('updated-product');
     $service->update(
         $productId,
         $code,
         ProductAdminStatus::Active,
         ProductAdminType::Digital,
         $taxClassId,
-        $translations('updated-product'),
+        $updatedTranslations,
         [],
     );
     Assert::same('active', $database->table('product')->where('id', $productId)->fetch()->status);
     Assert::same('digital', $database->table('product')->where('id', $productId)->fetch()->type);
     Assert::same(0, $database->table('product_category')->where('product_id', $productId)->count('*'));
+    foreach ($updatedTranslations as $localeCode => $expectedTranslation) {
+        $storedTranslation = $database->table('product_translation')
+            ->where('product_id', $productId)
+            ->where('locale', $localeCode)
+            ->fetch();
+        Assert::notNull($storedTranslation);
+        Assert::same($expectedTranslation['name'], $storedTranslation->name);
+        Assert::same($expectedTranslation['description'], $storedTranslation->description);
+        Assert::same($expectedTranslation['metaTitle'], $storedTranslation->meta_title);
+    }
+    $updatedEditorData = $editorReader->findForEdit($productId);
+    Assert::notNull($updatedEditorData);
+    Assert::same($updatedTranslations, $updatedEditorData->translations);
 
     Assert::exception(
         fn () => $service->update($productId, 'invalid code', ProductAdminStatus::Draft, ProductAdminType::Physical, $taxClassId, $translations('invalid'), []),
