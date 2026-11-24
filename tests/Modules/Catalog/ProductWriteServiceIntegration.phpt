@@ -5,11 +5,12 @@ declare(strict_types=1);
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\ProductEditorReader;
+use App\Modules\Catalog\Api\ProductAdminStatus;
+use App\Modules\Catalog\Api\ProductAdminType;
 use App\Modules\Catalog\Application\ProductWriteRepository;
 use App\Modules\Catalog\Application\ProductWriteService;
 use App\Modules\Catalog\Application\SlugService;
 use App\Modules\Catalog\Domain\Product\ProductStatus;
-use App\Modules\Catalog\Domain\Product\ProductType;
 use App\Modules\Tax\Api\TaxClassOptionReader;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\Locale\LocaleProvider;
@@ -55,7 +56,7 @@ $translations = static function (string $prefix) use ($localeProvider, $token): 
 $productId = null;
 try {
     Assert::exception(
-        fn () => $service->create($code, ProductStatus::Draft, ProductType::Physical, $taxClassId, $translations('denied'), [$categoryId]),
+        fn () => $service->create($code, ProductAdminStatus::Draft, ProductAdminType::Physical, $taxClassId, $translations('denied'), [$categoryId]),
         CatalogAccessDeniedException::class,
     );
     Assert::same(null, $database->table('product')->where('code', $code)->fetch());
@@ -105,8 +106,8 @@ try {
     $service->update(
         $productId,
         $code,
-        ProductStatus::Active,
-        ProductType::Digital,
+        ProductAdminStatus::Active,
+        ProductAdminType::Digital,
         $taxClassId,
         $translations('updated-product'),
         [],
