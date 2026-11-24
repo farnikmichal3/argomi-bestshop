@@ -298,7 +298,8 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
         }
         $raw = $this->string($number, 'product_variant_attribute_value.value_number');
         $canonical = VariantCombinationHash::canonicalize([$code => ['type' => 'number', 'value' => $raw]]);
-        return new VariantMatrixValue(substr($canonical, strlen($code) + 1), $raw);
+        $normalized = substr($canonical, strlen($code) + 1);
+        return new VariantMatrixValue($normalized, $normalized);
     }
 
     private function textValue(?int $valueId, mixed $number, mixed $text): VariantMatrixValue
