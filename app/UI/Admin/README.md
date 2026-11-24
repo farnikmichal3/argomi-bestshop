@@ -41,7 +41,7 @@ Navigační popisky Produkty a Kategorie se proto vždy překládají přes dom�
 
 ## Matice variant (F5-17)
 
-Z editoru produktu vede odkaz na presenter `Admin:Products:Variants`.
+Z editoru produktu vede odkaz na presenter `Admin:Products:Variants`. Podle Nette presenter mappingu `Admin: [App\\UI\\Admin, *, **Presenter]` je třída umístěna v namespace `App\\UI\\Admin\\Products\\Variants` a souboru `Products/Variants/VariantsPresenter.php`; šablona matice zůstává explicitně načítána z `Products/variants.latte`.
 Matice načítá veřejný `ProductVariantMatrixReader` a změny předává
 veřejnému `ProductVariantGenerator`; UI neobsahuje databázové
 dotazy ani vlastní výpočet hashů. Serverová kontrola
