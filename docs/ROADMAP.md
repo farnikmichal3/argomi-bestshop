@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.96 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.97 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **556 kroků**: hotovo 189, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 357, zrušeno 7.
+Celkem **556 kroků**: hotovo 190, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 357, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **556 kroků**: hotovo 189, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 38 | 18 | 2 | 0 | 0 | 0 | 18 | 0 |
+| F5 | Catalog (vlna 1) | 38 | 19 | 1 | 0 | 0 | 0 | 18 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -74,6 +74,10 @@ Celkem **556 kroků**: hotovo 189, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.97 (24. 11. 2026)
+- Dokončen F5-17: administrační matice variant a generování chybějících kombinací. Uživatel potvrdil úspěšné lokální testy i funkčnost matice v prohlížeči. Opravena také cesta presenteru podle Nette mappingu (`App\\UI\\Admin\\Products\\Variants\\VariantsPresenter`) a relativní cesta k šabloně. Navazuje F5-18 – editace konkrétní varianty (SKU, EAN, hmotnost a výchozí varianta).
+- Souhrn F5: **19 hotovo**, **1 rozpracováno**, **18 plán**. Celkem: **190 hotovo**, **1 rozpracováno**, **1 k úpravě**, **357 plán**, **7 zrušeno**.
 
 ### v3.96 (24. 11. 2026)
 - Opravena Nette presenter mapping cesta administrační matice variant: třída `Admin:Products:Variants` nyní leží v namespace `App\\UI\\Admin\\Products\\Variants` a odpovídající podsložce `UI/Admin/Products/Variants/VariantsPresenter.php`. Odkaz z editoru produktu tak odpovídá konfiguraci `Admin: [App\\UI\\Admin, *, **Presenter]`; šablona matice zůstává explicitně načítána z `UI/Admin/Products/variants.latte`. F5-17 zůstává rozpracováno do lokálního ověření v prohlížeči.
@@ -668,7 +672,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### F5: Catalog (vlna 1)
 
-_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 16 z 38 kroků; 2 rozpracováno.
+_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 19 z 38 kroků; 1 rozpracováno.
 
 - `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
 - `[HOTOVO]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` — typované neměnné modely a enumy stavů/typů; validace identifikátorů, kódů, SHA-256 hashe a fyzických rozměrů; doménový test bez infrastrukturních závislostí.
@@ -686,7 +690,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-14** Admin: strom kategorií s drag & drop řazením — strom kategorií s bezpečným drag & drop řazením sourozenců, transakčním pořadím, oprávněními a integračními testy; CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-15** Admin: seznam produktů s filtry (kategorie, stav, typ) — stránkovaný read model, Ublaboo DataGrid, lokalizované názvy a kombinovatelné filtry; CI a lokální kontroly prošly, uživatel potvrdil funkční stránku i filtrování v prohlížeči.
 - `[HOTOVO]` **F5-16** Admin: základní záložka produktu (názvy, popisy, zařazení) — transakční editor identifikačních údajů, překladů, SEO metadat a kategorií; uživatel ověřil ukládání, opětovné načtení i flash zprávy v prohlížeči.
-- `[ROZDĚLÁNO]` **F5-17** Admin: matice variant (generování kombinací z os) — read model, výběr a transakční generování chybějících kombinací přes `ProductVariantGenerator`; limit 256 kombinací, SHA-256 přes `VariantCombinationHash`, existující varianty zůstávají nedotčené; CI prošlo (79 testů, PHPStan, coding standard, architektura); čeká na lokální kontrolu a browser ověření.
+- `[HOTOVO]` **F5-17** Admin: matice variant (generování kombinací z os) — read model, výběr a transakční generování chybějících kombinací přes `ProductVariantGenerator`; limit 256 kombinací, SHA-256 přes `VariantCombinationHash`, existující varianty zůstávají nedotčené; CI prošlo (79 testů, PHPStan, coding standard, architektura) a uživatel potvrdil lokální testy i funkčnost matice v prohlížeči.
 - `[PLÁN]` **F5-18** Admin: úprava konkrétní varianty (SKU, EAN, váha, výchozí)
 - `[PLÁN]` **F5-19** Admin: správa atributů a jejich hodnot
 - `[PLÁN]` **F5-20** Admin: přiřazení atributů k produktu
