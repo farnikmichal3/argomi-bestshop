@@ -24,8 +24,8 @@ final readonly class AttributeAdminApiService implements AttributeAdminReader
         return $this->queryService->findForEdit($attributeId);
     }
 
-    public function findUnitOptions(): array
+    public function findUnitOptions(Locale $locale): array
     {
-        return $this->queryService->findUnitOptions();
+        return $this->queryService->findUnitOptions($locale);
     }
 }
