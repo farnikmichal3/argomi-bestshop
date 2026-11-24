@@ -213,7 +213,8 @@ final class AttributesPresenter extends TranslatedPresenter
 
     protected function createComponentCreateValueForm(): Form
     {
-        if ($this->attribute === null || $this->attribute->type !== AttributeDataType::Enum) {
+        $attribute = $this->attribute;
+        if ($attribute === null || $attribute->type !== AttributeDataType::Enum) {
             throw new ForbiddenRequestException();
         }
         $translator = $this->translator();
@@ -223,7 +224,7 @@ final class AttributesPresenter extends TranslatedPresenter
         $form->addInteger('sortOrder', 'attributes.values.sort_order')->setHtmlAttribute('class', 'form-control')->setDefaultValue(0)->addRule(Form::Min, 'attributes.form.error.invalid', 0);
         $this->addValueTranslationFields($form);
         $form->addSubmit('submit', 'attributes.values.create.submit')->setHtmlAttribute('class', 'btn btn-primary');
-        $attributeId = $this->attribute->id;
+        $attributeId = $attribute->id;
         $form->onSuccess[] = function (Form $form, array $values) use ($translator, $attributeId): void {
             if (!$this->catalogPermission->canManage()) {
                 throw new ForbiddenRequestException();
