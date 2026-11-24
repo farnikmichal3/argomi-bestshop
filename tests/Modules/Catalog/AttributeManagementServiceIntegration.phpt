@@ -8,7 +8,7 @@ use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Application\AttributeWriteRepository;
 use App\Modules\Catalog\Application\AttributeWriteService;
-use App\Modules\Catalog\Domain\Attribute\AttributeType;
+use App\Modules\Catalog\Api\AttributeDataType;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Database\Explorer;
@@ -79,7 +79,7 @@ $valueTranslations = static function (string $prefix) use ($localeProvider, $tok
 };
 
 Assert::exception(
-    fn () => $denied->create($code, AttributeType::Enum, null, false, 0, $translations('denied')),
+    fn () => $denied->create($code, AttributeDataType::Enum, null, false, 0, $translations('denied')),
     CatalogAccessDeniedException::class,
 );
 Assert::same(null, $database->table('attribute')->where('code', $code)->fetch());
