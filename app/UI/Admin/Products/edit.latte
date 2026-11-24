@@ -1,0 +1,14 @@
+{block title}{if $isCreate}{_'products.editor.create_title'}{else}{_'products.editor.edit_title'}{/if}{/block}
+
+{block content}
+<div class="py-3">
+    <section class="card">
+        <div class="card-body">
+            {control productForm}
+            <div class="mt-3">
+                <a class="btn btn-outline-secondary" n:href="default">{_'products.editor.cancel'}</a>
+            </div>
+        </div>
+    </section>
+</div>
+{/block}
