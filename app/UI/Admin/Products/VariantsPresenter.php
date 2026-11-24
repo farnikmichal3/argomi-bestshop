@@ -166,7 +166,7 @@ final class VariantsPresenter extends TranslatedPresenter
     private function formatCombinationLabel(
         VariantMatrixCombination $combination,
         ProductVariantMatrix $matrix,
-        object $translator,
+        Translator $translator,
     ): string {
         $parts = [];
         foreach ($matrix->axes as $axis) {
