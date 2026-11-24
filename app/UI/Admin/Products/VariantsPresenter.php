@@ -197,7 +197,7 @@ final class VariantsPresenter extends TranslatedPresenter
                     ? 'products.variants.value.true'
                     : 'products.variants.value.false');
             }
-            $parts[] = ($axis->name ?? $axis->code) . ': ' . ($label ?? (string) $value);
+            $parts[] = ($axis->name ?? $axis->code) . ': ' . ($label ?? $value);
         }
 
         return implode(' · ', $parts);
