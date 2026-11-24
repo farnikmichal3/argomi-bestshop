@@ -26,7 +26,7 @@ final readonly class ProductVariantGenerationService implements ProductVariantGe
         if (!$this->permission->canManage()) {
             throw new CatalogAccessDeniedException();
         }
-        if ($productId < 1 || !array_is_list($combinations) || count($combinations) > self::MAX_SELECTED_COMBINATIONS) {
+        if ($productId < 1 || count($combinations) > self::MAX_SELECTED_COMBINATIONS) {
             throw new InvalidArgumentException('Požadavek na generování variant není platný.');
         }
         if ($combinations === []) {
@@ -103,10 +103,6 @@ final readonly class ProductVariantGenerationService implements ProductVariantGe
         $seenHashes = [];
 
         foreach ($combinations as $combination) {
-            if (!is_array($combination)) {
-                throw new InvalidArgumentException('Kombinace varianty musí být pole os.');
-            }
-
             $keys = array_keys($combination);
             if (array_filter($keys, 'is_string') !== $keys) {
                 throw new InvalidArgumentException('Kódy os musí být textové.');
@@ -121,13 +117,7 @@ final readonly class ProductVariantGenerationService implements ProductVariantGe
             $values = [];
             foreach ($axes as $code => $axis) {
                 $entry = $combination[$code] ?? null;
-                if (
-                    !is_array($entry)
-                    || !isset($entry['type'])
-                    || !array_key_exists('value', $entry)
-                    || !is_string($entry['type'])
-                    || $entry['type'] !== $axis['type']
-                ) {
+                if ($entry['type'] !== $axis['type']) {
                     throw new InvalidArgumentException(sprintf('Hodnota osy %s nemá platný datový typ.', $code));
                 }
 
