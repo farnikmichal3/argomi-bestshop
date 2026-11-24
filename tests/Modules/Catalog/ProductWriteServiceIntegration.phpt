@@ -45,7 +45,7 @@ $translations = static function (string $prefix) use ($localeProvider, $token): 
         $entries[$locale->getCode()] = [
             'name' => $prefix . '-' . $token . '-' . $locale->getCode(),
             'shortDescription' => 'Short ' . $token,
-            'description' => 'Description ' . $token,
+            'description' => '<p>Description ' . $token . '</p><script>alert(1)</script><a href="javascript:alert(1)" onclick="alert(2)">safe link</a>',
             'metaTitle' => 'Meta ' . $token,
             'metaDescription' => 'Meta description ' . $token,
         ];
@@ -66,6 +66,7 @@ try {
         $localeProvider,
         $integration->container->getByType(SlugService::class),
         $integration->container->getByType(Transaction::class),
+        $integration->container->getByType(\App\Modules\Catalog\Application\ProductDescriptionSanitizer::class),
         new class implements CatalogPermission {
             public function canView(): bool
             {
@@ -123,12 +124,18 @@ try {
             ->fetch();
         Assert::notNull($storedTranslation);
         Assert::same($expectedTranslation['name'], $storedTranslation->name);
-        Assert::same($expectedTranslation['description'], $storedTranslation->description);
+        Assert::contains('<p>Description ' . $token . '</p>', (string) $storedTranslation->description);
+        Assert::notContains('<script', (string) $storedTranslation->description);
+        Assert::notContains('javascript:', (string) $storedTranslation->description);
+        Assert::notContains('onclick=', (string) $storedTranslation->description);
         Assert::same($expectedTranslation['metaTitle'], $storedTranslation->meta_title);
     }
     $updatedEditorData = $editorReader->findForEdit($productId);
     Assert::notNull($updatedEditorData);
-    Assert::same($updatedTranslations, $updatedEditorData->translations);
+    foreach ($updatedEditorData->translations as $storedTranslation) {
+        Assert::notContains('<script', (string) $storedTranslation['description']);
+        Assert::notContains('javascript:', (string) $storedTranslation['description']);
+    }
 
     Assert::exception(
         fn () => $service->update($productId, 'invalid code', ProductAdminStatus::Draft, ProductAdminType::Physical, $taxClassId, $translations('invalid'), []),
