@@ -64,23 +64,4 @@ final readonly class ProductEditorQueryService implements ProductEditorReader
         );
     }
 
-    /** @return list<array{id: int, code: string, name: string}> */
-    public function findTaxClasses(): array
-    {
-        $options = [];
-        foreach ($this->database->table('tax_class')->order('code ASC')->fetchAll() as $row) {
-            if (!is_string($row->code) || !is_string($row->name)) {
-                throw new \UnexpectedValueException('Daňová třída obsahuje neplatný kód nebo název.');
-            }
-            $id = $row->id;
-            if (is_string($id) && ctype_digit($id)) {
-                $id = filter_var($id, FILTER_VALIDATE_INT);
-            }
-            if (!is_int($id)) {
-                throw new \UnexpectedValueException('Daňová třída obsahuje neplatné ID.');
-            }
-            $options[] = ['id' => $id, 'code' => $row->code, 'name' => $row->name];
-        }
-        return $options;
-    }
 }
