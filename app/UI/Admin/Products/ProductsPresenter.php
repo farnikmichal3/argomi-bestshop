@@ -165,7 +165,8 @@ final class ProductsPresenter extends TranslatedPresenter
                 ->setHtmlAttribute('rows', '3');
             $container->addTextArea('description', 'products.editor.description')
                 ->setHtmlAttribute('class', 'form-control')
-                ->setHtmlAttribute('rows', '6');
+                ->setHtmlAttribute('rows', '12')
+                ->setHtmlAttribute('data-hugerte', 'product-description');
             $container->addText('metaTitle', 'products.editor.meta_title')
                 ->setHtmlAttribute('class', 'form-control');
             $container->addTextArea('metaDescription', 'products.editor.meta_description')
