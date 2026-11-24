@@ -5,6 +5,8 @@ declare(strict_types=1);
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\ProductEditorReader;
+use App\Modules\Catalog\Api\ProductEditorConfigurationReader;
+use App\Modules\Catalog\Api\ProductConfigurationWriter;
 use App\Modules\Catalog\Api\ProductWriter;
 use App\Modules\Tax\Api\TaxClassOptionReader;
 use App\Modules\Translation\Api\TranslatorFactory;
@@ -56,6 +58,8 @@ $presenter = new ProductsPresenter(
     $productEditorReader,
     $taxClassOptionReader,
     $productWriter,
+    $integration->container->getByType(ProductEditorConfigurationReader::class),
+    $integration->container->getByType(ProductConfigurationWriter::class),
     $categoryTreeReader,
     $translatorFactory,
 );
