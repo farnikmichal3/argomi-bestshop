@@ -9,7 +9,6 @@ use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Application\AttributeWriteRepository;
 use App\Modules\Catalog\Application\AttributeWriteService;
 use App\Modules\Catalog\Api\AttributeDataType;
-use App\Modules\Catalog\Domain\Attribute\AttributeType;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Database\Explorer;
@@ -87,18 +86,18 @@ Assert::same(null, $database->table('attribute')->where('code', $code)->fetch())
 
 try {
     $database->transaction(function () use ($database, $service, $reader, $localeProvider, $token, $code, $valueCode, $translations, $valueTranslations): void {
-        $attributeId = $service->create($code, AttributeType::Enum, null, true, 4, $translations('attribute'));
+        $attributeId = $service->create($code, AttributeDataType::Enum, null, true, 4, $translations('attribute'));
         Assert::true($attributeId > 0);
 
         $valueId = $service->createValue($attributeId, $valueCode, 2, $valueTranslations('value'));
         Assert::true($valueId > 0);
 
-        $service->update($attributeId, $code, AttributeType::Enum, null, false, 7, $translations('updated'));
+        $service->update($attributeId, $code, AttributeDataType::Enum, null, false, 7, $translations('updated'));
         $service->updateValue($attributeId, $valueId, $valueCode, 3, $valueTranslations('updated-value'));
 
         $data = $reader->findForEdit($attributeId);
         Assert::notNull($data);
-        Assert::same(AttributeType::Enum, $data->type);
+        Assert::same(AttributeDataType::Enum, $data->type);
         Assert::same(7, $data->sortOrder);
         Assert::false($data->isFilterable);
         Assert::same(count($localeProvider->getActiveLocales()), count($data->translations));
@@ -112,11 +111,11 @@ try {
             InvalidArgumentException::class,
         );
         Assert::exception(
-            fn () => $service->create($code, AttributeType::Text, null, false, 0, $translations('duplicate')),
+            fn () => $service->create($code, AttributeDataType::Text, null, false, 0, $translations('duplicate')),
             InvalidArgumentException::class,
         );
         Assert::exception(
-            fn () => $service->update($attributeId, $code, AttributeType::Text, null, false, 0, $translations('wrong-type')),
+            fn () => $service->update($attributeId, $code, AttributeDataType::Text, null, false, 0, $translations('wrong-type')),
             InvalidArgumentException::class,
         );
 
