@@ -24,6 +24,7 @@ final class ProductWriteService implements ProductWriter
         private readonly LocaleProvider $localeProvider,
         private readonly SlugService $slugService,
         private readonly Transaction $transaction,
+        private readonly ProductDescriptionSanitizer $descriptionSanitizer,
         private readonly CatalogPermission $permission,
     ) {}
 
@@ -117,7 +118,7 @@ final class ProductWriteService implements ProductWriter
             $normalized[$code] = [
                 'name' => $name,
                 'shortDescription' => self::optionalText($entry['shortDescription'] ?? null, 2000, $code),
-                'description' => self::optionalText($entry['description'] ?? null, null, $code),
+                'description' => $this->descriptionSanitizer->sanitize(self::optionalText($entry['description'] ?? null, null, $code)),
                 'metaTitle' => self::optionalText($entry['metaTitle'] ?? null, 255, $code),
                 'metaDescription' => self::optionalText($entry['metaDescription'] ?? null, 500, $code),
             ];
