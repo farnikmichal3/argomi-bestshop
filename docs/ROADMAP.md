@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.97 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.99 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -74,6 +74,9 @@ Celkem **556 kroků**: hotovo 190, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.99 (24. 11. 2026)
+- F5-18: GitHub Actions run `45344360718` úspěšně ověřil dopředné migrace MySQL 8.4, **81 testů**, PHPStan bez chyb, coding standard a Deptrac. Zahrnuje i test globální unikátnosti EAN-8/EAN-13. Implementace čeká na lokální `check.bat` a ruční ověření editoru v prohlížeči.
 
 ### v3.98 (24. 11. 2026)
 - Zahájen F5-18: administrační editace konkrétní varianty – SKU, EAN, hmotnost a výchozí varianta. První kontrola schématu potvrdila existenci `sku`, `weight_g`, `is_default` a unikátního omezení jediné výchozí varianty; EAN zatím chybí a bude přidán dopřednou migrací. Rozsah implementace zahrnuje veřejné Catalog API, transakční aplikační službu, databázový adaptér, lokalizovaný editor, validaci kontrolní číslice EAN a integrační testy. F5-17 je uzavřeno po potvrzení lokálních testů a browser funkčnosti.
