@@ -62,6 +62,9 @@ final readonly class ProductVariantWriteService implements ProductVariantWriter
 
             $this->repository->updateVariant($variantId, $sku, $ean, $weightG);
             if ($isDefault) {
+                if (!$this->repository->isVariantActive($variantId)) {
+                    throw new InvalidArgumentException('Neaktivní varianta nemůže být výchozí.');
+                }
                 $productId = $this->repository->findProductId($variantId);
                 if ($productId === null) {
                     throw new InvalidArgumentException('Produkt varianty nebyl nalezen.');
