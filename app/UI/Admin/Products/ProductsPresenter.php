@@ -317,10 +317,9 @@ final class ProductsPresenter extends TranslatedPresenter
         $form = new Form();
         $form->setTranslator($translator);
 
-        $axisOptions = [];
-        $defaults = ['variantAxisIds' => array_map('strval', $this->configurationData->variantAxisIds)];
+        $defaults = [];
+        $axisOrder = array_flip($this->configurationData->variantAxisIds);
         foreach ($this->configurationData->availableAttributes as $attribute) {
-            $axisOptions[(string) $attribute->id] = $attribute->name;
             $fieldName = 'attribute_' . $attribute->id;
             $assigned = $this->configurationData->assignedValues[$attribute->id] ?? null;
 
@@ -352,11 +351,20 @@ final class ProductsPresenter extends TranslatedPresenter
                     $defaults[$fieldName] = $assigned;
                 }
             }
+
+            $axisField = 'axis_' . $attribute->id;
+            $orderField = 'axis_order_' . $attribute->id;
+            $form->addCheckbox($axisField, $attribute->name . ' — products.configuration.axis')
+                ->setHtmlAttribute('class', 'form-check-input');
+            $form->addInteger($orderField, 'products.configuration.axis_order')
+                ->setHtmlAttribute('class', 'form-control form-control-sm')
+                ->setHtmlAttribute('min', '1');
+            if (array_key_exists($attribute->id, $axisOrder)) {
+                $defaults[$axisField] = true;
+                $defaults[$orderField] = (string) ($axisOrder[$attribute->id] + 1);
+            }
         }
 
-        $form->addMultiSelect('variantAxisIds', 'products.configuration.axes', $axisOptions)
-            ->setHtmlAttribute('class', 'form-select')
-            ->setHtmlAttribute('size', '6');
         $form->setDefaults($defaults);
         $form->addSubmit('submit', 'products.configuration.submit')
             ->setHtmlAttribute('class', 'btn btn-primary');
@@ -401,15 +409,25 @@ final class ProductsPresenter extends TranslatedPresenter
                 $attributes[] = ['attributeId' => $attribute->id, 'value' => $value];
             }
 
-            $axisIds = [];
-            foreach (($values['variantAxisIds'] ?? []) as $axisId) {
-                $parsed = filter_var((string) $axisId, FILTER_VALIDATE_INT);
-                if (!is_int($parsed) || $parsed < 1) {
+            $orderedAxes = [];
+            foreach ($this->configurationData->availableAttributes as $attribute) {
+                if (($values['axis_' . $attribute->id] ?? false) !== true) {
+                    continue;
+                }
+                $order = filter_var($values['axis_order_' . $attribute->id] ?? null, FILTER_VALIDATE_INT);
+                if (!is_int($order) || $order < 1) {
                     $form->addError($translator->translate('products.editor.error.invalid'));
                     return;
                 }
-                $axisIds[] = $parsed;
+                $orderedAxes[] = ['id' => $attribute->id, 'order' => $order];
             }
+            usort($orderedAxes, static fn (array $left, array $right): int => $left['order'] <=> $right['order'] ?: $left['id'] <=> $right['id']);
+            $orders = array_column($orderedAxes, 'order');
+            if (count($orders) !== count(array_unique($orders))) {
+                $form->addError($translator->translate('products.editor.error.invalid'));
+                return;
+            }
+            $axisIds = array_column($orderedAxes, 'id');
 
             try {
                 $this->productConfigurationWriter->save($this->editData->id, $attributes, $axisIds);
