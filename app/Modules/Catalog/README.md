@@ -82,6 +82,10 @@ nepředává `ActiveRow` mimo persistence vrstvu.
   platnost ID při zápisu znovu ověřuje persistence vrstva.
 - Admin UI nabízí vytvoření a úpravu na samostatných stránkách; seznam
   produktů zůstává odděleným DataGrid read modelem.
+- Handler formuláře deklaruje návratový typ `array`, aby Nette Forms převedlo
+  vnořené jazykové kontejnery z `ArrayHash` na pole; validace tak předává
+  úplná data do veřejného zapisovacího kontraktu. Úspěšný zápis používá
+  Post/Redirect/Get a Nette flash session.
 
 Ověření zapisovací vrstvy pokrývá
 `tests/Modules/Catalog/ProductWriteServiceIntegration.phpt`: odmítnutí
