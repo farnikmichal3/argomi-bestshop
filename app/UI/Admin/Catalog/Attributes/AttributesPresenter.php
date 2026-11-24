@@ -6,11 +6,11 @@ namespace App\UI\Admin\Catalog\Attributes;
 
 use App\Modules\Catalog\Api\AttributeAdminReader;
 use App\Modules\Catalog\Api\AttributeInUseException;
+use App\Modules\Catalog\Api\AttributeDataType;
 use App\Modules\Catalog\Api\AttributeWriter;
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\Dto\AttributeEditorData;
 use App\Modules\Catalog\Api\Dto\AttributeValueEditorData;
-use App\Modules\Catalog\Api\AttributeDataType;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Presentation\TranslatedPresenter;
@@ -71,7 +71,6 @@ final class AttributesPresenter extends TranslatedPresenter
         $this->attribute = $this->attributeReader->findForEdit($id);
         if ($this->attribute === null) {
             $this->redirect('default');
-            return;
         }
         $this->template->attribute = $this->attribute;
         $this->template->locales = $this->localeProvider->getActiveLocales();
@@ -96,7 +95,6 @@ final class AttributesPresenter extends TranslatedPresenter
         }
         if ($this->attributeValue === null) {
             $this->redirect('edit', ['id' => $id]);
-            return;
         }
         $this->template->attribute = $this->attribute;
         $this->template->attributeValue = $this->attributeValue;
@@ -137,7 +135,8 @@ final class AttributesPresenter extends TranslatedPresenter
 
     protected function createComponentEditForm(): Form
     {
-        if ($this->attribute === null) {
+        $attribute = $this->attribute;
+        if ($attribute === null) {
             throw new ForbiddenRequestException();
         }
         $translator = $this->translator();
@@ -145,15 +144,15 @@ final class AttributesPresenter extends TranslatedPresenter
         $form->setTranslator($translator);
         $this->addAttributeFields($form);
         $form->setDefaults([
-            'code' => $this->attribute->code,
-            'type' => $this->attribute->type->value,
-            'unitId' => $this->attribute->unitId === null ? '' : (string) $this->attribute->unitId,
-            'isFilterable' => $this->attribute->isFilterable,
-            'sortOrder' => $this->attribute->sortOrder,
-            'translations' => array_map(static fn (string $name): array => ['name' => $name], $this->attribute->translations),
+            'code' => $attribute->code,
+            'type' => $attribute->type->value,
+            'unitId' => $attribute->unitId === null ? '' : (string) $attribute->unitId,
+            'isFilterable' => $attribute->isFilterable,
+            'sortOrder' => $attribute->sortOrder,
+            'translations' => array_map(static fn (string $name): array => ['name' => $name], $attribute->translations),
         ]);
         $form->addSubmit('submit', 'attributes.form.edit.submit')->setHtmlAttribute('class', 'btn btn-primary');
-        $attributeId = $this->attribute->id;
+        $attributeId = $attribute->id;
         $form->onSuccess[] = function (Form $form, array $values) use ($translator, $attributeId): void {
             if (!$this->catalogPermission->canManage()) {
                 throw new ForbiddenRequestException();
@@ -174,7 +173,6 @@ final class AttributesPresenter extends TranslatedPresenter
             }
             $this->flashMessage($translator->translate('attributes.form.updated'), 'success');
             $this->redirect('edit', ['id' => $attributeId]);
-            return;
         };
         return $form;
     }
@@ -251,7 +249,9 @@ final class AttributesPresenter extends TranslatedPresenter
 
     protected function createComponentEditValueForm(): Form
     {
-        if ($this->attribute === null || $this->attributeValue === null) {
+        $attribute = $this->attribute;
+        $attributeValue = $this->attributeValue;
+        if ($attribute === null || $attributeValue === null) {
             throw new ForbiddenRequestException();
         }
         $translator = $this->translator();
@@ -261,23 +261,23 @@ final class AttributesPresenter extends TranslatedPresenter
         $form->addInteger('sortOrder', 'attributes.values.sort_order')->setHtmlAttribute('class', 'form-control')->addRule(Form::Min, 'attributes.form.error.invalid', 0);
         $this->addValueTranslationFields($form);
         $form->setDefaults([
-            'code' => $this->attributeValue->code,
-            'sortOrder' => $this->attributeValue->sortOrder,
-            'translations' => array_map(static fn (string $label): array => ['label' => $label], $this->attributeValue->translations),
+            'code' => $attributeValue->code,
+            'sortOrder' => $attributeValue->sortOrder,
+            'translations' => array_map(static fn (string $label): array => ['label' => $label], $attributeValue->translations),
         ]);
         $form->addSubmit('submit', 'attributes.values.edit.submit')->setHtmlAttribute('class', 'btn btn-primary');
-        $attributeId = $this->attribute->id;
-        $valueId = $this->attributeValue->id;
+        $attributeId = $attribute->id;
+        $valueId = $attributeValue->id;
         $form->onSuccess[] = function (Form $form, array $values) use ($translator, $attributeId, $valueId): void {
             if (!$this->catalogPermission->canManage()) {
                 throw new ForbiddenRequestException();
             }
-            if (!is_string($values['code'] ?? null) || !is_int($values['sortOrder'] ?? null) || !is_array($values['translations'] ?? null)) {
+            if (!is_string($values['code'] ?? null) || !is_int($values['sortOrder'] ?? null) || ($translations = $this->normalizeTranslations($values['translations'] ?? null)) === null) {
                 $form->addError($translator->translate('attributes.form.error.invalid'));
                 return;
             }
             try {
-                $this->attributeWriter->updateValue($attributeId, $valueId, $values['code'], $values['sortOrder'], $values['translations']);
+                $this->attributeWriter->updateValue($attributeId, $valueId, $values['code'], $values['sortOrder'], $translations);
             } catch (UniqueConstraintViolationException) {
                 $form->addError($translator->translate('attributes.form.error.duplicate'));
                 return;
@@ -359,11 +359,8 @@ final class AttributesPresenter extends TranslatedPresenter
         }
     }
 
-    /** @param array<string, mixed> $values
-     *  @return array{string, AttributeDataType, ?int, bool, int, array<string, mixed>}|null
-     */
     /**
-     * @param array<string, mixed> $values
+     * @param array<mixed, mixed> $values
      * @return array{string, AttributeDataType, ?int, bool, int, array<string, mixed>}|null
      */
     private function parseAttributeValues(array $values): ?array
