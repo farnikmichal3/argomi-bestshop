@@ -92,6 +92,45 @@ Ověření zapisovací vrstvy pokrývá
 anonymního zápisu, vytvoření produktu a překladů pro aktivní jazyky,
 přiřazení kategorií, úprava stavu/typu, odstranění přiřazení a validace kódu.
 
+F5-16 bylo dokončeno a ověřeno uživatelem v prohlížeči: změny základních údajů
+se po opětovném otevření načtou z databáze a úspěšný zápis zobrazí flash zprávu.
+Handler formuláře přijímá číselné ID selectů v obou podobách (`string` i `int`)
+a převádí je na validované celé číslo před voláním veřejného `ProductWriter`.
+
+## Administrační matice variant (F5-17)
+
+F5-17 navazuje na existující doménové a databázové základy; nevytváří paralelní
+model variant. `product_variant_axis` určuje osy konkrétního produktu,
+`product_variant` uchovává prodejní variantu a
+`product_variant_attribute_value` její typované hodnoty. Doménová
+`VariantCombinationHash` zajišťuje deterministickou kanonizaci a SHA-256 hash;
+`VariantSelector` ověřuje úplnost os a vyhledává odpovídající aktivní variantu.
+
+Implementace administrační matice musí zachovat následující invarianty:
+
+- Kombinace se počítá výhradně přes `VariantCombinationHash`; vlastní ani
+  alternativní formát hashe není přípustný.
+- Varianta patří přesně jednomu produktu a každá její hodnota musí odpovídat
+  ose tohoto produktu i datovému typu atributu.
+- Unikátnost kombinace chrání `(product_id, combination_hash)` a globální
+  unikátnost SKU chrání databázový index.
+- Již existující varianty se nesmějí při generování přepisovat ani fyzicky
+  mazat. Zachovat se musí jejich identita a navázaná cenová, skladová,
+  obrázková i historická data; varianty se deaktivují, nikoli mažou.
+- Nastavení výchozí varianty musí respektovat jedinou výchozí variantu na
+  produkt a existující transakční přepínání.
+- Zápis musí být transakční, autorizovaný přes `CatalogPermission::canManage()`
+  v prezentační i aplikační vrstvě a oddělený od UI přes veřejné API Catalog.
+- Ceny a sklad zůstávají vlastnictvím modulů Pricing a Inventory; generátor
+  kombinací je nesmí zapisovat ani odvozovat.
+
+Součástí F5-17 je nejprve administrační read model matice a validace úplné
+sady os/hodnot, poté bezpečné vytvoření chybějících kombinací. Správa globálních
+definic atributů a jejich číselníků zůstává samostatným F5-19; přiřazení os
+k produktu zůstává F5-20. Pokud bude pro generování potřeba zadat nové hodnoty
+nečíselníkového typu, musí být jejich zdroj výslovně součástí kontraktu a nesmí
+se domýšlet z prezentační vrstvy.
+
 ## DI registrace
 
 `Infrastructure/DI/CatalogExtension` je automaticky objevena konvencí
