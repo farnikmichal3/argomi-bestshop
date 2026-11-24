@@ -80,6 +80,7 @@ final class VariantsPresenter extends TranslatedPresenter
             $rows[] = [
                 'label' => $label,
                 'sku' => $combination->sku,
+                'variantId' => $combination->variantId,
                 'exists' => $combination->exists(),
                 'isActive' => $combination->isActive,
                 'isDefault' => $combination->isDefault,
