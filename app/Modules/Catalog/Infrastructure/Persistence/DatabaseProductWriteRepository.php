@@ -95,6 +95,7 @@ final class DatabaseProductWriteRepository implements ProductWriteRepository
         $selection->update($values);
     }
 
+    /** @param list<int> $categoryIds */
     public function replaceCategories(int $productId, array $categoryIds): void
     {
         $this->database->table('product_category')->where('product_id', $productId)->delete();
