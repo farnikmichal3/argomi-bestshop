@@ -25,13 +25,16 @@ app/
 │   ├── Catalog/
 │   │   ├── Api/
 │   │   │   ├── Dto/
+│   │   │   │   ├── ProductVariantEditorData.php
 │   │   │   │   ├── ProductVariantMatrix.php
 │   │   │   │   ├── VariantMatrixAxis.php
 │   │   │   │   ├── VariantMatrixCombination.php
 │   │   │   │   └── VariantMatrixValue.php
 │   │   │   ├── Event/
+│   │   │   ├── ProductVariantEditorReader.php
 │   │   │   ├── ProductVariantGenerator.php
 │   │   │   ├── ProductVariantMatrixReader.php
+│   │   │   ├── ProductVariantWriter.php
 │   │   │   └── VariantMatrixTooLargeException.php
 │   │   ├── Application/
 │   │   │   ├── Dto/
@@ -39,10 +42,13 @@ app/
 │   │   │   │   └── ProductTranslationDto.php
 │   │   │   ├── ProductRepository.php
 │   │   │   ├── ProductVariantGenerationRepository.php
-│   │   │   └── ProductVariantGenerationService.php
+│   │   │   ├── ProductVariantGenerationService.php
+│   │   │   ├── ProductVariantWriteRepository.php
+│   │   │   └── ProductVariantWriteService.php
 │   │   ├── Domain/
 │   │   │   ├── Attribute/
 │   │   │   └── Variant/
+│   │   │       └── VariantEan.php
 │   │   └── Infrastructure/
 │   │       ├── DI/
 │   │       └── Persistence/
