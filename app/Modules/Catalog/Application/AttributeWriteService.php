@@ -22,6 +22,7 @@ final readonly class AttributeWriteService
         private CatalogPermission $permission,
     ) {}
 
+    /** @param array<string, mixed> $translations */
     public function create(string $code, AttributeDataType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): int
     {
         $this->assertCanManage();
@@ -46,6 +47,7 @@ final readonly class AttributeWriteService
         });
     }
 
+    /** @param array<string, mixed> $translations */
     public function update(int $attributeId, string $code, AttributeDataType $type, ?int $unitId, bool $isFilterable, int $sortOrder, array $translations): void
     {
         $this->assertCanManage();
@@ -94,6 +96,7 @@ final readonly class AttributeWriteService
         });
     }
 
+    /** @param array<string, mixed> $translations */
     public function createValue(int $attributeId, string $code, int $sortOrder, array $translations): int
     {
         $this->assertCanManage();
@@ -114,6 +117,7 @@ final readonly class AttributeWriteService
         });
     }
 
+    /** @param array<string, mixed> $translations */
     public function updateValue(int $attributeId, int $valueId, string $code, int $sortOrder, array $translations): void
     {
         $this->assertCanManage();
@@ -158,6 +162,10 @@ final readonly class AttributeWriteService
         }
     }
 
+    /**
+     * @param array<string, mixed> $translations
+     * @return array<string, string>
+     */
     private function normalizeTranslations(array $translations, string $field): array
     {
         $normalized = [];
