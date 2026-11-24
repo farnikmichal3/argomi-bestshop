@@ -39,6 +39,18 @@ Navigační popisky Produkty a Kategorie se proto vždy překládají přes dom�
 - Po úspěšném zápisu následuje Post/Redirect/Get a potvrzení přes Nette flash
   session, které vykresluje společný administrační layout.
 
+## Matice variant (F5-17)
+
+F5-17 rozšiřuje administraci produktu o správu kombinací variant. UI bude
+pouze prezentační adaptér veřejných kontraktů Catalog; nesmí přímo číst ani
+zapisovat tabulky variant. Serverová kontrola `CatalogPermission::canManage()`
+platí pro načtení i změnu matice. Výpočet kombinací a hashů zůstává v Catalog,
+nikoli v Latte nebo JavaScriptu.
+
+Matice musí zobrazovat existující varianty i chybějící kombinace bez ztráty
+identity existujících variant. Generování nesmí měnit SKU, aktivitu, výchozí
+příznak, ceny, sklad, obrázky ani historické vazby již uložených variant.
+
 ## JavaScript a CSS
 
 - \`assets/js/admin.js\` je jediný vstupní bod Adminu. Načte AdminLTE CSS, Bootstrap Icons, \`shared.js\` a AdminLTE JavaScript v tomto pořadí.
