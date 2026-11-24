@@ -45,10 +45,15 @@ final readonly class ProductVariantGenerationService implements ProductVariantGe
 
         $normalized = $this->normalizeCombinations($combinations, $axes);
 
-        return $this->transaction->run(function () use ($productId, $normalized): int {
+        return $this->transaction->run(function () use ($productId, $normalized, $axes): int {
             $status = $this->repository->findProductStatus($productId);
             if ($status === null || $status === 'archived') {
                 throw new InvalidArgumentException('Produkt neexistuje nebo je archivovaný.');
+            }
+
+            $currentAxes = $this->repository->findAxisDefinitions($productId);
+            if ($currentAxes !== $axes) {
+                throw new InvalidArgumentException('Variantní osy produktu se během generování změnily.');
             }
 
             $created = 0;
@@ -62,11 +67,10 @@ final readonly class ProductVariantGenerationService implements ProductVariantGe
                 // SKU je stabilní, produktově namespacované a ponechává prostor
                 // pro pozdější ruční úpravu v navazujícím F5-18.
                 $sku = sprintf('V%d-%s', $productId, substr($hash, 0, 40));
-                $this->repository->createVariant($productId, $sku, $hash, $sortOrder);
-                $variantId = $this->repository->findVariantIdByHash($productId, $hash);
+                $variantId = $this->repository->createVariant($productId, $sku, $hash, $sortOrder);
 
                 foreach ($combination as $code => $attribute) {
-                    $axis = $this->repository->findAxisDefinitions($productId)[$code] ?? null;
+                    $axis = $axes[$code] ?? null;
                     if ($axis === null) {
                         throw new InvalidArgumentException('Varianta obsahuje neznámou osu.');
                     }
