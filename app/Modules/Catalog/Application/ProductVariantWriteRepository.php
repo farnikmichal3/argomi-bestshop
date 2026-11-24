@@ -10,6 +10,8 @@ interface ProductVariantWriteRepository
 
     public function findProductId(int $variantId): ?int;
 
+    public function isVariantActive(int $variantId): bool;
+
     public function isSkuAvailable(string $sku, int $excludeVariantId): bool;
 
     public function isEanAvailable(string $ean, int $excludeVariantId): bool;
