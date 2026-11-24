@@ -742,7 +742,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-17** Admin: matice variant (generování kombinací z os) — read model, výběr a transakční generování chybějících kombinací přes `ProductVariantGenerator`; limit 256 kombinací, SHA-256 přes `VariantCombinationHash`, existující varianty zůstávají nedotčené; CI prošlo (79 testů, PHPStan, coding standard, architektura) a uživatel potvrdil lokální testy i funkčnost matice v prohlížeči.
 - `[HOTOVO]` **F5-18** Admin: úprava konkrétní varianty (SKU, EAN, váha, výchozí) — veřejné API a transakční editor; dopředná migrace EAN, kontrolní číslice a unikátnost; výchozí varianta měněna atomicky v rámci produktu. CI, lokální aktivní kontroly i ruční ověření v prohlížeči uživatelem potvrzeny.
 - `[HOTOVO]` **F5-19** Admin: správa atributů a jejich hodnot — CRUD atributů, překlady pro aktivní jazyky, typy text/number/enum/bool, měrná jednotka pouze pro number a transakční správu lokalizovaných enum hodnot; ochrana používaných os a hodnot variant.
-- `[ROZDĚLÁNO]` **F5-20** Admin: přiřazení atributů k produktu, výběr a řazení os variant, profesionální karta editoru produktu, HugeRTE pro lokalizované dlouhé popisy a serverová sanitizace HTML; příprava napojení na Media modul bez uploadu v této fázi.
+- `[HOTOVO]` **F5-20** Admin: přiřazení atributů k produktu, výběr a řazení os variant, profesionální karta editoru produktu, HugeRTE pro lokalizované dlouhé popisy a serverová sanitizace HTML; příprava napojení na Media modul bez uploadu v této fázi.
 - `[PLÁN]` **F5-21** Admin: konfigurace voleb zákazníka pro produkt
 - `[PLÁN]` **F5-22** Admin: nahrání obrázků a přiřazení k variantám
 - `[PLÁN]` **F5-23** Admin: správa souvisejících a doporučených produktů
