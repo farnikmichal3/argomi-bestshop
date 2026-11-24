@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\ProductEditorReader;
+use App\Modules\Tax\Api\TaxClassOptionReader;
 use App\Modules\Catalog\Application\ProductWriteRepository;
 use App\Modules\Catalog\Application\ProductWriteService;
 use App\Modules\Catalog\Application\SlugService;
@@ -97,7 +98,9 @@ try {
     Assert::same($productId, $editorData->id);
     Assert::same([$categoryId], $editorData->categoryIds);
     Assert::count(count($localeProvider->getActiveLocales()), $editorData->translations);
-    Assert::true(count($editorReader->findTaxClasses()) > 0);
+    /** @var TaxClassOptionReader $taxClassOptionReader */
+    $taxClassOptionReader = $integration->container->getByType(TaxClassOptionReader::class);
+    Assert::true(count($taxClassOptionReader->findOptions()) > 0);
 
     $service->update(
         $productId,
