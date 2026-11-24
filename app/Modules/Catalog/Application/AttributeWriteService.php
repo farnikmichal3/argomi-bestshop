@@ -7,14 +7,12 @@ namespace App\Modules\Catalog\Application;
 use App\Modules\Catalog\Api\AttributeInUseException;
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
-use App\Modules\Catalog\Api\AttributeWriter;
-use App\Modules\Catalog\Domain\Attribute\Attribute;
 use App\Modules\Catalog\Domain\Attribute\AttributeType;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\Locale\LocaleProvider;
 use InvalidArgumentException;
 
-final readonly class AttributeWriteService implements AttributeWriter
+final readonly class AttributeWriteService
 {
     public function __construct(
         private AttributeWriteRepository $repository,
