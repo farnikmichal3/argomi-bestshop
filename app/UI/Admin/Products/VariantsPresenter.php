@@ -9,6 +9,7 @@ use App\Modules\Catalog\Api\Dto\ProductVariantMatrix;
 use App\Modules\Catalog\Api\Dto\VariantMatrixCombination;
 use App\Modules\Catalog\Api\ProductVariantGenerator;
 use App\Modules\Catalog\Api\ProductVariantMatrixReader;
+use App\Modules\Catalog\Api\VariantMatrixTooLargeException;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Presentation\TranslatedPresenter;
@@ -47,7 +48,17 @@ final class VariantsPresenter extends TranslatedPresenter
             throw new ForbiddenRequestException();
         }
 
-        $this->matrix = $this->matrixReader->findForProduct($id, $this->localeProvider->getDefault());
+        try {
+            $this->matrix = $this->matrixReader->findForProduct($id, $this->localeProvider->getDefault());
+        } catch (VariantMatrixTooLargeException) {
+            $translator = $this->translatorFactory->createTranslator(
+                TranslationDomain::Catalog,
+                $this->localeProvider->getDefault(),
+            );
+            $this->flashMessage($translator->translate('products.variants.limit'), 'warning');
+            $this->redirect(':Admin:Products:edit', ['id' => $id]);
+        }
+
         if ($this->matrix === null) {
             $translator = $this->translatorFactory->createTranslator(
                 TranslationDomain::Catalog,
