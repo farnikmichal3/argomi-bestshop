@@ -8,14 +8,19 @@ use App\Modules\Catalog\Api\Dto\AttributeAdminItem;
 use App\Modules\Catalog\Application\AttributeAdminRepository;
 use App\Modules\Catalog\Application\AttributeWriteRepository;
 use App\Modules\Catalog\Domain\Attribute\AttributeType;
+use App\Modules\Translation\Api\UnitFormatter;
 use App\Shared\Domain\Locale\Locale;
+use App\Shared\Domain\Quantity\Quantity;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use UnexpectedValueException;
 
 final readonly class DatabaseAttributeRepository implements AttributeAdminRepository, AttributeWriteRepository
 {
-    public function __construct(private Explorer $database) {}
+    public function __construct(
+        private Explorer $database,
+        private UnitFormatter $unitFormatter,
+    ) {}
 
     public function findAll(Locale $locale): array
     {
@@ -109,7 +114,8 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
         $options = [];
         foreach ($this->database->table('unit')->where('is_active', 1)->order('sort_order ASC, id ASC') as $row) {
             $id = self::toInt($row->id);
-            $options[$id] = $names[$id] ?? self::toString($row->code);
+            $namePattern = $names[$id] ?? self::toString($row->code);
+            $options[$id] = $this->unitFormatter->formatName($namePattern, Quantity::fromInteger(1), $locale);
         }
         return $options;
     }
