@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 2.2 · 18. 11. 2026  
+**Revize:** 2.3 · 24. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
@@ -14,6 +14,8 @@ Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nep�
 | structures | `migrations/structures/2026-11-15-120000-transactional-outbox.sql` | Samostatná persistence Transactional Outbox (F3-34) |
 | structures | `migrations/structures/2026-11-15-220000-protect-demo-orders.sql` | Označení demo objednávek a ochrana Outboxu/skladu (F3-32) |
 | structures | `migrations/structures/2026-11-17-150000-admin-message-translation.sql` | Samostatná tabulka systémových překladů Admin (F4-17) |
+| structures | `migrations/structures/2026-11-24-080000-product-variant-ean.sql` | Volitelný globálně unikátní EAN-8/EAN-13 pro variantu produktu (F5-18) |
+| dummy-data | `migrations/dummy-data/2026-11-24-080000-seed-catalog-product-variant-editor.sql` | Idempotentní cs/en texty editoru variant (F5-18) |
 | dummy-data | `migrations/dummy-data/2026-11-18-080000-seed-admin-translation.sql` | Idempotentní cs/en seed administračních textů včetně SHA-1 default_hash (F4-24) |
 | dummy-data | `migrations/dummy-data/2026-11-15-230000-classify-demo-orders.sql` | Označení čtyř demo objednávek (F3-32) |
 | basic-data | `migrations/basic-data/2026-11-04-201000-basic-data.sql` | Základní číselníky a referenční data |
@@ -103,6 +105,9 @@ Objednávky používají explicitní `shop_order.is_demo`. Příznak se po vytvo
 - Hash kombinací variant a konfigurací je SHA-256, tedy 64 hexadecimálních znaků; přesná kanonizace vstupu musí být sdílená mezi PHP a SQL a testovaná.
 - Změny cen se zaznamenávají do historie.
 - Výchozí varianta produktu se přepíná transakčně.
+- `product_variant.ean` je volitelný globálně unikátní identifikátor typu EAN-8 nebo EAN-13. Sloupec používá ASCII a binární porovnání; databázový CHECK omezuje délku a povoluje pouze číslice. Aplikační doménový validátor navíc ověřuje kontrolní číslici. Více variant může mít `NULL`, ale konkrétní EAN smí být přiřazen pouze jednou.
+- `product_variant.weight_g` je volitelná nezáporná hmotnost v celých gramech (`INT UNSIGNED`). SKU zůstává globálně unikátní.
+- Přepnutí `is_default` nejprve zruší dosavadní výchozí variantu daného produktu a následně nastaví novou v jedné transakci. Unikátní index nad generovaným `default_flag` vynucuje nejvýše jednu výchozí variantu produktu.
 - Skladové rezervace a skutečné odpisy jsou odlišné operace.
 - Objednávkové položky uchovávají historický snapshot názvů, cen, daní, voleb a adres. Historický nákup nesmí záviset na aktuálním katalogu.
 - Stav objednávky je řízen stavovým automatem v aplikační vrstvě.
