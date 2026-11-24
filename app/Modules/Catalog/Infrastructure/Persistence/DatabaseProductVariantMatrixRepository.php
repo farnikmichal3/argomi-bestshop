@@ -195,7 +195,7 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
             if ($type === 'number' || $type === 'text') {
                 usort(
                     $values,
-                    static fn (VariantMatrixValue $a, VariantMatrixValue $b): int => strcmp(
+                    static fn(VariantMatrixValue $a, VariantMatrixValue $b): int => strcmp(
                         (string) $a->value,
                         (string) $b->value,
                     ),
