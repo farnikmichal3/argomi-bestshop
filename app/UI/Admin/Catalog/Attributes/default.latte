@@ -1,0 +1,46 @@
+{block title}{_'attributes.title'}{/block}
+
+{block content}
+<div class="py-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+        <p class="text-body-secondary mb-0">{_'attributes.description'}</p>
+        {if $canManage}
+            <a class="btn btn-primary" n:href="create">{_'attributes.create'}</a>
+        {/if}
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">{_'attributes.column.id'}</th>
+                    <th scope="col">{_'attributes.column.name'}</th>
+                    <th scope="col">{_'attributes.column.code'}</th>
+                    <th scope="col">{_'attributes.column.type'}</th>
+                    <th scope="col">{_'attributes.column.values'}</th>
+                    <th scope="col">{_'attributes.column.filterable'}</th>
+                    <th scope="col">{_'attributes.column.usage'}</th>
+                    {if $canManage}<th scope="col">{_'attributes.column.actions'}</th>{/if}
+                </tr>
+            </thead>
+            <tbody>
+                <tr n:foreach="$attributes as $attribute">
+                    <td>{$attribute->id}</td>
+                    <td>{$attribute->name ?? '—'}</td>
+                    <td><code>{$attribute->code}</code></td>
+                    <td>{_'attributes.type.' . $attribute->type}</td>
+                    <td>{$attribute->valueCount}</td>
+                    <td>{if $attribute->isFilterable}{_'attributes.yes'}{else}{_'attributes.no'}{/if}</td>
+                    <td>{$attribute->axisCount}</td>
+                    {if $canManage}
+                        <td><a class="btn btn-sm btn-outline-primary" n:href="edit, id => $attribute->id">{_'attributes.action.edit'}</a></td>
+                    {/if}
+                </tr>
+                <tr n:if="$attributes === []">
+                    <td colspan="{if $canManage}8{else}7{/if}">{_'attributes.empty'}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{/block}
