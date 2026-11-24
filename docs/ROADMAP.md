@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.105 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.106 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -74,6 +74,12 @@ Celkem **556 kroků**: hotovo 191, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.106 (24. 11. 2026)
+- F5-20: čtecí kontrakt konfigurace produktu je připojen k administračnímu editoru. Samostatná karta načítá dostupné atributy a jejich lokalizované enum hodnoty/jednotky, předvyplní uložené hodnoty a umožňuje nastavit osy variant včetně explicitního pořadí.
+- Zápis používá samostatný formulář a veřejný `ProductConfigurationWriter`; typové kontroly a ochrana proti změně množiny os u produktů s existujícími variantami zůstávají v aplikační službě. Základní editor po vytvoření produktu přesměruje do jeho editace.
+- Přidán idempotentní seed cs/en textů `2026-11-24-110000-seed-catalog-product-configuration-editor.sql`, aktualizován README Catalogu a autorizační integrační test pro nové závislosti presenteru.
+- HtmlPurifier zůstává povinný pro HTML popisy. Atributy se ukládají jako typovaná data a zobrazují jako escapovaný prostý text. F5-20 zůstává ROZDĚLÁNO do CI, lokálních kontrol a ověření editoru v prohlížeči.
 
 ### v3.105 (24. 11. 2026)
 - F5-20: přidán veřejný čtecí kontrakt `ProductEditorConfigurationReader` a typované DTO pro dostupné atributy, lokalizované názvy/jednotky/enum hodnoty, již uložené produktové hodnoty a pořadí os variant.
