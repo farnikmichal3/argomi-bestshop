@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Api\Dto;
 
-use App\Modules\Catalog\Application\Dto\ProductDto;
-use App\Modules\Catalog\Application\Dto\ProductTranslationDto;
-
 /**
- * Data required to populate the basic product editor.
+ * Public, persistence-independent data for the basic product editor.
  */
 final readonly class ProductEditorData
 {
     /**
-     * @param list<ProductTranslationDto> $translations
+     * @param array<string, array{name: string, shortDescription: ?string, description: ?string, metaTitle: ?string, metaDescription: ?string}> $translations
      * @param list<int> $categoryIds
      */
     public function __construct(
-        public ProductDto $product,
+        public int $id,
+        public string $code,
+        public string $status,
+        public string $type,
+        public int $taxClassId,
         public array $translations,
         public array $categoryIds,
     ) {}
