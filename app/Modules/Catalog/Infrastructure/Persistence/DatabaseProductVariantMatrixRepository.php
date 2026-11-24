@@ -322,7 +322,6 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
         }
     }
 
-    /** @param array<int, VariantMatrixValue> $enumValuesById */
     private function compareNumbers(string $left, string $right): int
     {
         $leftNegative = str_starts_with($left, '-');
@@ -336,8 +335,14 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
         [$leftInteger, $leftFraction] = array_pad(explode('.', $leftUnsigned, 2), 2, '');
         [$rightInteger, $rightFraction] = array_pad(explode('.', $rightUnsigned, 2), 2, '');
 
-        $leftInteger = ltrim($leftInteger, '0') ?: '0';
-        $rightInteger = ltrim($rightInteger, '0') ?: '0';
+        $leftInteger = ltrim($leftInteger, '0');
+        $rightInteger = ltrim($rightInteger, '0');
+        if ($leftInteger === '') {
+            $leftInteger = '0';
+        }
+        if ($rightInteger === '') {
+            $rightInteger = '0';
+        }
         $comparison = strlen($leftInteger) <=> strlen($rightInteger);
         if ($comparison === 0) {
             $comparison = strcmp($leftInteger, $rightInteger);
@@ -354,6 +359,7 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
         return $leftNegative ? -$comparison : $comparison;
     }
 
+    /** @param array<int, VariantMatrixValue> $enumValuesById */
     private function enumValue(?int $valueId, mixed $number, mixed $text, array $enumValuesById): VariantMatrixValue
     {
         if ($valueId === null || $number !== null || $text !== null || !isset($enumValuesById[$valueId])) {
