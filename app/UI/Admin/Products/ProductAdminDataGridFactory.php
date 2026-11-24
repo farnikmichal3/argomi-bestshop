@@ -44,6 +44,7 @@ final readonly class ProductAdminDataGridFactory
         $grid->addColumnText('type', 'products.admin.column.type');
         $grid->addColumnText('status', 'products.admin.column.status');
         $grid->addColumnText('categories', 'products.admin.column.categories');
+        $grid->addAction('edit', 'products.admin.action.edit', 'edit', ['id' => 'id']);
 
         $categoryOptions = [];
         $this->appendCategoryOptions(
