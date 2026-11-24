@@ -28,7 +28,7 @@ final readonly class AttributeAdminQueryService
         }
 
         $values = array_map(
-            static fn (array $value): AttributeValueEditorData => new AttributeValueEditorData(
+            static fn(array $value): AttributeValueEditorData => new AttributeValueEditorData(
                 $value['id'],
                 $value['code'],
                 $value['sortOrder'],
