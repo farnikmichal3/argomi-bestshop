@@ -3,7 +3,11 @@ Product relation service adds, removes and reorders complete directional relatio
 --FILE--
 <?php
 
+use App\Modules\Catalog\Api\CatalogAccessDeniedException;
+use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Application\Dto\ProductRelationOrderDto;
+use App\Modules\Catalog\Application\ProductRelationRepository;
+use App\Shared\Application\Transaction\Transaction;
 use App\Modules\Catalog\Application\ProductRelationService;
 use App\Modules\Catalog\Domain\ProductRelationType;
 use Nette\Database\Explorer;
@@ -17,8 +21,33 @@ require_once $rootDir . '/tests/Support/IntegrationTestBootstrap.php';
 
 $integration = IntegrationTestBootstrap::boot($rootDir);
 
-/** @var ProductRelationService $service */
-$service = $integration->container->getByType(ProductRelationService::class);
+/** @var ProductRelationRepository $repository */
+$repository = $integration->container->getByType(ProductRelationRepository::class);
+/** @var Transaction $transaction */
+$transaction = $integration->container->getByType(Transaction::class);
+$deniedPermission = new class implements CatalogPermission {
+    public function canView(): bool { return false; }
+    public function canManage(): bool { return false; }
+};
+$deniedService = new ProductRelationService($repository, $transaction, $deniedPermission);
+Assert::exception(
+    static fn () => $deniedService->add(1, 2, ProductRelationType::Accessory),
+    CatalogAccessDeniedException::class,
+);
+Assert::exception(
+    static fn () => $deniedService->remove(1, 2, ProductRelationType::Accessory),
+    CatalogAccessDeniedException::class,
+);
+Assert::exception(
+    static fn () => $deniedService->reorder(1, []),
+    CatalogAccessDeniedException::class,
+);
+
+$managerPermission = new class implements CatalogPermission {
+    public function canView(): bool { return true; }
+    public function canManage(): bool { return true; }
+};
+$service = new ProductRelationService($repository, $transaction, $managerPermission);
 /** @var Explorer $database */
 $database = $integration->database;
 $pdo = $database->getConnection()->getPdo();
