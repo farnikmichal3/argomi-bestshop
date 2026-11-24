@@ -27,6 +27,17 @@ final readonly class ProductEditorQueryService implements ProductEditorReader
             return null;
         }
 
+        $translations = [];
+        foreach ($this->products->findTranslations($productId) as $translation) {
+            $translations[$translation->locale->getCode()] = [
+                'name' => $translation->name,
+                'shortDescription' => $translation->shortDescription,
+                'description' => $translation->description,
+                'metaTitle' => $translation->metaTitle,
+                'metaDescription' => $translation->metaDescription,
+            ];
+        }
+
         $categoryIds = [];
         foreach ($this->database->table('product_category')
             ->where('product_id', $productId)
@@ -43,8 +54,12 @@ final readonly class ProductEditorQueryService implements ProductEditorReader
         }
 
         return new ProductEditorData(
-            $product,
-            $this->products->findTranslations($productId),
+            $product->id,
+            $product->code,
+            $product->status,
+            $product->type->value,
+            $product->taxClassId,
+            $translations,
             $categoryIds,
         );
     }
