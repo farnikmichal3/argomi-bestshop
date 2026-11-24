@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.104 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.105 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -74,6 +74,12 @@ Celkem **556 kroků**: hotovo 191, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.105 (24. 11. 2026)
+- F5-20: přidán veřejný čtecí kontrakt `ProductEditorConfigurationReader` a typované DTO pro dostupné atributy, lokalizované názvy/jednotky/enum hodnoty, již uložené produktové hodnoty a pořadí os variant.
+- Databázové čtení je odděleno do `DatabaseProductEditorConfigurationRepository`; aplikační query service mapuje výsledky do veřejného API. Textové hodnoty zůstávají prostým textem a v šablonách se musí escapovat; HTML popis produktu nadále sanitizuje HtmlPurifier přes existující `ProductDescriptionSanitizer`.
+- Přidán MySQL integrační test pro enum/text/number/bool, lokalizaci enum hodnot a jednotek, uložené osy variant i neexistující produkt. Testovací fixture se po ověření vrací zpět transakcí.
+- Čtecí část zatím není připojena k formuláři produktu. F5-20 zůstává ROZDĚLÁNO do ověření lokálních testů, PHPStan, coding standardu, Deptrac a následné integrace formuláře/zápisu.
 
 ### v3.104 (24. 11. 2026)
 - F5-20: HugeRTE 1.0.15 (MIT) je přidán jako lokální npm závislost a sestavuje se přes stávající esbuild; dlouhé popisy aktivních jazyků používají editor bez CDN. Serverový ProductDescriptionSanitizer používá HTMLPurifier s explicitním allowlistem strukturálních prvků, formátování, odkazů a tabulek; odmítá skripty, nebezpečná URL schémata, event handlery a vložené CSS. Integrační test ověřuje škodlivé HTML při create/update i opětovném načtení.
