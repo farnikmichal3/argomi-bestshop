@@ -22,7 +22,7 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
         $attributes = $this->database->table('attribute')->order('sort_order ASC, id ASC')->fetchAll();
         $names = [];
         foreach ($this->database->table('attribute_translation')->where('locale', $locale->getCode()) as $row) {
-            $names[self::toInt($row->attribute_id)] = (string) $row->name;
+            $names[self::toInt($row->attribute_id)] = self::toString($row->name);
         }
         $valueCounts = self::countBy($this->database->table('attribute_value')->fetchAll(), 'attribute_id');
         $axisCounts = self::countBy($this->database->table('product_variant_axis')->fetchAll(), 'attribute_id');
@@ -33,8 +33,8 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
             $unitId = $row->unit_id === null ? null : self::toInt($row->unit_id);
             $result[] = new AttributeAdminItem(
                 $id,
-                (string) $row->code,
-                (string) $row->type,
+                self::toString($row->code),
+                self::toString($row->type),
                 $names[$id] ?? null,
                 $unitId,
                 (bool) $row->is_filterable,
@@ -55,7 +55,7 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
 
         $translations = [];
         foreach ($this->database->table('attribute_translation')->where('attribute_id', $attributeId) as $translation) {
-            $translations[(string) $translation->locale] = (string) $translation->name;
+            $translations[self::toString($translation->locale)] = self::toString($translation->name);
         }
 
         $valueRows = $this->database->table('attribute_value')
@@ -71,7 +71,7 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
         if ($valueIds !== []) {
             foreach ($this->database->table('attribute_value_translation')->where('attribute_value_id', $valueIds) as $translation) {
                 $valueId = self::toInt($translation->attribute_value_id);
-                $valueTranslations[$valueId][(string) $translation->locale] = (string) $translation->label;
+                $valueTranslations[$valueId][self::toString($translation->locale)] = self::toString($translation->label);
             }
         }
 
@@ -80,7 +80,7 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
             $id = self::toInt($valueRow->id);
             $values[] = [
                 'id' => $id,
-                'code' => (string) $valueRow->code,
+                'code' => self::toString($valueRow->code),
                 'sortOrder' => self::toInt($valueRow->sort_order),
                 'translations' => $valueTranslations[$id] ?? [],
             ];
@@ -88,8 +88,8 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
 
         return [
             'id' => self::toInt($row->id),
-            'code' => (string) $row->code,
-            'type' => (string) $row->type,
+            'code' => self::toString($row->code),
+            'type' => self::toString($row->type),
             'unitId' => $row->unit_id === null ? null : self::toInt($row->unit_id),
             'isFilterable' => (bool) $row->is_filterable,
             'sortOrder' => self::toInt($row->sort_order),
@@ -103,13 +103,13 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
     {
         $names = [];
         foreach ($this->database->table('unit_translation')->where('locale', $locale->getCode()) as $row) {
-            $names[self::toInt($row->unit_id)] = (string) $row->name;
+            $names[self::toInt($row->unit_id)] = self::toString($row->name);
         }
 
         $options = [];
         foreach ($this->database->table('unit')->where('is_active', 1)->order('sort_order ASC, id ASC') as $row) {
             $id = self::toInt($row->id);
-            $options[$id] = $names[$id] ?? (string) $row->code;
+            $options[$id] = $names[$id] ?? self::toString($row->code);
         }
         return $options;
     }
@@ -139,7 +139,7 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
         if (!$row instanceof ActiveRow) {
             return null;
         }
-        return AttributeType::from((string) $row->type);
+        return AttributeType::from(self::toString($row->type));
     }
 
     public function hasAttributeAxes(int $attributeId): bool
@@ -263,10 +263,10 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
         $selection->update(['label' => $label]);
     }
 
-    /** @param list<ActiveRow> $rows
+    /** @param iterable<ActiveRow> $rows
      *  @return array<int, int>
      */
-    private static function countBy(array $rows, string $field): array
+    private static function countBy(iterable $rows, string $field): array
     {
         $counts = [];
         foreach ($rows as $row) {
@@ -282,6 +282,14 @@ final readonly class DatabaseAttributeRepository implements AttributeAdminReposi
             throw new UnexpectedValueException('Databáze nevrátila vložený řádek atributu.');
         }
         return self::toInt($row->id);
+    }
+
+    private static function toString(mixed $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+        throw new UnexpectedValueException('Databáze vrátila neplatnou textovou hodnotu atributu.');
     }
 
     private static function toInt(mixed $value): int
