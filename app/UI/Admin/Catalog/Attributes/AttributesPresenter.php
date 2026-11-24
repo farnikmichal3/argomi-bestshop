@@ -148,7 +148,7 @@ final class AttributesPresenter extends TranslatedPresenter
             'unitId' => $attribute->unitId === null ? '' : (string) $attribute->unitId,
             'isFilterable' => $attribute->isFilterable,
             'sortOrder' => $attribute->sortOrder,
-            'translations' => array_map(static fn (string $name): array => ['name' => $name], $attribute->translations),
+            'translations' => array_map(static fn(string $name): array => ['name' => $name], $attribute->translations),
         ]);
         $form->addSubmit('submit', 'attributes.form.edit.submit')->setHtmlAttribute('class', 'btn btn-primary');
         $attributeId = $attribute->id;
@@ -263,7 +263,7 @@ final class AttributesPresenter extends TranslatedPresenter
         $form->setDefaults([
             'code' => $attributeValue->code,
             'sortOrder' => $attributeValue->sortOrder,
-            'translations' => array_map(static fn (string $label): array => ['label' => $label], $attributeValue->translations),
+            'translations' => array_map(static fn(string $label): array => ['label' => $label], $attributeValue->translations),
         ]);
         $form->addSubmit('submit', 'attributes.values.edit.submit')->setHtmlAttribute('class', 'btn btn-primary');
         $attributeId = $attribute->id;
