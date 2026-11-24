@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\ProductEditorReader;
-use App\Modules\Catalog\Application\ProductWriteService;
+use App\Modules\Catalog\Api\ProductWriter;
 use App\Modules\Tax\Api\TaxClassOptionReader;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Shared\Domain\Locale\LocaleProvider;
@@ -42,8 +42,8 @@ $deniedPermission = new class implements CatalogPermission {
 $productEditorReader = $integration->container->getByType(ProductEditorReader::class);
 /** @var TaxClassOptionReader $taxClassOptionReader */
 $taxClassOptionReader = $integration->container->getByType(TaxClassOptionReader::class);
-/** @var ProductWriteService $productWriter */
-$productWriter = $integration->container->getByType(ProductWriteService::class);
+/** @var ProductWriter $productWriter */
+$productWriter = $integration->container->getByType(ProductWriter::class);
 /** @var CategoryTreeReader $categoryTreeReader */
 $categoryTreeReader = $integration->container->getByType(CategoryTreeReader::class);
 /** @var TranslatorFactory $translatorFactory */
