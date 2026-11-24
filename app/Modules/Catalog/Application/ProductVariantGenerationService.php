@@ -128,7 +128,9 @@ final readonly class ProductVariantGenerationService implements ProductVariantGe
                     }
                 } elseif ($axis['type'] === 'number') {
                     if (!is_string($value)) {
-                        throw new InvalidArgumentException(sprintf('Číselná hodnota osy %s musí být desetinný řetězec.', $code));
+                        throw new InvalidArgumentException(
+                            sprintf('Číselná hodnota osy %s musí být desetinný řetězec.', $code),
+                        );
                     }
                 } elseif ($axis['type'] === 'text') {
                     if (!is_string($value) || mb_strlen($value) > 255) {
