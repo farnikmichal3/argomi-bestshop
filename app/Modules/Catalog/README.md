@@ -141,7 +141,8 @@ Překročení limitu vrací veřejnou výjimku `Api/VariantMatrixTooLargeExcepti
 kterou Admin UI převádí na lokalizované upozornění.
 
 Ověření pokrývají `ProductVariantMatrixIntegration.phpt` a
-`ProductVariantGenerationIntegration.phpt`; kanonizaci
+`ProductVariantGenerationIntegration.phpt`; uživatel potvrdil úspěšné lokální kontroly
+i funkčnost matice v prohlížeči. Kanonizaci
 a shodu PHP/MySQL SHA-256 dále ověřují existující testy
 `VariantCombinationHash.phpt`, `VariantCombinationHashIntegration.phpt`
 a `VariantSelectorIntegration.phpt`.
