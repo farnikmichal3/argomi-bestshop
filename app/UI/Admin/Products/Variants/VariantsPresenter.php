@@ -44,7 +44,7 @@ final class VariantsPresenter extends TranslatedPresenter
 
     public function actionDefault(int $id): void
     {
-        if (!$this->catalogPermission->canManage()) {
+        if (!$this->catalogPermission->canView()) {
             throw new ForbiddenRequestException();
         }
 
@@ -104,7 +104,8 @@ final class VariantsPresenter extends TranslatedPresenter
         $this->template->hasAxes = $this->matrix->axes !== [];
         $this->template->hasValues = !$hasEmptyAxis && $this->matrix->combinations !== [];
         $this->template->hasMissing = $missingOptions !== [];
-        $this->template->canGenerate = $missingOptions !== [];
+        $this->template->canManage = $this->catalogPermission->canManage();
+        $this->template->canGenerate = $missingOptions !== [] && $this->catalogPermission->canManage();
     }
 
     protected function createComponentGenerateForm(): Form
