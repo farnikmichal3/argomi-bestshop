@@ -192,7 +192,15 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
                 'bool' => [new VariantMatrixValue(false, null), new VariantMatrixValue(true, null)],
                 default => throw new UnexpectedValueException('Osa má nepodporovaný datový typ.'),
             };
-            if ($type === 'number' || $type === 'text') {
+            if ($type === 'number') {
+                usort(
+                    $values,
+                    fn(VariantMatrixValue $a, VariantMatrixValue $b): int => $this->compareNumbers(
+                        (string) $a->value,
+                        (string) $b->value,
+                    ),
+                );
+            } elseif ($type === 'text') {
                 usort(
                     $values,
                     static fn(VariantMatrixValue $a, VariantMatrixValue $b): int => strcmp(
@@ -315,6 +323,37 @@ final readonly class DatabaseProductVariantMatrixRepository implements ProductVa
     }
 
     /** @param array<int, VariantMatrixValue> $enumValuesById */
+    private function compareNumbers(string $left, string $right): int
+    {
+        $leftNegative = str_starts_with($left, '-');
+        $rightNegative = str_starts_with($right, '-');
+        if ($leftNegative !== $rightNegative) {
+            return $leftNegative ? -1 : 1;
+        }
+
+        $leftUnsigned = $leftNegative ? substr($left, 1) : $left;
+        $rightUnsigned = $rightNegative ? substr($right, 1) : $right;
+        [$leftInteger, $leftFraction] = array_pad(explode('.', $leftUnsigned, 2), 2, '');
+        [$rightInteger, $rightFraction] = array_pad(explode('.', $rightUnsigned, 2), 2, '');
+
+        $leftInteger = ltrim($leftInteger, '0') ?: '0';
+        $rightInteger = ltrim($rightInteger, '0') ?: '0';
+        $comparison = strlen($leftInteger) <=> strlen($rightInteger);
+        if ($comparison === 0) {
+            $comparison = strcmp($leftInteger, $rightInteger);
+        }
+
+        if ($comparison === 0) {
+            $fractionLength = max(strlen($leftFraction), strlen($rightFraction));
+            $comparison = strcmp(
+                str_pad($leftFraction, $fractionLength, '0'),
+                str_pad($rightFraction, $fractionLength, '0'),
+            );
+        }
+
+        return $leftNegative ? -$comparison : $comparison;
+    }
+
     private function enumValue(?int $valueId, mixed $number, mixed $text, array $enumValuesById): VariantMatrixValue
     {
         if ($valueId === null || $number !== null || $text !== null || !isset($enumValuesById[$valueId])) {
