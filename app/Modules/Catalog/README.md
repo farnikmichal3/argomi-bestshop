@@ -185,6 +185,32 @@ Administrační čtení používá veřejný kontrakt `Api/AttributeAdminReader`
 - Typ atributu nelze změnit, pokud má již hodnoty nebo je použit jako osa variant. Atribut použitý jako osa nelze odstranit; enum hodnotu použitou existující variantou nelze odstranit. Databázové FK `RESTRICT` zůstávají poslední ochranou obchodních vazeb.
 - F5-19 nevyžaduje změnu struktury databáze; systémové texty administrace dodávají idempotentní seedy `2026-11-24-090000-seed-catalog-attribute-admin.sql` a `2026-11-24-100000-seed-admin-attributes-navigation.sql`.
 
+## Editor produktových atributů a os variant (F5-20)
+
+Administrační editor základních údajů je rozšířen o samostatnou kartu
+konfigurace produktu. UI čte dostupné atributy, lokalizované názvy, jednotky,
+enum možnosti, uložené hodnoty a osy přes veřejný
+`Api/ProductEditorConfigurationReader`. Zápis probíhá samostatným formulářem
+přes `Api/ProductConfigurationWriter`; prezentační vrstva nezná aplikační
+repository ani databázové tabulky.
+
+- Podporované hodnoty jsou `text`, `number`, `enum` a `bool`. Prázdné
+  pole znamená, že produkt daný atribut nemá přiřazen; typové a rozsahové
+  kontroly vždy znovu provádí `ProductConfigurationService`.
+- Enum select nabízí pouze hodnoty příslušného atributu; aplikační služba
+  znovu ověřuje jejich příslušnost. Číselné hodnoty se předávají jako řetězce,
+  aby se neztratila desetinná přesnost.
+- Osy variant se vybírají samostatně a každá má explicitní pořadí. Duplicitní
+  nebo nekladné pořadí je odmítnuto. Pokud již produkt obsahuje varianty,
+  aplikační služba nedovolí změnit množinu os; povoleno je pouze přeřazení.
+- Základní údaje a konfigurace se ukládají oddělenými formuláři a transakcemi.
+  Vytvoření produktu přesměruje do editace, kde lze konfiguraci doplnit.
+- Systémové popisky UI jsou v databázovém seedu
+  `2026-11-24-110000-seed-catalog-product-configuration-editor.sql`.
+- Textové atributy jsou prostý text a Latte je escapuje. HTMLPurifier zůstává
+  povinný pouze pro HTML popisy produktu; obsah atributů se nikdy nepovažuje
+  za důvěryhodné HTML.
+
 ## DI registrace
 
 `Infrastructure/DI/CatalogExtension` je automaticky objevena konvencí
