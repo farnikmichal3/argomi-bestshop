@@ -16,5 +16,5 @@ interface AttributeAdminReader
     public function findForEdit(int $attributeId): ?AttributeEditorData;
 
     /** @return array<int|string, string> */
-    public function findUnitOptions(): array;
+    public function findUnitOptions(Locale $locale): array;
 }
