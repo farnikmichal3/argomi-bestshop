@@ -1,0 +1,19 @@
+{block title}{_'attributes.values.edit.title'}{/block}
+
+{block content}
+<div class="py-3">
+    <div class="mb-3">
+        <span class="text-body-secondary"><code>{$attribute->code}</code></span>
+        <a class="btn btn-sm btn-outline-secondary ms-2" n:href="edit, id => $attribute->id">{_'attributes.values.back'}</a>
+    </div>
+    <section class="card">
+        <div class="card-body">
+            {control editValueForm}
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                {control deleteValueForm}
+                <a class="btn btn-outline-secondary" n:href="edit, id => $attribute->id">{_'attributes.form.cancel'}</a>
+            </div>
+        </div>
+    </section>
+</div>
+{/block}
