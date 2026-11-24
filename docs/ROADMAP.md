@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.94 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.95 · 24. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -77,7 +77,7 @@ Celkem **556 kroků**: hotovo 189, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 
 ### v3.93 (24. 11. 2026)
 - Dokončen F5-16: administrační editor základních údajů produktu. Identifikační údaje, lokalizované názvy a popisy, SEO metadata i přiřazení ke kategoriím se ukládají transakčně přes veřejné API Catalog; uživatel ověřil v prohlížeči opětovné načtení uložených změn a funkční flash zprávy. Oprava formuláře navíc pokrývá číselné ID selectů vracené Nette Forms jako `int` i `string`; CI a lokální aktivní kontroly prošly.
-- Zahájen F5-17: administrační matice variant a generování kombinací z os. Přidán veřejný read kontrakt matice a transakční generátor přes `ProductVariantGenerator`; Admin stránka zobrazuje existující i chybějící kombinace a dovoluje vybrat jen chybějící. Generátor znovu ověřuje úplnost os, typy a enum hodnoty, používá výhradně `VariantCombinationHash`, je idempotentní a zachovává existující varianty i jejich obchodní vazby. Dostupné kombinace jsou omezeny na 256; DECIMAL hodnoty se čtou jako text bez `float`. Přidány cs/en seed texty a integrační testy matice i generování. Zbývá úspěšné CI, lokální kontroly a ověření stránky v prohlížeči.
+- Zahájen F5-17: administrační matice variant a generování kombinací z os. Přidán veřejný read kontrakt matice a transakční generátor přes `ProductVariantGenerator`; Admin stránka zobrazuje existující i chybějící kombinace a dovoluje vybrat jen chybějící. Generátor znovu ověřuje úplnost os, typy a enum hodnoty, používá výhradně `VariantCombinationHash`, je idempotentní a zachovává existující varianty i jejich obchodní vazby. Dostupné kombinace jsou omezeny na 256; DECIMAL hodnoty se čtou jako text bez `float`. Přidány cs/en seed texty a integrační testy matice i generování. CI na commitu `da6c411` prošlo: **79 testů**, PHPStan, coding standard i architektura; zbývá lokální kontrola a ověření stránky v prohlížeči.
 - F5-26 (oprávnění katalogu) zůstává rozpracováno. Souhrn F5: **18 hotovo**, **2 rozpracováno**, **18 plán**. Celkem: **189 hotovo**, **2 rozpracováno**, **1 k úpravě**, **357 plán**, **7 zrušeno**.
 
 ### v3.92 (24. 11. 2026)
@@ -683,7 +683,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-14** Admin: strom kategorií s drag & drop řazením — strom kategorií s bezpečným drag & drop řazením sourozenců, transakčním pořadím, oprávněními a integračními testy; CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-15** Admin: seznam produktů s filtry (kategorie, stav, typ) — stránkovaný read model, Ublaboo DataGrid, lokalizované názvy a kombinovatelné filtry; CI a lokální kontroly prošly, uživatel potvrdil funkční stránku i filtrování v prohlížeči.
 - `[HOTOVO]` **F5-16** Admin: základní záložka produktu (názvy, popisy, zařazení) — transakční editor identifikačních údajů, překladů, SEO metadat a kategorií; uživatel ověřil ukládání, opětovné načtení i flash zprávy v prohlížeči.
-- `[ROZDĚLÁNO]` **F5-17** Admin: matice variant (generování kombinací z os) — read model, výběr a transakční generování chybějících kombinací přes `ProductVariantGenerator`; limit 256 kombinací, SHA-256 přes `VariantCombinationHash`, existující varianty zůstávají nedotčené; čeká na CI a browser ověření.
+- `[ROZDĚLÁNO]` **F5-17** Admin: matice variant (generování kombinací z os) — read model, výběr a transakční generování chybějících kombinací přes `ProductVariantGenerator`; limit 256 kombinací, SHA-256 přes `VariantCombinationHash`, existující varianty zůstávají nedotčené; CI prošlo (79 testů, PHPStan, coding standard, architektura); čeká na lokální kontrolu a browser ověření.
 - `[PLÁN]` **F5-18** Admin: úprava konkrétní varianty (SKU, EAN, váha, výchozí)
 - `[PLÁN]` **F5-19** Admin: správa atributů a jejich hodnot
 - `[PLÁN]` **F5-20** Admin: přiřazení atributů k produktu
