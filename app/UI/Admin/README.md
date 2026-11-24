@@ -22,6 +22,18 @@ Administrace používá společný Latte layout \`@layout.latte\` postavený na 
 
 Navigační popisky Produkty a Kategorie se proto vždy překládají přes doménu Admin, nikoliv přes doménu Catalog právě otevřeného presenteru. Skrytí odkazu je pouze prezentační pomůcka; cílové presentery nadále samostatně kontrolují oprávnění.
 
+## Editor produktů (F5-16)
+
+- Seznam produktů zůstává stránkovaným DataGrid read modelem.
+- Akce vytvoření a úpravy vedou na samostatné stránky presenteru
+  `Admin:Products:create` a `Admin:Products:edit`.
+- Formulář základních údajů pracuje s aktivními jazyky z databáze,
+  hierarchickým výběrem kategorií, stavem, typem a daňovou třídou.
+- Zápisy předává aplikačnímu `ProductWriteService`; presenter neobsahuje
+  databázové dotazy ani vlastní transakční logiku.
+- Oprávnění `CatalogPermission::canManage()` se kontroluje v presenteru
+  i znovu v aplikační zapisovací službě.
+
 ## JavaScript a CSS
 
 - \`assets/js/admin.js\` je jediný vstupní bod Adminu. Načte AdminLTE CSS, Bootstrap Icons, \`shared.js\` a AdminLTE JavaScript v tomto pořadí.
