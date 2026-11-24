@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-use App\\Modules\\Catalog\\Api\\CatalogPermission;
-use App\\Modules\\Catalog\\Api\\Dto\\ProductVariantMatrix;
-use App\\Modules\\Catalog\\Api\\Dto\\VariantMatrixAxis;
-use App\\Modules\\Catalog\\Api\\Dto\\VariantMatrixCombination;
-use App\\Modules\\Catalog\\Api\\Dto\\VariantMatrixValue;
-use App\\Modules\\Catalog\\Api\\ProductVariantGenerator;
-use App\\Modules\\Catalog\\Api\\ProductVariantMatrixReader;
-use App\\Modules\\Catalog\\Api\\ProductVariantEditorReader;
-use App\\Modules\\Catalog\\Api\\ProductVariantWriter;
-use App\\Modules\\Translation\\Api\\TranslatorFactory;
-use App\\Shared\\Domain\\Locale\\LocaleProvider;
-use App\\UI\\Admin\\Products\\Variants\\VariantsPresenter;
-use App\\UI\\Admin\\Products\\Variant\\VariantPresenter;
-use Nette\\Application\\ForbiddenRequestException;
-use Nette\\Application\\UI\\TemplateFactory;
-use Nette\\Http\\IRequest;
-use Nette\\Http\\IResponse;
-use Tester\\Assert;
-use Tests\\Support\\IntegrationTestBootstrap;
+use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Api\Dto\ProductVariantMatrix;
+use App\Modules\Catalog\Api\Dto\VariantMatrixAxis;
+use App\Modules\Catalog\Api\Dto\VariantMatrixCombination;
+use App\Modules\Catalog\Api\Dto\VariantMatrixValue;
+use App\Modules\Catalog\Api\ProductVariantGenerator;
+use App\Modules\Catalog\Api\ProductVariantMatrixReader;
+use App\Modules\Catalog\Api\ProductVariantEditorReader;
+use App\Modules\Catalog\Api\ProductVariantWriter;
+use App\Modules\Translation\Api\TranslatorFactory;
+use App\Shared\Domain\Locale\LocaleProvider;
+use App\UI\Admin\Products\Variants\VariantsPresenter;
+use App\UI\Admin\Products\Variant\VariantPresenter;
+use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\TemplateFactory;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
+use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 require $rootDir . '/vendor/autoload.php';
@@ -53,7 +53,7 @@ $managerPermission = new class implements CatalogPermission {
 };
 
 $matrixReader = new class implements ProductVariantMatrixReader {
-    public function findForProduct(int $productId, \\App\\Shared\\Domain\\Locale\\Locale $locale): ?ProductVariantMatrix
+    public function findForProduct(int $productId, \App\Shared\Domain\Locale\Locale $locale): ?ProductVariantMatrix
     {
         return new ProductVariantMatrix(
             $productId,
@@ -143,7 +143,7 @@ Assert::exception(
     ForbiddenRequestException::class,
 );
 
-echo "OK\\n";
+echo "OK\n";
 ?>
 --EXPECT--
 OK
