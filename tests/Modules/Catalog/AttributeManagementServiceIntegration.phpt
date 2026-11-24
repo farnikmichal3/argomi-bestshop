@@ -9,6 +9,7 @@ use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Application\AttributeWriteRepository;
 use App\Modules\Catalog\Application\AttributeWriteService;
 use App\Modules\Catalog\Api\AttributeDataType;
+use App\Modules\Catalog\Domain\Attribute\AttributeType;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Database\Explorer;

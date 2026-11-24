@@ -26,11 +26,11 @@ $reader = $integration->container->getByType(MessageTranslationReader::class);
 Assert::type(MessageTranslationReader::class, $reader);
 
 $token = bin2hex(random_bytes(8));
-$coreKey = 'f4_17.core.' . $token;
-$customKey = 'f4_17.custom.' . $token;
-$outdatedKey = 'f4_17.outdated.' . $token;
-$modifiedKey = 'f4_19.modified.' . $token;
-$adminKey = 'f4_17.admin.' . $token;
+$coreKey = '000_test_f4_17.core.' . $token;
+$customKey = '000_test_f4_17.custom.' . $token;
+$outdatedKey = '000_test_f4_17.outdated.' . $token;
+$modifiedKey = '000_test_f4_19.modified.' . $token;
+$adminKey = '000_test_f4_17.admin.' . $token;
 
 $pdo->beginTransaction();
 
