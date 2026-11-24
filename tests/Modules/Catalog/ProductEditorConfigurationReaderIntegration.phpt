@@ -8,6 +8,8 @@ use Nette\Database\Explorer;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
 
+final class ProductEditorConfigurationFixtureRollback extends Exception {}
+
 $rootDir = dirname(__DIR__, 3);
 require $rootDir . '/vendor/autoload.php';
 require_once $rootDir . '/tests/Support/IntegrationTestBootstrap.php';
@@ -153,10 +155,10 @@ try {
         Assert::same('ks', $numberOption->unitSymbol);
 
         Assert::same(null, $reader->findForProduct(PHP_INT_MAX, Locale::fromString('cs')));
-        throw new RuntimeException('rollback product editor configuration fixture');
+        throw new ProductEditorConfigurationFixtureRollback();
     });
-} catch (RuntimeException $exception) {
-    Assert::same('rollback product editor configuration fixture', $exception->getMessage());
+} catch (ProductEditorConfigurationFixtureRollback) {
+    // Intentional rollback of the integration-test fixture.
 }
 
 echo "OK\n";
