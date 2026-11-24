@@ -12,9 +12,11 @@ use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\Dto\AttributeEditorData;
 use App\Modules\Catalog\Api\Dto\AttributeValueEditorData;
 use App\Modules\Translation\Api\TranslationDomain;
+use App\Modules\Translation\Api\UnitFormatter;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Presentation\TranslatedPresenter;
 use App\Shared\Domain\Locale\LocaleProvider;
+use App\Shared\Domain\Quantity\Quantity;
 use App\UI\Admin\AdminAccessTrait;
 use InvalidArgumentException;
 use Nette\Application\ForbiddenRequestException;
@@ -35,6 +37,7 @@ final class AttributesPresenter extends TranslatedPresenter
         private readonly CatalogPermission $catalogPermission,
         private readonly LocaleProvider $localeProvider,
         private readonly TranslatorFactory $translatorFactory,
+        private readonly UnitFormatter $unitFormatter,
     ) {
         parent::__construct();
     }
@@ -60,7 +63,7 @@ final class AttributesPresenter extends TranslatedPresenter
             throw new ForbiddenRequestException();
         }
         $this->template->locales = $this->localeProvider->getActiveLocales();
-        $this->template->unitOptions = $this->attributeReader->findUnitOptions($this->localeProvider->getDefault());
+        $this->template->unitOptions = $this->getFormattedUnitOptions();
     }
 
     public function actionEdit(int $id): void
@@ -421,5 +424,17 @@ final class AttributesPresenter extends TranslatedPresenter
             TranslationDomain::Catalog,
             $this->localeProvider->getDefault(),
         );
+    }
+
+    /** @return array<int|string, string> */
+    private function getFormattedUnitOptions(): array
+    {
+        $locale = $this->localeProvider->getDefault();
+        $options = $this->attributeReader->findUnitOptions($locale);
+        foreach ($options as $id => $namePattern) {
+            $options[$id] = $this->unitFormatter->formatName($namePattern, Quantity::fromInteger(1), $locale);
+        }
+
+        return $options;
     }
 }
