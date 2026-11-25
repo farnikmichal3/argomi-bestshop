@@ -37,7 +37,7 @@ final readonly class MediaAssetQueryService implements MediaAssetReader
         }
 
         return array_map(
-            fn ($asset): MediaAssetData => $this->map($asset),
+            fn($asset): MediaAssetData => $this->map($asset),
             $this->repository->findLibrary($limit, $offset),
         );
     }
@@ -61,7 +61,7 @@ final readonly class MediaAssetQueryService implements MediaAssetReader
             $asset->sourceFileSizeBytes,
             $asset->createdAt,
             array_map(
-                static fn ($derivative): MediaAssetDerivativeData => new MediaAssetDerivativeData(
+                static fn($derivative): MediaAssetDerivativeData => new MediaAssetDerivativeData(
                     $derivative->variant,
                     $derivative->format,
                     $derivative->width,

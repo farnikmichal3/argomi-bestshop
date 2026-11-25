@@ -6,6 +6,4 @@ namespace App\Modules\Media\Api;
 
 use RuntimeException;
 
-final class MediaAccessDeniedException extends RuntimeException
-{
-}
+final class MediaAccessDeniedException extends RuntimeException {}

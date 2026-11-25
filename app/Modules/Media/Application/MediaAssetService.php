@@ -78,7 +78,7 @@ final readonly class MediaAssetService implements MediaAssetWriter
         );
 
         try {
-            return $this->transaction->run(fn (): int => $this->repository->create($asset));
+            return $this->transaction->run(fn(): int => $this->repository->create($asset));
         } catch (Throwable $exception) {
             $this->cleanup($written);
             throw $exception;
@@ -97,7 +97,7 @@ final readonly class MediaAssetService implements MediaAssetWriter
             return;
         }
 
-        $this->transaction->run(fn () => $this->repository->delete($id));
+        $this->transaction->run(fn() => $this->repository->delete($id));
         $keys = [$asset->storageKey];
         foreach ($asset->derivatives as $derivative) {
             $keys[] = $derivative->storageKey;
