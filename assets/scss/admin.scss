@@ -137,6 +137,25 @@ tr[draggable="true"]:active {
     background: var(--bs-tertiary-bg);
 }
 
+.product-editor-panel form {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.product-editor-panel form .form-group,
+.product-editor-panel form .mb-3 {
+    min-width: 0;
+}
+
+.product-editor-panel textarea[data-hugerte] {
+    min-height: 26rem;
+}
+
+.product-editor-panel .tox,
+.product-editor-panel .hugerte {
+    max-width: 100%;
+}
+
 .product-editor-panel-body {
     padding: clamp(1rem, 2vw, 1.75rem);
 }
