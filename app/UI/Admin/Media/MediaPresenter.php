@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Admin\Media;
 
+use App\Modules\Media\Api\Dto\MediaAssetData;
 use App\Modules\Media\Api\MediaAssetContentReader;
 use App\Modules\Media\Api\MediaAssetReader;
 use App\Modules\Media\Api\MediaAssetWriter;
@@ -26,6 +27,16 @@ final class MediaPresenter extends TranslatedPresenter
 {
     use AdminAccessTrait;
 
+    private ?int $assignProductId = null;
+
+    private ?int $assignVariantId = null;
+
+    /** @var array<int|string, string> */
+    private array $assignVariantOptions = [];
+
+    /** @var list<MediaAssetData> */
+    private array $libraryAssets = [];
+
     public function __construct(
         private readonly MediaPermission $mediaPermission,
         private readonly CatalogPermission $catalogPermission,
@@ -45,7 +56,7 @@ final class MediaPresenter extends TranslatedPresenter
         return TranslationDomain::Admin;
     }
 
-    public function renderDefault(): void
+    public function renderDefault(?int $productId = null, ?int $variantId = null): void
     {
         if (!$this->mediaPermission->canView()) {
             throw new ForbiddenRequestException();
