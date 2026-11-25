@@ -313,3 +313,38 @@ Ověření pokrývá `CatalogPermissionResolver.phpt`,
 `VariantsPresenterAuthorizationIntegration.phpt`,
 `ProductRelationManagerIntegration.phpt` a
 `ProductImageRegistrationAuthorization.phpt`.
+
+
+## Konfigurace zákaznických voleb produktu (F5-21)
+
+Administrační správu poskytují veřejné kontrakty
+`Api/ProductCustomerOptionReader` a `Api/ProductCustomerOptionWriter`.
+Interní `ProductCustomerOptionQueryService` a
+`ProductCustomerOptionService` oddělují čtení od transakčního zápisu;
+databázovou implementaci zajišťuje
+`Infrastructure/Persistence/DatabaseProductCustomerOptionRepository`.
+Prezentační vrstva nepřistupuje přímo k databázi.
+
+- Produkt může mít volby typu `choice` nebo `text`; každá volba má
+  stabilní kód, povinnost, pořadí a lokalizované názvy pro všechny aktivní
+  jazyky.
+- Volba `choice` spravuje lokalizované popisky hodnot. Volba `text`
+  přijímá zákaznický text nejvýše 500 znaků a nemá číselník hodnot.
+- Aktualizace zachovává identitu existujících voleb a hodnot. Přidání,
+  úprava a mazání se provádí přes aplikační službu a sdílenou transakci.
+- Změna typu, která by odstranila existující hodnoty, je validována;
+  odstranění používaných voleb/hodnot je chráněno aplikační kontrolou
+  a databázovými vazbami. Konkrétní kontrola reálného použití v košíku
+  bude znovu ověřena po implementaci modulu Cart (F7).
+- Služba znovu kontroluje `CatalogPermission::canManage()`; oprávnění
+  v presenteru ani skrytí ovládacích prvků nejsou jedinou ochranou.
+- Cenové příplatky se v Catalogu nevypočítávají ani nespravují;
+  patří do Pricing (F6-08). F5-21 nevyžaduje změnu databázového schématu.
+- Systémové popisky administrace dodává idempotentní seed
+  `2026-11-25-080000-seed-catalog-customer-options.sql`.
+
+Integrační test `ProductCustomerOptionServiceIntegration.phpt` pokrývá
+vytvoření a načtení voleb, překlady, zachování ID při úpravě, hodnoty,
+pořadí, povinnost, neplatné typy a kódy, chybějící překlady a ochranu
+před odstraněním odkazovaných záznamů. Resolver zákaznického výběru
+nadále ověřují samostatné testy `OptionResolver`.
