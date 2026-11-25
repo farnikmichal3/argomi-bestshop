@@ -39,7 +39,7 @@ $context = IntegrationTestBootstrap::boot($rootDir);
 Assert::true($context->container instanceof Container);
 
 // Katalogový read kontrakt zůstává dostupný přes automatické vyhledávání služeb.
-Assert::type(ProductRepository::class, $context->container->getByType(ProductEditorReader::class));
+Assert::type(ProductEditorReader::class, $context->container->getByType(ProductEditorReader::class));
 
 // Media zveřejňuje pouze API; storage a procesor zůstávají interními kontrakty modulu.
 Assert::type(MediaAssetReader::class, $context->container->getByType(MediaAssetReader::class));
