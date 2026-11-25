@@ -55,6 +55,7 @@ final readonly class MediaAssetQueryService implements MediaAssetReader
             $asset->id,
             $asset->originalFilename,
             $asset->storageKey,
+            $asset->sourceSha256,
             $asset->sourceMimeType,
             $asset->sourceWidth,
             $asset->sourceHeight,
@@ -64,6 +65,8 @@ final readonly class MediaAssetQueryService implements MediaAssetReader
                 static fn($derivative): MediaAssetDerivativeData => new MediaAssetDerivativeData(
                     $derivative->variant,
                     $derivative->format,
+                    $derivative->sourceSha256,
+                    $derivative->recipeSha256,
                     $derivative->width,
                     $derivative->height,
                     $derivative->storageKey,

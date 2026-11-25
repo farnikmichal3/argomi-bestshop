@@ -15,6 +15,7 @@ final readonly class MediaAssetData
         public int $id,
         public string $originalFilename,
         public string $storageKey,
+        public ?string $sourceSha256,
         public ?string $sourceMimeType,
         public ?int $sourceWidth,
         public ?int $sourceHeight,

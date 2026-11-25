@@ -54,7 +54,11 @@ final class DatabaseMediaAssetRepository implements MediaAssetRepository
     public function findById(int $id): ?MediaAssetRecord
     {
         $row = $this->database->table('media_asset')->get($id);
-        return $row instanceof ActiveRow ? $this->map($row) : null;
+        if (!$row instanceof ActiveRow) {
+            return null;
+        }
+
+        return $this->mapRows([$row])[0];
     }
 
     public function findLibrary(int $limit, int $offset): array
@@ -68,12 +72,7 @@ final class DatabaseMediaAssetRepository implements MediaAssetRepository
             ->limit($limit, $offset)
             ->fetchAll();
 
-        $assets = [];
-        foreach ($rows as $row) {
-            $assets[] = $this->map($row);
-        }
-
-        return $assets;
+        return $this->mapRows($rows);
     }
 
     public function delete(int $id): void
@@ -81,25 +80,41 @@ final class DatabaseMediaAssetRepository implements MediaAssetRepository
         $this->database->table('media_asset')->where('id', $id)->delete();
     }
 
-    private function map(ActiveRow $row): MediaAssetRecord
+    /**
+     * @param list<ActiveRow> $rows
+     * @return list<MediaAssetRecord>
+     */
+    private function mapRows(array $rows): array
     {
-        $id = $this->integer($row->id, 'media_asset.id');
-        $derivatives = [];
-        foreach ($this->database->table('media_asset_derivative')
-            ->where('media_asset_id', $id)
-            ->order('variant ASC, format ASC')
-            ->fetchAll() as $derivative) {
-            $derivatives[] = new MediaAssetDerivativeRecord(
-                $this->string($derivative->variant, 'media_asset_derivative.variant'),
-                $this->string($derivative->format, 'media_asset_derivative.format'),
-                $this->integer($derivative->width, 'media_asset_derivative.width'),
-                $this->integer($derivative->height, 'media_asset_derivative.height'),
-                $this->string($derivative->storage_key, 'media_asset_derivative.storage_key'),
-                $this->integer($derivative->file_size_bytes, 'media_asset_derivative.file_size_bytes'),
-            );
+        $ids = [];
+        foreach ($rows as $row) {
+            $ids[] = $this->integer($row->id, 'media_asset.id');
         }
 
-        $createdAt = $row->created_at;
+        $derivativesByAsset = [];
+        if ($ids !== []) {
+            foreach ($this->database->table('media_asset_derivative')
+                ->where('media_asset_id', $ids)
+                ->order('media_asset_id ASC, variant ASC, format ASC')
+                ->fetchAll() as $derivative) {
+                $assetId = $this->integer($derivative->media_asset_id, 'media_asset_derivative.media_asset_id');
+                $derivativesByAsset[$assetId][] = new MediaAssetDerivativeRecord(
+                    $this->string($derivative->variant, 'media_asset_derivative.variant'),
+                    $this->string($derivative->format, 'media_asset_derivative.format'),
+                    $this->string($derivative->source_sha256, 'media_asset_derivative.source_sha256'),
+                    $this->string($derivative->recipe_sha256, 'media_asset_derivative.recipe_sha256'),
+                    $this->integer($derivative->width, 'media_asset_derivative.width'),
+                    $this->integer($derivative->height, 'media_asset_derivative.height'),
+                    $this->string($derivative->storage_key, 'media_asset_derivative.storage_key'),
+                    $this->integer($derivative->file_size_bytes, 'media_asset_derivative.file_size_bytes'),
+                );
+            }
+        }
+
+        $assets = [];
+        foreach ($rows as $row) {
+            $id = $this->integer($row->id, 'media_asset.id');
+            $createdAt = $row->created_at;
         if (!$createdAt instanceof DateTimeInterface) {
             if (!is_string($createdAt)) {
                 throw new UnexpectedValueException('media_asset.created_at nemá platný časový typ.');
@@ -111,13 +126,17 @@ final class DatabaseMediaAssetRepository implements MediaAssetRepository
             $id,
             $this->string($row->original_filename, 'media_asset.original_filename'),
             $this->string($row->storage_key, 'media_asset.storage_key'),
+            $this->nullableString($row->source_sha256, 'media_asset.source_sha256'),
             $this->nullableString($row->source_mime_type, 'media_asset.source_mime_type'),
             $this->nullableInteger($row->source_width, 'media_asset.source_width'),
             $this->nullableInteger($row->source_height, 'media_asset.source_height'),
             $this->nullableInteger($row->source_file_size_bytes, 'media_asset.source_file_size_bytes'),
             DateTimeImmutable::createFromInterface($createdAt),
-            $derivatives,
+            $derivativesByAsset[$id] ?? [],
         );
+        }
+
+        return $assets;
     }
 
     private function integer(mixed $value, string $field): int
