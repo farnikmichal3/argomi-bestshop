@@ -164,7 +164,7 @@ final class DatabaseProductImageRepository implements ProductImageRepository
     public function updateMetadata(int $productId, int $imageId, ?string $altText, int $sortOrder): void
     {
         if ($productId < 1 || $imageId < 1 || $sortOrder < 0 || ($altText !== null && mb_strlen($altText) > 255)) {
-            throw new \\InvalidArgumentException('Metadata obrázku nejsou platná.');
+            throw new \InvalidArgumentException('Metadata obrázku nejsou platná.');
         }
 
         $row = $this->database->table('product_image')
@@ -172,7 +172,7 @@ final class DatabaseProductImageRepository implements ProductImageRepository
             ->where('id', $imageId)
             ->fetch();
         if (!$row instanceof ActiveRow) {
-            throw new \\InvalidArgumentException('Obrázek produktu nebyl nalezen.');
+            throw new \InvalidArgumentException('Obrázek produktu nebyl nalezen.');
         }
 
         $this->database->table('product_image')
@@ -215,7 +215,7 @@ final class DatabaseProductImageRepository implements ProductImageRepository
             ->where('id', $imageId)
             ->fetch();
         if (!$row instanceof ActiveRow) {
-            throw new \\InvalidArgumentException('Obrázek produktu nebyl nalezen.');
+            throw new \InvalidArgumentException('Obrázek produktu nebyl nalezen.');
         }
 
         $variantId = $row->product_variant_id;
