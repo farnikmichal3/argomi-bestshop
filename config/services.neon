@@ -32,6 +32,9 @@ services:
   # Fyzické soubory katalogových obrázků zůstávají mimo veřejný adresář www/.
   - App\Modules\Catalog\Infrastructure\Storage\InterventionProductImageProcessor
   - App\Modules\Catalog\Infrastructure\Storage\FilesystemProductImageStorage(%appDir%/../var/catalog-images)
+  # Media owns the physical library; files remain outside www/.
+  - App\Modules\Media\Infrastructure\Image\InterventionMediaImageProcessor
+  - App\Modules\Media\Infrastructure\Storage\FilesystemMediaFileStorage(%appDir%/../var/media)
   # Poskytovatel není zachycen automatickým vyhledáváním *Service/*Repository,
   # proto jej registrujeme výslovně. Rozhraní CurrencyProvider se pak autowiruje
   # přes jedinou dostupnou implementaci.

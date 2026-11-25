@@ -15,6 +15,7 @@ final class ModuleRegistry
         'Identity',
         'Inventory',
         'Mailing',
+        'Media',
         'Orders',
         'Payments',
         'Pricing',

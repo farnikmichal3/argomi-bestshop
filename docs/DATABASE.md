@@ -35,7 +35,8 @@ Počáteční soubor `2026-11-04-200000-init.sql` vytváří 46 tabulek; dopřed
 |---|---|
 | Jazyk, měna, jednotky a překlady | `language`, `currency`, `unit`, `unit_translation`, `catalog_message_translation`, `cart_message_translation`, `checkout_message_translation`, `admin_message_translation` |
 | Daně | `tax_class`, `tax_rate` |
-| Katalog | `product`, `product_translation`, `category`, `category_translation`, `product_category`, `attribute`, `attribute_translation`, `attribute_value`, `attribute_value_translation`, `product_variant_axis`, `product_variant`, `product_attribute_value`, `product_variant_attribute_value`, `product_option`, `product_option_translation`, `product_option_value`, `product_option_value_translation`, `product_relation`, `product_image` |
+| Katalog | `product`, `product_translation`, `category`, `category_translation`, `product_category`, `attribute`, `attribute_translation`, `attribute_value`, `attribute_value_translation`, `product_variant_axis`, `product_variant`, `product_attribute_value`, `product_variant_attribute_value`, `product_option`, `product_option_translation`, `product_option_value`, `product_option_value_translation`, `product_relation`, `product_image` (vazby na Media) |
+| Média | `media_asset`, `media_asset_derivative` |
 | Ceny | `variant_price`, `variant_price_history`, `option_value_price` |
 | Sklad | `stock_item`, `stock_movement` |
 | Zákazníci | `customer`, `customer_address` |

@@ -104,6 +104,15 @@
         - type: classLike
           value: '^App\\Modules\\Mailing\\(?!Api\\)'
 
+    - name: MediaApi
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Media\\Api\\'
+    - name: MediaInternal
+      collectors:
+        - type: classLike
+          value: '^App\\Modules\\Media\\(?!Api\\)'
+
     - name: OrdersApi
       collectors:
         - type: classLike
@@ -184,6 +193,7 @@
       - IdentityApi
       - InventoryApi
       - MailingApi
+      - MediaApi
       - OrdersApi
       - PaymentsApi
       - PricingApi
@@ -220,6 +230,7 @@
       - IdentityApi
       - InventoryApi
       - MailingApi
+      - MediaApi
       - OrdersApi
       - PaymentsApi
       - PricingApi
@@ -236,6 +247,7 @@
     IdentityApi: [IdentityInternal, Shared, External]
     InventoryApi: [InventoryInternal, Shared, External]
     MailingApi: [MailingInternal, Shared, External]
+    MediaApi: [MediaInternal, Shared, External]
     OrdersApi: [OrdersInternal, Shared, External]
     PaymentsApi: [PaymentsInternal, Shared, External]
     PricingApi: [PricingInternal, Shared, External]
@@ -247,12 +259,13 @@
     # Interní implementace mohou implementovat vlastní veřejné API;
     # jinak smějí používat pouze Shared a externí knihovny.
     CartInternal: [Shared, External]
-    CatalogInternal: [CatalogApi, Shared, External]
+    CatalogInternal: [CatalogApi, MediaApi, Shared, External]
     CheckoutInternal: [Shared, External]
     CustomerInternal: [Shared, External]
     IdentityInternal: [Shared, External]
     InventoryInternal: [Shared, External]
     MailingInternal: [Shared, External]
+    MediaInternal: [MediaApi, Shared, External]
     OrdersInternal: [Shared, External]
     PaymentsInternal: [Shared, External]
     PricingInternal: [Shared, External]
