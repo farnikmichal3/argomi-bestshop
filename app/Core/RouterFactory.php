@@ -62,7 +62,9 @@ final class RouterFactory
             ->addRoute('admin/<presenter>/<action>');
 
         // Povolené jazykové prefixy se vždy sestavují z aktivních záznamů v databázi.
-        $router->withModule('Front')
+        $frontRouter = $router->withModule('Front');
+        $frontRouter->addRoute('media/<token [a-f0-9]{64}>[/<variant>]', 'Media:default');
+        $frontRouter
             ->addRoute('<lang ' . $languagePattern . '>', 'Home:default')
             ->addRoute('<lang ' . $languagePattern . '>/<presenter>/<action>');
 
