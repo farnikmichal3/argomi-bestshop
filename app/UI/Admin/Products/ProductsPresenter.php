@@ -518,6 +518,20 @@ final class ProductsPresenter extends TranslatedPresenter
             'action' => 'update',
         ]);
 
+        $imageConfiguration = [];
+        foreach ($this->productImages as $image) {
+            $imageConfiguration[(string) $image->id] = [
+                'altText' => $image->altText ?? '',
+                'sortOrder' => $image->sortOrder,
+            ];
+        }
+        $form->getElementPrototype()
+            ->setAttribute('data-product-image-management', '')
+            ->setAttribute(
+                'data-image-configuration',
+                json_encode($imageConfiguration, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT),
+            );
+
         $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
             if (!$this->catalogPermission->canManage() || $this->editData === null) {
                 throw new ForbiddenRequestException();
