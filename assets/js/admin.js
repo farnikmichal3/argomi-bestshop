@@ -35,6 +35,37 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
     });
 });
 
+document.querySelectorAll('form[data-product-image-management]').forEach((form) => {
+    const imageSelect = form.elements.namedItem('imageId');
+    const altTextInput = form.elements.namedItem('altText');
+    const sortOrderInput = form.elements.namedItem('sortOrder');
+
+    if (!(imageSelect instanceof HTMLSelectElement)
+        || !(altTextInput instanceof HTMLInputElement)
+        || !(sortOrderInput instanceof HTMLInputElement)) {
+        return;
+    }
+
+    let imageConfiguration;
+    try {
+        imageConfiguration = JSON.parse(form.dataset.imageConfiguration ?? '{}');
+    } catch {
+        return;
+    }
+
+    imageSelect.addEventListener('change', () => {
+        const selectedImage = imageConfiguration[imageSelect.value];
+        if (!selectedImage) {
+            return;
+        }
+
+        altTextInput.value = selectedImage.altText;
+        sortOrderInput.value = String(selectedImage.sortOrder);
+        altTextInput.dispatchEvent(new Event('input', { bubbles: true }));
+        sortOrderInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+});
+
 document.querySelectorAll('tbody[data-category-sortable]').forEach((group) => {
     let draggedRow = null;
 
