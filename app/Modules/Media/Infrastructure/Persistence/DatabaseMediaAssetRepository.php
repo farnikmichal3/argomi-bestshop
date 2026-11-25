@@ -60,7 +60,7 @@ final class DatabaseMediaAssetRepository implements MediaAssetRepository
     public function findLibrary(int $limit, int $offset): array
     {
         if ($limit < 0 || $offset < 0) {
-            throw new \\InvalidArgumentException('Limit a offset knihovny médií nesmí být záporné.');
+            throw new \InvalidArgumentException('Limit a offset knihovny médií nesmí být záporné.');
         }
 
         $rows = $this->database->table('media_asset')
