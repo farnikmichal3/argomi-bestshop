@@ -14,7 +14,6 @@ use App\Modules\Media\Application\MediaAssetService;
 use App\Modules\Media\Application\MediaFileStorage;
 use App\Modules\Media\Application\MediaImageProcessor;
 use App\Shared\Application\Transaction\Transaction;
-use DateTimeImmutable;
 use Tester\Assert;
 
 require __DIR__ . '/../../../vendor/autoload.php';
@@ -66,7 +65,7 @@ $repository = new class implements MediaAssetRepository {
     public function delete(int $id): void { $this->created = null; }
 };
 $transaction = new class implements Transaction {
-    public function run(Closure $callback): mixed { return $callback(); }
+    public function run(callable $operation): mixed { return $operation(); }
 };
 $allowed = new class implements MediaPermission {
     public function canView(): bool { return true; }
