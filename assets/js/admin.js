@@ -29,7 +29,7 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
 
             const pickerUrl = textarea.dataset.mediaPickerUrl;
             if (!pickerUrl) {
-                editorInstance.windowManager.alert('Knihovna publikovaných médií není dostupná.');
+                editorInstance.windowManager.alert(textarea.dataset.mediaPickerUnavailable ?? '');
                 return;
             }
 
@@ -44,7 +44,7 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
 
                 const assets = await response.json();
                 if (!Array.isArray(assets) || assets.length === 0) {
-                    editor.windowManager.alert('Knihovna neobsahuje žádné publikované obrázky.');
+                    editor.windowManager.alert(textarea.dataset.mediaPickerEmpty ?? '');
                     return;
                 }
 
@@ -57,20 +57,20 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
                 }
 
                 editorInstance.windowManager.open({
-                    title: 'Vybrat publikovaný obrázek',
+                    title: textarea.dataset.mediaPickerTitle ?? '',
                     size: 'large',
                     body: {
                         type: 'panel',
                         items: [{
                             type: 'selectbox',
                             name: 'mediaAsset',
-                            label: 'Obrázek',
+                            label: textarea.dataset.mediaPickerLabel ?? '',
                             items: options,
                         }],
                     },
                     buttons: [
-                        { type: 'cancel', text: 'Zrušit' },
-                        { type: 'submit', text: 'Vložit', primary: true },
+                        { type: 'cancel', text: textarea.dataset.mediaPickerCancel ?? '' },
+                        { type: 'submit', text: textarea.dataset.mediaPickerInsert ?? '', primary: true },
                     ],
                     onSubmit: (api) => {
                         const selected = assets.find((asset) => asset.value === api.getData().mediaAsset);
@@ -84,7 +84,7 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
                     },
                 });
             } catch {
-                editor.windowManager.alert('Obrázky se nepodařilo načíst. Zkontroluj oprávnění a zkus to znovu.');
+                editor.windowManager.alert(textarea.dataset.mediaPickerFailed ?? '');
             }
         },
         branding: false,
