@@ -10,7 +10,6 @@ use App\Modules\Catalog\Application\ProductCustomerOptionService;
 use App\Shared\Application\Transaction\Transaction;
 use App\Shared\Domain\Locale\LocaleProvider;
 use Nette\Database\Explorer;
-use RuntimeException;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
 
@@ -136,11 +135,16 @@ try {
         ]);
         $updated = $reader->findForProduct($productId);
         Assert::notNull($updated);
-        Assert::same($choice->id, $updated->options[0]->id);
-        Assert::same('Umístění potisku', $updated->options[0]->translations['cs']);
-        Assert::count(3, $updated->options[0]->values);
-        Assert::same($choice->values[0]->id, $updated->options[0]->values[0]->id);
-        Assert::same(true, $updated->options[1]->isRequired);
+        Assert::same($text->id, $updated->options[0]->id);
+        Assert::same($choice->id, $updated->options[1]->id);
+        $updatedById = [];
+        foreach ($updated->options as $updatedOption) {
+            $updatedById[$updatedOption->id] = $updatedOption;
+        }
+        Assert::same('Umístění potisku', $updatedById[$choice->id]->translations['cs']);
+        Assert::count(3, $updatedById[$choice->id]->values);
+        Assert::same($choice->values[0]->id, $updatedById[$choice->id]->values[0]->id);
+        Assert::same(true, $updatedById[$text->id]->isRequired);
 
         // Neplatné typy, duplicitní kódy a chybějící aktivní překlady jsou odmítnuty.
         Assert::exception(
