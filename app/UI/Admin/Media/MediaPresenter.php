@@ -82,7 +82,7 @@ final class MediaPresenter extends TranslatedPresenter
         $form->setTranslator($translator);
         $form->addUpload('file', 'media.upload.file')
             ->setRequired('media.upload.error.required')
-            ->addRule(Form::MAX_FILE_SIZE, 'media.upload.error.invalid', 20_000_000)
+            ->addRule(Form::MaxFileSize, 'media.upload.error.invalid', 20_000_000)
             ->setHtmlAttribute('accept', 'image/jpeg,image/png,image/webp,image/avif');
         $form->addSubmit('submit', 'media.upload.submit')
             ->setHtmlAttribute('class', 'btn btn-primary');
