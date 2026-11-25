@@ -100,3 +100,20 @@ Role `catalog_manager` a `admin` mají plný přístup ke správě. Všechny
 prezentační akce a formulářové/POST handlery kontrolují oprávnění na serveru;
 aplikační zapisovací služby provádějí vlastní kontrolu znovu. Skrytí odkazu
 nebo tlačítka nikdy nenahrazuje serverovou autorizaci.
+
+
+## Zákaznické volby produktu (F5-21)
+
+Editor produktu obsahuje samostatnou kartu zákaznických voleb. Čtení a
+zápis probíhají přes veřejné kontrakty
+`ProductCustomerOptionReader` a `ProductCustomerOptionWriter`;
+databázové dotazy ani transakční logika nejsou součástí presenteru.
+
+Obchodník může spravovat typ `choice` s lokalizovanými hodnotami nebo
+typ `text` s limitem 500 znaků, lokalizované názvy, povinnost a pořadí.
+Aktivní jazyky se načítají dynamicky z databáze. Oprávnění
+`CatalogPermission::canManage()` kontroluje presenter i aplikační služba.
+Cenové příplatky zůstávají mimo tuto kartu a patří do Pricing (F6-08).
+
+Ověření mazání proti skutečným položkám košíku bude provedeno po
+implementaci Cart (F7), protože košík zatím není dostupný.
