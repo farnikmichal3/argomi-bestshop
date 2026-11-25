@@ -31,6 +31,7 @@ $image = new ProductImageDto(
     51,
     8,
     null,
+    'media/0123456789abcdef/original.bin',
     'Product image',
     4,
     true,
