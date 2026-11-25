@@ -80,6 +80,32 @@ final class DatabaseMediaAssetRepository implements MediaAssetRepository
         $this->database->table('media_asset')->where('id', $id)->delete();
     }
 
+    public function publish(int $id, string $publicToken): void
+    {
+        if (preg_match('~^[a-f0-9]{64}$~D', $publicToken) !== 1) {
+            throw new \\InvalidArgumentException('Veřejný identifikátor média není platný.');
+        }
+        $this->database->table('media_asset')->where('id', $id)->update([
+            'public_token' => $publicToken,
+            'published_at' => new \\DateTimeImmutable(),
+        ]);
+    }
+
+    public function unpublish(int $id): void
+    {
+        $this->database->table('media_asset')->where('id', $id)->update(['published_at' => null]);
+    }
+
+    public function findPublishedByToken(string $publicToken): ?MediaAssetRecord
+    {
+        $row = $this->database->table('media_asset')->where('public_token', $publicToken)
+            ->where('published_at IS NOT NULL')->fetch();
+        if (!$row instanceof ActiveRow) {
+            return null;
+        }
+        return $this->mapRows([$row])[0];
+    }
+
     /**
      * @param list<ActiveRow> $rows
      * @return list<MediaAssetRecord>
@@ -133,10 +159,23 @@ final class DatabaseMediaAssetRepository implements MediaAssetRepository
                 $this->nullableInteger($row->source_file_size_bytes, 'media_asset.source_file_size_bytes'),
                 DateTimeImmutable::createFromInterface($createdAt),
                 $derivativesByAsset[$id] ?? [],
+                $this->nullableString($row->public_token, 'media_asset.public_token'),
+                $row->published_at === null ? null : $this->toDateTime($row->published_at, 'media_asset.published_at'),
             );
         }
 
         return $assets;
+    }
+
+    private function toDateTime(mixed $value, string $field): DateTimeImmutable
+    {
+        if ($value instanceof DateTimeInterface) {
+            return DateTimeImmutable::createFromInterface($value);
+        }
+        if (is_string($value)) {
+            return new DateTimeImmutable($value);
+        }
+        throw new UnexpectedValueException(sprintf('Pole %s neobsahuje platný čas.', $field));
     }
 
     private function integer(mixed $value, string $field): int
