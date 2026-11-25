@@ -19,4 +19,10 @@ interface MediaAssetRepository
     public function findLibrary(int $limit, int $offset): array;
 
     public function delete(int $id): void;
+
+    public function publish(int $id, string $publicToken): void;
+
+    public function unpublish(int $id): void;
+
+    public function findPublishedByToken(string $publicToken): ?MediaAssetRecord;
 }
