@@ -18,7 +18,7 @@ Catalog spravuje produktové a variantní vazby na mediální položky. Odstran�
 
 ## Aktuální implementační základ
 
-- Upload je vystaven přes `MediaAssetWriter`; čtení knihovny přes `MediaAssetReader`.
+- Upload je vystaven přes `MediaAssetWriter`; čtení knihovny přes `MediaAssetReader`; obsah bezpečných náhledů přes `MediaAssetContentReader`.
 - Originály se zachovávají beze změny. Deriváty `thumbnail`, `listing` a `detail` vznikají z originálu ve WebP.
 - Soubory jsou uloženy pod neprůhlednými relativními klíči mimo `www/`.
 - Zpracování kontroluje skutečný obrazový obsah, limit 20 MB a limit 40 megapixelů.

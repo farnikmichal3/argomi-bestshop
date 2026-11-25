@@ -63,6 +63,13 @@
                                 <p>{$adminTranslator->translate('admin.navigation.attributes')}</p>
                             </a>
                         </li>
+                        <li class="nav-header" n:if="$canViewMedia">{$adminTranslator->translate('admin.navigation.media')}</li>
+                        <li class="nav-item" n:if="$canViewMedia">
+                            <a class="nav-link {if $presenter->getName() === 'Admin:Media'}active{/if}" n:href=":Admin:Media:default" n:attr="aria-current => $presenter->getName() === 'Admin:Media' ? 'page' : null">
+                                <i class="nav-icon bi bi-images" aria-hidden="true"></i>
+                                <p>{$adminTranslator->translate('admin.navigation.media_library')}</p>
+                            </a>
+                        </li>
                         <li class="nav-header" n:if="$canViewTranslations">{$adminTranslator->translate('admin.navigation.system')}</li>
                         <li class="nav-item" n:if="$canViewTranslations">
                             <a class="nav-link {if $presenter->getName() === 'Admin:Translations'}active{/if}" n:href=":Admin:Translations:default" n:attr="aria-current => $presenter->getName() === 'Admin:Translations' ? 'page' : null">

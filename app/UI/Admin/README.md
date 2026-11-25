@@ -22,6 +22,10 @@ Administrace používá společný Latte layout \`@layout.latte\` postavený na 
 
 Navigační popisky Produkty a Kategorie se proto vždy překládají přes doménu Admin, nikoliv přes doménu Catalog právě otevřeného presenteru. Skrytí odkazu je pouze prezentační pomůcka; cílové presentery nadále samostatně kontrolují oprávnění.
 
+## Knihovna médií (F5-22)
+
+`Admin:Media` poskytuje autorizovanou knihovnu mediálních položek a nahrávání přes `MediaAssetWriter`. Náhledy se čtou přes veřejný `MediaAssetContentReader`; fyzické cesty a souborové úložiště zůstávají skryté uvnitř Media. Přístup k náhledům i uploadu kontroluje MediaPermission na serveru a aplikační službě. Role `catalog_viewer` může knihovnu prohlížet, `catalog_manager` a `admin` mohou nahrávat a mazat.
+
 ## Editor produktů (F5-16)
 
 - Seznam produktů zůstává stránkovaným DataGrid read modelem.

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UI\Admin;
 
 use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Media\Api\MediaPermission;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslationPermission;
 use App\Modules\Translation\Api\TranslatorFactory;
@@ -20,6 +21,7 @@ trait AdminAccessTrait
     private TranslatorFactory $adminTranslatorFactory;
     private LocaleProvider $adminLocaleProvider;
     private CatalogPermission $adminCatalogPermission;
+    private MediaPermission $adminMediaPermission;
     private TranslationPermission $adminTranslationPermission;
 
     public function injectAdminAccess(
@@ -27,10 +29,12 @@ trait AdminAccessTrait
         LocaleProvider $localeProvider,
         CatalogPermission $catalogPermission,
         TranslationPermission $translationPermission,
+        MediaPermission $mediaPermission,
     ): void {
         $this->adminTranslatorFactory = $translatorFactory;
         $this->adminLocaleProvider = $localeProvider;
         $this->adminCatalogPermission = $catalogPermission;
+        $this->adminMediaPermission = $mediaPermission;
         $this->adminTranslationPermission = $translationPermission;
     }
 
@@ -52,6 +56,7 @@ trait AdminAccessTrait
             $this->adminLocaleProvider->getDefault(),
         );
         $this->template->canViewCatalog = $this->adminCatalogPermission->canView();
+        $this->template->canViewMedia = $this->adminMediaPermission->canView();
         $this->template->canViewTranslations = $this->adminTranslationPermission->canView();
         $this->template->adminLocaleCode = $this->adminLocaleProvider->getDefault()->getCode();
     }

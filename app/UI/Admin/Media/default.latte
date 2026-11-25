@@ -1,0 +1,61 @@
+{block title}{_'media.title'}{/block}
+
+{block content}
+<div class="media-library-page py-3">
+    <section class="card product-editor-card mb-4">
+        <header class="card-header">
+            <div>
+                <div class="text-body-secondary small text-uppercase fw-semibold mb-1">ArgoMi BestShop · Media</div>
+                <h2 class="h5 mb-0">{_'media.upload.title'}</h2>
+                <p class="text-body-secondary small mb-0">{_'media.description'}</p>
+            </div>
+        </header>
+        <div class="card-body">
+            {if $canManageMedia}
+                {control uploadForm}
+            {else}
+                <p class="text-body-secondary mb-0">{_'media.read_only'}</p>
+            {/if}
+        </div>
+    </section>
+
+    <section class="card product-editor-card">
+        <header class="card-header">
+            <h2 class="h5 mb-0">{_'media.library.title'}</h2>
+        </header>
+        <div class="card-body">
+            {if $assets === []}
+                <p class="text-body-secondary mb-0">{_'media.empty'}</p>
+            {else}
+                <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-3">
+                    {foreach $assets as $asset}
+                        <div class="col">
+                            <article class="card h-100">
+                                <div class="ratio ratio-1x1 bg-body-tertiary">
+                                    <img
+                                        src="{link image!, id => $asset->id, variant => 'thumbnail'}"
+                                        alt="{$asset->originalFilename}"
+                                        class="w-100 h-100 object-fit-contain"
+                                        loading="lazy"
+                                    >
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="h6 text-break">{$asset->originalFilename}</h3>
+                                    <p class="small text-body-secondary mb-0">
+                                        {if $asset->sourceWidth !== null && $asset->sourceHeight !== null}
+                                            {$asset->sourceWidth} × {$asset->sourceHeight} px
+                                        {/if}
+                                        {if $asset->sourceFileSizeBytes !== null}
+                                            · {$asset->sourceFileSizeBytes} B
+                                        {/if}
+                                    </p>
+                                </div>
+                            </article>
+                        </div>
+                    {/foreach}
+                </div>
+            {/if}
+        </div>
+    </section>
+</div>
+{/block}
