@@ -21,7 +21,7 @@ final readonly class MediaAssetPublicationService implements MediaAssetPublicati
     public function publish(int $id): string
     {
         $this->assertCanManage();
-        if ($id < 1 || $this->repository->findById($id) === null) {
+        if ($id < 1) {
             throw new InvalidArgumentException('Médium nebylo nalezeno.');
         }
 
