@@ -21,90 +21,177 @@
                 </a>
             </div>
         </header>
-        <div class="card-body">
-            {control productForm}
-        </div>
-    </section>
 
-    {if !$isCreate}
-        <section class="card product-editor-card mt-4">
-            <header class="card-header">
-                <div>
-                    <div class="text-body-secondary small text-uppercase fw-semibold mb-1">Catalog · Attributes</div>
-                    <h2 class="h5 mb-0">{_'products.configuration.title'}</h2>
-                    <p class="text-body-secondary small mb-0">{_'products.configuration.description'}</p>
-                </div>
-            </header>
+        {if $isCreate}
             <div class="card-body">
-                {control productConfigurationForm}
+                {control productForm}
             </div>
-        </section>
+        {else}
+            <div class="product-editor-tabs-wrap">
+                <ul class="nav nav-tabs product-editor-tabs" id="product-editor-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="product-tab-basic" data-bs-toggle="tab" data-bs-target="#product-pane-basic" type="button" role="tab" aria-controls="product-pane-basic" aria-selected="true">
+                            <i class="bi bi-card-text" aria-hidden="true"></i>
+                            <span>{_'products.editor.basic_data'}</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="product-tab-configuration" data-bs-toggle="tab" data-bs-target="#product-pane-configuration" type="button" role="tab" aria-controls="product-pane-configuration" aria-selected="false">
+                            <i class="bi bi-sliders" aria-hidden="true"></i>
+                            <span>{_'products.configuration.title'}</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="product-tab-variants" data-bs-toggle="tab" data-bs-target="#product-pane-variants" type="button" role="tab" aria-controls="product-pane-variants" aria-selected="false">
+                            <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
+                            <span>{_'products.variants.title'}</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="product-tab-images" data-bs-toggle="tab" data-bs-target="#product-pane-images" type="button" role="tab" aria-controls="product-pane-images" aria-selected="false">
+                            <i class="bi bi-images" aria-hidden="true"></i>
+                            <span>{_'products.images.title'}</span>
+                            <span class="badge text-bg-secondary">{$productImages|length}</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="product-tab-customer-options" data-bs-toggle="tab" data-bs-target="#product-pane-customer-options" type="button" role="tab" aria-controls="product-pane-customer-options" aria-selected="false">
+                            <i class="bi bi-ui-checks" aria-hidden="true"></i>
+                            <span>{_'products.customer_options.title'}</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
 
-        <section class="card product-editor-card mt-4">
-            <header class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
-                <div>
-                    <div class="text-body-secondary small text-uppercase fw-semibold mb-1">Catalog · Media</div>
-                    <h2 class="h5 mb-0">{_'products.images.title'}</h2>
-                    <p class="text-body-secondary small mb-0">{_'products.images.description'}</p>
-                </div>
-                <a class="btn btn-outline-primary" n:href=":Admin:Media:default, productId => $product->id">
-                    <i class="bi bi-images me-1" aria-hidden="true"></i>
-                    {_'products.images.manage'}
-                </a>
-            </header>
-            <div class="card-body">
-                {if $productImages === []}
-                    <p class="text-body-secondary mb-0">{_'products.images.empty'}</p>
-                {else}
-                    <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-3">
-                        {foreach $productImages as $image}
-                            <div class="col">
-                                <article class="card h-100">
-                                    <div class="ratio ratio-1x1 bg-body-tertiary">
-                                        <img
-                                            src="{link :Admin:Media:image, id => $image->mediaAssetId, variant => 'thumbnail'}"
-                                            alt="{$image->altText ?? ''}"
-                                            class="w-100 h-100 object-fit-contain"
-                                            loading="lazy"
-                                        >
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="small text-break mb-1">{$image->altText ?? ('Media #' . $image->mediaAssetId)}</p>
-                                        <div class="d-flex flex-wrap gap-1">
-                                            {if $image->isPrimary}
-                                                <span class="badge text-bg-primary">{_'products.images.primary'}</span>
-                                            {/if}
-                                            {if $image->variantId === null}
-                                                <span class="badge text-bg-secondary">{_'products.images.product_level'}</span>
-                                            {else}
-                                                <span class="badge text-bg-secondary">{_'products.images.variant'} #{$image->variantId}</span>
-                                            {/if}
-                                        </div>
-                                    </div>
-                                </article>
+            <div class="tab-content product-editor-tab-content" id="product-editor-tab-content">
+                <div class="tab-pane fade show active" id="product-pane-basic" role="tabpanel" aria-labelledby="product-tab-basic" tabindex="0">
+                    <section class="product-editor-panel">
+                        <header class="product-editor-panel-header">
+                            <div>
+                                <div class="text-body-secondary small text-uppercase fw-semibold mb-1">ArgoMi BestShop · Catalog</div>
+                                <h3 class="h5 mb-1">{_'products.editor.basic_data'}</h3>
+                                <p class="text-body-secondary small mb-0">{_'products.editor.basic_data_description'}</p>
                             </div>
-                        {/foreach}
-                    </div>
-                    <div class="mt-4 border-top pt-3">
-                        <h3 class="h6 mb-3">{_'products.images.form.title'}</h3>
-                        {control productImageManagementForm}
-                    </div>
-                {/if}
-            </div>
-        </section>
-
-        <section class="card product-editor-card mt-4">
-            <header class="card-header">
-                <div>
-                    <div class="text-body-secondary small text-uppercase fw-semibold mb-1">Catalog · Customer options</div>
-                    <h2 class="h5 mb-0">{_'products.customer_options.title'}</h2>
-                    <p class="text-body-secondary small mb-0">{_'products.customer_options.description'}</p>
+                        </header>
+                        <div class="product-editor-panel-body">
+                            {control productForm}
+                        </div>
+                    </section>
                 </div>
-            </header>
-            <div class="card-body">
-                {control productCustomerOptionsForm}
+
+                <div class="tab-pane fade" id="product-pane-configuration" role="tabpanel" aria-labelledby="product-tab-configuration" tabindex="0">
+                    <section class="product-editor-panel">
+                        <header class="product-editor-panel-header">
+                            <div>
+                                <div class="text-body-secondary small text-uppercase fw-semibold mb-1">Catalog · Attributes</div>
+                                <h3 class="h5 mb-1">{_'products.configuration.title'}</h3>
+                                <p class="text-body-secondary small mb-0">{_'products.configuration.description'}</p>
+                            </div>
+                        </header>
+                        <div class="product-editor-panel-body">
+                            {control productConfigurationForm}
+                        </div>
+                    </section>
+                </div>
+
+                <div class="tab-pane fade" id="product-pane-variants" role="tabpanel" aria-labelledby="product-tab-variants" tabindex="0">
+                    <section class="product-editor-panel">
+                        <header class="product-editor-panel-header">
+                            <div>
+                                <div class="text-body-secondary small text-uppercase fw-semibold mb-1">Catalog · Variants</div>
+                                <h3 class="h5 mb-1">{_'products.variants.title'}</h3>
+                                <p class="text-body-secondary small mb-0">{_'products.variants.manage_description'}</p>
+                            </div>
+                        </header>
+                        <div class="product-editor-panel-body">
+                            <div class="product-editor-feature">
+                                <div class="product-editor-feature-icon">
+                                    <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h4 class="h6 mb-1">{_'products.variants.title'}</h4>
+                                    <p class="text-body-secondary mb-3">{_'products.variants.manage_description'}</p>
+                                    <a class="btn btn-primary" n:href=":Admin:Products:Variants:default, id => $product->id">
+                                        <i class="bi bi-arrow-up-right-square me-1" aria-hidden="true"></i>
+                                        {_'products.variants.manage_button'}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="tab-pane fade" id="product-pane-images" role="tabpanel" aria-labelledby="product-tab-images" tabindex="0">
+                    <section class="product-editor-panel">
+                        <header class="product-editor-panel-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                            <div>
+                                <div class="text-body-secondary small text-uppercase fw-semibold mb-1">Catalog · Media</div>
+                                <h3 class="h5 mb-1">{_'products.images.title'}</h3>
+                                <p class="text-body-secondary small mb-0">{_'products.images.description'}</p>
+                            </div>
+                            <a class="btn btn-outline-primary" n:href=":Admin:Media:default, productId => $product->id">
+                                <i class="bi bi-images me-1" aria-hidden="true"></i>
+                                {_'products.images.manage'}
+                            </a>
+                        </header>
+                        <div class="product-editor-panel-body">
+                            {if $productImages === []}
+                                <p class="text-body-secondary mb-0">{_'products.images.empty'}</p>
+                            {else}
+                                <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-3">
+                                    {foreach $productImages as $image}
+                                        <div class="col">
+                                            <article class="card h-100">
+                                                <div class="ratio ratio-1x1 bg-body-tertiary">
+                                                    <img
+                                                        src="{link :Admin:Media:image, id => $image->mediaAssetId, variant => 'thumbnail'}"
+                                                        alt="{$image->altText ?? ''}"
+                                                        class="w-100 h-100 object-fit-contain"
+                                                        loading="lazy"
+                                                    >
+                                                </div>
+                                                <div class="card-body">
+                                                    <p class="small text-break mb-1">{$image->altText ?? ('Media #' . $image->mediaAssetId)}</p>
+                                                    <div class="d-flex flex-wrap gap-1">
+                                                        {if $image->isPrimary}
+                                                            <span class="badge text-bg-primary">{_'products.images.primary'}</span>
+                                                        {/if}
+                                                        {if $image->variantId === null}
+                                                            <span class="badge text-bg-secondary">{_'products.images.product_level'}</span>
+                                                        {else}
+                                                            <span class="badge text-bg-secondary">{_'products.images.variant'} #{$image->variantId}</span>
+                                                        {/if}
+                                                    </div>
+                                                </div>
+                                            </article>
+                                        </div>
+                                    {/foreach}
+                                </div>
+                                <div class="mt-4 border-top pt-3">
+                                    <h4 class="h6 mb-3">{_'products.images.form.title'}</h4>
+                                    {control productImageManagementForm}
+                                </div>
+                            {/if}
+                        </div>
+                    </section>
+                </div>
+
+                <div class="tab-pane fade" id="product-pane-customer-options" role="tabpanel" aria-labelledby="product-tab-customer-options" tabindex="0">
+                    <section class="product-editor-panel">
+                        <header class="product-editor-panel-header">
+                            <div>
+                                <div class="text-body-secondary small text-uppercase fw-semibold mb-1">Catalog · Customer options</div>
+                                <h3 class="h5 mb-1">{_'products.customer_options.title'}</h3>
+                                <p class="text-body-secondary small mb-0">{_'products.customer_options.description'}</p>
+                            </div>
+                        </header>
+                        <div class="product-editor-panel-body">
+                            {control productCustomerOptionsForm}
+                        </div>
+                    </section>
+                </div>
             </div>
-        </section>
-    {/if}
+        {/if}
+    </section>
 </div>
 {/block}
