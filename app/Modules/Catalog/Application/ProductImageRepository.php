@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Application;
 
 use App\Modules\Catalog\Application\Dto\ProductImageDto;
-use App\Modules\Catalog\Application\Dto\StoredProductImageAssetsDto;
+use App\Modules\Media\Api\Dto\MediaAssetData;
 
 interface ProductImageRepository
 {
@@ -27,6 +27,6 @@ interface ProductImageRepository
         ?int $variantId,
         ?string $altText,
         int $sortOrder,
-        StoredProductImageAssetsDto $assets,
+        MediaAssetData $asset,
     ): int;
 }

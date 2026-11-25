@@ -6,8 +6,8 @@ use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Application\ProductImageRegistrationService;
 use App\Modules\Catalog\Application\ProductImageRepository;
-use App\Modules\Catalog\Application\ProductImageStorage;
-use App\Modules\Catalog\Application\ProductImageStorageService;
+use App\Modules\Media\Api\MediaAssetReader;
+use App\Modules\Media\Api\MediaAssetWriter;
 use App\Shared\Application\Transaction\Transaction;
 use Tester\Assert;
 use Tests\Support\IntegrationTestBootstrap;
@@ -31,8 +31,8 @@ $deniedPermission = new class implements CatalogPermission {
 };
 
 $service = new ProductImageRegistrationService(
-    $integration->container->getByType(ProductImageStorageService::class),
-    $integration->container->getByType(ProductImageStorage::class),
+    $integration->container->getByType(MediaAssetWriter::class),
+    $integration->container->getByType(MediaAssetReader::class),
     $integration->container->getByType(ProductImageRepository::class),
     $integration->container->getByType(Transaction::class),
     $deniedPermission,

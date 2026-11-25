@@ -6,7 +6,7 @@ atributy, volby zákazníka, přiřazení médií, související produkty a jeji
 ## Hranice modulu
 
 - Veřejné kontrakty pro ostatní moduly patří do `Api/`.
-- Fyzické mediální soubory, originály, deriváty a knihovna médií patří do modulu Media. Catalog vlastní pouze produktové/variantní vazby a jejich pořadí, ALT text a hlavní obrázek.
+- Fyzické mediální soubory, originály, deriváty a knihovna médií patří do modulu Media. Catalog vlastní pouze produktové/variantní vazby a jejich pořadí, ALT text a hlavní obrázek; registrace používá `MediaAssetWriter` a `MediaAssetReader` a fyzické úložiště nezná.
 - Doménové objekty a invarianty patří do `Domain/`.
 - Use-cases, aplikační služby a interní DTO patří do `Application/`.
 - Databázové adaptéry a DI konfigurace patří do `Infrastructure/`.

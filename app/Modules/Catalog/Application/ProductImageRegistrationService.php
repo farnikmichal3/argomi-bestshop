@@ -6,18 +6,20 @@ namespace App\Modules\Catalog\Application;
 
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
-use App\Modules\Catalog\Application\Dto\StoredProductImageAssetsDto;
+use App\Modules\Media\Api\MediaAssetReader;
+use App\Modules\Media\Api\MediaAssetWriter;
 use App\Shared\Application\Transaction\Transaction;
+use RuntimeException;
 use Throwable;
 
-final class ProductImageRegistrationService
+final readonly class ProductImageRegistrationService
 {
     public function __construct(
-        private readonly ProductImageStorageService $imageStorage,
-        private readonly ProductImageStorage $storage,
-        private readonly ProductImageRepository $images,
-        private readonly Transaction $transaction,
-        private readonly CatalogPermission $permission,
+        private MediaAssetWriter $mediaWriter,
+        private MediaAssetReader $mediaReader,
+        private ProductImageRepository $images,
+        private Transaction $transaction,
+        private CatalogPermission $permission,
     ) {}
 
     public function register(
@@ -26,7 +28,7 @@ final class ProductImageRegistrationService
         string $source,
         ?string $altText = null,
         int $sortOrder = 0,
-        int $quality = 82,
+        string $originalFilename = 'product-image',
     ): int {
         if (!$this->permission->canManage()) {
             throw new CatalogAccessDeniedException();
@@ -35,33 +37,29 @@ final class ProductImageRegistrationService
             throw new \InvalidArgumentException('Produkt, varianta a pořadí obrázku mají neplatnou hodnotu.');
         }
 
-        $assets = $this->imageStorage->store($source, $quality);
-
+        $mediaId = $this->mediaWriter->upload($source, $originalFilename);
         try {
+            $asset = $this->mediaReader->find($mediaId);
+            if ($asset === null) {
+                throw new RuntimeException('Nově uložené médium nebylo možné načíst.');
+            }
+
             return $this->transaction->run(
                 fn(): int => $this->images->createForProduct(
                     $productId,
                     $variantId,
                     $altText,
                     $sortOrder,
-                    $assets,
+                    $asset,
                 ),
             );
         } catch (Throwable $exception) {
-            $this->removeStoredAssets($assets);
-            throw $exception;
-        }
-    }
-
-    private function removeStoredAssets(StoredProductImageAssetsDto $assets): void
-    {
-        foreach ([$assets->originalPath, ...array_values($assets->derivativePaths)] as $path) {
             try {
-                $this->storage->delete($path);
+                $this->mediaWriter->delete($mediaId);
             } catch (Throwable) {
-                // Zachováme původní chybu databázové operace; osiřelé soubory
-                // lze dohledat podle bezpečných storage klíčů při údržbě.
+                // Zachováme původní chybu; osiřelé médium lze dohledat podle ID.
             }
+            throw $exception;
         }
     }
 }

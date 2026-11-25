@@ -6,7 +6,7 @@ namespace App\Modules\Catalog\Infrastructure\Persistence;
 
 use App\Modules\Catalog\Application\Dto\ProductImageDerivativeDto;
 use App\Modules\Catalog\Application\Dto\ProductImageDto;
-use App\Modules\Catalog\Application\Dto\StoredProductImageAssetsDto;
+use App\Modules\Media\Api\Dto\MediaAssetData;
 use App\Modules\Catalog\Application\ProductImageRepository;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
@@ -90,7 +90,7 @@ final class DatabaseProductImageRepository implements ProductImageRepository
         ?int $variantId,
         ?string $altText,
         int $sortOrder,
-        StoredProductImageAssetsDto $assets,
+        MediaAssetData $asset,
     ): int {
         if ($productId < 1 || ($variantId !== null && $variantId < 1) || $sortOrder < 0) {
             throw new \InvalidArgumentException('Produkt, varianta a pořadí obrázku mají neplatnou hodnotu.');
@@ -99,14 +99,15 @@ final class DatabaseProductImageRepository implements ProductImageRepository
         $image = $this->database->table('product_image')->insert([
             'product_id' => $productId,
             'product_variant_id' => $variantId,
-            'file_path' => $assets->originalPath,
+            'media_asset_id' => $asset->id,
+            'file_path' => $asset->storageKey,
             'alt_text' => $altText,
             'sort_order' => $sortOrder,
-            'source_sha256' => $assets->sourceSha256,
-            'source_mime_type' => $assets->sourceMimeType,
-            'source_width' => $assets->sourceWidth,
-            'source_height' => $assets->sourceHeight,
-            'source_file_size_bytes' => $assets->originalBytes,
+            'source_sha256' => $asset->sourceSha256,
+            'source_mime_type' => $asset->sourceMimeType,
+            'source_width' => $asset->sourceWidth,
+            'source_height' => $asset->sourceHeight,
+            'source_file_size_bytes' => $asset->sourceFileSizeBytes,
         ]);
 
         if (!$image instanceof ActiveRow) {
@@ -114,17 +115,16 @@ final class DatabaseProductImageRepository implements ProductImageRepository
         }
 
         $imageId = $this->integer($image->id, 'product_image.id');
-        foreach (['thumbnail', 'listing', 'detail'] as $kind) {
-            $metadata = $assets->derivativeMetadata[$kind];
+        foreach ($asset->derivatives as $derivative) {
             $this->database->table('product_image_derivative')->insert([
                 'product_image_id' => $imageId,
-                'format' => $metadata['format'],
-                'source_sha256' => $assets->sourceSha256,
-                'recipe_sha256' => hash('sha256', $assets->recipeSha256 . ';variant=' . $kind),
-                'width' => $metadata['width'],
-                'height' => $metadata['height'],
-                'file_path' => $assets->derivativePaths[$kind],
-                'file_size_bytes' => $metadata['fileSizeBytes'],
+                'format' => $derivative->format,
+                'source_sha256' => $derivative->sourceSha256,
+                'recipe_sha256' => $derivative->recipeSha256,
+                'width' => $derivative->width,
+                'height' => $derivative->height,
+                'file_path' => $derivative->storageKey,
+                'file_size_bytes' => $derivative->fileSizeBytes,
             ]);
         }
 
