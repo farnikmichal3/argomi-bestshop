@@ -8,7 +8,6 @@ use App\\Modules\\Media\\Api\\MediaPublicAssetReader;
 use App\\Presentation\\TranslatedPresenter;
 use App\\Modules\\Translation\\Api\\TranslationDomain;
 use Nette\\Application\\BadRequestException;
-use Nette\\Application\\BadRequestException as NotFoundException;
 
 final class MediaPresenter extends TranslatedPresenter
 {
@@ -30,7 +29,7 @@ final class MediaPresenter extends TranslatedPresenter
 
         $image = $this->mediaReader->read($token, $variant);
         if ($image === null) {
-            throw new NotFoundException('Veřejné médium nebylo nalezeno.');
+            throw new BadRequestException('Veřejné médium nebylo nalezeno.');
         }
 
         $this->sendResponse(new PublicMediaResponse($image->contents, $image->mimeType));
