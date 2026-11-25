@@ -97,6 +97,30 @@ final class MediaPresenter extends TranslatedPresenter
             && $this->libraryAssets !== [];
     }
 
+    public function actionPublished(): void
+    {
+        if (!$this->mediaPermission->canView()) {
+            throw new ForbiddenRequestException();
+        }
+
+        $items = [];
+        foreach ($this->mediaAssetReader->findLibrary(100, 0) as $asset) {
+            if ($asset->publishedAt === null || $asset->publicToken === null) {
+                continue;
+            }
+
+            $items[] = [
+                'title' => $asset->originalFilename,
+                'value' => '/media/' . $asset->publicToken . '/detail',
+                'alt' => $asset->originalFilename,
+                'width' => $asset->sourceWidth,
+                'height' => $asset->sourceHeight,
+            ];
+        }
+
+        $this->sendJson($items);
+    }
+
     public function actionImage(int $id, string $variant = 'thumbnail'): void
     {
         if (!$this->mediaPermission->canView()) {
