@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\\UI\\Front\\Media;
+namespace App\UI\Front\Media;
 
-use App\\Modules\\Media\\Api\\MediaPublicAssetReader;
-use App\\Presentation\\TranslatedPresenter;
-use App\\Modules\\Translation\\Api\\TranslationDomain;
-use Nette\\Application\\BadRequestException;
+use App\Modules\Media\Api\MediaPublicAssetReader;
+use App\Presentation\TranslatedPresenter;
+use App\Modules\Translation\Api\TranslationDomain;
+use Nette\Application\BadRequestException;
 
 final class MediaPresenter extends TranslatedPresenter
 {
