@@ -83,11 +83,11 @@ final class DatabaseMediaAssetRepository implements MediaAssetRepository
     public function publish(int $id, string $publicToken): void
     {
         if (preg_match('~^[a-f0-9]{64}$~D', $publicToken) !== 1) {
-            throw new \\InvalidArgumentException('Veřejný identifikátor média není platný.');
+            throw new \InvalidArgumentException('Veřejný identifikátor média není platný.');
         }
         $this->database->table('media_asset')->where('id', $id)->update([
             'public_token' => $publicToken,
-            'published_at' => new \\DateTimeImmutable(),
+            'published_at' => new \DateTimeImmutable(),
         ]);
     }
 
