@@ -201,7 +201,14 @@ final class ProductsPresenter extends TranslatedPresenter
                 ->setHtmlAttribute('class', 'form-control')
                 ->setHtmlAttribute('rows', '12')
                 ->setHtmlAttribute('data-hugerte', 'product-description')
-                ->setHtmlAttribute('data-media-picker-url', $this->link(':Admin:Media:published'));
+                ->setHtmlAttribute('data-media-picker-url', $this->link(':Admin:Media:published'))
+                ->setHtmlAttribute('data-media-picker-title', $translator->translate('products.editor.media_picker.title'))
+                ->setHtmlAttribute('data-media-picker-label', $translator->translate('products.editor.media_picker.label'))
+                ->setHtmlAttribute('data-media-picker-cancel', $translator->translate('products.editor.media_picker.cancel'))
+                ->setHtmlAttribute('data-media-picker-insert', $translator->translate('products.editor.media_picker.insert'))
+                ->setHtmlAttribute('data-media-picker-unavailable', $translator->translate('products.editor.media_picker.unavailable'))
+                ->setHtmlAttribute('data-media-picker-empty', $translator->translate('products.editor.media_picker.empty'))
+                ->setHtmlAttribute('data-media-picker-failed', $translator->translate('products.editor.media_picker.failed'));
             $container->addText('metaTitle', 'products.editor.meta_title')
                 ->setHtmlAttribute('class', 'form-control');
             $container->addTextArea('metaDescription', 'products.editor.meta_description')
