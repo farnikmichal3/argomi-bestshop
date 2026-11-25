@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.47 · 24. 11. 2026
+**Revize:** 1.48 · 25. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -136,6 +136,16 @@ Pravidla:
 - Objednávka uchovává snímek údajů a cen z okamžiku nákupu.
 - Historie cen se ukládá samostatně; zákonný výpočet nejnižší ceny za období je samostatná aplikační odpovědnost.
 - Schéma v1 je jeden počáteční celek. Další změny budou přidávány inkrementálně pomocí migrací.
+
+### Zákaznické volby produktu
+
+- Zákaznické volby jsou samostatnou součástí konfigurace produktu v modulu Catalog; nejsou produktovými atributy ani osami variant. Atributy popisují vlastnosti produktu a varianty, zatímco zákaznické volby představují údaje nebo rozhodnutí zadané kupujícím při konfiguraci konkrétní položky.
+- Základní typy voleb jsou `choice` (výběr jedné z obchodníkem definovaných hodnot) a `text` (vlastní text zákazníka). Každá volba má stabilní kód jedinečný v rámci produktu, příznak povinnosti a pořadí.
+- Název každé volby a popisky všech nabízených hodnot jsou obsahové překlady pro každý aktivní jazyk. Aktivní jazyky se vždy načítají přes `LocaleProvider`; seznam jazyků se nesmí pevně zakódovat.
+- Textový vstup má limit 500 znaků. Aplikační `OptionResolver` znovu ověřuje aktivní produkt, vlastnictví volby produktem, povinnost, typ vstupu a příslušnost vybrané hodnoty k dané volbě. Výsledkem je normalizovaný typovaný výběr bez cenových výpočtů.
+- Správa definic, lokalizovaných názvů a hodnot patří do Catalog a musí být autorizována přes `CatalogPermission::canManage()`; aplikační služba je autoritativní hranicí, nikoliv pouze administrační formulář.
+- Cenové rozdíly voleb vlastní modul Pricing. Catalog nesmí počítat ani ukládat peněžní částky; jejich napojení na `option_value_price` a výpočet příplatků patří do F6-08. Částky se ukládají v minor units a vždy s měnou.
+- Košík uchovává identitu zvolené možnosti přes `cart_item_option`; objednávka uchovává neměnný snímek názvu, popisku a cenového rozdílu v `shop_order_item_option`. Identifikátory voleb/hodnot použité košíkem nelze odstranit, dokud je chrání cizí klíče `RESTRICT`.
 
 ### Transakce v aplikační vrstvě
 
