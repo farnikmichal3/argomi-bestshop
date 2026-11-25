@@ -754,7 +754,7 @@ final class ProductsPresenter extends TranslatedPresenter
 
             try {
                 $this->productCustomerOptionWriter->save($this->editData->id, $options);
-            } catch (UniqueConstraintViolationException | InvalidArgumentException) {
+            } catch (UniqueConstraintViolationException|InvalidArgumentException) {
                 $form->addError($translator->translate('products.customer_options.error.invalid'));
                 return;
             }
