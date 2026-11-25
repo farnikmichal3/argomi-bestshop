@@ -11,6 +11,9 @@ use App\Modules\Catalog\Api\Dto\ProductEditorData;
 use App\Modules\Catalog\Api\ProductEditorReader;
 use App\Modules\Catalog\Api\ProductEditorConfigurationReader;
 use App\Modules\Catalog\Api\ProductConfigurationWriter;
+use App\Modules\Catalog\Api\ProductCustomerOptionReader;
+use App\Modules\Catalog\Api\ProductCustomerOptionWriter;
+use App\Modules\Catalog\Api\Dto\ProductCustomerOptionConfigurationData;
 use App\Modules\Catalog\Api\AttributeDataType;
 use App\Modules\Catalog\Api\Dto\ProductEditorConfigurationData;
 use App\Modules\Catalog\Api\ProductAdminStatus;
@@ -39,6 +42,8 @@ final class ProductsPresenter extends TranslatedPresenter
 
     private ?ProductEditorConfigurationData $configurationData = null;
 
+    private ?ProductCustomerOptionConfigurationData $customerOptionData = null;
+
     /** @var array<int|string, string> */
     private array $categoryOptions = [];
 
@@ -54,6 +59,8 @@ final class ProductsPresenter extends TranslatedPresenter
         private readonly ProductWriter $productWriter,
         private readonly ProductEditorConfigurationReader $productEditorConfigurationReader,
         private readonly ProductConfigurationWriter $productConfigurationWriter,
+        private readonly ProductCustomerOptionReader $productCustomerOptionReader,
+        private readonly ProductCustomerOptionWriter $productCustomerOptionWriter,
         private readonly CategoryTreeReader $categoryTreeReader,
         private readonly TranslatorFactory $translatorFactory,
     ) {
@@ -106,6 +113,11 @@ final class ProductsPresenter extends TranslatedPresenter
         if ($this->configurationData === null) {
             throw new BadRequestException('Konfigurace produktu nebyla nalezena.');
         }
+        $this->customerOptionData = $this->productCustomerOptionReader->findForProduct($id);
+        if ($this->customerOptionData === null) {
+            throw new BadRequestException('Konfigurace zákaznických voleb nebyla nalezena.');
+        }
+        $this->template->customerOptionData = $this->customerOptionData;
         $this->template->isCreate = false;
         $this->template->product = $this->editData;
     }
@@ -451,6 +463,353 @@ final class ProductsPresenter extends TranslatedPresenter
         };
 
         return $form;
+    }
+
+    protected function createComponentProductCustomerOptionsForm(): Form
+    {
+        if (!$this->catalogPermission->canManage()) {
+            throw new ForbiddenRequestException();
+        }
+        if ($this->editData === null || $this->customerOptionData === null) {
+            throw new BadRequestException('Konfigurace zákaznických voleb není inicializována.');
+        }
+
+        $translator = $this->translatorFactory->createTranslator(
+            TranslationDomain::Catalog,
+            $this->localeProvider->getDefault(),
+        );
+        $form = new Form();
+        $form->setTranslator($translator);
+
+        $defaults = [];
+        $optionsContainer = $form->addContainer('options');
+        foreach ($this->customerOptionData->options as $option) {
+            $optionKey = 'option_' . $option->id;
+            $container = $optionsContainer->addContainer($optionKey);
+            $container->addText('code', 'products.customer_options.option.code')
+                ->setHtmlAttribute('class', 'form-control')
+                ->setRequired();
+            $container->addSelect('type', 'products.customer_options.option.type', [
+                'choice' => 'products.customer_options.type.choice',
+                'text' => 'products.customer_options.type.text',
+            ])->setHtmlAttribute('class', 'form-select')->setRequired();
+            $container->addCheckbox('isRequired', 'products.customer_options.option.required')
+                ->setHtmlAttribute('class', 'form-check-input');
+            $container->addInteger('sortOrder', 'products.customer_options.option.sort_order')
+                ->setHtmlAttribute('class', 'form-control')
+                ->setRequired();
+
+            $translations = $container->addContainer('translations');
+            foreach ($this->localeProvider->getActiveLocales() as $locale) {
+                $translations->addText($locale->getCode(), 'products.customer_options.option.name')
+                    ->setHtmlAttribute('class', 'form-control')
+                    ->setRequired();
+            }
+
+            $valuesContainer = $container->addContainer('values');
+            foreach ($option->values as $value) {
+                $valueKey = 'value_' . $value->id;
+                $valueContainer = $valuesContainer->addContainer($valueKey);
+                $valueContainer->addText('code', 'products.customer_options.value.code')
+                    ->setHtmlAttribute('class', 'form-control')
+                    ->setRequired();
+                $valueContainer->addInteger('sortOrder', 'products.customer_options.value.sort_order')
+                    ->setHtmlAttribute('class', 'form-control')
+                    ->setRequired();
+                $valueContainer->addCheckbox('delete', 'products.customer_options.value.delete')
+                    ->setHtmlAttribute('class', 'form-check-input');
+                $valueTranslations = $valueContainer->addContainer('translations');
+                foreach ($this->localeProvider->getActiveLocales() as $locale) {
+                    $valueTranslations->addText($locale->getCode(), 'products.customer_options.value.label')
+                        ->setHtmlAttribute('class', 'form-control')
+                        ->setRequired();
+                }
+                $defaults['options'][$optionKey]['values'][$valueKey] = [
+                    'code' => $value->code,
+                    'sortOrder' => $value->sortOrder,
+                    'translations' => $value->translations,
+                ];
+            }
+
+            $newValue = $valuesContainer->addContainer('newValue');
+            $newValue->addText('code', 'products.customer_options.value.code')
+                ->setHtmlAttribute('class', 'form-control');
+            $newValue->addInteger('sortOrder', 'products.customer_options.value.sort_order')
+                ->setHtmlAttribute('class', 'form-control');
+            $newValueTranslations = $newValue->addContainer('translations');
+            foreach ($this->localeProvider->getActiveLocales() as $locale) {
+                $newValueTranslations->addText($locale->getCode(), 'products.customer_options.value.label')
+                    ->setHtmlAttribute('class', 'form-control');
+            }
+
+            $defaults['options'][$optionKey] = [
+                'code' => $option->code,
+                'type' => $option->type,
+                'isRequired' => $option->isRequired,
+                'sortOrder' => $option->sortOrder,
+                'translations' => $option->translations,
+                'values' => $defaults['options'][$optionKey]['values'] ?? [],
+            ];
+            $container->addCheckbox('delete', 'products.customer_options.option.delete')
+                ->setHtmlAttribute('class', 'form-check-input');
+            $defaults['options'][$optionKey]['values']['newValue']['sortOrder'] = count($option->values);
+        }
+
+        $newOption = $form->addContainer('newOption');
+        $newOption->addText('code', 'products.customer_options.option.code')
+            ->setHtmlAttribute('class', 'form-control');
+        $newOption->addSelect('type', 'products.customer_options.option.type', [
+            'choice' => 'products.customer_options.type.choice',
+            'text' => 'products.customer_options.type.text',
+        ])->setHtmlAttribute('class', 'form-select');
+        $newOption->addCheckbox('isRequired', 'products.customer_options.option.required')
+            ->setHtmlAttribute('class', 'form-check-input');
+        $newOption->addInteger('sortOrder', 'products.customer_options.option.sort_order')
+            ->setHtmlAttribute('class', 'form-control');
+        $newTranslations = $newOption->addContainer('translations');
+        foreach ($this->localeProvider->getActiveLocales() as $locale) {
+            $newTranslations->addText($locale->getCode(), 'products.customer_options.option.name')
+                ->setHtmlAttribute('class', 'form-control');
+        }
+        $newValues = $newOption->addContainer('values');
+        $newValue = $newValues->addContainer('newValue');
+        $newValue->addText('code', 'products.customer_options.value.code')
+            ->setHtmlAttribute('class', 'form-control');
+        $newValue->addInteger('sortOrder', 'products.customer_options.value.sort_order')
+            ->setHtmlAttribute('class', 'form-control');
+        $newValueTranslations = $newValue->addContainer('translations');
+        foreach ($this->localeProvider->getActiveLocales() as $locale) {
+            $newValueTranslations->addText($locale->getCode(), 'products.customer_options.value.label')
+                ->setHtmlAttribute('class', 'form-control');
+        }
+
+        $defaults['newOption'] = [
+            'type' => 'choice',
+            'sortOrder' => count($this->customerOptionData->options),
+            'values' => ['newValue' => ['sortOrder' => 0]],
+        ];
+        $form->setDefaults($defaults);
+
+        $form->addSubmit('submit', 'products.customer_options.submit')
+            ->setHtmlAttribute('class', 'btn btn-primary');
+
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
+            if (!$this->catalogPermission->canManage() || $this->editData === null || $this->customerOptionData === null) {
+                throw new ForbiddenRequestException();
+            }
+
+            $options = [];
+            $submittedOptions = $values['options'] ?? [];
+            if (!is_array($submittedOptions)) {
+                $form->addError($translator->translate('products.customer_options.error.invalid'));
+                return;
+            }
+
+            foreach ($this->customerOptionData->options as $option) {
+                $optionKey = 'option_' . $option->id;
+                $entry = $submittedOptions[$optionKey] ?? null;
+                if (!is_array($entry)) {
+                    $form->addError($translator->translate('products.customer_options.error.invalid'));
+                    return;
+                }
+                if (($entry['delete'] ?? false) === true) {
+                    continue;
+                }
+
+                if (!is_string($entry['code'] ?? null)
+                    || !is_string($entry['type'] ?? null)
+                    || !is_bool($entry['isRequired'] ?? null)
+                    || (!is_int($entry['sortOrder'] ?? null) && !is_string($entry['sortOrder'] ?? null))) {
+                    $form->addError($translator->translate('products.customer_options.error.invalid'));
+                    return;
+                }
+                $translations = $this->readCustomerOptionTranslations($entry['translations'] ?? null);
+                $sortOrder = $this->readCustomerOptionSortOrder($entry['sortOrder']);
+                if ($translations === null || $sortOrder === null) {
+                    $form->addError($translator->translate('products.customer_options.error.invalid'));
+                    return;
+                }
+
+                $type = $entry['type'];
+                if (!in_array($type, ['choice', 'text'], true)) {
+                    $form->addError($translator->translate('products.customer_options.error.invalid'));
+                    return;
+                }
+
+                $optionValues = [];
+                if ($type === 'choice') {
+                    $rawValues = $entry['values'] ?? null;
+                    if (!is_array($rawValues)) {
+                        $form->addError($translator->translate('products.customer_options.error.invalid'));
+                        return;
+                    }
+                    foreach ($option->values as $value) {
+                        $valueKey = 'value_' . $value->id;
+                        $valueEntry = $rawValues[$valueKey] ?? null;
+                        if (!is_array($valueEntry)) {
+                            $form->addError($translator->translate('products.customer_options.error.invalid'));
+                            return;
+                        }
+                        if (($valueEntry['delete'] ?? false) === true) {
+                            continue;
+                        }
+                        if (!is_string($valueEntry['code'] ?? null)
+                            || (!is_int($valueEntry['sortOrder'] ?? null) && !is_string($valueEntry['sortOrder'] ?? null))) {
+                            $form->addError($translator->translate('products.customer_options.error.invalid'));
+                            return;
+                        }
+                        $valueTranslations = $this->readCustomerOptionTranslations($valueEntry['translations'] ?? null);
+                        $valueSortOrder = $this->readCustomerOptionSortOrder($valueEntry['sortOrder']);
+                        if ($valueTranslations === null || $valueSortOrder === null) {
+                            $form->addError($translator->translate('products.customer_options.error.invalid'));
+                            return;
+                        }
+                        $optionValues[] = [
+                            'id' => $value->id,
+                            'code' => $valueEntry['code'],
+                            'sortOrder' => $valueSortOrder,
+                            'translations' => $valueTranslations,
+                        ];
+                    }
+
+                    $newValueEntry = $rawValues['newValue'] ?? null;
+                    if (is_array($newValueEntry) && $this->hasCustomerOptionInput($newValueEntry['code'] ?? null, $newValueEntry['translations'] ?? null)) {
+                        if (!is_string($newValueEntry['code'] ?? null)
+                            || (!is_int($newValueEntry['sortOrder'] ?? null) && !is_string($newValueEntry['sortOrder'] ?? null))) {
+                            $form->addError($translator->translate('products.customer_options.error.invalid'));
+                            return;
+                        }
+                        $valueTranslations = $this->readCustomerOptionTranslations($newValueEntry['translations'] ?? null);
+                        $valueSortOrder = $this->readCustomerOptionSortOrder($newValueEntry['sortOrder']);
+                        if ($valueTranslations === null || $valueSortOrder === null) {
+                            $form->addError($translator->translate('products.customer_options.error.invalid'));
+                            return;
+                        }
+                        $optionValues[] = [
+                            'code' => $newValueEntry['code'],
+                            'sortOrder' => $valueSortOrder,
+                            'translations' => $valueTranslations,
+                        ];
+                    }
+                }
+
+                $options[] = [
+                    'id' => $option->id,
+                    'code' => $entry['code'],
+                    'type' => $type,
+                    'isRequired' => $entry['isRequired'],
+                    'sortOrder' => $sortOrder,
+                    'translations' => $translations,
+                    'values' => $optionValues,
+                ];
+            }
+
+            $newEntry = $values['newOption'] ?? null;
+            if (is_array($newEntry) && $this->hasCustomerOptionInput($newEntry['code'] ?? null, $newEntry['translations'] ?? null)) {
+                if (!is_string($newEntry['code'] ?? null)
+                    || !is_string($newEntry['type'] ?? null)
+                    || !is_bool($newEntry['isRequired'] ?? null)
+                    || (!is_int($newEntry['sortOrder'] ?? null) && !is_string($newEntry['sortOrder'] ?? null))) {
+                    $form->addError($translator->translate('products.customer_options.error.invalid'));
+                    return;
+                }
+                $translations = $this->readCustomerOptionTranslations($newEntry['translations'] ?? null);
+                $sortOrder = $this->readCustomerOptionSortOrder($newEntry['sortOrder']);
+                if ($translations === null || $sortOrder === null || !in_array($newEntry['type'], ['choice', 'text'], true)) {
+                    $form->addError($translator->translate('products.customer_options.error.invalid'));
+                    return;
+                }
+
+                $newOptionValues = [];
+                $newValueEntry = is_array($newEntry['values'] ?? null) ? $newEntry['values']['newValue'] ?? null : null;
+                if ($newEntry['type'] === 'choice' && is_array($newValueEntry)
+                    && $this->hasCustomerOptionInput($newValueEntry['code'] ?? null, $newValueEntry['translations'] ?? null)) {
+                    if (!is_string($newValueEntry['code'] ?? null)
+                        || (!is_int($newValueEntry['sortOrder'] ?? null) && !is_string($newValueEntry['sortOrder'] ?? null))) {
+                        $form->addError($translator->translate('products.customer_options.error.invalid'));
+                        return;
+                    }
+                    $valueTranslations = $this->readCustomerOptionTranslations($newValueEntry['translations'] ?? null);
+                    $valueSortOrder = $this->readCustomerOptionSortOrder($newValueEntry['sortOrder']);
+                    if ($valueTranslations === null || $valueSortOrder === null) {
+                        $form->addError($translator->translate('products.customer_options.error.invalid'));
+                        return;
+                    }
+                    $newOptionValues[] = [
+                        'code' => $newValueEntry['code'],
+                        'sortOrder' => $valueSortOrder,
+                        'translations' => $valueTranslations,
+                    ];
+                }
+
+                $options[] = [
+                    'code' => $newEntry['code'],
+                    'type' => $newEntry['type'],
+                    'isRequired' => $newEntry['isRequired'],
+                    'sortOrder' => $sortOrder,
+                    'translations' => $translations,
+                    'values' => $newOptionValues,
+                ];
+            }
+
+            try {
+                $this->productCustomerOptionWriter->save($this->editData->id, $options);
+            } catch (UniqueConstraintViolationException | InvalidArgumentException) {
+                $form->addError($translator->translate('products.customer_options.error.invalid'));
+                return;
+            }
+
+            $this->flashMessage($translator->translate('products.customer_options.saved'), 'success');
+            $this->redirect('edit', $this->editData->id);
+        };
+
+        return $form;
+    }
+
+    /** @return array<string,string>|null */
+    private function readCustomerOptionTranslations(mixed $raw): ?array
+    {
+        if (!is_array($raw)) {
+            return null;
+        }
+        $translations = [];
+        foreach ($this->localeProvider->getActiveLocales() as $locale) {
+            $code = $locale->getCode();
+            $value = $raw[$code] ?? null;
+            if (!is_string($value)) {
+                return null;
+            }
+            $translations[$code] = $value;
+        }
+        return $translations;
+    }
+
+    private function readCustomerOptionSortOrder(mixed $raw): ?int
+    {
+        if (is_int($raw)) {
+            return $raw;
+        }
+        if (is_string($raw)) {
+            $value = filter_var($raw, FILTER_VALIDATE_INT);
+            return is_int($value) ? $value : null;
+        }
+        return null;
+    }
+
+    private function hasCustomerOptionInput(mixed $code, mixed $translations): bool
+    {
+        if (is_string($code) && trim($code) !== '') {
+            return true;
+        }
+        if (!is_array($translations)) {
+            return false;
+        }
+        foreach ($translations as $value) {
+            if (is_string($value) && trim($value) !== '') {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function loadEditorOptions(): void
