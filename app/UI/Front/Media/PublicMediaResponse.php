@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\\UI\\Front\\Media;
+namespace App\UI\Front\Media;
 
-use Nette\\Application\\Response;
-use Nette\\Http\\IRequest;
-use Nette\\Http\\IResponse;
+use Nette\Application\Response;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
 
 final readonly class PublicMediaResponse implements Response
 {
