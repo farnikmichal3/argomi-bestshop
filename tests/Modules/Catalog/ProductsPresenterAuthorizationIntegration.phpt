@@ -6,6 +6,7 @@ use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\ProductEditorReader;
 use App\Modules\Catalog\Api\ProductImageReader;
+use App\Modules\Catalog\Api\ProductImageWriter;
 use App\Modules\Catalog\Api\ProductEditorConfigurationReader;
 use App\Modules\Catalog\Api\ProductConfigurationWriter;
 use App\Modules\Catalog\Api\ProductCustomerOptionReader;
@@ -47,6 +48,8 @@ $deniedPermission = new class implements CatalogPermission {
 $productEditorReader = $integration->container->getByType(ProductEditorReader::class);
 /** @var ProductImageReader $productImageReader */
 $productImageReader = $integration->container->getByType(ProductImageReader::class);
+/** @var ProductImageWriter $productImageWriter */
+$productImageWriter = $integration->container->getByType(ProductImageWriter::class);
 /** @var TaxClassOptionReader $taxClassOptionReader */
 $taxClassOptionReader = $integration->container->getByType(TaxClassOptionReader::class);
 /** @var ProductWriter $productWriter */
@@ -62,6 +65,7 @@ $presenter = new ProductsPresenter(
     $localeProvider,
     $productEditorReader,
     $productImageReader,
+    $productImageWriter,
     $taxClassOptionReader,
     $productWriter,
     $integration->container->getByType(ProductEditorConfigurationReader::class),

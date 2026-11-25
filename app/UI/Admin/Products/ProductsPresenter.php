@@ -9,7 +9,9 @@ use App\Modules\Catalog\Api\CategoryTreeItem;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\Dto\ProductEditorData;
 use App\Modules\Catalog\Api\ProductEditorReader;
+use App\Modules\Catalog\Api\Dto\ProductImageData;
 use App\Modules\Catalog\Api\ProductImageReader;
+use App\Modules\Catalog\Api\ProductImageWriter;
 use App\Modules\Catalog\Api\ProductEditorConfigurationReader;
 use App\Modules\Catalog\Api\ProductConfigurationWriter;
 use App\Modules\Catalog\Api\ProductCustomerOptionReader;
@@ -45,6 +47,9 @@ final class ProductsPresenter extends TranslatedPresenter
 
     private ?ProductCustomerOptionConfigurationData $customerOptionData = null;
 
+    /** @var list<ProductImageData> */
+    private array $productImages = [];
+
     /** @var array<int|string, string> */
     private array $categoryOptions = [];
 
@@ -57,6 +62,7 @@ final class ProductsPresenter extends TranslatedPresenter
         private readonly LocaleProvider $localeProvider,
         private readonly ProductEditorReader $productEditorReader,
         private readonly ProductImageReader $productImageReader,
+        private readonly ProductImageWriter $productImageWriter,
         private readonly TaxClassOptionReader $taxClassOptionReader,
         private readonly ProductWriter $productWriter,
         private readonly ProductEditorConfigurationReader $productEditorConfigurationReader,
@@ -120,7 +126,8 @@ final class ProductsPresenter extends TranslatedPresenter
             throw new BadRequestException('Konfigurace zákaznických voleb nebyla nalezena.');
         }
         $this->template->customerOptionData = $this->customerOptionData;
-        $this->template->productImages = $this->productImageReader->findForProduct($id);
+        $this->productImages = $this->productImageReader->findForProduct($id);
+        $this->template->productImages = $this->productImages;
         $this->template->isCreate = false;
         $this->template->product = $this->editData;
     }
@@ -462,6 +469,108 @@ final class ProductsPresenter extends TranslatedPresenter
             }
 
             $this->flashMessage($translator->translate('products.configuration.saved'), 'success');
+            $this->redirect('edit', $this->editData->id);
+        };
+
+        return $form;
+    }
+
+    protected function createComponentProductImageManagementForm(): Form
+    {
+        if (!$this->catalogPermission->canManage() || $this->editData === null || $this->productImages === []) {
+            throw new ForbiddenRequestException();
+        }
+
+        $translator = $this->translatorFactory->createTranslator(
+            TranslationDomain::Catalog,
+            $this->localeProvider->getDefault(),
+        );
+        $imageOptions = [];
+        foreach ($this->productImages as $image) {
+            $imageOptions[$image->id] = $image->altText ?? sprintf('Media #%d', $image->mediaAssetId);
+        }
+
+        $form = new Form();
+        $form->setTranslator($translator);
+        $form->addSelect('imageId', 'products.images.form.image', $imageOptions)
+            ->setRequired()
+            ->setHtmlAttribute('class', 'form-select');
+        $form->addText('altText', 'products.images.form.alt_text')
+            ->setMaxLength(255)
+            ->setHtmlAttribute('class', 'form-control');
+        $form->addInteger('sortOrder', 'products.images.form.sort_order')
+            ->setHtmlAttribute('class', 'form-control');
+        $form->addSelect('action', 'products.images.form.action', [
+            'update' => 'products.images.form.action.update',
+            'primary' => 'products.images.form.action.primary',
+            'remove' => 'products.images.form.action.remove',
+        ])
+            ->setRequired()
+            ->setHtmlAttribute('class', 'form-select');
+        $form->addSubmit('submit', 'products.images.form.submit')
+            ->setHtmlAttribute('class', 'btn btn-outline-primary');
+
+        $firstImage = $this->productImages[0];
+        $form->setDefaults([
+            'imageId' => (string) $firstImage->id,
+            'altText' => $firstImage->altText ?? '',
+            'sortOrder' => $firstImage->sortOrder,
+            'action' => 'update',
+        ]);
+
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
+            if (!$this->catalogPermission->canManage() || $this->editData === null) {
+                throw new ForbiddenRequestException();
+            }
+
+            $imageIdRaw = $values['imageId'] ?? null;
+            $action = $values['action'] ?? null;
+            if ((!is_string($imageIdRaw) && !is_int($imageIdRaw)) || !is_string($action)) {
+                $form->addError($translator->translate('products.images.form.error.invalid'));
+                return;
+            }
+
+            $imageId = filter_var((string) $imageIdRaw, FILTER_VALIDATE_INT);
+            if (!is_int($imageId) || $imageId < 1) {
+                $form->addError($translator->translate('products.images.form.error.invalid'));
+                return;
+            }
+
+            if ($action === 'remove') {
+                $this->productImageWriter->remove($this->editData->id, $imageId);
+                $message = 'products.images.form.removed';
+            } elseif ($action === 'primary') {
+                $this->productImageWriter->setPrimary($this->editData->id, $imageId);
+                $message = 'products.images.form.primary_set';
+            } elseif ($action === 'update') {
+                $altText = $values['altText'] ?? null;
+                $sortOrderRaw = $values['sortOrder'] ?? null;
+                if (
+                    !is_string($altText)
+                    || (!is_string($sortOrderRaw) && !is_int($sortOrderRaw))
+                ) {
+                    $form->addError($translator->translate('products.images.form.error.invalid'));
+                    return;
+                }
+                $sortOrder = filter_var((string) $sortOrderRaw, FILTER_VALIDATE_INT);
+                if (!is_int($sortOrder) || $sortOrder < 0) {
+                    $form->addError($translator->translate('products.images.form.error.invalid'));
+                    return;
+                }
+
+                $this->productImageWriter->update(
+                    $this->editData->id,
+                    $imageId,
+                    trim($altText) === '' ? null : trim($altText),
+                    $sortOrder,
+                );
+                $message = 'products.images.form.updated';
+            } else {
+                $form->addError($translator->translate('products.images.form.error.invalid'));
+                return;
+            }
+
+            $this->flashMessage($translator->translate($message), 'success');
             $this->redirect('edit', $this->editData->id);
         };
 
