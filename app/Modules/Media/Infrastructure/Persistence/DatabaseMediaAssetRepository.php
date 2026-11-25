@@ -72,7 +72,7 @@ final class DatabaseMediaAssetRepository implements MediaAssetRepository
             ->limit($limit, $offset)
             ->fetchAll();
 
-        return $this->mapRows($rows);
+        return $this->mapRows(array_values($rows));
     }
 
     public function delete(int $id): void
