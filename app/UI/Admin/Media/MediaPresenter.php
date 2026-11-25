@@ -55,6 +55,10 @@ final class MediaPresenter extends TranslatedPresenter
             throw new ForbiddenRequestException();
         }
 
+        if (!in_array($variant, ['original', 'thumbnail', 'listing', 'detail'], true)) {
+            throw new BadRequestException('Varianta obrázku není platná.');
+        }
+
         $image = $this->mediaAssetContentReader->read($id, $variant);
         if ($image === null) {
             throw new BadRequestException('Požadovaný náhled média nebyl nalezen.');
@@ -78,7 +82,7 @@ final class MediaPresenter extends TranslatedPresenter
         $form->setTranslator($translator);
         $form->addUpload('file', 'media.upload.file')
             ->setRequired('media.upload.error.required')
-            ->setMaxSize(20_000_000)
+            ->addRule(Form::MAX_FILE_SIZE, 'media.upload.error.invalid', 20_000_000)
             ->setHtmlAttribute('accept', 'image/jpeg,image/png,image/webp,image/avif');
         $form->addSubmit('submit', 'media.upload.submit')
             ->setHtmlAttribute('class', 'btn btn-primary');
@@ -97,7 +101,7 @@ final class MediaPresenter extends TranslatedPresenter
             }
 
             try {
-                $this->mediaAssetWriter->upload($contents, $file->getName());
+                $this->mediaAssetWriter->upload($contents, $file->getUntrustedName());
             } catch (InvalidArgumentException) {
                 $form->addError($translator->translate('media.upload.error.invalid'));
                 return;

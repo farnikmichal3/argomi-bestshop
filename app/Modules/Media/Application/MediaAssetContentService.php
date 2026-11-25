@@ -12,8 +12,6 @@ use InvalidArgumentException;
 
 final readonly class MediaAssetContentService implements MediaAssetContentReader
 {
-    private const VARIANTS = ['original', 'thumbnail', 'listing', 'detail'];
-
     public function __construct(
         private MediaAssetRepository $repository,
         private MediaFileStorage $storage,
@@ -25,7 +23,7 @@ final readonly class MediaAssetContentService implements MediaAssetContentReader
         if (!$this->permission->canView()) {
             throw new MediaAccessDeniedException('Přístup k obsahu médií byl odepřen.');
         }
-        if ($id < 1 || !in_array($variant, self::VARIANTS, true)) {
+        if ($id < 1) {
             throw new InvalidArgumentException('Identifikátor nebo varianta média není platná.');
         }
 
