@@ -19,6 +19,18 @@
         </div>
     </section>
 
+    {if $canManageMedia && $assets !== []}
+        <section class="card product-editor-card mb-4">
+            <header class="card-header">
+                <h2 class="h5 mb-0">{_'media.publication.title'}</h2>
+                <p class="text-body-secondary small mb-0">{_'media.publication.description'}</p>
+            </header>
+            <div class="card-body">
+                {control publicationForm}
+            </div>
+        </section>
+    {/if}
+
     {if $canAssignProductImages}
         <section class="card product-editor-card mb-4">
             <header class="card-header">
@@ -53,7 +65,7 @@
                                 </div>
                                 <div class="card-body">
                                     <h3 class="h6 text-break">{$asset->originalFilename}</h3>
-                                    <p class="small text-body-secondary mb-0">
+                                    <p class="small text-body-secondary mb-2">
                                         {if $asset->sourceWidth !== null && $asset->sourceHeight !== null}
                                             {$asset->sourceWidth} × {$asset->sourceHeight} px
                                         {/if}
@@ -61,6 +73,11 @@
                                             · {$asset->sourceFileSizeBytes} B
                                         {/if}
                                     </p>
+                                    {if $asset->publishedAt !== null}
+                                        <span class="badge text-bg-success">{_'media.publication.published'}</span>
+                                    {else}
+                                        <span class="badge text-bg-secondary">{_'media.publication.private'}</span>
+                                    {/if}
                                 </div>
                             </article>
                         </div>
