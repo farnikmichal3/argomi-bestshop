@@ -116,6 +116,10 @@ Pravidla:
 - Obsah se ukládá jako HTML v lokalizovaných překladech produktu. Editor nesmí zavádět proprietární datový formát ani obcházet Nette Forms, oprávnění, CSRF nebo aplikační validační kontrakty.
 - Vkládání obrázků bude napojeno na vlastní Media modul F5-22; do jeho dokončení se nepřidává externí upload ani veřejně zapisovatelné URL.
 - Knihovna médií a obrazových variant používá již schválený intervention/image a centrální pravidla generování uvedená níže.
+- Modul `Media` vlastní obecné mediální soubory, jejich bezpečné přijetí, neměnné originály, metadata, deriváty, fyzické úložiště a administrační knihovnu. Nezná produkty, varianty ani katalogové vztahy.
+- Modul `Catalog` vlastní pouze vazby mediálních položek na produkt a konkrétní variantu, jejich pořadí, ALT text a označení hlavního obrázku. Na Media komunikuje výhradně přes jeho veřejné API; nesmí přistupovat k jeho repozitářům ani souborovému úložišti.
+- Media nesmí poskytovat přímé veřejné zápisové URL. Upload prochází autentizovanou administrací, kontrolou oprávnění, limity velikosti a pixelů, dekódováním skutečného obsahu a bezpečným uložením mimo `www/`. Zobrazení souboru zajišťuje kontrolovaný read endpoint, který ověří oprávnění/veřejnou dostupnost a vrací pouze známé MIME typy.
+- Mazání mediální položky musí být blokováno, dokud na ni existuje produktová vazba nebo jiná reference. Smazání vazby v Catalog samo o sobě nemaže mediální originál; životní cyklus souboru řídí Media.
 
 ### Generování a velikosti miniatur obrázků
 

@@ -1,11 +1,12 @@
 # Modul Catalog
 
 Modul `Catalog` vlastní zákaznický katalog: kategorie, produkty, varianty,
-atributy, volby zákazníka, obrázky, související produkty a jejich čtecí modely.
+atributy, volby zákazníka, přiřazení médií, související produkty a jejich čtecí modely.
 
 ## Hranice modulu
 
 - Veřejné kontrakty pro ostatní moduly patří do `Api/`.
+- Fyzické mediální soubory, originály, deriváty a knihovna médií patří do modulu Media. Catalog vlastní pouze produktové/variantní vazby a jejich pořadí, ALT text a hlavní obrázek.
 - Doménové objekty a invarianty patří do `Domain/`.
 - Use-cases, aplikační služby a interní DTO patří do `Application/`.
 - Databázové adaptéry a DI konfigurace patří do `Infrastructure/`.

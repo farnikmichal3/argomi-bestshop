@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.111 · 25. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.112 · 25. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **556 kroků**: hotovo 194, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 354, zrušeno 7.
+Celkem **556 kroků**: hotovo 194, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 353, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **556 kroků**: hotovo 194, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 38 | 23 | 0 | 0 | 0 | 0 | 15 | 0 |
+| F5 | Catalog (vlna 1) | 38 | 23 | 1 | 0 | 0 | 0 | 14 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -74,6 +74,11 @@ Celkem **556 kroků**: hotovo 194, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.112 (25. 11. 2026)
+- Zahájen F5-22 – vlastní Media workflow. Sjednocena hranice modulů: Media vlastní knihovnu, originály, odvozené varianty, metadata a bezpečné úložiště; Catalog vlastní pouze vazby médií na produkty a varianty, jejich pořadí, ALT text a hlavní obrázek. Implementace bude postupovat přes databázový/API základ, administrační knihovnu s přiřazováním a následný výběr médií v HugeRTE.
+- Audit potvrdil existující Intervention Image 4.4, bezpečné úložiště mimo `www/`, zpracování originálu a WebP derivátů i stávající katalogovou vazbu `product_image`. Počáteční migrace `001` zůstává neměnná; změny schématu budou výhradně dopředné a zachovají existující data.
+- Souhrn F5: **23 hotovo**, **1 rozpracováno**, **14 plán**. Celkem: **194 hotovo**, **1 rozpracováno**, **1 k úpravě**, **353 plán**, **7 zrušeno**.
 
 ### v3.111 (25. 11. 2026)
 - Uživatel potvrdil lokální kontrolní sadu i funkční ověření administrační konfigurace zákaznických voleb produktu (F5-21). Volby typu `choice` a `text`, lokalizované názvy/hodnoty, povinnost, pořadí a ukládání konfigurace fungují. Kontrola mazání proti skutečným položkám košíku se odkládá do F7, protože modul Cart zatím není implementován; existující aplikační a databázové ochrany zůstávají zachovány.
@@ -760,7 +765,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-19** Admin: správa atributů a jejich hodnot — CRUD atributů, překlady pro aktivní jazyky, typy text/number/enum/bool, měrná jednotka pouze pro number a transakční správu lokalizovaných enum hodnot; ochrana používaných os a hodnot variant.
 - `[HOTOVO]` **F5-20** Admin: přiřazení atributů k produktu, výběr a řazení os variant, profesionální karta editoru produktu, HugeRTE pro lokalizované dlouhé popisy a serverová sanitizace HTML; příprava napojení na Media modul bez uploadu v této fázi.
 - `[HOTOVO]` **F5-21** Admin: konfigurace voleb zákazníka pro produkt
-- `[PLÁN]` **F5-22** Admin: nahrání obrázků a přiřazení k variantám
+- `[ROZDĚLÁNO]` **F5-22** Admin: knihovna médií, bezpečné nahrávání, přiřazení k produktům/variantám a výběr médií v HugeRTE
 - `[PLÁN]` **F5-23** Admin: správa souvisejících a doporučených produktů
 - `[PLÁN]` **F5-24** Validace: kontrola povinných údajů při aktivaci produktu
 - `[PLÁN]` **F5-25** Zákaz přímého mazání: označení produktu jako archivovaný
