@@ -56,19 +56,16 @@ final class MediaPresenter extends TranslatedPresenter
         return TranslationDomain::Admin;
     }
 
-    public function renderDefault(?int $productId = null, ?int $variantId = null): void
+    public function actionDefault(?int $productId = null, ?int $variantId = null): void
     {
         if (!$this->mediaPermission->canView()) {
             throw new ForbiddenRequestException();
         }
 
         $this->libraryAssets = $this->mediaAssetReader->findLibrary(48, 0);
-        $this->template->assets = $this->libraryAssets;
-        $this->template->canManageMedia = $this->mediaPermission->canManage();
         $this->assignProductId = $productId;
         $this->assignVariantId = $variantId;
-        $this->template->assignProductId = null;
-        $this->template->canAssignProductImages = false;
+        $this->assignVariantOptions = [];
 
         if ($productId !== null && $this->catalogPermission->canManage()) {
             $matrix = $this->productVariantMatrixReader->findForProduct($productId, $this->localeProvider->getDefault());
@@ -85,10 +82,17 @@ final class MediaPresenter extends TranslatedPresenter
             if ($variantId !== null && !array_key_exists($variantId, $this->assignVariantOptions)) {
                 throw new BadRequestException('Varianta nepatří k vybranému produktu.');
             }
-
-            $this->template->assignProductId = $productId;
-            $this->template->canAssignProductImages = $this->libraryAssets !== [];
         }
+    }
+
+    public function renderDefault(): void
+    {
+        $this->template->assets = $this->libraryAssets;
+        $this->template->canManageMedia = $this->mediaPermission->canManage();
+        $this->template->assignProductId = $this->assignProductId;
+        $this->template->canAssignProductImages = $this->assignProductId !== null
+            && $this->catalogPermission->canManage()
+            && $this->libraryAssets !== [];
     }
 
     public function actionImage(int $id, string $variant = 'thumbnail'): void
