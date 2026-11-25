@@ -37,12 +37,10 @@ final class InterventionMediaImageProcessor implements MediaImageProcessor
             throw new InvalidArgumentException('Zdrojový obrázek nebo kvalita zpracování jsou mimo povolené limity.');
         }
 
-        $image = $this->decode($source);
-
         return [
-            'thumbnail' => $this->encode($image->cover(160, 160), $quality),
-            'listing' => $this->encode($image->cover(480, 480), $quality),
-            'detail' => $this->encode($image->scaleDown(1200, 1200), $quality),
+            'thumbnail' => $this->encode($this->decode($source)->cover(160, 160), $quality),
+            'listing' => $this->encode($this->decode($source)->cover(480, 480), $quality),
+            'detail' => $this->encode($this->decode($source)->scaleDown(1200, 1200), $quality),
         ];
     }
 

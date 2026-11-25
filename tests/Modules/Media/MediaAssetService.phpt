@@ -50,13 +50,13 @@ $repository = new class implements MediaAssetRepository {
         $derivatives = [];
         foreach ($this->created->derivatives as $variant => $image) {
             $derivatives[] = new MediaAssetDerivativeRecord(
-                $variant, $image->format, $image->width, $image->height,
-                $this->created->derivativeKeys[$variant], strlen($image->contents),
+                $variant, $image->format, hash('sha256', 'source'), hash('sha256', $variant),
+                $image->width, $image->height, $this->created->derivativeKeys[$variant], strlen($image->contents),
             );
         }
         return new MediaAssetRecord(
             42, $this->created->originalFilename, $this->created->storageKey,
-            $this->created->sourceMimeType, $this->created->sourceWidth,
+            $this->created->sourceSha256, $this->created->sourceMimeType, $this->created->sourceWidth,
             $this->created->sourceHeight, $this->created->sourceFileSizeBytes,
             new DateTimeImmutable('2026-11-25T00:00:00+00:00'), $derivatives,
         );

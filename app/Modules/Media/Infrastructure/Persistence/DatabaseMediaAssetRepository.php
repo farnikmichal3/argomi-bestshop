@@ -115,25 +115,25 @@ final class DatabaseMediaAssetRepository implements MediaAssetRepository
         foreach ($rows as $row) {
             $id = $this->integer($row->id, 'media_asset.id');
             $createdAt = $row->created_at;
-        if (!$createdAt instanceof DateTimeInterface) {
-            if (!is_string($createdAt)) {
-                throw new UnexpectedValueException('media_asset.created_at nemá platný časový typ.');
+            if (!$createdAt instanceof DateTimeInterface) {
+                if (!is_string($createdAt)) {
+                    throw new UnexpectedValueException('media_asset.created_at nemá platný časový typ.');
+                }
+                $createdAt = new DateTimeImmutable($createdAt);
             }
-            $createdAt = new DateTimeImmutable($createdAt);
-        }
 
-        return new MediaAssetRecord(
-            $id,
-            $this->string($row->original_filename, 'media_asset.original_filename'),
-            $this->string($row->storage_key, 'media_asset.storage_key'),
-            $this->nullableString($row->source_sha256, 'media_asset.source_sha256'),
-            $this->nullableString($row->source_mime_type, 'media_asset.source_mime_type'),
-            $this->nullableInteger($row->source_width, 'media_asset.source_width'),
-            $this->nullableInteger($row->source_height, 'media_asset.source_height'),
-            $this->nullableInteger($row->source_file_size_bytes, 'media_asset.source_file_size_bytes'),
-            DateTimeImmutable::createFromInterface($createdAt),
-            $derivativesByAsset[$id] ?? [],
-        );
+            $assets[] = new MediaAssetRecord(
+                $id,
+                $this->string($row->original_filename, 'media_asset.original_filename'),
+                $this->string($row->storage_key, 'media_asset.storage_key'),
+                $this->nullableString($row->source_sha256, 'media_asset.source_sha256'),
+                $this->nullableString($row->source_mime_type, 'media_asset.source_mime_type'),
+                $this->nullableInteger($row->source_width, 'media_asset.source_width'),
+                $this->nullableInteger($row->source_height, 'media_asset.source_height'),
+                $this->nullableInteger($row->source_file_size_bytes, 'media_asset.source_file_size_bytes'),
+                DateTimeImmutable::createFromInterface($createdAt),
+                $derivativesByAsset[$id] ?? [],
+            );
         }
 
         return $assets;
