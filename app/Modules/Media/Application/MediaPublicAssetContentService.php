@@ -17,9 +17,8 @@ final readonly class MediaPublicAssetContentService implements MediaPublicAssetR
 
     public function read(string $publicToken, string $variant = 'detail'): ?MediaAssetContentData
     {
-        if (preg_match('/\A[a-f0-9]{64}\z/D', $publicToken) !== 1
-            || !in_array($variant, ['thumbnail', 'listing', 'detail'], true)) {
-            throw new InvalidArgumentException('Veřejný identifikátor nebo varianta média není platná.');
+        if (preg_match('/\\A[a-f0-9]{64}\\z/D', $publicToken) !== 1) {
+            throw new InvalidArgumentException('Veřejný identifikátor média není platný.');
         }
 
         $asset = $this->repository->findPublishedByToken($publicToken);
