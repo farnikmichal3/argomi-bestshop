@@ -13,6 +13,7 @@ import 'hugerte/plugins/code';
 import 'hugerte/plugins/wordcount';
 
 document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
+    let editorInstance;
     hugerte.init({
         target: textarea,
         height: 420,
@@ -28,7 +29,7 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
 
             const pickerUrl = textarea.dataset.mediaPickerUrl;
             if (!pickerUrl) {
-                editor.windowManager.alert('Knihovna publikovaných médií není dostupná.');
+                editorInstance.windowManager.alert('Knihovna publikovaných médií není dostupná.');
                 return;
             }
 
@@ -55,7 +56,7 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
                     return;
                 }
 
-                editor.windowManager.open({
+                editorInstance.windowManager.open({
                     title: 'Vybrat publikovaný obrázek',
                     size: 'large',
                     body: {
@@ -92,6 +93,7 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
         resize: true,
         content_style: 'body { font-family: system-ui, sans-serif; font-size: 15px; line-height: 1.6; }',
         setup: (editor) => {
+            editorInstance = editor;
             const form = textarea.form;
             if (form) {
                 form.addEventListener('submit', () => {
