@@ -152,9 +152,21 @@ final class MediaPresenter extends TranslatedPresenter
                 throw new ForbiddenRequestException();
             }
 
-            $mediaAssetId = filter_var((string) ($values['mediaAssetId'] ?? ''), FILTER_VALIDATE_INT);
-            $variantValue = filter_var((string) ($values['variantId'] ?? ''), FILTER_VALIDATE_INT);
-            $sortOrder = filter_var((string) ($values['sortOrder'] ?? ''), FILTER_VALIDATE_INT);
+            $mediaAssetValue = $values['mediaAssetId'] ?? null;
+            $variantValueRaw = $values['variantId'] ?? null;
+            $sortOrderRaw = $values['sortOrder'] ?? null;
+            if (
+                (!is_string($mediaAssetValue) && !is_int($mediaAssetValue))
+                || (!is_string($variantValueRaw) && !is_int($variantValueRaw))
+                || (!is_string($sortOrderRaw) && !is_int($sortOrderRaw))
+            ) {
+                $form->addError($translator->translate('media.assign.error.invalid'));
+                return;
+            }
+
+            $mediaAssetId = filter_var((string) $mediaAssetValue, FILTER_VALIDATE_INT);
+            $variantValue = filter_var((string) $variantValueRaw, FILTER_VALIDATE_INT);
+            $sortOrder = filter_var((string) $sortOrderRaw, FILTER_VALIDATE_INT);
             if (!is_int($mediaAssetId) || $mediaAssetId < 1 || !is_int($variantValue) || $variantValue < 0 || !is_int($sortOrder) || $sortOrder < 0) {
                 $form->addError($translator->translate('media.assign.error.invalid'));
                 return;
