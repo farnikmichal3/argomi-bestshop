@@ -22,5 +22,7 @@ final readonly class MediaAssetRecord
         public ?int $sourceFileSizeBytes,
         public DateTimeImmutable $createdAt,
         public array $derivatives,
+        public ?string $publicToken = null,
+        public ?DateTimeImmutable $publishedAt = null,
     ) {}
 }
