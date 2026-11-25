@@ -33,8 +33,7 @@ final readonly class MediaAssetService implements MediaAssetWriter
 
         $filename = $this->normalizeFilename($originalFilename);
         $imageInfo = getimagesizefromstring($source);
-        if ($imageInfo === false || !is_string($imageInfo['mime'] ?? null)
-            || !in_array($imageInfo['mime'], self::ALLOWED_MIME_TYPES, true)) {
+        if ($imageInfo === false || !in_array($imageInfo['mime'], self::ALLOWED_MIME_TYPES, true)) {
             throw new InvalidArgumentException('Nahraný soubor není podporovaný rastrový obrázek.');
         }
 
@@ -116,7 +115,7 @@ final readonly class MediaAssetService implements MediaAssetWriter
     private function normalizeFilename(string $filename): string
     {
         $filename = basename(str_replace('\\', '/', trim($filename)));
-        $filename = preg_replace('/[\x00-\x1F\x7F]/u', '', $filename) ?? '';
+        $filename = preg_replace('/[\x00-\x1F\x7F]/u', '', $filename);
         $filename = trim($filename);
         if ($filename === '') {
             throw new InvalidArgumentException('Název nahrávaného souboru není platný.');
