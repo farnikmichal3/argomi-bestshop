@@ -75,6 +75,7 @@ final readonly class MediaAssetQueryService implements MediaAssetReader
                 $asset->derivatives,
             ),
             $asset->publishedAt,
+            $asset->publicToken,
         );
     }
 }
