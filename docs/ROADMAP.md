@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.112 · 25. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.113 · 25. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **556 kroků**: hotovo 194, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 353, zrušeno 7.
+Celkem **557 kroků**: hotovo 194, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 353, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **556 kroků**: hotovo 194, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 38 | 23 | 1 | 0 | 0 | 0 | 14 | 0 |
+| F5 | Catalog (vlna 1) | 39 | 23 | 2 | 0 | 0 | 0 | 14 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -74,6 +74,11 @@ Celkem **556 kroků**: hotovo 194, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.113 (25. 11. 2026)
+- Uživatel potvrdil lokální ověření dynamického načítání ALT textu a pořadí při změně vybraného obrázku; příčinou chybějící reakce byl neaktuální zkompilovaný JavaScript. F5-22 pokračuje podle původního rozsahu.
+- Zahájen F5-39 – záložková editace produktu. Stávající samostatné formuláře zůstávají zachovány a jsou rozděleny do pěti přepínacích částí: základní údaje, konfigurace, varianty, obrázky a zákaznické volby. Obsah zůstává v DOM, aby přepnutí záložky nezahazovalo rozepsané hodnoty. Doplněny responzivní styly a systémové překlady cs/en.
+- F5: **23 hotovo**, **2 rozděláno**, **14 plán**. Celkem: **194 hotovo**, **2 rozděláno**, **1 k úpravě**, **353 plán**, **7 zrušeno**.
 
 ### v3.112 (25. 11. 2026)
 - Zahájen F5-22 – vlastní Media workflow. Sjednocena hranice modulů: Media vlastní knihovnu, originály, odvozené varianty, metadata a bezpečné úložiště; Catalog vlastní pouze vazby médií na produkty a varianty, jejich pořadí, ALT text a hlavní obrázek. Implementace bude postupovat přes databázový/API základ, administrační knihovnu s přiřazováním a následný výběr médií v HugeRTE.
@@ -782,6 +787,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[PLÁN]` **F5-36** Test: načtení demo produktu 5 – hrnek s vlastním potiskem (zákaznické volby a příplatky)
 - `[HOTOVO]` **F5-37** Admin: bezpečné mazání kategorií — smazat lze pouze kategorii bez podkategorií a přiřazených produktů; databáze vynucuje `ON DELETE RESTRICT`, překlady se odstraní přes FK `ON DELETE CASCADE`; integrační testy, CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-38** Admin: společný `@layout.latte` na AdminLTE 4, responzivní postranní navigace, jednotný vstup JS/CSS a překlady nezávislé na doméně stránky; uživatel potvrdil bezproblémové fungování kompletní administrace v prohlížeči. Tento mezikrok předchází F5-16.
+- `[ROZDĚLÁNO]` **F5-39** Admin: záložková editace produktu – rozdělení editoru do responzivních částí se zachováním stávajících formulářů, oprávnění, validace a rozepsaných hodnot.
 
 ### F6: Tax, Pricing, Inventory
 
