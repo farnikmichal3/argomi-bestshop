@@ -63,6 +63,9 @@ $repository = new class implements MediaAssetRepository {
     }
     public function findLibrary(int $limit, int $offset): array { return []; }
     public function delete(int $id): void { $this->created = null; }
+    public function publish(int $id, string $publicToken): void {}
+    public function unpublish(int $id): void {}
+    public function findPublishedByToken(string $publicToken): ?MediaAssetRecord { return null; }
 };
 $transaction = new class implements Transaction {
     public function run(callable $operation): mixed { return $operation(); }
