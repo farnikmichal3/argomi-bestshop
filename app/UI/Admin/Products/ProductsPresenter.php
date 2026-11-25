@@ -9,6 +9,7 @@ use App\Modules\Catalog\Api\CategoryTreeItem;
 use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\Dto\ProductEditorData;
 use App\Modules\Catalog\Api\ProductEditorReader;
+use App\Modules\Catalog\Api\ProductImageReader;
 use App\Modules\Catalog\Api\ProductEditorConfigurationReader;
 use App\Modules\Catalog\Api\ProductConfigurationWriter;
 use App\Modules\Catalog\Api\ProductCustomerOptionReader;
@@ -55,6 +56,7 @@ final class ProductsPresenter extends TranslatedPresenter
         private readonly CatalogPermission $catalogPermission,
         private readonly LocaleProvider $localeProvider,
         private readonly ProductEditorReader $productEditorReader,
+        private readonly ProductImageReader $productImageReader,
         private readonly TaxClassOptionReader $taxClassOptionReader,
         private readonly ProductWriter $productWriter,
         private readonly ProductEditorConfigurationReader $productEditorConfigurationReader,
@@ -118,6 +120,7 @@ final class ProductsPresenter extends TranslatedPresenter
             throw new BadRequestException('Konfigurace zákaznických voleb nebyla nalezena.');
         }
         $this->template->customerOptionData = $this->customerOptionData;
+        $this->template->productImages = $this->productImageReader->findForProduct($id);
         $this->template->isCreate = false;
         $this->template->product = $this->editData;
     }

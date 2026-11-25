@@ -41,6 +41,55 @@
         </section>
 
         <section class="card product-editor-card mt-4">
+            <header class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <div>
+                    <div class="text-body-secondary small text-uppercase fw-semibold mb-1">Catalog · Media</div>
+                    <h2 class="h5 mb-0">{_'products.images.title'}</h2>
+                    <p class="text-body-secondary small mb-0">{_'products.images.description'}</p>
+                </div>
+                <a class="btn btn-outline-primary" n:href=":Admin:Media:default, productId => $product->id">
+                    <i class="bi bi-images me-1" aria-hidden="true"></i>
+                    {_'products.images.manage'}
+                </a>
+            </header>
+            <div class="card-body">
+                {if $productImages === []}
+                    <p class="text-body-secondary mb-0">{_'products.images.empty'}</p>
+                {else}
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-3">
+                        {foreach $productImages as $image}
+                            <div class="col">
+                                <article class="card h-100">
+                                    <div class="ratio ratio-1x1 bg-body-tertiary">
+                                        <img
+                                            src="{link :Admin:Media:image, id => $image->mediaAssetId, variant => 'thumbnail'}"
+                                            alt="{$image->altText ?? ''}"
+                                            class="w-100 h-100 object-fit-contain"
+                                            loading="lazy"
+                                        >
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="small text-break mb-1">{$image->altText ?? ('Media #' . $image->mediaAssetId)}</p>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            {if $image->isPrimary}
+                                                <span class="badge text-bg-primary">{_'products.images.primary'}</span>
+                                            {/if}
+                                            {if $image->variantId === null}
+                                                <span class="badge text-bg-secondary">{_'products.images.product_level'}</span>
+                                            {else}
+                                                <span class="badge text-bg-secondary">{_'products.images.variant'} #{$image->variantId}</span>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        {/foreach}
+                    </div>
+                {/if}
+            </div>
+        </section>
+
+        <section class="card product-editor-card mt-4">
             <header class="card-header">
                 <div>
                     <div class="text-body-secondary small text-uppercase fw-semibold mb-1">Catalog · Customer options</div>

@@ -6,6 +6,8 @@ Catalog and Media module DI services are discovered and compiled by the applicat
 use App\Core\Module\ModuleRegistry;
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\ProductEditorReader;
+use App\Modules\Catalog\Api\ProductImageReader;
+use App\Modules\Catalog\Api\ProductImageWriter;
 use App\Modules\Catalog\Infrastructure\DI\CatalogExtension;
 use App\Modules\Catalog\Infrastructure\Security\NetteCatalogPermissionService;
 use App\Modules\Media\Api\MediaAssetContentReader;
@@ -38,8 +40,10 @@ Assert::false((new ReflectionClass(MediaExtension::class))->isAbstract());
 $context = IntegrationTestBootstrap::boot($rootDir);
 Assert::true($context->container instanceof Container);
 
-// Katalogový read kontrakt zůstává dostupný přes automatické vyhledávání služeb.
+// Katalogové read/write kontrakty zůstávají dostupné přes automatické vyhledávání služeb.
 Assert::type(ProductEditorReader::class, $context->container->getByType(ProductEditorReader::class));
+Assert::type(ProductImageReader::class, $context->container->getByType(ProductImageReader::class));
+Assert::type(ProductImageWriter::class, $context->container->getByType(ProductImageWriter::class));
 
 // Media zveřejňuje pouze API; storage a procesor zůstávají interními kontrakty modulu.
 Assert::type(MediaAssetReader::class, $context->container->getByType(MediaAssetReader::class));

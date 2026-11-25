@@ -19,6 +19,18 @@
         </div>
     </section>
 
+    {if $canAssignProductImages}
+        <section class="card product-editor-card mb-4">
+            <header class="card-header">
+                <h2 class="h5 mb-0">{_'media.assign.title'}</h2>
+                <p class="text-body-secondary small mb-0">{_'media.assign.description'}</p>
+            </header>
+            <div class="card-body">
+                {control assignForm}
+            </div>
+        </section>
+    {/if}
+
     <section class="card product-editor-card">
         <header class="card-header">
             <h2 class="h5 mb-0">{_'media.library.title'}</h2>
