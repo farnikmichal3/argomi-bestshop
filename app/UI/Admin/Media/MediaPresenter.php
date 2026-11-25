@@ -7,6 +7,7 @@ namespace App\UI\Admin\Media;
 use App\Modules\Media\Api\Dto\MediaAssetData;
 use App\Modules\Media\Api\MediaAssetContentReader;
 use App\Modules\Media\Api\MediaAssetReader;
+use App\Modules\Media\Api\MediaAssetPublicationWriter;
 use App\Modules\Media\Api\MediaAssetWriter;
 use App\Modules\Media\Api\MediaPermission;
 use App\Modules\Catalog\Api\CatalogPermission;
@@ -44,6 +45,7 @@ final class MediaPresenter extends TranslatedPresenter
         private readonly ProductVariantMatrixReader $productVariantMatrixReader,
         private readonly MediaAssetReader $mediaAssetReader,
         private readonly MediaAssetWriter $mediaAssetWriter,
+        private readonly MediaAssetPublicationWriter $mediaAssetPublicationWriter,
         private readonly MediaAssetContentReader $mediaAssetContentReader,
         private readonly TranslatorFactory $translatorFactory,
         private readonly LocaleProvider $localeProvider,
@@ -193,6 +195,58 @@ final class MediaPresenter extends TranslatedPresenter
 
             $this->flashMessage($translator->translate('media.assign.success'), 'success');
             $this->redirect(':Admin:Products:edit', $this->assignProductId);
+        };
+
+        return $form;
+    }
+
+    protected function createComponentPublicationForm(): Form
+    {
+        if (!$this->mediaPermission->canManage()) {
+            throw new ForbiddenRequestException();
+        }
+
+        $translator = $this->translatorFactory->createTranslator(
+            TranslationDomain::Admin,
+            $this->localeProvider->getDefault(),
+        );
+        $assetOptions = [];
+        foreach ($this->libraryAssets as $asset) {
+            $assetOptions[$asset->id] = $asset->originalFilename;
+        }
+
+        $form = new Form();
+        $form->setTranslator($translator);
+        $form->addProtection('media.publication.error.protection');
+        $form->addSelect('mediaAssetId', 'media.publication.asset', $assetOptions)
+            ->setRequired('media.publication.error.required')
+            ->setHtmlAttribute('class', 'form-select');
+        $form->addCheckbox('publish', 'media.publication.publish_checkbox');
+        $form->addSubmit('submit', 'media.publication.submit')
+            ->setHtmlAttribute('class', 'btn btn-outline-primary');
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
+            $assetValue = $values['mediaAssetId'] ?? null;
+            if ((!is_string($assetValue) && !is_int($assetValue)) || !$this->mediaPermission->canManage()) {
+                $form->addError($translator->translate('media.publication.error.invalid'));
+                return;
+            }
+
+            $assetId = filter_var((string) $assetValue, FILTER_VALIDATE_INT);
+            if (!is_int($assetId) || $assetId < 1) {
+                $form->addError($translator->translate('media.publication.error.invalid'));
+                return;
+            }
+
+            if ((bool) ($values['publish'] ?? false)) {
+                $this->mediaAssetPublicationWriter->publish($assetId);
+                $message = 'media.publication.success';
+            } else {
+                $this->mediaAssetPublicationWriter->unpublish($assetId);
+                $message = 'media.publication.unpublished';
+            }
+
+            $this->flashMessage($translator->translate($message), 'success');
+            $this->redirect('default');
         };
 
         return $form;
