@@ -11,8 +11,6 @@ use App\Modules\Catalog\Application\ProductImageRepository;
 use App\Modules\Media\Api\Dto\MediaAssetData;
 use App\Modules\Media\Api\MediaAssetReader;
 use App\Shared\Application\Transaction\Transaction;
-use DateTimeImmutable;
-use InvalidArgumentException;
 use Tester\Assert;
 
 require __DIR__ . '/../../../vendor/autoload.php';
@@ -36,6 +34,7 @@ $image = new ProductImageDto(
     'Product image',
     4,
     true,
+    hash('sha256', 'source'),
     'image/png',
     32,
     24,
