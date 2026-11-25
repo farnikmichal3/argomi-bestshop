@@ -11,10 +11,12 @@ final readonly class ProductImageDto
      */
     public function __construct(
         public int $id,
+        public int $mediaAssetId,
         public ?int $variantId,
         public string $filePath,
         public ?string $altText,
         public int $sortOrder,
+        public bool $isPrimary,
         public ?string $sourceSha256,
         public ?string $sourceMimeType,
         public ?int $sourceWidth,

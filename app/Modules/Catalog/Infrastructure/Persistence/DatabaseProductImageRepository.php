@@ -20,7 +20,21 @@ final class DatabaseProductImageRepository implements ProductImageRepository
 
     public function findForProduct(int $productId, array $activeVariantIds): array
     {
-        $activeVariantIdSet = array_fill_keys($activeVariantIds, true);
+        return $this->loadImages($productId, $activeVariantIds);
+    }
+
+    public function findForManagement(int $productId): array
+    {
+        return $this->loadImages($productId, null);
+    }
+
+    /**
+     * @param list<int>|null $activeVariantIds
+     * @return list<ProductImageDto>
+     */
+    private function loadImages(int $productId, ?array $activeVariantIds): array
+    {
+        $activeVariantIdSet = $activeVariantIds === null ? null : array_fill_keys($activeVariantIds, true);
         $rows = $this->database->table('product_image')
             ->where('product_id', $productId)
             ->order('sort_order ASC, id ASC')
@@ -32,7 +46,7 @@ final class DatabaseProductImageRepository implements ProductImageRepository
             $variantId = $row->product_variant_id;
             if ($variantId !== null) {
                 $variantId = $this->integer($variantId, 'product_image.product_variant_id');
-                if (!isset($activeVariantIdSet[$variantId])) {
+                if ($activeVariantIdSet !== null && !isset($activeVariantIdSet[$variantId])) {
                     continue;
                 }
             }
@@ -67,12 +81,14 @@ final class DatabaseProductImageRepository implements ProductImageRepository
             $id = $this->integer($row->id, 'product_image.id');
             $images[] = new ProductImageDto(
                 $id,
+                $this->integer($row->media_asset_id, 'product_image.media_asset_id'),
                 $row->product_variant_id === null
                     ? null
                     : $this->integer($row->product_variant_id, 'product_image.product_variant_id'),
                 $this->string($row->file_path, 'product_image.file_path'),
                 $this->nullableString($row->alt_text, 'product_image.alt_text'),
                 $this->integer($row->sort_order, 'product_image.sort_order'),
+                $this->integer($row->is_primary, 'product_image.is_primary') === 1,
                 $this->nullableString($row->source_sha256, 'product_image.source_sha256'),
                 $this->nullableString($row->source_mime_type, 'product_image.source_mime_type'),
                 $this->nullableInteger($row->source_width, 'product_image.source_width'),
@@ -91,9 +107,22 @@ final class DatabaseProductImageRepository implements ProductImageRepository
         ?string $altText,
         int $sortOrder,
         MediaAssetData $asset,
+        bool $isPrimary = false,
     ): int {
         if ($productId < 1 || ($variantId !== null && $variantId < 1) || $sortOrder < 0) {
             throw new \InvalidArgumentException('Produkt, varianta a pořadí obrázku mají neplatnou hodnotu.');
+        }
+
+        $scope = $this->database->table('product_image')
+            ->where('product_id', $productId)
+            ->where('product_variant_id', $variantId);
+        $hasPrimary = $scope->where('is_primary', 1)->fetch() !== null;
+        $makePrimary = $isPrimary || !$hasPrimary;
+        if ($makePrimary) {
+            $this->database->table('product_image')
+                ->where('product_id', $productId)
+                ->where('product_variant_id', $variantId)
+                ->update(['is_primary' => 0]);
         }
 
         $image = $this->database->table('product_image')->insert([
@@ -103,6 +132,7 @@ final class DatabaseProductImageRepository implements ProductImageRepository
             'file_path' => $asset->storageKey,
             'alt_text' => $altText,
             'sort_order' => $sortOrder,
+            'is_primary' => $makePrimary ? 1 : 0,
             'source_sha256' => $asset->sourceSha256,
             'source_mime_type' => $asset->sourceMimeType,
             'source_width' => $asset->sourceWidth,
@@ -129,6 +159,73 @@ final class DatabaseProductImageRepository implements ProductImageRepository
         }
 
         return $imageId;
+    }
+
+    public function updateMetadata(int $productId, int $imageId, ?string $altText, int $sortOrder): void
+    {
+        if ($productId < 1 || $imageId < 1 || $sortOrder < 0 || ($altText !== null && mb_strlen($altText) > 255)) {
+            throw new \\InvalidArgumentException('Metadata obrázku nejsou platná.');
+        }
+
+        $row = $this->database->table('product_image')
+            ->where('product_id', $productId)
+            ->where('id', $imageId)
+            ->fetch();
+        if (!$row instanceof ActiveRow) {
+            throw new \\InvalidArgumentException('Obrázek produktu nebyl nalezen.');
+        }
+
+        $this->database->table('product_image')
+            ->where('id', $imageId)
+            ->update(['alt_text' => $altText, 'sort_order' => $sortOrder]);
+    }
+
+    public function remove(int $productId, int $imageId): void
+    {
+        $row = $this->database->table('product_image')
+            ->where('product_id', $productId)
+            ->where('id', $imageId)
+            ->fetch();
+        if (!$row instanceof ActiveRow) {
+            return;
+        }
+
+        $variantId = $row->product_variant_id;
+        $wasPrimary = $this->integer($row->is_primary, 'product_image.is_primary') === 1;
+        $this->database->table('product_image')->where('id', $imageId)->delete();
+
+        if ($wasPrimary) {
+            $next = $this->database->table('product_image')
+                ->where('product_id', $productId)
+                ->where('product_variant_id', $variantId)
+                ->order('sort_order ASC, id ASC')
+                ->fetch();
+            if ($next instanceof ActiveRow) {
+                $this->database->table('product_image')
+                    ->where('id', $this->integer($next->id, 'product_image.id'))
+                    ->update(['is_primary' => 1]);
+            }
+        }
+    }
+
+    public function setPrimary(int $productId, int $imageId): void
+    {
+        $row = $this->database->table('product_image')
+            ->where('product_id', $productId)
+            ->where('id', $imageId)
+            ->fetch();
+        if (!$row instanceof ActiveRow) {
+            throw new \\InvalidArgumentException('Obrázek produktu nebyl nalezen.');
+        }
+
+        $variantId = $row->product_variant_id;
+        $this->database->table('product_image')
+            ->where('product_id', $productId)
+            ->where('product_variant_id', $variantId)
+            ->update(['is_primary' => 0]);
+        $this->database->table('product_image')
+            ->where('id', $imageId)
+            ->update(['is_primary' => 1]);
     }
 
     private function integer(mixed $value, string $field): int

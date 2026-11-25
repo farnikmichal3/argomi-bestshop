@@ -42,6 +42,10 @@ takže uživatelský vstup nikdy netvoří SQL identifikátor. Neaktivní katego
 ani neaktivní produkty se do výpisu nedostanou. Výpis zahrnuje pouze přímé
 přiřazení produktu do kategorie, nikoli automaticky její potomky.
 
+## Produktové obrázky a přiřazení médií (F5-22)
+
+Catalog vlastní pouze vazby mezi produktem/variantou a položkou z Media. Veřejné kontrakty `ProductImageReader` a `ProductImageWriter` poskytují seznam, přiřazení, úpravu ALT textu a pořadí, odstranění vazby a nastavení hlavního obrázku. Samotný soubor, originál a deriváty zůstávají ve vlastnictví Media; odstranění produktové vazby soubor nemaže. Přiřazení ověřuje existenci mediální položky přes `MediaAssetReader` a databázový FK ověřuje vlastnictví varianty produktem. Hlavní obrázek je jedinečný pro produktovou nebo konkrétní variantní skupinu.
+
 ## Administrační výpis produktů (F5-15)
 
 Catalog poskytuje veřejný čtecí kontrakt `Api/ProductAdminListReader` pro administrační seznam produktů. Vstupem je neměnný `ProductAdminListFilter` a explicitní `Locale`; výstupem je stránkovaný `ProductAdminListing` s typovanými položkami `ProductAdminListItem`.
