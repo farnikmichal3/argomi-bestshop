@@ -73,6 +73,21 @@ $sourceVariant = $database->table('product_variant')->insert([
     'sort_order' => 3,
 ]);
 $sourceVariantId = (int) $sourceVariant->id;
+$currency = $database->table('currency')->order('code ASC')->fetch();
+Assert::notNull($currency);
+$database->table('variant_price')->insert([
+    'product_variant_id' => $sourceVariantId,
+    'currency' => $currency->code,
+    'amount_minor' => 1299,
+    'tax_included' => 1,
+]);
+$database->table('stock_item')->insert([
+    'product_variant_id' => $sourceVariantId,
+    'track_stock' => 0,
+    'allow_backorder' => 1,
+    'quantity_on_hand' => '15.000',
+    'quantity_reserved' => '3.000',
+]);
 
 $service->archive($sourceId);
 Assert::same(ProductStatus::Archived, $repository->findStatus($sourceId));
@@ -127,6 +142,27 @@ Assert::same(250, (int) $copyVariant->weight_g);
 Assert::same(300, (int) $copyVariant->length_mm);
 Assert::same(200, (int) $copyVariant->width_mm);
 Assert::same(20, (int) $copyVariant->height_mm);
+
+$copyPrice = $database->table('variant_price')
+    ->where('product_variant_id', $copyVariant->id)
+    ->where('currency', $currency->code)
+    ->fetch();
+Assert::notNull($copyPrice);
+Assert::same(1299, (int) $copyPrice->amount_minor);
+Assert::same(1, (int) $copyPrice->tax_included);
+
+$copyStock = $database->table('stock_item')
+    ->where('product_variant_id', $copyVariant->id)
+    ->fetch();
+Assert::notNull($copyStock);
+Assert::same(0, (int) $copyStock->track_stock);
+Assert::same(1, (int) $copyStock->allow_backorder);
+Assert::same('0.000', number_format((float) $copyStock->quantity_on_hand, 3, '.', ''));
+Assert::same('0.000', number_format((float) $copyStock->quantity_reserved, 3, '.', ''));
+Assert::same(0, $database->table('variant_price_history')
+    ->where('product_variant_id', $copyVariant->id)->count('*'));
+Assert::same(0, $database->table('stock_movement')
+    ->where('product_variant_id', $copyVariant->id)->count('*'));
 
 $draft = $database->table('product')->insert([
     'code' => 'f5-25-draft-' . $token,
