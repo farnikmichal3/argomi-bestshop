@@ -12,6 +12,11 @@ use App\Modules\Catalog\Api\ProductEditorReader;
 use App\Modules\Catalog\Api\Dto\ProductImageData;
 use App\Modules\Catalog\Api\ProductImageReader;
 use App\Modules\Catalog\Api\ProductImageWriter;
+use App\Modules\Catalog\Api\ProductRelationKind;
+use App\Modules\Catalog\Api\ProductRelationReader;
+use App\Modules\Catalog\Api\ProductRelationWriter;
+use App\Modules\Catalog\Api\Dto\ProductRelationItem;
+use App\Modules\Catalog\Api\Dto\ProductRelationOrder;
 use App\Modules\Catalog\Api\ProductEditorConfigurationReader;
 use App\Modules\Catalog\Api\ProductConfigurationWriter;
 use App\Modules\Catalog\Api\ProductCustomerOptionReader;
@@ -50,6 +55,12 @@ final class ProductsPresenter extends TranslatedPresenter
     /** @var list<ProductImageData> */
     private array $productImages = [];
 
+    /** @var list<ProductRelationItem> */
+    private array $productRelations = [];
+
+    /** @var array<int|string, string> */
+    private array $productRelationOptions = [];
+
     /** @var array<int|string, string> */
     private array $categoryOptions = [];
 
@@ -63,6 +74,8 @@ final class ProductsPresenter extends TranslatedPresenter
         private readonly ProductEditorReader $productEditorReader,
         private readonly ProductImageReader $productImageReader,
         private readonly ProductImageWriter $productImageWriter,
+        private readonly ProductRelationReader $productRelationReader,
+        private readonly ProductRelationWriter $productRelationWriter,
         private readonly TaxClassOptionReader $taxClassOptionReader,
         private readonly ProductWriter $productWriter,
         private readonly ProductEditorConfigurationReader $productEditorConfigurationReader,
@@ -128,6 +141,13 @@ final class ProductsPresenter extends TranslatedPresenter
         $this->template->customerOptionData = $this->customerOptionData;
         $this->productImages = $this->productImageReader->findForProduct($id);
         $this->template->productImages = $this->productImages;
+        $this->productRelations = $this->productRelationReader->findForProduct($id, $this->resolveLocale());
+        $this->template->productRelations = $this->productRelations;
+        $this->productRelationOptions = [];
+        foreach ($this->productRelationReader->findAvailableProducts($id, $this->resolveLocale()) as $option) {
+            $this->productRelationOptions[$option->id] = ($option->name ?? $option->code) . ' (' . $option->code . ')';
+        }
+        $this->template->productRelationOptions = $this->productRelationOptions;
         $this->template->isCreate = false;
         $this->template->product = $this->editData;
     }
@@ -593,6 +613,182 @@ final class ProductsPresenter extends TranslatedPresenter
             }
 
             $this->flashMessage($translator->translate($message), 'success');
+            $this->redirect('edit', $this->editData->id);
+        };
+
+        return $form;
+    }
+
+    protected function createComponentProductRelationAddForm(): Form
+    {
+        if (!$this->catalogPermission->canManage() || $this->editData === null) {
+            throw new ForbiddenRequestException();
+        }
+
+        $translator = $this->translatorFactory->createTranslator(
+            TranslationDomain::Catalog,
+            $this->localeProvider->getDefault(),
+        );
+        $form = new Form();
+        $form->setTranslator($translator);
+        $form->addSelect('relatedProductId', 'products.relations.add.product', $this->productRelationOptions)
+            ->setPrompt('products.relations.add.product_prompt')
+            ->setRequired('products.relations.error.required')
+            ->setHtmlAttribute('class', 'form-select');
+        $form->addSelect('type', 'products.relations.add.type', [
+            ProductRelationKind::Accessory->value => 'products.relations.type.accessory',
+            ProductRelationKind::Alternative->value => 'products.relations.type.alternative',
+            ProductRelationKind::Compatible->value => 'products.relations.type.compatible',
+        ])
+            ->setRequired()
+            ->setHtmlAttribute('class', 'form-select');
+        $form->addSubmit('submit', 'products.relations.add.submit')
+            ->setHtmlAttribute('class', 'btn btn-primary');
+
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
+            if (!$this->catalogPermission->canManage() || $this->editData === null) {
+                throw new ForbiddenRequestException();
+            }
+
+            $relatedId = filter_var((string) ($values['relatedProductId'] ?? ''), FILTER_VALIDATE_INT);
+            $type = is_string($values['type'] ?? null) ? ProductRelationKind::tryFrom($values['type']) : null;
+            if (!is_int($relatedId) || $relatedId < 1 || $type === null) {
+                $form->addError($translator->translate('products.relations.error.invalid'));
+                return;
+            }
+
+            try {
+                $this->productRelationWriter->add($this->editData->id, $relatedId, $type);
+            } catch (InvalidArgumentException|\DomainException|UniqueConstraintViolationException) {
+                $form->addError($translator->translate('products.relations.error.duplicate_or_invalid'));
+                return;
+            }
+
+            $this->flashMessage($translator->translate('products.relations.added'), 'success');
+            $this->redirect('edit', $this->editData->id);
+        };
+
+        return $form;
+    }
+
+    protected function createComponentProductRelationRemoveForm(): Form
+    {
+        if (!$this->catalogPermission->canManage() || $this->editData === null) {
+            throw new ForbiddenRequestException();
+        }
+
+        $translator = $this->translatorFactory->createTranslator(
+            TranslationDomain::Catalog,
+            $this->localeProvider->getDefault(),
+        );
+        $relationOptions = [];
+        foreach ($this->productRelations as $relation) {
+            $relationKey = $relation->productId . ':' . $relation->type->value;
+            $relationOptions[$relationKey] = ($relation->name ?? $relation->productCode)
+                . ' (' . $relation->productCode . ') · '
+                . $translator->translate('products.relations.type.' . $relation->type->value);
+        }
+
+        $form = new Form();
+        $form->setTranslator($translator);
+        $form->addSelect('relationKey', 'products.relations.remove.relation', $relationOptions)
+            ->setPrompt('products.relations.remove.prompt')
+            ->setRequired('products.relations.error.required')
+            ->setHtmlAttribute('class', 'form-select');
+        $form->addSubmit('submit', 'products.relations.remove.submit')
+            ->setHtmlAttribute('class', 'btn btn-outline-danger');
+
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
+            if (!$this->catalogPermission->canManage() || $this->editData === null) {
+                throw new ForbiddenRequestException();
+            }
+
+            $key = $values['relationKey'] ?? null;
+            if (!is_string($key) || preg_match('/\A([1-9][0-9]*):(accessory|alternative|compatible)\z/D', $key, $matches) !== 1) {
+                $form->addError($translator->translate('products.relations.error.invalid'));
+                return;
+            }
+            $relatedId = filter_var($matches[1], FILTER_VALIDATE_INT);
+            $type = ProductRelationKind::tryFrom($matches[2]);
+            if (!is_int($relatedId) || $type === null) {
+                $form->addError($translator->translate('products.relations.error.invalid'));
+                return;
+            }
+
+            $this->productRelationWriter->remove($this->editData->id, $relatedId, $type);
+            $this->flashMessage($translator->translate('products.relations.removed'), 'success');
+            $this->redirect('edit', $this->editData->id);
+        };
+
+        return $form;
+    }
+
+    protected function createComponentProductRelationOrderForm(): Form
+    {
+        if (!$this->catalogPermission->canManage() || $this->editData === null) {
+            throw new ForbiddenRequestException();
+        }
+
+        $translator = $this->translatorFactory->createTranslator(
+            TranslationDomain::Catalog,
+            $this->localeProvider->getDefault(),
+        );
+        $form = new Form();
+        $form->setTranslator($translator);
+        $positions = $form->addContainer('positions');
+        $defaults = [];
+        foreach ($this->productRelations as $relation) {
+            $key = 'r' . $relation->productId . '_' . $relation->type->value;
+            $positions->addInteger($key, 'products.relations.order.position')
+                ->setRequired()
+                ->setHtmlAttribute('class', 'form-control')
+                ->setHtmlAttribute('min', '0');
+            $defaults['positions'][$key] = $relation->sortOrder;
+        }
+        $form->setDefaults($defaults);
+        $form->addSubmit('submit', 'products.relations.order.submit')
+            ->setHtmlAttribute('class', 'btn btn-outline-primary');
+
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
+            if (!$this->catalogPermission->canManage() || $this->editData === null) {
+                throw new ForbiddenRequestException();
+            }
+
+            $submitted = $values['positions'] ?? null;
+            if (!is_array($submitted) || count($submitted) !== count($this->productRelations)) {
+                $form->addError($translator->translate('products.relations.error.invalid'));
+                return;
+            }
+
+            $ordered = [];
+            $seenPositions = [];
+            foreach ($this->productRelations as $relation) {
+                $key = 'r' . $relation->productId . '_' . $relation->type->value;
+                $position = $submitted[$key] ?? null;
+                if ((!is_int($position) && !is_string($position)) || filter_var((string) $position, FILTER_VALIDATE_INT) === false) {
+                    $form->addError($translator->translate('products.relations.error.invalid'));
+                    return;
+                }
+                $position = (int) $position;
+                if ($position < 0 || isset($seenPositions[$position])) {
+                    $form->addError($translator->translate('products.relations.error.position'));
+                    return;
+                }
+                $seenPositions[$position] = true;
+                $ordered[] = ['position' => $position, 'relation' => new ProductRelationOrder($relation->productId, $relation->type)];
+            }
+
+            usort($ordered, static fn (array $a, array $b): int => $a['position'] <=> $b['position']);
+            $relations = array_map(static fn (array $entry): ProductRelationOrder => $entry['relation'], $ordered);
+
+            try {
+                $this->productRelationWriter->reorder($this->editData->id, $relations);
+            } catch (InvalidArgumentException|\DomainException) {
+                $form->addError($translator->translate('products.relations.error.invalid'));
+                return;
+            }
+
+            $this->flashMessage($translator->translate('products.relations.order.saved'), 'success');
             $this->redirect('edit', $this->editData->id);
         };
 
