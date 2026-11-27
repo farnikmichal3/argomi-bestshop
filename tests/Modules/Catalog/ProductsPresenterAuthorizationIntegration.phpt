@@ -14,6 +14,7 @@ use App\Modules\Catalog\Api\ProductConfigurationWriter;
 use App\Modules\Catalog\Api\ProductCustomerOptionReader;
 use App\Modules\Catalog\Api\ProductCustomerOptionWriter;
 use App\Modules\Catalog\Api\ProductWriter;
+use App\Modules\Catalog\Api\ProductLifecycleWriter;
 use App\Modules\Tax\Api\TaxClassOptionReader;
 use App\Modules\Translation\Api\TranslatorFactory;
 use App\Shared\Domain\Locale\LocaleProvider;
