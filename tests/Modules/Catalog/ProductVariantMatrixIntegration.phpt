@@ -41,14 +41,21 @@ Assert::same(['1', '2'], array_map(static fn ($value): string => (string) $value
 
 $charger = $reader->findForProduct(3, Locale::fromString('cs'));
 Assert::notNull($charger);
-$powerAxis = null;
+Assert::count(3, $charger->axes);
+Assert::count(12, $charger->combinations);
+Assert::same(4, count(array_filter($charger->combinations, static fn ($combination): bool => $combination->exists())));
+Assert::same(8, count(array_filter($charger->combinations, static fn ($combination): bool => !$combination->exists())));
+
+$chargerAxisValues = [];
 foreach ($charger->axes as $axis) {
-    if ($axis->code === 'power_w') {
-        $powerAxis = $axis;
-    }
+    $chargerAxisValues[$axis->code] = array_map(
+        static fn ($value): string => (string) $value->value,
+        $axis->values,
+    );
 }
-Assert::notNull($powerAxis);
-Assert::same(['65', '100'], array_map(static fn ($value): string => (string) $value->value, $powerAxis->values));
+Assert::same(['black', 'white'], $chargerAxisValues['color']);
+Assert::same(['1', '2', '3'], $chargerAxisValues['slots']);
+Assert::same(['65', '100'], $chargerAxisValues['power_w']);
 
 Assert::same(null, $reader->findForProduct(999999, Locale::fromString('cs')));
 

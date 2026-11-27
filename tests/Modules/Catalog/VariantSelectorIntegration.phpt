@@ -59,16 +59,52 @@ Assert::same(
     $cable,
 );
 
-$charger = $selector->select(3, [
-    'color' => ['type' => 'enum', 'value' => 'white'],
-    'power_w' => ['type' => 'number', 'value' => '65'],
-    'slots' => ['type' => 'number', 'value' => '1'],
-]);
+// GaN nabíječka (produkt ID 3) má čtyři skutečné kombinace ze tří os.
+$chargerVariants = [
+    'GAN-1X65-WH' => ['color' => 'white', 'power_w' => '65', 'slots' => '1'],
+    'GAN-2X65-BK' => ['color' => 'black', 'power_w' => '65', 'slots' => '2'],
+    'GAN-2X100-BK' => ['color' => 'black', 'power_w' => '100', 'slots' => '2'],
+    'GAN-3X100-BK' => ['color' => 'black', 'power_w' => '100', 'slots' => '3'],
+];
 
-Assert::same(
-    (int) $database->table('product_variant')->where('sku', 'GAN-1X65-WH')->fetch()->id,
-    $charger,
-);
+foreach ($chargerVariants as $sku => $values) {
+    $selectedVariantId = $selector->select(3, [
+        'color' => ['type' => 'enum', 'value' => $values['color']],
+        'power_w' => ['type' => 'number', 'value' => $values['power_w']],
+        'slots' => ['type' => 'number', 'value' => $values['slots']],
+    ]);
+
+    $expectedVariant = $database->table('product_variant')
+        ->where('sku', $sku)
+        ->fetch();
+
+    Assert::notNull($expectedVariant, sprintf('Demo GaN charger variant %s must exist.', $sku));
+    Assert::same(
+        (int) $expectedVariant->id,
+        $selectedVariantId,
+        sprintf('The exact active GaN charger variant %s must be selected.', $sku),
+    );
+}
+
+// Ověříme i osm kombinací, které v demo nabídce záměrně neexistují.
+$missingChargerCombinations = [
+    ['color' => 'black', 'power_w' => '65', 'slots' => '1'],
+    ['color' => 'white', 'power_w' => '65', 'slots' => '2'],
+    ['color' => 'black', 'power_w' => '65', 'slots' => '3'],
+    ['color' => 'white', 'power_w' => '65', 'slots' => '3'],
+    ['color' => 'black', 'power_w' => '100', 'slots' => '1'],
+    ['color' => 'white', 'power_w' => '100', 'slots' => '1'],
+    ['color' => 'white', 'power_w' => '100', 'slots' => '2'],
+    ['color' => 'white', 'power_w' => '100', 'slots' => '3'],
+];
+
+foreach ($missingChargerCombinations as $values) {
+    Assert::same(null, $selector->select(3, [
+        'color' => ['type' => 'enum', 'value' => $values['color']],
+        'power_w' => ['type' => 'number', 'value' => $values['power_w']],
+        'slots' => ['type' => 'number', 'value' => $values['slots']],
+    ]));
+}
 
 Assert::same(null, $selector->select(999999, [
     'color' => ['type' => 'enum', 'value' => 'black'],

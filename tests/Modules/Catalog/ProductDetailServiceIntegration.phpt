@@ -62,6 +62,15 @@ Assert::same('Color', $english->variants[0]->attributeValues[0]->name);
 
 $charger = $service->getById(3, Locale::fromString('cs'));
 Assert::notNull($charger);
+Assert::same(3, $charger->product->id);
+Assert::same('GaN nabíječka', $charger->translation?->name);
+Assert::count(4, $charger->variants);
+$chargerSkus = array_map(static fn ($variant): string => $variant->sku, $charger->variants);
+sort($chargerSkus, SORT_STRING);
+Assert::same(
+    ['GAN-1X65-WH', 'GAN-2X100-BK', 'GAN-2X65-BK', 'GAN-3X100-BK'],
+    $chargerSkus,
+);
 Assert::count(1, $charger->attributes);
 Assert::same('gan', $charger->attributes[0]->code);
 Assert::same('Technologie GaN', $charger->attributes[0]->name);
@@ -71,6 +80,11 @@ Assert::same(2, $charger->relations[0]->productId);
 Assert::same('usb-c-cable', $charger->relations[0]->productCode);
 Assert::same('accessory', $charger->relations[0]->type);
 Assert::same('USB-C kabel', $charger->relations[0]->translation?->name);
+
+$englishCharger = $service->getById(3, Locale::fromString('en'));
+Assert::notNull($englishCharger);
+Assert::same('GaN charger', $englishCharger->translation?->name);
+Assert::count(4, $englishCharger->variants);
 
 Assert::same(null, $service->getById(PHP_INT_MAX, Locale::fromString('cs')));
 Assert::exception(
