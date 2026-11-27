@@ -6,6 +6,7 @@ Product relation service adds, removes and reorders complete directional relatio
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Api\ProductRelationKind;
+use App\Modules\Catalog\Api\Dto\ProductRelationOrder;
 use App\Modules\Catalog\Infrastructure\Api\ProductRelationCommandApiService;
 use App\Modules\Catalog\Infrastructure\Api\ProductRelationQueryApiService;
 use App\Shared\Domain\Locale\Locale;
@@ -84,7 +85,7 @@ try {
     );
 
     $writer->reorder(1, [
-        new \\App\\Modules\\Catalog\\Api\\Dto\\ProductRelationOrder(2, ProductRelationKind::Accessory),
+        new ProductRelationOrder(2, ProductRelationKind::Accessory),
         new \\App\\Modules\\Catalog\\Api\\Dto\\ProductRelationOrder(3, ProductRelationKind::Alternative),
     ]);
 
