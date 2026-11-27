@@ -6,6 +6,10 @@ Toto je vstupní bod pro aktuální dokumentaci projektu. Dokumentace popisuje *
 
 | Dokument | Účel |
 |---|---|
+| [Audit 27. 11. 2026](AUDIT-2026-11-27.md) | Ověřený stav migrací, schématu, roadmapy, modulů, technologií a otevřených nesouladů |
+
+| Dokument | Účel |
+|---|---|
 | [ZÁMĚR](ZAMER.md) | Produktová vize, zásady, technologie a schválená rozhodnutí |
 | [STRUKTURA](STRUKTURA.md) | Skutečné členění aplikace, odpovědnosti modulů a pravidla závislostí |
 | [DATABASE](DATABASE.md) | Aktuální databázové schéma, migrace, konvence a seed data |
