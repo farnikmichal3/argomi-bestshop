@@ -147,8 +147,8 @@ final class DatabaseProductRelationRepository implements ProductRelationReposito
             ->where('product_id', $ids)
             ->where('locale', $locale->getCode())
             ->fetchAll() as $row) {
-            $namesById[$this->integer($row->product_id, 'product_translation.product_id')] =
-                $this->string($row->name, 'product_translation.name');
+            $namesById[$this->integer($row->product_id, 'product_translation.product_id')]
+                = $this->string($row->name, 'product_translation.name');
         }
 
         $result = [];
