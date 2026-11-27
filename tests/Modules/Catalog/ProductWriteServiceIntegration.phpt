@@ -88,6 +88,12 @@ try {
     );
     Assert::same(null, $database->table('product')->where('code', $code . '-active')->fetch());
 
+    Assert::exception(
+        fn () => $service->create($code . '-archived', ProductAdminStatus::Archived, ProductAdminType::Physical, $taxClassId, $translations('archived-create'), []),
+        InvalidArgumentException::class,
+    );
+    Assert::same(null, $database->table('product')->where('code', $code . '-archived')->fetch());
+
     $productId = $service->create(
         $code,
         ProductAdminStatus::Draft,
@@ -150,6 +156,19 @@ try {
     );
     Assert::same('active', $database->table('product')->where('id', $productId)->fetch()->status);
     Assert::same('digital', $database->table('product')->where('id', $productId)->fetch()->type);
+    Assert::exception(
+        fn () => $service->update(
+            $productId,
+            $code,
+            ProductAdminStatus::Archived,
+            ProductAdminType::Digital,
+            $taxClassId,
+            $updatedTranslations,
+            [],
+        ),
+        InvalidArgumentException::class,
+    );
+    Assert::same('active', $database->table('product')->where('id', $productId)->fetch()->status);
     Assert::same(0, $database->table('product_category')->where('product_id', $productId)->count('*'));
     foreach ($updatedTranslations as $localeCode => $expectedTranslation) {
         $storedTranslation = $database->table('product_translation')
