@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.20 · 27. 11. 2026  
+**Revize:** 4.21 · 27. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 27. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -25,12 +25,18 @@ app/
 │   ├── Catalog/
 │   │   ├── Api/
 │   │   │   ├── Dto/
-│   │   │   │   ├── ProductVariantEditorData.php
+│   │   │   │   ├── ProductRelationItem.php
+│   │   │   ├── ProductRelationOption.php
+│   │   │   ├── ProductRelationOrder.php
+│   │   │   ├── ProductVariantEditorData.php
 │   │   │   │   ├── ProductVariantMatrix.php
 │   │   │   │   ├── VariantMatrixAxis.php
 │   │   │   │   ├── VariantMatrixCombination.php
 │   │   │   │   └── VariantMatrixValue.php
 │   │   │   ├── Event/
+│   │   │   ├── ProductRelationKind.php
+│   │   │   ├── ProductRelationReader.php
+│   │   │   ├── ProductRelationWriter.php
 │   │   │   ├── ProductVariantEditorReader.php
 │   │   │   ├── ProductVariantGenerator.php
 │   │   │   ├── ProductVariantMatrixReader.php
@@ -41,6 +47,8 @@ app/
 │   │   │   │   ├── ProductDto.php
 │   │   │   │   └── ProductTranslationDto.php
 │   │   │   ├── ProductRepository.php
+│   │   │   ├── ProductRelationRepository.php
+│   │   │   ├── ProductRelationService.php
 │   │   │   ├── ProductVariantGenerationRepository.php
 │   │   │   ├── ProductVariantGenerationService.php
 │   │   │   ├── ProductVariantWriteRepository.php
@@ -50,9 +58,13 @@ app/
 │   │   │   └── Variant/
 │   │   │       └── VariantEan.php
 │   │   └── Infrastructure/
+│   │       ├── Api/
+│   │       │   ├── ProductRelationCommandApiService.php
+│   │       │   └── ProductRelationQueryApiService.php
 │   │       ├── DI/
 │   │       └── Persistence/
 │   │           ├── DatabaseProductRepository.php
+│   │           └── DatabaseProductRelationRepository.php
 │   │           ├── DatabaseProductVariantGenerationRepository.php
 │   │           └── DatabaseProductVariantMatrixRepository.php
 │   ├── Checkout/
