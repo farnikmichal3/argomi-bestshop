@@ -30,6 +30,25 @@ final class DatabaseProductWriteRepository implements ProductWriteRepository
         return $this->database->table('product')->where('id', $productId)->fetch() !== null;
     }
 
+    public function hasPublishableVariantConfiguration(int $productId): bool
+    {
+        $variants = $this->database->table('product_variant')
+            ->where('product_id', $productId)
+            ->where('is_active', 1);
+
+        if ($variants->count('*') < 1) {
+            return false;
+        }
+
+        // Databáze vynucuje nejvýše jednu výchozí variantu; ověříme,
+        // že právě jedna výchozí varianta patří mezi aktivní varianty.
+        return $this->database->table('product_variant')
+            ->where('product_id', $productId)
+            ->where('is_active', 1)
+            ->where('is_default', 1)
+            ->count('*') === 1;
+    }
+
     public function taxClassExists(int $taxClassId): bool
     {
         return $this->database->table('tax_class')->where('id', $taxClassId)->fetch() !== null;

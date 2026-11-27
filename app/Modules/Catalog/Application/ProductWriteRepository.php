@@ -14,6 +14,9 @@ interface ProductWriteRepository
 
     public function productExists(int $productId): bool;
 
+    /** Produkt má alespoň jednu aktivní variantu a právě jednu z nich označenou jako výchozí. */
+    public function hasPublishableVariantConfiguration(int $productId): bool;
+
     public function taxClassExists(int $taxClassId): bool;
 
     public function categoryExists(int $categoryId): bool;

@@ -54,6 +54,7 @@ $translations = static function (string $prefix) use ($localeProvider, $token): 
 };
 
 $productId = null;
+$variantId = null;
 try {
     Assert::exception(
         fn () => $service->create($code, ProductAdminStatus::Draft, ProductAdminType::Physical, $taxClassId, $translations('denied'), [$categoryId]),
@@ -80,6 +81,12 @@ try {
         },
     );
 
+    Assert::exception(
+        fn () => $service->create($code . '-active', ProductAdminStatus::Active, ProductAdminType::Physical, $taxClassId, $translations('active-create'), []),
+        InvalidArgumentException::class,
+    );
+    Assert::same(null, $database->table('product')->where('code', $code . '-active')->fetch());
+
     $productId = $service->create(
         $code,
         ProductAdminStatus::Draft,
@@ -105,6 +112,27 @@ try {
     Assert::true(count($taxClassOptionReader->findOptions()) > 0);
 
     $updatedTranslations = $translations('updated-product');
+    Assert::exception(
+        fn () => $service->update($productId, $code, ProductAdminStatus::Active, ProductAdminType::Digital, $taxClassId, $updatedTranslations, []),
+        InvalidArgumentException::class,
+    );
+    Assert::same('draft', $database->table('product')->where('id', $productId)->fetch()->status);
+
+    // Aktivace bez varianty ani s aktivní, ale nevýchozí variantou nesmí projít.
+    $variant = $database->table('product_variant')->insert([
+        'product_id' => $productId,
+        'sku' => 'TEST-' . strtoupper($token),
+        'combination_hash' => hash('sha256', 'test-activation-' . $token),
+        'is_default' => 0,
+        'is_active' => 1,
+    ]);
+    $variantId = (int) $variant->id;
+    Assert::exception(
+        fn () => $service->update($productId, $code, ProductAdminStatus::Active, ProductAdminType::Digital, $taxClassId, $updatedTranslations, []),
+        InvalidArgumentException::class,
+    );
+    $database->table('product_variant')->where('id', $variantId)->update(['is_default' => 1]);
+
     $service->update(
         $productId,
         $code,
@@ -145,8 +173,11 @@ try {
     echo "OK\n";
 } finally {
     if ($productId !== null) {
-        // Products are retained by design; remove the test assignment and archive the product.
+        // Produkty zůstávají kvůli auditní stopě; testovací variantu odstraníme a produkt archivujeme.
         $database->table('product_category')->where('product_id', $productId)->delete();
+        if ($variantId !== null) {
+            $database->table('product_variant')->where('id', $variantId)->delete();
+        }
         $database->table('product')->where('id', $productId)->update(['status' => ProductStatus::Archived->value]);
     }
     $database->table('category')->where('id', $categoryId)->delete();
