@@ -1,14 +1,14 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 2.4 · 27. 11. 2026  
+**Revize:** 2.5 · 27. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
 
 ## 1. Autoritativní migrační soubory
 
-V aktuálním repozitáři je **54 SQL migračních souborů**:
+V aktuálním repozitáři je **58 SQL migračních souborů**:
 
 | Skupina | Počet | Význam |
 |---|---:|---|
@@ -16,7 +16,7 @@ V aktuálním repozitáři je **54 SQL migračních souborů**:
 | \`basic-data\` | 2 | Základní číselníky a referenční data |
 | \`dummy-data\` | 32 | Demo obsah a verzované systémové překlady pro UI |
 
-### Structures (20)
+### Structures (21)
 
 \`\`\`text
 migrations/structures/
@@ -40,6 +40,7 @@ migrations/structures/
 2026-11-25-090000-media-library.sql
 2026-11-25-110000-product-image-management.sql
 2026-11-25-160000-media-publication.sql
+2026-11-27-100000-product-archive-terminal.sql
 \`\`\`
 
 ### Basic data (2)
@@ -50,7 +51,7 @@ migrations/basic-data/
 2026-11-22-111000-admin-identity-roles.sql
 \`\`\`
 
-### Dummy data (32)
+### Dummy data (35)
 
 \`\`\`text
 migrations/dummy-data/
@@ -86,6 +87,9 @@ migrations/dummy-data/
 2026-11-25-150000-seed-catalog-media-picker.sql
 2026-11-25-170000-seed-admin-media-publication.sql
 2026-11-25-180000-seed-catalog-media-picker-translations.sql
+2026-11-25-190000-seed-catalog-product-relations-admin.sql
+2026-11-27-093500-seed-catalog-product-activation-validation.sql
+2026-11-27-101000-seed-catalog-product-lifecycle.sql
 \`\`\`
 
 Nextras Migrations řadí soubory **globálně podle názvu**, nikoliv po skupinách jako tři nezávislé fáze. Skupiny a závislosti jsou nastaveny v \`config/common.neon\`:
@@ -96,7 +100,7 @@ Nextras Migrations řadí soubory **globálně podle názvu**, nikoliv po skupin
 
 ## 2. Schéma v1 – tabulky
 
-Počáteční soubor `2026-11-04-200000-init.sql` vytváří **46 tabulek**. Po všech 20 aktuálních strukturálních migracích obsahuje schéma **58 tabulek**. Rozdíl tvoří rozdělení systémových překladů a doplnění Outboxu, katalogu ISO 4217, administrační identity, derivátů obrázků a Media knihovny.
+Počáteční soubor `2026-11-04-200000-init.sql` vytváří **46 tabulek**. Po všech 21 aktuálních strukturálních migracích obsahuje schéma **58 tabulek**. Rozdíl tvoří rozdělení systémových překladů a doplnění Outboxu, katalogu ISO 4217, administrační identity, derivátů obrázků, Media knihovny a databázového vynucení nevratného archivovaného stavu produktu.
 
 | Oblast | Tabulky |
 |---|---|
@@ -368,6 +372,7 @@ CI nastavuje `TEST_DATABASE_REQUIRED=1`, takže integrační testy nesmějí bý
 
 ## 13. Historie
 
+| 27. 11. 2026 | v2.5: 58 SQL migrací (21 structures, 2 basic-data, 35 dummy-data); nová dopředná migrace `2026-11-27-100000-product-archive-terminal.sql` přidává databázovou ochranu terminálního stavu archived. Schéma zůstává na 58 tabulkách a 81 fyzických FK. |
 | 18. 11. 2026 | v2.2: doplněna samostatná tabulka `admin_message_translation`, cs/en seed administračních textů a jejich SHA-1 `default_hash` (F4-17/F4-24). |
 | Datum | Změna |
 |---|---|

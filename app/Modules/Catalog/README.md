@@ -373,3 +373,18 @@ nadále ověřují samostatné testy `OptionResolver`.
 ## Validace aktivace produktu (F5-24)
 
 Nový produkt se ukládá jako koncept; jeho varianty vznikají až po založení. Přechod produktu do stavu `active` vyžaduje alespoň jednu aktivní variantu a právě jednu výchozí aktivní variantu. Databázový unikátní index již omezuje počet výchozích variant na nejvýše jednu; aplikační validace navíc ověřuje, že výchozí varianta je aktivní. Kontrola probíhá v `ProductWriteService`, tedy nezávisle na administračním formuláři. Veřejná výjimka `ProductActivationRequirementsNotMet` umožňuje UI zobrazit konkrétní lokalizovanou validační zprávu. Kategorie, obrázek, popis a ceny nejsou touto fází označeny jako povinné. CI (88 testů, PHPStan, coding standard a Deptrac), lokální `check.bat` i ruční ověření všech aktivačních scénářů v administraci byly úspěšné; F5-24 je dokončeno.
+
+
+## Životní cyklus produktu a kopírování (F5-25)
+
+Veřejný administrační kontrakt `Api/ProductLifecycleWriter` nabízí dvě oddělené operace: nevratnou archivaci a vytvoření nové kopie výhradně z archivovaného produktu. Aplikační pravidla zajišťuje `Application/ProductLifecycleService`, persistence `Infrastructure/Persistence/DatabaseProductLifecycleRepository`; presenter ani UI neprovádí přímé SQL.
+
+- Archivace nastaví stav `archived`; databázový trigger deaktivuje všechny aktivní varianty. Další změna archivovaného produktu zpět na `draft` nebo `active` je odmítnuta databází i běžnou aplikační zapisovací službou.
+- Archivovaný produkt zůstává dohledatelný a zachovává původní identitu i historické vazby. Fyzické mazání produktu/variant zůstává zakázané.
+- Kopie vzniká jako nový koncept s novým ID produktu i variant. Nový kód produktu dostane jedinečný suffix `-copy`; SKU variant jsou nové a EAN se nepřenáší.
+- Přenášejí se překlady a SEO, kategorie, typ, daňová třída, produktové a variantní atributy, osy/kombinace variant, výchozí varianta (zůstává neaktivní), zákaznické volby včetně překladů a aktuálních příplatků, aktuální ceny variant a vazby na sdílená média.
+- Nastavení `track_stock` a `allow_backorder` se přenáší; `quantity_on_hand` i `quantity_reserved` začínají na nule. Cenová historie, skladové pohyby, objednávky, košíky a vztahy k jiným produktům se nikdy nekopírují.
+- Originály a optimalizované deriváty médií se fyzicky neduplikují. Nový produkt získá samostatné produktové vazby na stejné sdílené `media_asset`; deriváty zůstávají vlastnictvím Media knihovny.
+- Systémové texty jsou v cs/en seedované souborem `2026-11-27-101000-seed-catalog-product-lifecycle.sql`.
+
+Integrační test `ProductLifecycleServiceIntegration.phpt` ověřuje nevratnost archivace, deaktivaci variant, nové identity kopie, nové SKU a prázdné EAN, přenos aktuální ceny a skladové politiky při nulových stavech i absenci kopírované cenové a skladové historie. CI run `45993339668` prošel: 89 testů, PHPStan, coding standard a Deptrac. F5-25 čeká na lokální migraci, `check.bat` a ruční ověření v administraci.

@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.27 · 27. 11. 2026
+**Revize:** 1.28 · 27. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -211,3 +211,6 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 
 
 F5-24 přidává systémový klíč `products.editor.error.activation_requirements` v češtině a angličtině. Výchozí hodnoty dodává idempotentní seed `2026-11-27-093500-seed-catalog-product-activation-validation.sql`; validační texty zůstávají výhradně v databázi.
+
+
+F5-25 přidává databázové systémové texty pro nevratnou archivaci produktu a vytvoření nové kopie: `products.lifecycle.archive.*`, `products.lifecycle.copy.*` a `products.lifecycle.error.*`. Výchozí české a anglické hodnoty dodává idempotentní seed `2026-11-27-101000-seed-catalog-product-lifecycle.sql`; runtime texty zůstávají výhradně v databázi.

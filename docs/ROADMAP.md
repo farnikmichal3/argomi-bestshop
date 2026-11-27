@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.119 · 27. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.120 · 27. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -45,10 +45,11 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 | **M4** | F20 (vlna 4: fotokniha, nahrání souboru a předplatné; produkty 14–15) |
 | **M5** | F21 (funkce, na kterých obchodník stojí; průběžně) |
 | **Průběžně** | F16 (výuka) navazuje na hotové fáze |
+| **Každá etapa F** | Po dokončení funkční etapy následuje samostatný milník „Úklid a zkrášlení“: Latte, CSS/SCSS, JavaScript, konzistence UI/UX, responzivita, odstranění mrtvého kódu a opětovné spuštění všech kontrol. Milník je součástí plánované kapacity etapy, nikoliv náhradou za funkční testy. |
 
 ## 2. Přehled stavu
 
-Celkem **557 kroků**: hotovo 199, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 350, zrušeno 7.
+Celkem **560 kroků**: hotovo 199, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 352, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,8 +58,8 @@ Celkem **557 kroků**: hotovo 199, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 39 | 28 | 0 | 0 | 0 | 0 | 11 | 0 |
-| F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
+| F5 | Catalog (vlna 1) | 41 | 28 | 1 | 0 | 0 | 0 | 12 | 0 |
+| F6 | Tax, Pricing, Inventory | 28 | 0 | 0 | 0 | 0 | 0 | 28 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
 | F9 | Orders a Checkout | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
@@ -77,8 +78,9 @@ Celkem **557 kroků**: hotovo 199, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 
 ### v3.120 (27. 11. 2026)
 - Uživatel potvrdil úspěšný lokální `check.bat` i všechna ruční ověření F5-24 v administraci: přímé vytvoření aktivního produktu i aktivace bez aktivní/výchozí aktivní varianty jsou odmítnuty; aktivace s aktivní výchozí variantou projde. F5-24 je HOTOVO. CI run `45975557113` prošel s 88 testy, PHPStan, coding standardem a Deptrac.
-- F5-25 je následující krok: archivace produktu místo přímého mazání; před implementací se prověří současné mazání, vazby a pravidla zachování historie.
-- Souhrn F5: **28 hotovo**, **0 rozpracováno**, **11 plán**. Celkem: **199 hotovo**, **0 rozpracováno**, **1 k úpravě**, **350 plán**, **7 zrušeno**.
+- F5-25 je rozpracováno: implementována nevratná archivace a bezpečné vytvoření nové kopie z archivovaného produktu. Kopie zachovává opakovaně použitelné katalogové údaje a aktuální ceny, ale nedědí EAN, historické obchodní události ani skladové množství. CI run `45993339668` prošel s 89 testy, PHPStan, coding standardem a Deptrac; lokální a browser ověření ještě čeká.
+- Při další aktualizaci roadmapy byly doplněny F5-40 (produktové šablony) a opakovaný milník F5-41/F6-28 „Úklid a zkrášlení“. Přepínač jazyka administrace zůstává ve F12-22.
+- Souhrn F5: **28 hotovo**, **1 rozpracováno**, **12 plán**. Celkem: **199 hotovo**, **1 rozpracováno**, **1 k úpravě**, **352 plán**, **7 zrušeno**.
 
 ### v3.119 (27. 11. 2026)
 
@@ -775,7 +777,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### F5: Catalog (vlna 1)
 
-_Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo produkty 1 až 5._ Hotovo 27 z 39 kroků; 0 rozpracováno; 12 plánováno.
+_Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo produkty 1 až 5._ Hotovo 28 z 41 kroků; 1 rozpracováno; 12 plánováno.
 
 - `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
 - `[HOTOVO]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` — typované neměnné modely a enumy stavů/typů; validace identifikátorů, kódů, SHA-256 hashe a fyzických rozměrů; doménový test bez infrastrukturních závislostí.
@@ -801,7 +803,7 @@ _Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo pr
 - `[HOTOVO]` **F5-22** Admin: knihovna médií, bezpečné nahrávání, přiřazení k produktům/variantám a výběr médií v HugeRTE; soukromé výchozí nastavení, explicitní publikování, veřejné čtení pouze publikovaných derivátů a výběr pouze publikovaných položek. Uživatel potvrdil kompletní ověření hlavního workflow i opraveného prázdného stavu pickeru; zobrazení obrázku v zákaznickém detailu produktu čeká na frontend.
 - `[HOTOVO]` **F5-23** Admin: správa souvisejících a doporučených produktů – veřejné čtecí/zapisovací API, typovaná DTO, transakční přidání/odebrání/řazení a šestá záložka editoru. Kandidáty jsou jiné aktivní produkty; vztahy zůstávají směrové. Uživatel potvrdil migraci, všechny lokální testy i ruční ověření v prohlížeči.
 - `[HOTOVO]` **F5-24** Validace aktivace: nový produkt se nejprve ukládá jako koncept; aktivace vyžaduje alespoň jednu aktivní a právě jednu výchozí aktivní variantu. Ověřeno v CI, lokálně i v administraci.
-- `[PLÁN]` **F5-25** Zákaz přímého mazání: označení produktu jako archivovaný
+- `[ROZDĚLÁNO]` **F5-25** Nevratná archivace a bezpečné kopírování produktu: archivovaný produkt zůstává dohledatelný a historicky zachovaný; nelze jej znovu aktivovat ani upravovat. Z archivovaného produktu lze vytvořit nový koncept s novým ID produktu i variant, novým SKU a bez EAN. Kopírují se překlady, SEO, kategorie, typ, daňová třída, produktové/variantní atributy, osy a kombinace variant, zákaznické volby včetně aktuálních příplatků, aktuální ceny a vazby na sdílená média. Zachová se nastavení sledování skladu a doobjednávek, ale sklad i rezervace začínají na nule. Nekopírují se cenová historie, skladové pohyby, objednávky, košíky, historické vazby ani vztahy k jiným produktům. CI run `45993339668` prošel: 89 testů, PHPStan, coding standard a Deptrac; čeká se na lokální migraci, `check.bat` a ruční ověření administrace.
 - `[HOTOVO]` **F5-26** Oprávnění pro správu katalogu
 - `[PLÁN]` **F5-27** Test: načtení demo produktu 1 – bavlněné tričko (varianty velikost × barva)
 - `[PLÁN]` **F5-28** Test: načtení demo produktu 2 – GaN nabíječka (varianty výkon × počet portů × barva)
@@ -816,10 +818,12 @@ _Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo pr
 - `[HOTOVO]` **F5-37** Admin: bezpečné mazání kategorií — smazat lze pouze kategorii bez podkategorií a přiřazených produktů; databáze vynucuje `ON DELETE RESTRICT`, překlady se odstraní přes FK `ON DELETE CASCADE`; integrační testy, CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-38** Admin: společný `@layout.latte` na AdminLTE 4, responzivní postranní navigace, jednotný vstup JS/CSS a překlady nezávislé na doméně stránky; uživatel potvrdil bezproblémové fungování kompletní administrace v prohlížeči. Tento mezikrok předchází F5-16.
 - `[HOTOVO]` **F5-39** Admin: záložková editace produktu – pět responzivních částí (základní údaje, konfigurace, varianty, obrázky a zákaznické volby); zachovány stávající formuláře, oprávnění, validace i rozepsané hodnoty. Uživatel potvrdil funkčnost v prohlížeči.
+- `[PLÁN]` **F5-40** Produktové šablony: samostatná správa znovupoužitelných produktových předloh a založení nového konceptu s předvyplněnými údaji, variantami, atributy a zákaznickými volbami; obchodník upraví pouze rozdílové údaje (např. výrobce, EAN, cenu a obrázek). Naváže na ověřený mechanismus bezpečného kopírování z F5-25 a po dokončení F6 zohlední ceny/příplatky.
+- `[PLÁN]` **F5-41** Milník „Úklid a zkrášlení“ po F5: audit a sjednocení Latte šablon, CSS/SCSS, JavaScriptu, administračních komponent, responzivity, UX a odstranění nepoužívaného kódu; následně všechny aktivní testy, PHPStan, coding standard a Deptrac.
 
 ### F6: Tax, Pricing, Inventory
 
-_Ceny, daně a skladové hospodářství pro vlnu 1._ Hotovo 0 z 27 kroků.
+_Ceny, daně a skladové hospodářství pro vlnu 1._ Hotovo 0 z 28 kroků.
 
 - `[PLÁN]` **F6-01** Modul `Tax`: struktura, `TaxFacade`
 - `[PLÁN]` **F6-02** Daňové třídy a sazby podle země a data platnosti
@@ -846,6 +850,7 @@ _Ceny, daně a skladové hospodářství pro vlnu 1._ Hotovo 0 z 27 kroků.
 - `[PLÁN]` **F6-23** Testy rezervace a odpisu- `[PLÁN]` **F6-24** Texty modulů (cs, en)
 - `[PLÁN]` **F6-25** Dokumentace modulů Tax, Pricing, Inventory
 - `[PLÁN]` **F6-26** Pricing: zápis `variant_price_history` při každé změně ceny (včetně zdroje změny)- `[PLÁN]` **F6-27** Pricing: nejnižší cena za posledních 30 dní při zobrazení slevy (právní pravidlo, konzultace)
+- `[PLÁN]` **F6-28** Milník „Úklid a zkrášlení“ po F6: audit a sjednocení Latte, CSS/SCSS, JavaScriptu, cenových a skladových administračních workflow, UX a responzivity; úplné opakování automatických kontrol.
 
 ### F7: Cart
 _Košík jako doménový objekt, ceny přes Pricing a Tax._ Hotovo 0 z 16 kroků.

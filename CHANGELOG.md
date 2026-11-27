@@ -16,6 +16,7 @@ Development of the first production release is in progress. No production releas
 - Záložková editace produktu rozdělená do pěti pracovních částí.
 - Administrátorská správa souvisejících produktů: typované vztahy, výběr aktivních produktů, přidávání, odebírání a řazení.
 - Kontrola aktivace produktu: produkt lze aktivovat až po vytvoření alespoň jedné aktivní varianty a nastavení právě jedné výchozí aktivní varianty.
+- Nevratná archivace produktů a vytvoření nového konceptu z archivovaného produktu; kopírují se znovupoužitelné katalogové údaje a aktuální ceny, nikoliv EAN, skladové stavy nebo obchodní historie.
 
 ### Recording rules
 
