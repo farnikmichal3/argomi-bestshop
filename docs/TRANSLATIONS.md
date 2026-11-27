@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.24 · 18. 11. 2026
+**Revize:** 1.25 · 27. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -117,6 +117,7 @@ První potvrzený katalogový systémový klíč je `button.add_to_cart` se zně
 - `MessageCacheInvalidator` je aplikační kontrakt pro invalidaci po úspěšném zápisu. Podporuje invalidaci všech katalogů, jedné domény, jednoho jazyka i jejich průniku.
 - Invalidace používá tagy Nette Cache. Zapisovací operace musí invalidovat až po úspěšném potvrzení změny databáze.
 - Cache se invaliduje po změně jazyků, systémových hodnot nebo vlastních překladů.
+- Verzované SQL seedy se aplikují mimo běžné aplikační zapisovací služby, a proto samy neinvalidují již naplněnou Nette cache. Po migraci, která přidává nové systémové klíče do existující domény/locale, musí nasazovací postup vyčistit aplikační cache (nebo provést odpovídající řízenou invalidaci). Po vyčištění se katalog znovu načte z databáze; platí to i pro klíče výběru médií v doméně Catalog.
 - Výpadek cache nesmí způsobit ztrátu nebo změnu překladových dat.
 
 ### 8.1 CLI diagnostika překladových klíčů
