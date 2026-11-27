@@ -52,6 +52,7 @@ final readonly class ProductAdminDataGridFactory
         );
         if ($canManage) {
             $grid->addAction('edit', 'products.admin.action.edit', 'edit', ['id' => 'id']);
+            $grid->addAction('archive', 'products.lifecycle.archive.action', 'archive', ['id' => 'id']);
         }
 
         $categoryOptions = [];
