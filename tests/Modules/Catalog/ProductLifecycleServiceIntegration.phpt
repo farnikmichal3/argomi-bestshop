@@ -3,8 +3,6 @@ Product lifecycle archives permanently and creates an independent safe draft cop
 --FILE--
 <?php
 
-declare(strict_types=1);
-
 use App\Modules\Catalog\Api\CatalogPermission;
 use App\Modules\Catalog\Application\ProductLifecycleRepository;
 use App\Modules\Catalog\Application\ProductLifecycleService;
