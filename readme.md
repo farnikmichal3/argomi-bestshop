@@ -1,6 +1,6 @@
 # ArgoMi-BestShop
 
-ArgoMi-BestShop je modulární e-shop postavený na PHP 8.3+ a Nette 3.2. Projekt je vyvíjen jako modulární monolit s oddělenými oblastmi Front a Admin, databázovým přístupem přes Nette Database Explorer a SQL migracemi spravovanými Nextras Migrations.
+ArgoMi-BestShop je modulární e-shop postavený na PHP 8.3+ a Nette. Composer deklaruje kompatibilitu od řady 3.2; aktuální lockfile používá hlavní komponenty Nette 3.3.1. Projekt je vyvíjen jako modulární monolit s oddělenými oblastmi Front a Admin, databázovým přístupem přes Nette Database Explorer a SQL migracemi spravovanými Nextras Migrations.
 
 ## Dokumentace
 
