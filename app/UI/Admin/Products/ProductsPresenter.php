@@ -28,6 +28,7 @@ use App\Modules\Catalog\Api\ProductActivationRequirementsNotMet;
 use App\Modules\Catalog\Api\ProductAdminStatus;
 use App\Modules\Catalog\Api\ProductAdminType;
 use App\Modules\Catalog\Api\ProductWriter;
+use App\Modules\Catalog\Api\ProductLifecycleWriter;
 use App\Modules\Tax\Api\TaxClassOptionReader;
 use App\Modules\Translation\Api\TranslationDomain;
 use App\Modules\Translation\Api\TranslatorFactory;
