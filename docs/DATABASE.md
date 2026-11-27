@@ -252,7 +252,7 @@ Zápis do `outbox_message` musí používat stejný databázový connection a st
 ## 9. Známé mezery a navazující práce
 
 - ověřit všechny FK, CHECK a mazací strategie,
-- `[HOTOVO]` vytvořit diagramy schématu podle modulů – viz [schema.md](schema.md), který zachycuje 51 tabulek a 75 fyzických FK podle aktuálních migrací,
+- `[HOTOVO]` vytvořit diagramy schématu podle modulů – viz [schema.md](schema.md), který zachycuje 58 tabulek a 81 fyzických FK podle aktuálních strukturálních migrací,
 - doplnit testy součtů objednávek a snapshotů,
 - dokončit pravidla archivace produktů/variant,
 - doplnit úplné demo snapshoty a další vlny produktů,
