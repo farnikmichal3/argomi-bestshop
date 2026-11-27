@@ -20,16 +20,33 @@ $integration = IntegrationTestBootstrap::boot($rootDir);
 $database = $integration->database;
 $selector = new VariantSelector(new DatabaseVariantSelectionRepository($database));
 
-$tshirt = $selector->select(1, [
-    'color' => ['type' => 'enum', 'value' => 'black'],
-    'size' => ['type' => 'enum', 'value' => 'm'],
-]);
+// Demo tričko má úplnou matici 2 barev × 3 velikostí. Ověříme každou kombinaci.
+$tshirtCombinations = [
+    'TSHIRT-BK-S' => ['color' => 'black', 'size' => 's'],
+    'TSHIRT-BK-M' => ['color' => 'black', 'size' => 'm'],
+    'TSHIRT-BK-L' => ['color' => 'black', 'size' => 'l'],
+    'TSHIRT-WH-S' => ['color' => 'white', 'size' => 's'],
+    'TSHIRT-WH-M' => ['color' => 'white', 'size' => 'm'],
+    'TSHIRT-WH-L' => ['color' => 'white', 'size' => 'l'],
+];
 
-Assert::same(
-    (int) $database->table('product_variant')->where('sku', 'TSHIRT-BK-M')->fetch()->id,
-    $tshirt,
-    'The exact active T-shirt variant must be selected.',
-);
+foreach ($tshirtCombinations as $sku => $values) {
+    $selectedVariantId = $selector->select(1, [
+        'color' => ['type' => 'enum', 'value' => $values['color']],
+        'size' => ['type' => 'enum', 'value' => $values['size']],
+    ]);
+
+    $expectedVariant = $database->table('product_variant')
+        ->where('sku', $sku)
+        ->fetch();
+
+    Assert::notNull($expectedVariant, sprintf('Demo T-shirt variant %s must exist.', $sku));
+    Assert::same(
+        (int) $expectedVariant->id,
+        $selectedVariantId,
+        sprintf('The exact active T-shirt variant %s must be selected.', $sku),
+    );
+}
 
 $cable = $selector->select(2, [
     'c_connectors' => ['type' => 'number', 'value' => '2'],
