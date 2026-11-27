@@ -159,7 +159,7 @@ final readonly class DatabaseProductLifecycleRepository implements ProductLifecy
                 'product_id' => $targetId,
                 'sku' => sprintf('COPY-%d-%d', $targetId, $index + 1),
                 'combination_hash' => $this->string($row->combination_hash, 'product_variant.combination_hash'),
-                'is_default' => 0,
+                'is_default' => $row->is_default,
                 'is_active' => 0,
                 'weight_g' => $row->weight_g,
                 'length_mm' => $row->length_mm,
