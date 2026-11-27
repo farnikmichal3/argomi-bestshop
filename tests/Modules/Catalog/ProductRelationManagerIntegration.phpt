@@ -5,6 +5,10 @@ Product relation service adds, removes and reorders complete directional relatio
 
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Api\ProductRelationKind;
+use App\Modules\Catalog\Infrastructure\Api\ProductRelationCommandApiService;
+use App\Modules\Catalog\Infrastructure\Api\ProductRelationQueryApiService;
+use App\Shared\Domain\Locale\Locale;
 use App\Modules\Catalog\Application\Dto\ProductRelationOrderDto;
 use App\Modules\Catalog\Application\ProductRelationRepository;
 use App\Shared\Application\Transaction\Transaction;
@@ -48,14 +52,26 @@ $managerPermission = new class implements CatalogPermission {
     public function canManage(): bool { return true; }
 };
 $service = new ProductRelationService($repository, $transaction, $managerPermission);
+$writer = new ProductRelationCommandApiService($service);
+$reader = new ProductRelationQueryApiService($repository);
 /** @var Explorer $database */
 $database = $integration->database;
 $pdo = $database->getConnection()->getPdo();
 
 try {
     // Demo produkty 1, 2 a 3 jsou aktivní. Vztahy se zapisují pouze v jednom směru.
-    $service->add(1, 2, ProductRelationType::Accessory, 20);
-    $service->add(1, 3, ProductRelationType::Alternative, 10);
+    $writer->add(1, 2, ProductRelationKind::Accessory);
+    $writer->add(1, 3, ProductRelationKind::Alternative);
+
+    $locale = Locale::fromString('cs');
+    $items = $reader->findForProduct(1, $locale);
+    Assert::same(2, count($items));
+    Assert::same(ProductRelationKind::Accessory, $items[0]->type);
+    Assert::true($items[0]->name !== null);
+    $available = $reader->findAvailableProducts(1, $locale);
+    $availableIds = array_map(static fn ($product): int => $product->id, $available);
+    Assert::false(in_array(1, $availableIds, true));
+    Assert::true(in_array(2, $availableIds, true));
 
     Assert::same(
         2,
@@ -67,9 +83,9 @@ try {
         'Reverse relations must never be created implicitly.',
     );
 
-    $service->reorder(1, [
-        new ProductRelationOrderDto(2, ProductRelationType::Accessory),
-        new ProductRelationOrderDto(3, ProductRelationType::Alternative),
+    $writer->reorder(1, [
+        new \\App\\Modules\\Catalog\\Api\\Dto\\ProductRelationOrder(2, ProductRelationKind::Accessory),
+        new \\App\\Modules\\Catalog\\Api\\Dto\\ProductRelationOrder(3, ProductRelationKind::Alternative),
     ]);
 
     $ordered = $pdo->query(
@@ -91,8 +107,8 @@ try {
         'Nové pořadí musí obsahovat všechny existující vztahy právě jednou.',
     );
 
-    Assert::true($service->remove(1, 2, ProductRelationType::Accessory));
-    Assert::false($service->remove(1, 2, ProductRelationType::Accessory));
+    Assert::true($writer->remove(1, 2, ProductRelationKind::Accessory));
+    Assert::false($writer->remove(1, 2, ProductRelationKind::Accessory));
     Assert::same(
         1,
         (int) $pdo->query('SELECT COUNT(*) FROM product_relation WHERE product_id = 1 AND related_product_id = 3')->fetchColumn(),
