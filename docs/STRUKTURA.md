@@ -562,3 +562,6 @@ Otevřené technické úkoly se záměrně neduplikují v tomto dokumentu. Autor
 
 | 17. 11. 2026 | v4.6: doplněno veřejné API modulu Translation a jednosměrná hranice závislostí; prezentační vrstvy neznají interní implementaci podle F4-08. |
 | 16. 11. 2026 | v4.4: potvrzena implementace persistentní cache katalogů v modulu Translation, dekorátor `CachedMessageStore` a `NetteMessageCacheInvalidator` včetně přesné invalidace kombinace domény a locale podle F4-03. |
+
+
+F5-24 doplňuje veřejnou výjimku `Catalog/Api/ProductActivationRequirementsNotMet`. `ProductWriteService` odmítá přímé vytvoření produktu ve stavu active; produkt se nejprve ukládá jako koncept, protože varianty se vytvářejí až po založení. Přechod do active vyžaduje alespoň jednu aktivní variantu a právě jednu výchozí aktivní variantu. Admin formulář mapuje tuto výjimku na databázovou validační zprávu v cs/en.

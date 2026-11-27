@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.118 · 27. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.119 · 27. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **557 kroků**: hotovo 198, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 351, zrušeno 7.
+Celkem **557 kroků**: hotovo 198, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 350, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **557 kroků**: hotovo 198, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 39 | 27 | 0 | 0 | 0 | 0 | 12 | 0 |
+| F5 | Catalog (vlna 1) | 39 | 27 | 1 | 0 | 0 | 0 | 11 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -74,6 +74,10 @@ Celkem **557 kroků**: hotovo 198, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.119 (27. 11. 2026)
+- F5-24: `ProductWriteService` odmítá vytvořit produkt rovnou jako aktivní (nový produkt se ukládá jako koncept, protože varianty vznikají až po jeho vytvoření). Při aktivaci existujícího produktu vyžaduje alespoň jednu aktivní variantu a právě jednu výchozí aktivní variantu. Pravidlo je v aplikační službě a databázovém adaptéru, nikoli pouze ve formuláři. Admin formulář zobrazuje samostatnou cs/en validační zprávu. Integrační test pokrývá přímé vytvoření aktivního produktu, chybějící variantu, aktivní nevýchozí variantu, neaktivní výchozí variantu i úspěšnou aktivaci. GitHub Actions run `45974538703`: **88 testů**, PHPStan, coding standard a Deptrac úspěšně; lokální `check.bat` a ruční ověření zatím čekají.
+- Souhrn F5: **27 hotovo**, **1 rozpracováno**, **11 plán**. Celkem: **198 hotovo**, **1 rozpracováno**, **1 k úpravě**, **350 plán**, **7 zrušeno**.
 
 ### v3.118 (27. 11. 2026)
 - Uživatel potvrdil úspěšnou lokální migraci, všechny lokální testy a ruční ověření F5-23 v administraci. Přidávání, odebírání i řazení souvisejících produktů funguje a změny zůstávají uložené po opětovném otevření editoru. F5-23 je HOTOVO. Ověření přepínání jazyka administrace se na tento krok nevztahuje; přepínač jazyka rozhraní zůstává výslovně součástí F12-22.
@@ -791,7 +795,7 @@ _Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo pr
 - `[HOTOVO]` **F5-21** Admin: konfigurace voleb zákazníka pro produkt
 - `[HOTOVO]` **F5-22** Admin: knihovna médií, bezpečné nahrávání, přiřazení k produktům/variantám a výběr médií v HugeRTE; soukromé výchozí nastavení, explicitní publikování, veřejné čtení pouze publikovaných derivátů a výběr pouze publikovaných položek. Uživatel potvrdil kompletní ověření hlavního workflow i opraveného prázdného stavu pickeru; zobrazení obrázku v zákaznickém detailu produktu čeká na frontend.
 - `[HOTOVO]` **F5-23** Admin: správa souvisejících a doporučených produktů – veřejné čtecí/zapisovací API, typovaná DTO, transakční přidání/odebrání/řazení a šestá záložka editoru. Kandidáty jsou jiné aktivní produkty; vztahy zůstávají směrové. Uživatel potvrdil migraci, všechny lokální testy i ruční ověření v prohlížeči.
-- `[PLÁN]` **F5-24** Validace: kontrola povinných údajů při aktivaci produktu
+- `[ROZDĚLÁNO]` **F5-24** Validace: kontrola povinných údajů při aktivaci produktu – aktivace vyžaduje alespoň jednu aktivní a právě jednu výchozí aktivní variantu; CI prošlo, čeká lokální ověření
 - `[PLÁN]` **F5-25** Zákaz přímého mazání: označení produktu jako archivovaný
 - `[HOTOVO]` **F5-26** Oprávnění pro správu katalogu
 - `[PLÁN]` **F5-27** Test: načtení demo produktu 1 – bavlněné tričko (varianty velikost × barva)

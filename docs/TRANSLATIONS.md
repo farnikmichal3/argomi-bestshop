@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.26 · 27. 11. 2026
+**Revize:** 1.27 · 27. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -208,3 +208,6 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 - **1.9 · 16. 11. 2026:** zahájena implementace `DatabaseTranslator` a `DatabaseTranslatorFactory`; překladač dostává doménu i locale explicitně, chybějící klíč zatím vrací beze změny a ICU formátování je vyhrazeno pro F4-05.
 - **1.8 · 16. 11. 2026:** dokončena implementace persistentní cache katalogů, dekorátoru `CachedMessageStore` a tagové invalidace včetně přesného průniku domény a locale; ověřeno lokálně i v GitHub Actions.
 
+
+
+F5-24 přidává systémový klíč `products.editor.error.activation_requirements` v češtině a angličtině. Výchozí hodnoty dodává idempotentní seed `2026-11-27-093500-seed-catalog-product-activation-validation.sql`; validační texty zůstávají výhradně v databázi.
