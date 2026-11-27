@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.24 · 28. 11. 2026  
+**Revize:** 4.25 · 28. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 27. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -573,3 +573,6 @@ F5-24 doplňuje veřejnou výjimku `Catalog/Api/ProductActivationRequirementsNot
 
 
 F5-25 přidává veřejné administrační API `Catalog/Api/ProductLifecycleWriter`, aplikační `ProductLifecycleService` a interní `ProductLifecycleRepository`; databázový adaptér `DatabaseProductLifecycleRepository` vytváří archivní kopie transakčně. Admin `ProductsPresenter` obsluhuje potvrzenou archivaci i kopírování z archivovaného záznamu přes `archive.latte`. Nevratnost archivace vynucuje dopředný databázový trigger v `2026-11-27-100000-product-archive-terminal.sql`; migrace `2026-11-27-102000-product-image-derivative-reuse.sql` umožňuje sdílet derivátovou cestu mezi samostatnými produktovými vazbami. Archivace deaktivuje varianty a archivovaný produkt nelze znovu aktivovat. Kopie vzniká jako nový koncept s novými ID/SKU a bez EAN či skladových stavů. Historický seed archivace `2026-11-27-101000-seed-catalog-product-lifecycle.sql` zůstal neměnný; samostatný seed `2026-11-27-103000-seed-catalog-product-copy.sql` dodává texty kopírování. CI run `46077797137` prošel (89 testů, PHPStan, coding standard a Deptrac) a uživatel potvrdil lokální kontroly, migrace i ruční ověření administrace. F5-25 je HOTOVO.
+
+
+F5-27 rozšiřuje `tests/Modules/Catalog/VariantSelectorIntegration.phpt` o úplné ověření výběru všech šesti demo variant bavlněného trička (černá/bílá × S/M/L). Test kontroluje enum hodnoty obou os i přesnou identitu nalezené varianty. Lokalizovaný detail produktu a matice kombinací mají vlastní existující integrační testy. CI run `46081321571` a lokální `check.bat` prošly; počet testovacích souborů se nezměnil.

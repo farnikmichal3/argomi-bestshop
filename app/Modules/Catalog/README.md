@@ -388,3 +388,8 @@ Veřejný administrační kontrakt `Api/ProductLifecycleWriter` nabízí dvě od
 - Systémové texty archivace jsou v cs/en seedované neměnným souborem `2026-11-27-101000-seed-catalog-product-lifecycle.sql`; šest textů kopírování produktu dodává samostatný idempotentní seed `2026-11-27-103000-seed-catalog-product-copy.sql`.
 
 Integrační test `ProductLifecycleServiceIntegration.phpt` ověřuje nevratnost archivace, deaktivaci variant, nové identity kopie, nové SKU a prázdné EAN, přenos aktuální ceny a skladové politiky při nulových stavech, absenci kopírované cenové/skladové historie a sdílení obrazového derivátu bez duplikace fyzického souboru. CI run `46077797137` prošel: 89 testů, PHPStan, coding standard a Deptrac. Uživatel potvrdil úspěšné migrace v obou databázích, `All active checks passed.` z lokálního `check.bat` a funkčnost archivace i kopírování v administraci. F5-25 je HOTOVO.
+
+
+## Ověření demo produktu 1 – bavlněné tričko (F5-27)
+
+`tests/Modules/Catalog/VariantSelectorIntegration.phpt` ověřuje všech šest kombinací os barva a velikost: černá/bílá × S/M/L. Pro každou kombinaci se předají typované enum hodnoty a ověří se přesné ID vrácené varianty. Lokalizované načtení detailu produktu a šestiprvkovou matici pokrývají samostatné integrační testy; testovací sada tak ověřuje detail, matici i skutečný výběr každé varianty. F5-27 nevyžaduje změnu databáze.

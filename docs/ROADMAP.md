@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.121 · 28. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.122 · 28. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -49,7 +49,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **560 kroků**: hotovo 200, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 352, zrušeno 7.
+Celkem **560 kroků**: hotovo 201, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 351, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -58,7 +58,7 @@ Celkem **560 kroků**: hotovo 200, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 41 | 29 | 0 | 0 | 0 | 0 | 12 | 0 |
+| F5 | Catalog (vlna 1) | 41 | 30 | 0 | 0 | 0 | 0 | 11 | 0 |
 | F6 | Tax, Pricing, Inventory | 28 | 0 | 0 | 0 | 0 | 0 | 28 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -75,6 +75,10 @@ Celkem **560 kroků**: hotovo 200, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.122 (28. 11. 2026)
+- Uživatel potvrdil úspěšné GitHub Actions CI i kompletní lokální `check.bat` (`All active checks passed.`) pro F5-27. Test `VariantSelectorIntegration.phpt` nyní ověřuje výběr všech šesti variant demo bavlněného trička: černá/bílá × S/M/L; každá kombinace kontroluje odpovídající enum hodnoty i přesné ID nalezené varianty. Existující testy detailu a matice již pokrývaly lokalizované načtení produktu a šest kombinací, proto šlo o cílené rozšíření testu, nikoliv duplicitní implementaci. CI run `46081321571` prošel; celkový počet testů zůstává 89. F5-27 je HOTOVO.
+- Souhrn F5: **30 hotovo**, **0 rozpracováno**, **11 plán**. Celkem: **201 hotovo**, **0 rozpracováno**, **1 k úpravě**, **351 plán**, **7 zrušeno**.
 
 ### v3.121 (28. 11. 2026)
 - Uživatel potvrdil úspěšné lokální dopředné migrace pro produkční i testovací databázi, `check.bat` (`All active checks passed.`) a úplné ruční ověření F5-25 v administraci. Archivace je nevratná, deaktivuje aktivní varianty a archivovaný produkt zůstává dohledatelný. Vytvoření kopie zakládá nový koncept s novými ID/SKU, bez EAN a skladových stavů; opakovaně použitelné údaje, aktuální ceny a vazby na sdílená média se přenesou. F5-25 je HOTOVO.
@@ -804,7 +808,7 @@ _Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo pr
 - `[HOTOVO]` **F5-24** Validace aktivace: nový produkt se nejprve ukládá jako koncept; aktivace vyžaduje alespoň jednu aktivní a právě jednu výchozí aktivní variantu. Ověřeno v CI, lokálně i v administraci.
 - `[HOTOVO]` **F5-25** Nevratná archivace a bezpečné kopírování produktu: archivovaný produkt zůstává dohledatelný a historicky zachovaný; nelze jej znovu aktivovat ani upravovat. Archivace deaktivuje všechny aktivní varianty. Z archivovaného produktu lze vytvořit nový koncept s novým ID produktu i variant, novým SKU a bez EAN. Kopírují se překlady, SEO, kategorie, typ, daňová třída, produktové/variantní atributy, osy a kombinace variant, zákaznické volby včetně aktuálních příplatků, aktuální ceny a vazby na sdílená média. Zachová se nastavení sledování skladu a doobjednávek, ale sklad i rezervace začínají na nule. Katalogové vazby na obrazové deriváty sdílejí původní soubor; fyzické soubory se neduplikují. Nekopírují se cenová historie, skladové pohyby, objednávky, košíky ani historické vztahy. CI run `46077797137` prošel: 89 testů, PHPStan, coding standard a Deptrac; uživatel potvrdil úspěšné lokální migrace, `check.bat` a ruční ověření administrace.
 - `[HOTOVO]` **F5-26** Oprávnění pro správu katalogu
-- `[PLÁN]` **F5-27** Test: načtení demo produktu 1 – bavlněné tričko (varianty velikost × barva)
+- `[HOTOVO]` **F5-27** Test: načtení demo produktu 1 – bavlněné tričko (varianty velikost × barva); `VariantSelectorIntegration.phpt` ověřuje všech šest kombinací černá/bílá × S/M/L včetně přesné identity nalezené varianty. CI run `46081321571` a lokální `check.bat` prošly.
 - `[PLÁN]` **F5-28** Test: načtení demo produktu 2 – GaN nabíječka (varianty výkon × počet portů × barva)
 - `[PLÁN]` **F5-29** Test: načtení demo produktu 3 – USB-C kabel (varianty délky, konektorů a barvy)
 - `[PLÁN]` **F5-30** Test generování správného hashe kombinace varianty
