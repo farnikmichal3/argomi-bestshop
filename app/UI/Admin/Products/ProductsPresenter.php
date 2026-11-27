@@ -748,13 +748,13 @@ final class ProductsPresenter extends TranslatedPresenter
         $form->setTranslator($translator);
         $positions = $form->addContainer('positions');
         $defaults = [];
-        foreach ($this->productRelations as $relation) {
+        foreach ($this->productRelations as $index => $relation) {
             $key = 'r' . $relation->productId . '_' . $relation->type->value;
             $positions->addInteger($key, 'products.relations.order.position')
                 ->setRequired()
                 ->setHtmlAttribute('class', 'form-control')
                 ->setHtmlAttribute('min', '0');
-            $defaults['positions'][$key] = $relation->sortOrder;
+            $defaults['positions'][$key] = $index;
         }
         $form->setDefaults($defaults);
         $form->addSubmit('submit', 'products.relations.order.submit')
