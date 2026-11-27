@@ -258,6 +258,12 @@ aktuální vztahy zdrojového produktu právě jednou. Částečné pořadí ani
 položky se nepřijímají. Nové pořadí se ukládá jako souvislá řada od nuly. Směrovost
 je zachována a opačný vztah se nikdy nevytváří automaticky.
 
+Administrační editor poskytuje samostatnou záložku pro správu těchto vztahů.
+Přidávat lze pouze jiné aktivní produkty; typ vztahu je explicitní
+(doplněk, alternativa nebo kompatibilní produkt). Ověření dokončení F5-23
+zahrnovalo úspěšné lokální migrace a testy i ruční kontrolu přidávání,
+odebírání, řazení a opětovného načtení v administraci.
+
 ## Generování slugů
 
 Aplikační `SlugService` vytváří ASCII slug z názvu pomocí ICU transliterace,
