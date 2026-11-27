@@ -72,6 +72,7 @@ $presenter = new ProductsPresenter(
     $integration->container->getByType(ProductRelationWriter::class),
     $taxClassOptionReader,
     $productWriter,
+    $integration->container->getByType(ProductLifecycleWriter::class),
     $integration->container->getByType(ProductEditorConfigurationReader::class),
     $integration->container->getByType(ProductConfigurationWriter::class),
     $integration->container->getByType(ProductCustomerOptionReader::class),
