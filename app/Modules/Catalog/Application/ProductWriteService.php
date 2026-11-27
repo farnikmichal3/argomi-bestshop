@@ -54,6 +54,9 @@ final class ProductWriteService implements ProductWriter
         if ($domainStatus === ProductStatus::Active) {
             throw new ProductActivationRequirementsNotMet('Nový produkt musí být nejprve uložen jako koncept, doplněny varianty a teprve poté aktivován.');
         }
+        if ($domainStatus === ProductStatus::Archived) {
+            throw new InvalidArgumentException('Nový produkt nelze vytvořit přímo jako archivovaný.');
+        }
 
         if (!$this->repository->isCodeAvailable($code)) {
             throw new InvalidArgumentException('Kód produktu již existuje.');
@@ -85,6 +88,13 @@ final class ProductWriteService implements ProductWriter
         $domainType = ProductType::from($type->value);
         if ($productId < 1 || !$this->repository->productExists($productId)) {
             throw new InvalidArgumentException('Produkt nebyl nalezen.');
+        }
+        $currentStatus = $this->repository->findStatus($productId);
+        if ($currentStatus === ProductStatus::Archived) {
+            throw new InvalidArgumentException('Archivovaný produkt nelze upravovat ani znovu aktivovat. Vytvořte z něj nový produkt.');
+        }
+        if ($domainStatus === ProductStatus::Archived) {
+            throw new InvalidArgumentException('Archivace se provádí samostatnou nevratnou akcí.');
         }
 
         $code = self::normalizeCode($code);
