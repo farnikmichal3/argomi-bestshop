@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Application;
+namespace App\Modules\Catalog\Application;
 
-use App\\Modules\\Catalog\\Domain\\Product\\ProductStatus;
+use App\Modules\Catalog\Domain\Product\ProductStatus;
 
 interface ProductLifecycleRepository
 {
