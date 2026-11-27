@@ -39,6 +39,17 @@ foreach ($cable->axes as $axis) {
 Assert::notNull($lengthAxis);
 Assert::same(['1', '2'], array_map(static fn ($value): string => (string) $value->value, $lengthAxis->values));
 
+$cableAxisValues = [];
+foreach ($cable->axes as $axis) {
+    $cableAxisValues[$axis->code] = array_map(
+        static fn ($value): string => (string) $value->value,
+        $axis->values,
+    );
+}
+Assert::same(['1', '2'], $cableAxisValues['length_m']);
+Assert::same(['1', '2'], $cableAxisValues['c_connectors']);
+Assert::same(['black', 'white'], $cableAxisValues['color']);
+
 $charger = $reader->findForProduct(3, Locale::fromString('cs'));
 Assert::notNull($charger);
 Assert::count(3, $charger->axes);
