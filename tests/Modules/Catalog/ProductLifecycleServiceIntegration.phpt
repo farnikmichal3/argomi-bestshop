@@ -5,14 +5,14 @@ Product lifecycle archives permanently and creates an independent safe draft cop
 
 declare(strict_types=1);
 
-use App\\Modules\\Catalog\\Api\\CatalogPermission;
-use App\\Modules\\Catalog\\Application\\ProductLifecycleRepository;
-use App\\Modules\\Catalog\\Application\\ProductLifecycleService;
-use App\\Modules\\Catalog\\Domain\\Product\\ProductStatus;
-use App\\Shared\\Application\\Transaction\\Transaction;
-use Nette\\Database\\Explorer;
-use Tester\\Assert;
-use Tests\\Support\\IntegrationTestBootstrap;
+use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Application\ProductLifecycleRepository;
+use App\Modules\Catalog\Application\ProductLifecycleService;
+use App\Modules\Catalog\Domain\Product\ProductStatus;
+use App\Shared\Application\Transaction\Transaction;
+use Nette\Database\Explorer;
+use Tester\Assert;
+use Tests\Support\IntegrationTestBootstrap;
 
 $rootDir = dirname(__DIR__, 3);
 require $rootDir . '/vendor/autoload.php';
