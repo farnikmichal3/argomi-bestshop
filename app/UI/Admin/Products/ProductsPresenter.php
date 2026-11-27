@@ -234,7 +234,6 @@ final class ProductsPresenter extends TranslatedPresenter
         );
         $form = new Form();
         $form->setTranslator($translator);
-        $form->addProtection('products.lifecycle.error.invalid');
         $form->addHidden('productId')->setDefaultValue((string) $this->lifecycleProduct->id);
         $form->addSubmit('confirm', 'products.lifecycle.archive.confirm')
             ->setHtmlAttribute('class', 'btn btn-danger');
