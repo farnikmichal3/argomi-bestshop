@@ -12,9 +12,9 @@ V aktuálním repozitáři je **59 SQL migračních souborů**:
 
 | Skupina | Počet | Význam |
 |---|---:|---|
-| \`structures\` | 20 | Počáteční schéma a všechny dopředné strukturální změny |
+| \`structures\` | 22 | Počáteční schéma a všechny dopředné strukturální změny |
 | \`basic-data\` | 2 | Základní číselníky a referenční data |
-| \`dummy-data\` | 32 | Demo obsah a verzované systémové překlady pro UI |
+| \`dummy-data\` | 35 | Demo obsah a verzované systémové překlady pro UI |
 
 ### Structures (22)
 
