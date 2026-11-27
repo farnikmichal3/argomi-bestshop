@@ -186,7 +186,9 @@ final class ProductsPresenter extends TranslatedPresenter
 
         $statusOptions = [];
         foreach (ProductAdminStatus::cases() as $status) {
-            $statusOptions[$status->value] = 'products.admin.status.' . $status->value;
+            if ($status !== ProductAdminStatus::Archived) {
+                $statusOptions[$status->value] = 'products.admin.status.' . $status->value;
+            }
         }
         $form->addSelect('status', 'products.editor.status', $statusOptions)
             ->setHtmlAttribute('class', 'form-select')
