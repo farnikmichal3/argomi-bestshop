@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.116 · 27. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.117 · 27. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -75,9 +75,13 @@ Celkem **557 kroků**: hotovo 197, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
+### v3.117 (27. 11. 2026)
+- F5-23: hotový první implementační řez administrační správy vztahů produktů; veřejné API, lokalizované DTO, transakční add/remove/reorder, výběr aktivních kandidátů, nová záložka editoru a idempotentní cs/en seed. CI run `45964330897` prošel (88 testů, PHPStan, coding standard, Deptrac). Lokální migrace a ruční ověření zůstávají otevřené.
+- Souhrn F5: **26 hotovo**, **1 rozpracováno**, **12 plán**. Celkem: **197 hotovo**, **1 rozpracováno**, **1 k úpravě**, **351 plán**, **7 zrušeno**.
+
 ### v3.116 (27. 11. 2026)
 - Uživatel potvrdil kompletní ověření F5-22 včetně opraveného prázdného stavu HugeRTE pickeru. F5-22 je HOTOVO; zobrazení vloženého obrázku na veřejném produktovém detailu zůstává návazností na budoucí Front UI.
-- Zahájen F5-23: administrační správa souvisejících a doporučených produktů. Využije existující směrové vztahy a transakční aplikační službu z F5-09; nejprve bude doplněna veřejná hranice Catalog API a následně rozhraní v editoru produktu.
+- F5-23: přidány veřejné Catalog kontrakty `ProductRelationReader`/`ProductRelationWriter`, typované DTO a adaptéry nad existující transakční službou F5-09. Editor produktu má šestou záložku pro přidávání, odebírání a řazení doplňků, alternativ a kompatibilních produktů; kandidáti jsou pouze jiné aktivní produkty. Doplněny cs/en seedy a integrační pokrytí API i načítání kandidátů. GitHub Actions run `45964330897` prošel: 88 testů, PHPStan, coding standard a Deptrac. Čeká se na lokální migraci, `check.bat` a ruční ověření v prohlížeči.
 - Souhrn F5: **26 hotovo**, **1 rozpracováno**, **12 plán**. Celkem: **197 hotovo**, **1 rozpracováno**, **1 k úpravě**, **351 plán**, **7 zrušeno**.
 
 ### v3.115 (27. 11. 2026)
