@@ -30,6 +30,18 @@ final class DatabaseProductWriteRepository implements ProductWriteRepository
         return $this->database->table('product')->where('id', $productId)->fetch() !== null;
     }
 
+    public function findStatus(int $productId): ?ProductStatus
+    {
+        $value = $this->database->table('product')->get($productId)?->status;
+        if ($value === null) {
+            return null;
+        }
+        if (!is_string($value) || ProductStatus::tryFrom($value) === null) {
+            throw new \\UnexpectedValueException('Produkt obsahuje neplatný stav životního cyklu.');
+        }
+        return ProductStatus::from($value);
+    }
+
     public function hasPublishableVariantConfiguration(int $productId): bool
     {
         $variants = $this->database->table('product_variant')
