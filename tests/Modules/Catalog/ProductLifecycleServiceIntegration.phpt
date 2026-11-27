@@ -157,8 +157,8 @@ $copyStock = $database->table('stock_item')
 Assert::notNull($copyStock);
 Assert::same(0, (int) $copyStock->track_stock);
 Assert::same(1, (int) $copyStock->allow_backorder);
-Assert::same('0.000', number_format((float) $copyStock->quantity_on_hand, 3, '.', ''));
-Assert::same('0.000', number_format((float) $copyStock->quantity_reserved, 3, '.', ''));
+Assert::same('0.000', (string) $copyStock->quantity_on_hand);
+Assert::same('0.000', (string) $copyStock->quantity_reserved);
 Assert::same(0, $database->table('variant_price_history')
     ->where('product_variant_id', $copyVariant->id)->count('*'));
 Assert::same(0, $database->table('stock_movement')
