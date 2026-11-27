@@ -60,6 +60,13 @@
                             <span>{_'products.customer_options.title'}</span>
                         </button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="product-tab-relations" data-bs-toggle="tab" data-bs-target="#product-pane-relations" type="button" role="tab" aria-controls="product-pane-relations" aria-selected="false">
+                            <i class="bi bi-diagram-3" aria-hidden="true"></i>
+                            <span>{_'products.relations.title'}</span>
+                            <span class="badge text-bg-secondary">{$productRelations|length}</span>
+                        </button>
+                    </li>
                 </ul>
             </div>
 
@@ -187,6 +194,64 @@
                         </header>
                         <div class="product-editor-panel-body">
                             {control productCustomerOptionsForm}
+                        </div>
+                    </section>
+                </div>
+
+                <div class="tab-pane fade" id="product-pane-relations" role="tabpanel" aria-labelledby="product-tab-relations" tabindex="0">
+                    <section class="product-editor-panel">
+                        <header class="product-editor-panel-header">
+                            <div>
+                                <div class="text-body-secondary small text-uppercase fw-semibold mb-1">Catalog · Product relations</div>
+                                <h3 class="h5 mb-1">{_'products.relations.title'}</h3>
+                                <p class="text-body-secondary small mb-0">{_'products.relations.description'}</p>
+                            </div>
+                        </header>
+                        <div class="product-editor-panel-body">
+                            {if $productRelations === []}
+                                <div class="alert alert-light border mb-4">{_'products.relations.empty'}</div>
+                            {else}
+                                <div class="table-responsive mb-4">
+                                    <table class="table table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>{_'products.relations.list.product'}</th>
+                                                <th>{_'products.relations.list.type'}</th>
+                                                <th>{_'products.relations.list.position'}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {foreach $productRelations as $relation}
+                                                <tr>
+                                                    <td>
+                                                        <strong>{$relation->name ?? $relation->productCode}</strong>
+                                                        <div class="small text-body-secondary">{$relation->productCode}</div>
+                                                    </td>
+                                                    <td><span class="badge text-bg-secondary">{_'products.relations.type.' . $relation->type->value}</span></td>
+                                                    <td>{$relation->sortOrder + 1}</td>
+                                                </tr>
+                                            {/foreach}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="border rounded-3 p-3 mb-4">
+                                    <h4 class="h6 mb-3">{_'products.relations.order.title'}</h4>
+                                    {control productRelationOrderForm}
+                                </div>
+                                <div class="border rounded-3 p-3 mb-4">
+                                    <h4 class="h6 mb-3">{_'products.relations.remove.title'}</h4>
+                                    {control productRelationRemoveForm}
+                                </div>
+                            {/if}
+
+                            {if $productRelationOptions !== []}
+                                <div class="border rounded-3 p-3">
+                                    <h4 class="h6 mb-3">{_'products.relations.add.title'}</h4>
+                                    {control productRelationAddForm}
+                                </div>
+                            {else}
+                                <p class="text-body-secondary mb-0">{_'products.relations.add.no_candidates'}</p>
+                            {/if}
                         </div>
                     </section>
                 </div>
