@@ -16,16 +16,28 @@ Začni v [docs/README.md](docs/README.md). Kanonické dokumenty:
 ## Technologie
 
 - PHP 8.3+
-- Nette 3.2 a Latte 3
+- Nette (Composer constraints `^3.2`, lockfile resolves 3.3.x) a Latte 3
 - MySQL 8.x / InnoDB / utf8mb4
 - Nette Database Explorer
 - Nextras Migrations (SQL)
 - PHPStan level max
 - Nette Tester
 - Sass + esbuild, Bootstrap 5.3.8 + Bootswatch Cosmo 5.3.8
-- Naja 3
+- Naja 3.3.3
+- AdminLTE 4.10.2 + Bootstrap Icons 1.13.2 (Admin)
+- HugeRTE 1.0.15 (lokální WYSIWYG)
+- Ublaboo DataGrid 7.2.0
+- Intervention Image 4.4.0 + GIF driver
+- HTMLPurifier 4.19.1
 
 Vite se nepoužívá. Assety se sestavují vlastními skripty Sass a esbuild.
+
+## Aktuální implementační rozsah
+
+- Nejucelenější implementovanou oblastí je Catalog v administraci: kategorie, produkty, atributy, varianty, zákaznické volby a mediální vazby.
+- Media poskytuje soukromou knihovnu, bezpečné uploady a explicitní publikování veřejných derivátů.
+- Identity poskytuje základní administrátorské přihlášení; nejde o kompletní RBAC/ACL.
+- Veřejný produktový frontend, košík a checkout nejsou dokončené. Přítomnost jejich adresářů nebo databázových tabulek neznamená hotové uživatelské workflow.
 
 ## Vývojové prostředí
 
