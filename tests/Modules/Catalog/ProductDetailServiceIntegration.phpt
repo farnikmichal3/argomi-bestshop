@@ -86,6 +86,43 @@ Assert::notNull($englishCharger);
 Assert::same('GaN charger', $englishCharger->translation?->name);
 Assert::count(4, $englishCharger->variants);
 
+$cable = $service->getById(2, Locale::fromString('cs'));
+Assert::notNull($cable);
+Assert::same(2, $cable->product->id);
+Assert::same('USB-C kabel', $cable->translation?->name);
+Assert::count(5, $cable->variants);
+$cableSkus = array_map(static fn ($variant): string => $variant->sku, $cable->variants);
+sort($cableSkus, SORT_STRING);
+Assert::same(
+    ['CABLE-CA-1M-BK', 'CABLE-CA-2M-BK', 'CABLE-CC-1M-BK', 'CABLE-CC-2M-BK', 'CABLE-CC-2M-WH'],
+    $cableSkus,
+);
+
+$defaultCableVariant = $cable->variants[0];
+Assert::same('CABLE-CC-1M-BK', $defaultCableVariant->sku);
+Assert::count(3, $defaultCableVariant->attributeValues);
+$cableAttributes = [];
+foreach ($defaultCableVariant->attributeValues as $value) {
+    $cableAttributes[$value->code] = $value;
+}
+Assert::same('Délka', $cableAttributes['length_m']->name);
+Assert::same('Počet konektorů USB-C', $cableAttributes['c_connectors']->name);
+Assert::same('Barva', $cableAttributes['color']->name);
+Assert::same('Černá', $cableAttributes['color']->label);
+
+$englishCable = $service->getById(2, Locale::fromString('en'));
+Assert::notNull($englishCable);
+Assert::same('USB-C cable', $englishCable->translation?->name);
+Assert::count(5, $englishCable->variants);
+$englishCableAttributes = [];
+foreach ($englishCable->variants[0]->attributeValues as $value) {
+    $englishCableAttributes[$value->code] = $value;
+}
+Assert::same('Length', $englishCableAttributes['length_m']->name);
+Assert::same('Number of USB-C connectors', $englishCableAttributes['c_connectors']->name);
+Assert::same('Color', $englishCableAttributes['color']->name);
+Assert::same('Black', $englishCableAttributes['color']->label);
+
 Assert::same(null, $service->getById(PHP_INT_MAX, Locale::fromString('cs')));
 Assert::exception(
     static fn () => $service->getById(0, Locale::fromString('cs')),
