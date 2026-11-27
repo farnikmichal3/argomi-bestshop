@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Infrastructure\\Persistence;
+namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\\Modules\\Catalog\\Application\\ProductLifecycleRepository;
-use App\\Modules\\Catalog\\Domain\\Product\\ProductStatus;
-use Nette\\Database\\Explorer;
-use Nette\\Database\\Table\\ActiveRow;
+use App\Modules\Catalog\Application\ProductLifecycleRepository;
+use App\Modules\Catalog\Domain\Product\ProductStatus;
+use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
 use UnexpectedValueException;
 
 /**
