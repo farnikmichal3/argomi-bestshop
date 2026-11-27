@@ -119,7 +119,7 @@ $copyVariant = $database->table('product_variant')->where('product_id', $copyId)
 Assert::notNull($copyVariant);
 Assert::notSame($sourceVariantId, (int) $copyVariant->id);
 Assert::same(0, (int) $copyVariant->is_active);
-Assert::same(0, (int) $copyVariant->is_default);
+Assert::same(1, (int) $copyVariant->is_default);
 Assert::null($copyVariant->ean);
 Assert::contains('COPY-' . $copyId . '-', $copyVariant->sku);
 Assert::same($sourceVariant->combination_hash, $copyVariant->combination_hash);
