@@ -182,6 +182,46 @@ final class ProductsPresenter extends TranslatedPresenter
         $this->template->isArchived = $this->lifecycleProduct->status === ProductAdminStatus::Archived->value;
     }
 
+    protected function createComponentProductCopyForm(): Form
+    {
+        if (!$this->catalogPermission->canManage() || $this->lifecycleProduct === null
+            || $this->lifecycleProduct->status !== ProductAdminStatus::Archived->value) {
+            throw new ForbiddenRequestException();
+        }
+
+        $translator = $this->translatorFactory->createTranslator(
+            TranslationDomain::Catalog,
+            $this->localeProvider->getDefault(),
+        );
+        $form = new Form();
+        $form->setTranslator($translator);
+        $form->addProtection('products.lifecycle.error.invalid');
+        $form->addHidden('productId')->setDefaultValue((string) $this->lifecycleProduct->id);
+        $form->addSubmit('createCopy', 'products.lifecycle.copy.confirm')
+            ->setHtmlAttribute('class', 'btn btn-primary');
+
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
+            if (!$this->catalogPermission->canManage() || $this->lifecycleProduct === null
+                || $this->lifecycleProduct->status !== ProductAdminStatus::Archived->value
+                || !is_string($values['productId'] ?? null)
+                || (int) $values['productId'] !== $this->lifecycleProduct->id) {
+                throw new ForbiddenRequestException();
+            }
+
+            try {
+                $newProductId = $this->productLifecycleWriter->createCopyFromArchived($this->lifecycleProduct->id);
+            } catch (InvalidArgumentException) {
+                $form->addError($translator->translate('products.lifecycle.error.invalid'));
+                return;
+            }
+
+            $this->flashMessage($translator->translate('products.lifecycle.copy.success'), 'success');
+            $this->redirect('edit', $newProductId);
+        };
+
+        return $form;
+    }
+
     protected function createComponentProductArchiveForm(): Form
     {
         if (!$this->catalogPermission->canManage() || $this->lifecycleProduct === null
