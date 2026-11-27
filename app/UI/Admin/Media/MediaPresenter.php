@@ -241,7 +241,6 @@ final class MediaPresenter extends TranslatedPresenter
 
         $form = new Form();
         $form->setTranslator($translator);
-        $form->addProtection('media.publication.error.protection');
         $form->addSelect('mediaAssetId', 'media.publication.asset', $assetOptions)
             ->setRequired('media.publication.error.required')
             ->setHtmlAttribute('class', 'form-select');
