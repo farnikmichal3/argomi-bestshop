@@ -78,7 +78,7 @@ Celkem **560 kroků**: hotovo 199, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 
 ### v3.120 (27. 11. 2026)
 - Uživatel potvrdil úspěšný lokální `check.bat` i všechna ruční ověření F5-24 v administraci: přímé vytvoření aktivního produktu i aktivace bez aktivní/výchozí aktivní varianty jsou odmítnuty; aktivace s aktivní výchozí variantou projde. F5-24 je HOTOVO. CI run `45975557113` prošel s 88 testy, PHPStan, coding standardem a Deptrac.
-- F5-25 je rozpracováno: implementována nevratná archivace a bezpečné vytvoření nové kopie z archivovaného produktu. Kopie zachovává opakovaně použitelné katalogové údaje a aktuální ceny, ale nedědí EAN, historické obchodní události ani skladové množství. CI run `45993339668` prošel s 89 testy, PHPStan, coding standardem a Deptrac; lokální a browser ověření ještě čeká.
+- F5-25 je rozpracováno: implementována nevratná archivace a bezpečné vytvoření nové kopie z archivovaného produktu. Kopie zachovává opakovaně použitelné katalogové údaje a aktuální ceny, ale nedědí EAN, historické obchodní události ani skladové množství. CI run `45994266889` prošel s 89 testy, PHPStan, coding standardem a Deptrac; lokální a browser ověření ještě čeká.
 - Při další aktualizaci roadmapy byly doplněny F5-40 (produktové šablony) a opakovaný milník F5-41/F6-28 „Úklid a zkrášlení“. Přepínač jazyka administrace zůstává ve F12-22.
 - Souhrn F5: **28 hotovo**, **1 rozpracováno**, **12 plán**. Celkem: **199 hotovo**, **1 rozpracováno**, **1 k úpravě**, **352 plán**, **7 zrušeno**.
 
