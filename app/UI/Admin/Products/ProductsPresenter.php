@@ -47,6 +47,8 @@ final class ProductsPresenter extends TranslatedPresenter
 
     private ?ProductEditorData $editData = null;
 
+    private ?ProductEditorData $lifecycleProduct = null;
+
     private bool $creating = false;
 
     private ?ProductEditorConfigurationData $configurationData = null;
@@ -79,6 +81,7 @@ final class ProductsPresenter extends TranslatedPresenter
         private readonly ProductRelationWriter $productRelationWriter,
         private readonly TaxClassOptionReader $taxClassOptionReader,
         private readonly ProductWriter $productWriter,
+        private readonly ProductLifecycleWriter $productLifecycleWriter,
         private readonly ProductEditorConfigurationReader $productEditorConfigurationReader,
         private readonly ProductConfigurationWriter $productConfigurationWriter,
         private readonly ProductCustomerOptionReader $productCustomerOptionReader,
@@ -151,6 +154,67 @@ final class ProductsPresenter extends TranslatedPresenter
         $this->template->productRelationOptions = $this->productRelationOptions;
         $this->template->isCreate = false;
         $this->template->product = $this->editData;
+    }
+
+    public function actionArchive(int $id): void
+    {
+        if (!$this->catalogPermission->canManage()) {
+            throw new ForbiddenRequestException();
+        }
+
+        $this->lifecycleProduct = $this->productEditorReader->findForEdit($id);
+        if ($this->lifecycleProduct === null) {
+            $this->flashMessage(
+                $this->translatorFactory->createTranslator(TranslationDomain::Catalog, $this->localeProvider->getDefault())
+                    ->translate('products.lifecycle.error.not_found'),
+                'warning',
+            );
+            $this->redirect('default');
+        }
+
+        $localeCode = $this->resolveLocale()->getCode();
+        $this->template->product = $this->lifecycleProduct;
+        $this->template->productName = $this->lifecycleProduct->translations[$localeCode]['name'] ?? $this->lifecycleProduct->code;
+        $this->template->isArchived = $this->lifecycleProduct->status === ProductAdminStatus::Archived->value;
+    }
+
+    protected function createComponentProductArchiveForm(): Form
+    {
+        if (!$this->catalogPermission->canManage() || $this->lifecycleProduct === null
+            || $this->lifecycleProduct->status === ProductAdminStatus::Archived->value) {
+            throw new ForbiddenRequestException();
+        }
+
+        $translator = $this->translatorFactory->createTranslator(
+            TranslationDomain::Catalog,
+            $this->localeProvider->getDefault(),
+        );
+        $form = new Form();
+        $form->setTranslator($translator);
+        $form->addProtection('products.lifecycle.error.invalid');
+        $form->addHidden('productId')->setDefaultValue((string) $this->lifecycleProduct->id);
+        $form->addSubmit('confirm', 'products.lifecycle.archive.confirm')
+            ->setHtmlAttribute('class', 'btn btn-danger');
+
+        $form->onSuccess[] = function (Form $form, array $values) use ($translator): void {
+            if (!$this->catalogPermission->canManage() || $this->lifecycleProduct === null
+                || !is_string($values['productId'] ?? null)
+                || (int) $values['productId'] !== $this->lifecycleProduct->id) {
+                throw new ForbiddenRequestException();
+            }
+
+            try {
+                $this->productLifecycleWriter->archive($this->lifecycleProduct->id);
+            } catch (InvalidArgumentException) {
+                $form->addError($translator->translate('products.lifecycle.error.invalid'));
+                return;
+            }
+
+            $this->flashMessage($translator->translate('products.lifecycle.archive.success'), 'success');
+            $this->redirect('default');
+        };
+
+        return $form;
     }
 
     protected function createComponentProductsGrid(string $name): Control
