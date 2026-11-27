@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **557 kroků**: hotovo 195, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 353, zrušeno 7.
+Celkem **557 kroků**: hotovo 197, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 352, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -79,7 +79,7 @@ Celkem **557 kroků**: hotovo 195, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 - F5-22 a F5-39 byly uživatelem ověřeny v lokálním prostředí i v prohlížeči. F5-22 je dokončeno pro administrační knihovnu a publikování médií; zobrazení vloženého obrázku na veřejné produktové stránce zůstává návazností na dosud neimplementovaný frontend (nejde o chybu F5-22).
 - Mediální položky jsou neveřejné ve výchozím stavu. Veřejný endpoint zpřístupňuje pouze explicitně publikované odvozené varianty; HugeRTE picker nabízí pouze publikované položky. Překlady pickeru jsou v `catalog_message_translation` a byly ověřeny po vyčištění Nette cache.
 - F5-39: dokončena a ověřena záložková editace produktu v pěti částech. CI, dopředné migrace a celý lokální `check.bat` uživatel potvrdil jako úspěšné.
-- Souhrn F5: **26 hotovo**, **0 rozděláno**, **13 plán**. Celkem: **195 hotovo**, **0 rozděláno**, **1 k úpravě**, **353 plán**, **7 zrušeno**.
+- Souhrn F5: **26 hotovo**, **0 rozděláno**, **13 plán**. Celkem: **197 hotovo**, **0 rozděláno**, **1 k úpravě**, **352 plán**, **7 zrušeno**.
 
 ### v3.113 (25. 11. 2026)
 - Uživatel potvrdil lokální ověření dynamického načítání ALT textu a pořadí při změně vybraného obrázku; příčinou chybějící reakce byl neaktuální zkompilovaný JavaScript. F5-22 pokračuje podle původního rozsahu.
