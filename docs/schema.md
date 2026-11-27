@@ -25,7 +25,7 @@ Schéma obsahuje **58 tabulek** a **81 cizích klíčů** po započtení všech 
 | Translation | 1 | Společný jazykový katalog a překladová infrastruktura. |
 | Identity | 3 | Administrátorské účty, role a jejich vazby. |
 | Media | 2 | Mediální položky a jejich obrazové deriváty. |
-| Admin | 1 | Systémové texty administrační domény.
+| Admin | 1 | Systémové texty administrační domény. |
 | Shared | 1 | Technická tabulka Transactional Outbox; nese volitelnou vazbu na objednávku pro ochranu demo dat. |
 
 ## 2. Význam tabulek a datové invarianty
@@ -82,7 +82,7 @@ Cizí klíče chrání referenční integritu. Volba mazací akce vyjadřuje ži
 
 Závazné zvláštní případy:
 
-- Všech 15 sloupců `locale` odkazuje na `language(code)`. Povinné locale v překladových tabulkách (`unit_translation`, `catalog_message_translation`, `cart_message_translation`, `checkout_message_translation`, `product_translation`, `category_translation`, `attribute_translation`, `attribute_value_translation`, `product_option_translation`, `product_option_value_translation`, `shipping_method_translation` a `payment_method_translation`) používá `ON DELETE RESTRICT`, takže jazyk nelze odstranit, dokud existují jeho překlady. `cart.locale` a `shop_order.locale` rovněž používají `RESTRICT`. Volitelné `customer.locale` používá `ON DELETE SET NULL`; odstranění jazyka tedy zákazníka zachová a pouze zruší jeho preferované locale.
+- Všech 16 sloupců `locale` odkazuje na `language(code)`. Povinné locale v překladových tabulkách (`unit_translation`, `catalog_message_translation`, `cart_message_translation`, `checkout_message_translation`, `admin_message_translation`, `product_translation`, `category_translation`, `attribute_translation`, `attribute_value_translation`, `product_option_translation`, `product_option_value_translation`, `shipping_method_translation` a `payment_method_translation`) používá `ON DELETE RESTRICT`, takže jazyk nelze odstranit, dokud existují jeho překlady. `cart.locale` a `shop_order.locale` rovněž používají `RESTRICT`. Volitelné `customer.locale` používá `ON DELETE SET NULL`; odstranění jazyka tedy zákazníka zachová a pouze zruší jeho preferované locale.
 
 - `product_variant_attribute_value` → `product_variant_axis`: `RESTRICT`. Osa se nesmí odstranit, dokud je použita variantou.
 - `product_variant_attribute_value` → `attribute_value`: `RESTRICT`. Použitá enum hodnota se nesmí odstranit. Její překlady zůstávají závislými lokalizovanými daty a mohou být odstraněny kaskádou až po povoleném odstranění samotné hodnoty.
