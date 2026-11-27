@@ -27,6 +27,7 @@ První čtecí řez katalogu již obsahuje:
 - `Infrastructure/Persistence/DatabaseProductRepository` – implementaci přes Nette Database Explorer včetně stránkovaného výpisu aktivních produktů přímo zařazených do kategorie; podporuje řazení podle pozice v kategorii, kódu a data vytvoření;
 - `Application/ProductDetailService` a `ProductDetailRepository` – lokalizovaný detail aktivního produktu; read model obsahuje překlad produktu, aktivní varianty s lokalizovanými hodnotami os, obrázky, produktové atributy, zákaznické volby včetně hodnot a směrové vztahy k dalším aktivním produktům; databázový adaptér načítá související data dávkově a nepoužívá N+1 dotazy;
 - `Application/ProductRelationRepository` a `ProductRelationService` – lokalizované čtení i transakční správa směrových vztahů; přidání vyžaduje dva aktivní různé produkty, odebrání cílí na přesný typ vztahu a přeřazení přijímá úplný seznam bez duplicit; databázová unikátnost zůstává poslední ochranou proti duplicitám; typy (`accessory`, `alternative`, `compatible`) jsou reprezentovány enumem a opačný směr se nikdy nevytváří automaticky;
+- `Api/ProductRelationReader` a `ProductRelationWriter` – veřejná hranice pro administrační správu vztahů; veřejné DTO oddělují UI od interní aplikační vrstvy. Reader poskytuje lokalizované existující vztahy a aktivní kandidátní produkty; writer deleguje přidání, odebrání a úplné přeřazení do transakční `ProductRelationService`.
 - `Domain/Variant/VariantCombinationHash` – deterministickou kanonizaci a SHA-256 hash kombinace variant.
 
 Repozitář mapuje databázové řádky na DTO uvnitř persistence vrstvy. Časové údaje převádí do UTC.
@@ -41,6 +42,10 @@ a datum vytvoření nejnovější/nejstarší. Řazení je typované přes Produ
 takže uživatelský vstup nikdy netvoří SQL identifikátor. Neaktivní kategorie
 ani neaktivní produkty se do výpisu nedostanou. Výpis zahrnuje pouze přímé
 přiřazení produktu do kategorie, nikoli automaticky její potomky.
+
+## Administrační správa souvisejících produktů (F5-23)
+
+Editor produktu obsahuje samostatnou záložku Související produkty. Veřejné kontrakty `ProductRelationReader` a `ProductRelationWriter` zpřístupňují UI pouze typovaná DTO a enum `ProductRelationKind`; interní aplikační služba ani databázové řádky neopouštějí modul. Lze přidávat, odebírat a kompletně přeřazovat směrové vztahy typu doplněk, alternativa a kompatibilní produkt. Kandidáty tvoří pouze jiné aktivní produkty; duplicitní vazbu odmítá aplikační vrstva i unikátní databázový index. Přesun pořadí posílá úplný seznam vztahů a probíhá transakčně. Opačný vztah se automaticky nevytváří.
 
 ## Výběr médií v HugeRTE (F5-22)
 
