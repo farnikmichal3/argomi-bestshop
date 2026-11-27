@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.113 · 25. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.114 · 27. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **557 kroků**: hotovo 194, rozděláno 2, k úpravě 1, rozhodnout 0, blokováno 0, plán 353, zrušeno 7.
+Celkem **557 kroků**: hotovo 195, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 353, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **557 kroků**: hotovo 194, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 39 | 23 | 2 | 0 | 0 | 0 | 14 | 0 |
+| F5 | Catalog (vlna 1) | 39 | 26 | 0 | 0 | 0 | 0 | 13 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -74,6 +74,12 @@ Celkem **557 kroků**: hotovo 194, rozděláno 2, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.114 (27. 11. 2026)
+- F5-22 a F5-39 byly uživatelem ověřeny v lokálním prostředí i v prohlížeči. F5-22 je dokončeno pro administrační knihovnu a publikování médií; zobrazení vloženého obrázku na veřejné produktové stránce zůstává návazností na dosud neimplementovaný frontend (nejde o chybu F5-22).
+- Mediální položky jsou neveřejné ve výchozím stavu. Veřejný endpoint zpřístupňuje pouze explicitně publikované odvozené varianty; HugeRTE picker nabízí pouze publikované položky. Překlady pickeru jsou v `catalog_message_translation` a byly ověřeny po vyčištění Nette cache.
+- F5-39: dokončena a ověřena záložková editace produktu v pěti částech. CI, dopředné migrace a celý lokální `check.bat` uživatel potvrdil jako úspěšné.
+- Souhrn F5: **26 hotovo**, **0 rozděláno**, **13 plán**. Celkem: **195 hotovo**, **0 rozděláno**, **1 k úpravě**, **353 plán**, **7 zrušeno**.
 
 ### v3.113 (25. 11. 2026)
 - Uživatel potvrdil lokální ověření dynamického načítání ALT textu a pořadí při změně vybraného obrázku; příčinou chybějící reakce byl neaktuální zkompilovaný JavaScript. F5-22 pokračuje podle původního rozsahu.
@@ -747,7 +753,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### F5: Catalog (vlna 1)
 
-_Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1 až 5._ Hotovo 23 z 38 kroků; 15 plánováno.
+_Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo produkty 1 až 5._ Hotovo 26 z 39 kroků; 13 plánováno.
 
 - `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
 - `[HOTOVO]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` — typované neměnné modely a enumy stavů/typů; validace identifikátorů, kódů, SHA-256 hashe a fyzických rozměrů; doménový test bez infrastrukturních závislostí.
@@ -770,7 +776,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[HOTOVO]` **F5-19** Admin: správa atributů a jejich hodnot — CRUD atributů, překlady pro aktivní jazyky, typy text/number/enum/bool, měrná jednotka pouze pro number a transakční správu lokalizovaných enum hodnot; ochrana používaných os a hodnot variant.
 - `[HOTOVO]` **F5-20** Admin: přiřazení atributů k produktu, výběr a řazení os variant, profesionální karta editoru produktu, HugeRTE pro lokalizované dlouhé popisy a serverová sanitizace HTML; příprava napojení na Media modul bez uploadu v této fázi.
 - `[HOTOVO]` **F5-21** Admin: konfigurace voleb zákazníka pro produkt
-- `[ROZDĚLÁNO]` **F5-22** Admin: knihovna médií, bezpečné nahrávání, přiřazení k produktům/variantám a výběr médií v HugeRTE
+- `[HOTOVO]` **F5-22** Admin: knihovna médií, bezpečné nahrávání, přiřazení k produktům/variantám a výběr médií v HugeRTE; soukromé výchozí nastavení, explicitní publikování, veřejné čtení pouze publikovaných derivátů a výběr pouze publikovaných položek. CI, migrace, `check.bat` i ruční ověření v prohlížeči potvrzeny. Zobrazení obrázku v zákaznickém detailu produktu čeká na frontend.
 - `[PLÁN]` **F5-23** Admin: správa souvisejících a doporučených produktů
 - `[PLÁN]` **F5-24** Validace: kontrola povinných údajů při aktivaci produktu
 - `[PLÁN]` **F5-25** Zákaz přímého mazání: označení produktu jako archivovaný
@@ -787,7 +793,7 @@ _Kategorie, produkty, varianty, atributy a volby zákazníka pro demo produkty 1
 - `[PLÁN]` **F5-36** Test: načtení demo produktu 5 – hrnek s vlastním potiskem (zákaznické volby a příplatky)
 - `[HOTOVO]` **F5-37** Admin: bezpečné mazání kategorií — smazat lze pouze kategorii bez podkategorií a přiřazených produktů; databáze vynucuje `ON DELETE RESTRICT`, překlady se odstraní přes FK `ON DELETE CASCADE`; integrační testy, CI i lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-38** Admin: společný `@layout.latte` na AdminLTE 4, responzivní postranní navigace, jednotný vstup JS/CSS a překlady nezávislé na doméně stránky; uživatel potvrdil bezproblémové fungování kompletní administrace v prohlížeči. Tento mezikrok předchází F5-16.
-- `[ROZDĚLÁNO]` **F5-39** Admin: záložková editace produktu – rozdělení editoru do responzivních částí se zachováním stávajících formulářů, oprávnění, validace a rozepsaných hodnot.
+- `[HOTOVO]` **F5-39** Admin: záložková editace produktu – pět responzivních částí (základní údaje, konfigurace, varianty, obrázky a zákaznické volby); zachovány stávající formuláře, oprávnění, validace i rozepsané hodnoty. Uživatel potvrdil funkčnost v prohlížeči.
 
 ### F6: Tax, Pricing, Inventory
 
