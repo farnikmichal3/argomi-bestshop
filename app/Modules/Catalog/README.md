@@ -390,6 +390,16 @@ Veřejný administrační kontrakt `Api/ProductLifecycleWriter` nabízí dvě od
 Integrační test `ProductLifecycleServiceIntegration.phpt` ověřuje nevratnost archivace, deaktivaci variant, nové identity kopie, nové SKU a prázdné EAN, přenos aktuální ceny a skladové politiky při nulových stavech, absenci kopírované cenové/skladové historie a sdílení obrazového derivátu bez duplikace fyzického souboru. CI run `46077797137` prošel: 89 testů, PHPStan, coding standard a Deptrac. Uživatel potvrdil úspěšné migrace v obou databázích, `All active checks passed.` z lokálního `check.bat` a funkčnost archivace i kopírování v administraci. F5-25 je HOTOVO.
 
 
+## Ověření demo produktu 2 a 3 – GaN nabíječka a USB-C kabel (F5-28, F5-29)
+
+Integrační testy načtení detailu, matice variant a výběru variant ověřují tři reprezentativní demo produkty proti skutečným seed datům. Pořadové číslo demo produktu v roadmapě není databázové ID: tričko je `product.id = 1`, USB-C kabel `product.id = 2` a GaN nabíječka `product.id = 3`.
+
+- **GaN nabíječka:** tři osy výkon (65/100 W), počet portů (1/2/3) a barva (černá/bílá); z 12 možných kombinací existují čtyři SKU. Výběr testuje každou existující variantu a odmítá osm chybějících kombinací.
+- **USB-C kabel:** tři osy délka (1/2 m), počet konektorů USB-C (1/2) a barva (černá/bílá); z osmi možných kombinací existuje pět SKU. Výběr testuje každé SKU a odmítá tři chybějící kombinace.
+- Detail obou produktů se načítá v češtině i angličtině a kontroluje lokalizované názvy atributů a enum hodnot. Matice ověřuje celé domény os, nikoliv pouze hodnoty přítomné v jedné variantě.
+
+Testy rozšiřují existující soubory `VariantSelectorIntegration.phpt`, `ProductVariantMatrixIntegration.phpt` a `ProductDetailServiceIntegration.phpt`; počet testovacích souborů se nemění. Kroky nevyžadují databázovou migraci.
+
 ## Ověření demo produktu 1 – bavlněné tričko (F5-27)
 
 `tests/Modules/Catalog/VariantSelectorIntegration.phpt` ověřuje všech šest kombinací os barva a velikost: černá/bílá × S/M/L. Pro každou kombinaci se předají typované enum hodnoty a ověří se přesné ID vrácené varianty. Lokalizované načtení detailu produktu a šestiprvkovou matici pokrývají samostatné integrační testy; testovací sada tak ověřuje detail, matici i skutečný výběr každé varianty. F5-27 nevyžaduje změnu databáze.
