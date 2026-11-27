@@ -1,0 +1,26 @@
+{block title}{_'products.lifecycle.archive.title'}{/block}
+
+{block content}
+<div class="container-fluid py-3">
+    <section class="card border-warning">
+        <header class="card-header">
+            <h2 class="h5 mb-0">{_'products.lifecycle.archive.title'}</h2>
+        </header>
+        <div class="card-body">
+            <p class="mb-2">
+                <strong>{$productName}</strong>
+                <span class="text-body-secondary">({$product->code})</span>
+            </p>
+            {if $isArchived}
+                <div class="alert alert-secondary mb-0">{_'products.lifecycle.archive.already'}</div>
+            {else}
+                <div class="alert alert-warning">{_'products.lifecycle.archive.warning'}</div>
+                {control productArchiveForm}
+            {/if}
+            <a class="btn btn-outline-secondary mt-3" n:href="default">
+                <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>{_'products.editor.cancel'}
+            </a>
+        </div>
+    </section>
+</div>
+{/block}
