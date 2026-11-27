@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.25 · 27. 11. 2026
+**Revize:** 1.26 · 27. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -107,6 +107,8 @@ Import znamená databázovou operaci, nikoliv načítání textových katalogů:
 - SQL soubory smějí obsahovat výchozí hodnoty, ale nejsou runtime úložištěm. Runtime překladač čte texty výhradně z databáze; souborový fallback neexistuje.
 
 První potvrzený katalogový systémový klíč je `button.add_to_cart` se zněními `cs` = „Přidat do košíku“ a `en` = „Add to cart“. Vlastníkem je Catalog. Seed `2026-11-17-140000-seed-catalog-add-to-cart.sql` vkládá oba jazykové řádky do `catalog_message_translation`; při existujícím klíči ponechá celý řádek beze změny. Ostatní klíče se přidávají až po definování skutečných stabilních klíčů a zdrojových znění v příslušných modulech. Testovací klíče smějí vznikat pouze v integračních testech a jejich transakce se vždy vrací zpět.
+
+F5-23 přidává systémové texty administrační záložky souvisejících produktů do stejné vlastnické domény Catalog. Seed `2026-11-25-190000-seed-catalog-product-relations-admin.sql` dodává české a anglické znění typů vztahů, formulářů, stavových hlášek a validace; používá `ON DUPLICATE KEY UPDATE id = id` a nepřepisuje existující ani vlastní překlady.
 
 ## 8. Cache a diagnostika
 
