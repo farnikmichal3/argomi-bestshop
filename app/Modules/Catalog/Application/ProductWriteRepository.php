@@ -14,6 +14,8 @@ interface ProductWriteRepository
 
     public function productExists(int $productId): bool;
 
+    public function findStatus(int $productId): ?ProductStatus;
+
     /** Produkt má alespoň jednu aktivní variantu a právě jednu z nich označenou jako výchozí. */
     public function hasPublishableVariantConfiguration(int $productId): bool;
 
