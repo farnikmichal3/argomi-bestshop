@@ -1,42 +1,113 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 2.3 · 24. 11. 2026  
+**Revize:** 2.4 · 27. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
 
 ## 1. Autoritativní migrační soubory
 
-| Skupina | Soubor | Účel |
-|---|---|---|
-| structures | `migrations/structures/2026-11-04-200000-init.sql` | Počáteční databázové schéma |
-| structures | `migrations/structures/2026-11-15-120000-transactional-outbox.sql` | Samostatná persistence Transactional Outbox (F3-34) |
-| structures | `migrations/structures/2026-11-15-220000-protect-demo-orders.sql` | Označení demo objednávek a ochrana Outboxu/skladu (F3-32) |
-| structures | `migrations/structures/2026-11-17-150000-admin-message-translation.sql` | Samostatná tabulka systémových překladů Admin (F4-17) |
-| structures | `migrations/structures/2026-11-24-080000-product-variant-ean.sql` | Volitelný globálně unikátní EAN-8/EAN-13 pro variantu produktu (F5-18) |
-| dummy-data | `migrations/dummy-data/2026-11-24-080000-seed-catalog-product-variant-editor.sql` | Idempotentní cs/en texty editoru variant (F5-18) |
-| dummy-data | `migrations/dummy-data/2026-11-18-080000-seed-admin-translation.sql` | Idempotentní cs/en seed administračních textů včetně SHA-1 default_hash (F4-24) |
-| dummy-data | `migrations/dummy-data/2026-11-15-230000-classify-demo-orders.sql` | Označení čtyř demo objednávek (F3-32) |
-| basic-data | `migrations/basic-data/2026-11-04-201000-basic-data.sql` | Základní číselníky a referenční data |
-| dummy-data | `migrations/dummy-data/2026-11-04-202000-demo-products.sql` | Demonstrační obsah a související ukázková data |
+V aktuálním repozitáři je **54 SQL migračních souborů**:
 
-Migrace spravuje Nextras Migrations. Skupiny a závislosti jsou nastaveny v `config/common.neon`:
-- `basic-data` závisí na `structures`,
-- `dummy-data` závisí na `basic-data`.
+| Skupina | Počet | Význam |
+|---|---:|---|
+| \`structures\` | 20 | Počáteční schéma a všechny dopředné strukturální změny |
+| \`basic-data\` | 2 | Základní číselníky a referenční data |
+| \`dummy-data\` | 32 | Demo obsah a verzované systémové překlady pro UI |
 
-Aktuální cesta je `migrations/`, nikoliv historicky zmiňované `database/migrations/`. Aktuální pojmenování používá časové značky, nikoliv starší `001/002/003`.
+### Structures (20)
+
+\`\`\`text
+migrations/structures/
+2026-11-04-200000-init.sql
+2026-11-15-120000-transactional-outbox.sql
+2026-11-15-130000-iso4217-currency-catalog.sql
+2026-11-15-140000-normalize-iso4217-release-fk.sql
+2026-11-15-150000-protect-variant-attribute-values.sql
+2026-11-15-160000-add-language-foreign-keys-to-locales.sql
+2026-11-15-170000-order-accounting-invariants.sql
+2026-11-15-180000-archive-products-and-variants.sql
+2026-11-15-210000-split-system-message-translations.sql
+2026-11-15-220000-protect-demo-orders.sql
+2026-11-17-150000-admin-message-translation.sql
+2026-11-18-150500-catalog-image-derivatives.sql
+2026-11-20-220000-product-image-original-metadata.sql
+2026-11-22-060000-protect-category-deletion.sql
+2026-11-22-080000-add-product-type.sql
+2026-11-22-110000-admin-identity-foundation.sql
+2026-11-24-080000-product-variant-ean.sql
+2026-11-25-090000-media-library.sql
+2026-11-25-110000-product-image-management.sql
+2026-11-25-160000-media-publication.sql
+\`\`\`
+
+### Basic data (2)
+
+\`\`\`text
+migrations/basic-data/
+2026-11-04-201000-basic-data.sql
+2026-11-22-111000-admin-identity-roles.sql
+\`\`\`
+
+### Dummy data (32)
+
+\`\`\`text
+migrations/dummy-data/
+2026-11-04-202000-demo-products.sql
+2026-11-15-190000-complete-demo-data.sql
+2026-11-15-200000-complete-demo-short-descriptions.sql
+2026-11-15-230000-classify-demo-orders.sql
+2026-11-17-140000-seed-catalog-add-to-cart.sql
+2026-11-18-080000-seed-admin-translation.sql
+2026-11-21-120000-seed-catalog-category-admin.sql
+2026-11-22-030000-seed-catalog-category-create-form.sql
+2026-11-22-040000-seed-catalog-category-editor.sql
+2026-11-22-050000-seed-catalog-category-ordering.sql
+2026-11-22-070000-seed-catalog-category-deletion.sql
+2026-11-22-090000-seed-catalog-product-admin-list.sql
+2026-11-22-100000-seed-admin-datagrid.sql
+2026-11-22-112000-seed-admin-login-messages.sql
+2026-11-22-120000-seed-admin-layout-navigation.sql
+2026-11-22-130000-seed-adminlte-navigation.sql
+2026-11-24-050000-seed-catalog-product-editor.sql
+2026-11-24-060000-seed-catalog-product-variants-admin.sql
+2026-11-24-070000-seed-catalog-variant-matrix-limit.sql
+2026-11-24-080000-seed-catalog-product-variant-editor.sql
+2026-11-24-090000-seed-catalog-attribute-admin.sql
+2026-11-24-100000-seed-admin-attributes-navigation.sql
+2026-11-24-110000-seed-catalog-product-configuration-editor.sql
+2026-11-24-120000-seed-catalog-view-permission.sql
+2026-11-25-080000-seed-catalog-customer-options.sql
+2026-11-25-100000-seed-admin-media-library.sql
+2026-11-25-120000-seed-product-image-management.sql
+2026-11-25-130000-seed-product-image-management-form.sql
+2026-11-25-140000-seed-catalog-product-editor-tabs.sql
+2026-11-25-150000-seed-catalog-media-picker.sql
+2026-11-25-170000-seed-admin-media-publication.sql
+2026-11-25-180000-seed-catalog-media-picker-translations.sql
+\`\`\`
+
+Nextras Migrations řadí soubory **globálně podle názvu**, nikoliv po skupinách jako tři nezávislé fáze. Skupiny a závislosti jsou nastaveny v \`config/common.neon\`:
+- \`basic-data\` závisí na \`structures\`,
+- \`dummy-data\` závisí na \`basic-data\`.
+
+Časové prefixy proto musí zachovat skutečné pořadí všech již aplikovaných migrací napříč skupinami. Nová migrace musí mít prefix až za poslední již aplikovanou migrací v příslušném prostředí. Již aplikované migrační soubory se neupravují; opravy se přidávají novým dopředným souborem.
 
 ## 2. Schéma v1 – tabulky
 
-Počáteční soubor `2026-11-04-200000-init.sql` vytváří 46 tabulek; dopředné migrace rozšiřují schéma podle potřeb modulů.
+Počáteční soubor `2026-11-04-200000-init.sql` vytváří **46 tabulek**. Po všech 20 aktuálních strukturálních migracích obsahuje schéma **58 tabulek**. Rozdíl tvoří rozdělení systémových překladů a doplnění Outboxu, katalogu ISO 4217, administrační identity, derivátů obrázků a Media knihovny.
 
 | Oblast | Tabulky |
 |---|---|
-| Jazyk, měna, jednotky a překlady | `language`, `currency`, `unit`, `unit_translation`, `catalog_message_translation`, `cart_message_translation`, `checkout_message_translation`, `admin_message_translation` |
+| Jazyk a jednotky | `language`, `unit`, `unit_translation` |
+| Systémové překlady | `catalog_message_translation`, `cart_message_translation`, `checkout_message_translation`, `admin_message_translation` (každá doména vlastní svou tabulku) |
 | Daně | `tax_class`, `tax_rate` |
-| Katalog | `product`, `product_translation`, `category`, `category_translation`, `product_category`, `attribute`, `attribute_translation`, `attribute_value`, `attribute_value_translation`, `product_variant_axis`, `product_variant`, `product_attribute_value`, `product_variant_attribute_value`, `product_option`, `product_option_translation`, `product_option_value`, `product_option_value_translation`, `product_relation`, `product_image` (vazby na Media) |
+| Katalog | `product`, `product_translation`, `category`, `category_translation`, `product_category`, `attribute`, `attribute_translation`, `attribute_value`, `attribute_value_translation`, `product_variant_axis`, `product_variant`, `product_attribute_value`, `product_variant_attribute_value`, `product_option`, `product_option_translation`, `product_option_value`, `product_option_value_translation`, `product_relation`, `product_image` (vazby na Media), `product_image_derivative`, `catalog_message_translation` |
 | Média | `media_asset`, `media_asset_derivative` |
+| Administrátorská identita | `admin_user`, `admin_role`, `admin_user_role` |
+| Ceník ISO 4217 | `iso4217_catalog_release`, `iso4217_currency` |
+| Sdílená infrastruktura | `outbox_message` (Transactional Outbox) |
 | Ceny | `variant_price`, `variant_price_history`, `option_value_price` |
 | Sklad | `stock_item`, `stock_movement` |
 | Zákazníci | `customer`, `customer_address` |
@@ -45,7 +116,7 @@ Počáteční soubor `2026-11-04-200000-init.sql` vytváří 46 tabulek; dopřed
 | Košík | `cart`, `cart_item`, `cart_item_option` |
 | Objednávky | `shop_order`, `shop_order_item`, `shop_order_item_option`, `shop_order_adjustment`, `shop_order_status_history` |
 
-Počet a názvy tabulek jsou převzaté přímo z aktuálního `init.sql`. Tabulky Identity, Mailing, Settings a samostatný Checkout workflow zatím v tomto počátečním schématu nejsou; jejich doplnění patří do dalších fází.
+Počet a názvy tabulek jsou převzaté přímo z aktuálního `init.sql`. Tabulky administrátorské identity jsou doplněny dopřednou migrací; zákaznická Identity, Mailing, Settings a samostatný Checkout workflow zatím implementovány nejsou. Přítomnost připravených modulových adresářů neznamená, že jejich aplikační workflow existuje.
 
 ## 3. Základní data
 
