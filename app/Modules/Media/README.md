@@ -24,6 +24,15 @@ Catalog spravuje produktové a variantní vazby na mediální položky. Odstran�
 - Zpracování kontroluje skutečný obrazový obsah, limit 20 MB a limit 40 megapixelů.
 - Mazání databázového záznamu je chráněno cizími klíči před odstraněním používaného média.
 
+## Publikování médií
+
+- Každá položka je po nahrání soukromá; existující/backfillované položky zůstávají soukromé.
+- Veřejná dostupnost vzniká pouze explicitním publikováním administrátorem s oprávněním Media MANAGE.
+- Publikovaná položka má neprůhledný 256bitový hex identifikátor; ten sám o sobě není oprávněním. Veřejný reader vždy kontroluje také neprázdné published_at.
+- Veřejný endpoint poskytuje pouze povolené deriváty thumbnail/listing/detail, nikdy originál. Odpověď nastavuje bezpečnostní hlavičky a nepoužívá veřejný filesystem path.
+- Zrušení publikování vymaže published_at; soubor ani identifikátor se nemusí mazat.
+- HugeRTE picker čte pouze explicitně publikované položky a vrací jejich veřejnou detail URL a ALT text.
+
 ## Bezpečnostní pravidla
 
 - Upload je dostupný pouze přes autentizovanou administraci s kontrolou oprávnění na prezentační i aplikační vrstvě.
