@@ -65,8 +65,10 @@ final readonly class DatabaseProductLifecycleRepository implements ProductLifecy
         $this->copyVariantAxes($productId, $newProductId);
         $variantIds = $this->copyVariants($productId, $newProductId);
         $this->copyVariantAttributeValues($productId, $newProductId, $variantIds);
+        $this->copyVariantPrices($variantIds);
         $this->copyImages($productId, $newProductId, $variantIds);
         $this->copyCustomerOptions($productId, $newProductId);
+        $this->copyStockSettings($variantIds);
 
         // product_relation se záměrně nekopíruje: vazby jsou směrové a
         // nové identitě produktu by mohly přenést obchodně neplatná doporučení.
@@ -195,6 +197,42 @@ final readonly class DatabaseProductLifecycleRepository implements ProductLifecy
     }
 
     /** @param array<int, int> $variantIds */
+    private function copyVariantPrices(array $variantIds): void
+    {
+        foreach ($variantIds as $sourceVariantId => $targetVariantId) {
+            foreach ($this->database->table('variant_price')
+                ->where('product_variant_id', $sourceVariantId)->fetchAll() as $price) {
+                $this->database->table('variant_price')->insert([
+                    'product_variant_id' => $targetVariantId,
+                    'currency' => $price->currency,
+                    'amount_minor' => $price->amount_minor,
+                    'tax_included' => $price->tax_included,
+                ]);
+            }
+        }
+    }
+
+    /** @param array<int, int> $variantIds */
+    private function copyStockSettings(array $variantIds): void
+    {
+        foreach ($variantIds as $sourceVariantId => $targetVariantId) {
+            $stock = $this->database->table('stock_item')
+                ->where('product_variant_id', $sourceVariantId)->fetch();
+            if ($stock === null) {
+                continue;
+            }
+
+            $this->database->table('stock_item')->insert([
+                'product_variant_id' => $targetVariantId,
+                'track_stock' => $stock->track_stock,
+                'allow_backorder' => $stock->allow_backorder,
+                'quantity_on_hand' => '0.000',
+                'quantity_reserved' => '0.000',
+            ]);
+        }
+    }
+
+    /** @param array<int, int> $variantIds */
     private function copyImages(int $sourceId, int $targetId, array $variantIds): void
     {
         $images = $this->database->table('product_image')
@@ -296,6 +334,15 @@ final readonly class DatabaseProductLifecycleRepository implements ProductLifecy
             }
 
             foreach ($valueIds as $sourceValueId => $targetValueId) {
+                foreach ($this->database->table('option_value_price')
+                    ->where('product_option_value_id', $sourceValueId)->fetchAll() as $price) {
+                    $this->database->table('option_value_price')->insert([
+                        'product_option_value_id' => $targetValueId,
+                        'currency' => $price->currency,
+                        'delta_minor' => $price->delta_minor,
+                    ]);
+                }
+
                 foreach ($this->database->table('product_option_value_translation')
                     ->where('product_option_value_id', $sourceValueId)->fetchAll() as $translation) {
                     $this->database->table('product_option_value_translation')->insert([
