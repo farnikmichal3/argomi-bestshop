@@ -8,7 +8,7 @@ Tento dokument vizualizuje skutečné tabulky a cizí klíče po aplikaci všech
 
 ## 1. Přehled tabulek podle vlastníka
 
-Schéma obsahuje **58 tabulek** a **82 cizích klíčů** po započtení všech 20 strukturálních migrací v aktuálním repozitáři. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
+Schéma obsahuje **58 tabulek** a **81 cizích klíčů** po započtení všech 20 strukturálních migrací v aktuálním repozitáři. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
 
 | Modul | Tabulek | Oblast |
 |---|---:|---|
