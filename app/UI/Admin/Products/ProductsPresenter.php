@@ -650,8 +650,15 @@ final class ProductsPresenter extends TranslatedPresenter
                 throw new ForbiddenRequestException();
             }
 
-            $relatedId = filter_var((string) ($values['relatedProductId'] ?? ''), FILTER_VALIDATE_INT);
-            $type = is_string($values['type'] ?? null) ? ProductRelationKind::tryFrom($values['type']) : null;
+            $relatedIdRaw = $values['relatedProductId'] ?? null;
+            $typeRaw = $values['type'] ?? null;
+            if ((!is_string($relatedIdRaw) && !is_int($relatedIdRaw)) || !is_string($typeRaw)) {
+                $form->addError($translator->translate('products.relations.error.invalid'));
+                return;
+            }
+
+            $relatedId = filter_var((string) $relatedIdRaw, FILTER_VALIDATE_INT);
+            $type = ProductRelationKind::tryFrom($typeRaw);
             if (!is_int($relatedId) || $relatedId < 1 || $type === null) {
                 $form->addError($translator->translate('products.relations.error.invalid'));
                 return;
@@ -713,8 +720,8 @@ final class ProductsPresenter extends TranslatedPresenter
                 return;
             }
             $relatedId = filter_var($matches[1], FILTER_VALIDATE_INT);
-            $type = ProductRelationKind::tryFrom($matches[2]);
-            if (!is_int($relatedId) || $type === null) {
+            $type = ProductRelationKind::from($matches[2]);
+            if (!is_int($relatedId)) {
                 $form->addError($translator->translate('products.relations.error.invalid'));
                 return;
             }
