@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – překladový subsystém
 
 **Stav:** závazný architektonický standard; implementace postupně  
-**Revize:** 1.28 · 27. 11. 2026
+**Revize:** 1.29 · 28. 11. 2026
 
 ## 1. Základní pravidlo
 
@@ -191,6 +191,8 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 
 ### Historie revizí
 
+- **1.29 · 28. 11. 2026:** F5-25 dokončeno. Odděleny neměnný již aplikovaný seed archivace `2026-11-27-101000-seed-catalog-product-lifecycle.sql` a nový idempotentní seed `2026-11-27-103000-seed-catalog-product-copy.sql` pro texty `products.lifecycle.copy.*`; obě databáze mají nové migrace aplikované.
+
 - **1.24 · 18. 11. 2026:** dokončena administrační správa vlastních překladů a jazyků, serverová oprávnění, runtime diagnostika chybějících textů s Tracy panelem a idempotentní cs/en seed domény Admin. Systémové zdroje zůstávají chráněné a všechny zápisy invalidují cache.
 - **1.23 · 17. 11. 2026:** F4-17 zavádí samostatnou vlastnickou doménu `Admin` a tabulku `admin_message_translation`; administrativní texty se oddělují od obchodních domén. Doplněno mapování veřejné i interní domény, databázového úložiště a integrační test.
 
@@ -213,4 +215,4 @@ Jazyk se určuje z parametru `lang` aktivní routy. Před použitím se ověří
 F5-24 přidává systémový klíč `products.editor.error.activation_requirements` v češtině a angličtině. Výchozí hodnoty dodává idempotentní seed `2026-11-27-093500-seed-catalog-product-activation-validation.sql`; validační texty zůstávají výhradně v databázi.
 
 
-F5-25 přidává databázové systémové texty pro nevratnou archivaci produktu a vytvoření nové kopie: `products.lifecycle.archive.*`, `products.lifecycle.copy.*` a `products.lifecycle.error.*`. Výchozí české a anglické hodnoty dodává idempotentní seed `2026-11-27-101000-seed-catalog-product-lifecycle.sql`; runtime texty zůstávají výhradně v databázi.
+F5-25 přidává databázové systémové texty pro nevratnou archivaci produktu a vytvoření nové kopie: `products.lifecycle.archive.*`, `products.lifecycle.copy.*` a `products.lifecycle.error.*`. Výchozí české a anglické hodnoty pro archivaci dodává idempotentní seed `2026-11-27-101000-seed-catalog-product-lifecycle.sql`; šest textů pro kopírování produktu dodává samostatný idempotentní seed `2026-11-27-103000-seed-catalog-product-copy.sql`. Původní již aplikovaný seed zůstává neměnný; runtime texty jsou výhradně v databázi.

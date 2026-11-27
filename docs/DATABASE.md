@@ -1,20 +1,20 @@
 # ArgoMi-BestShop – databáze
 
 **Stav:** dokumentace aktuálního schématu a dopředných migrací  
-**Revize:** 2.6 · 27. 11. 2026  
+**Revize:** 2.7 · 28. 11. 2026  
 **Databáze:** MySQL 8.x / InnoDB / utf8mb4
 
 Tento dokument popisuje SQL migrace, které jsou skutečně v repozitáři. Nepředstírá, že budoucí moduly nebo plánované funkce už mají hotové tabulky.
 
 ## 1. Autoritativní migrační soubory
 
-V aktuálním repozitáři je **59 SQL migračních souborů**:
+V aktuálním repozitáři je **60 SQL migračních souborů**:
 
 | Skupina | Počet | Význam |
 |---|---:|---|
 | \`structures\` | 22 | Počáteční schéma a všechny dopředné strukturální změny |
 | \`basic-data\` | 2 | Základní číselníky a referenční data |
-| \`dummy-data\` | 35 | Demo obsah a verzované systémové překlady pro UI |
+| \`dummy-data\` | 36 | Demo obsah a verzované systémové překlady pro UI |
 
 ### Structures (22)
 
@@ -52,7 +52,7 @@ migrations/basic-data/
 2026-11-22-111000-admin-identity-roles.sql
 \`\`\`
 
-### Dummy data (35)
+### Dummy data (36)
 
 \`\`\`text
 migrations/dummy-data/
@@ -91,6 +91,7 @@ migrations/dummy-data/
 2026-11-25-190000-seed-catalog-product-relations-admin.sql
 2026-11-27-093500-seed-catalog-product-activation-validation.sql
 2026-11-27-101000-seed-catalog-product-lifecycle.sql
+2026-11-27-103000-seed-catalog-product-copy.sql
 \`\`\`
 
 Nextras Migrations řadí soubory **globálně podle názvu**, nikoliv po skupinách jako tři nezávislé fáze. Skupiny a závislosti jsou nastaveny v \`config/common.neon\`:
@@ -373,6 +374,7 @@ CI nastavuje `TEST_DATABASE_REQUIRED=1`, takže integrační testy nesmějí bý
 
 ## 13. Historie
 
+| 28. 11. 2026 | v2.7: 60 SQL migrací (22 structures, 2 basic-data, 36 dummy-data). Samostatný idempotentní seed `2026-11-27-103000-seed-catalog-product-copy.sql` doplňuje šest textů pro kopírování produktu; historický seed archivace zůstává beze změny. Produkční i testovací databáze mají dopředné migrace aplikované. Schéma zůstává na 58 tabulkách a 81 fyzických FK. |
 | 27. 11. 2026 | v2.6: 59 SQL migrací (22 structures, 2 basic-data, 35 dummy-data); dopředná migrace `2026-11-27-102000-product-image-derivative-reuse.sql` odstraňuje globální unikátnost cesty z katalogové vazby derivátu. Fyzickou unikátnost nadále vlastní `media_asset_derivative.storage_key`. Schéma zůstává na 58 tabulkách a 81 fyzických FK. |
 | 27. 11. 2026 | v2.5: 58 SQL migrací (21 structures, 2 basic-data, 35 dummy-data); nová dopředná migrace `2026-11-27-100000-product-archive-terminal.sql` přidává databázovou ochranu terminálního stavu archived. Schéma zůstává na 58 tabulkách a 81 fyzických FK. |
 | 18. 11. 2026 | v2.2: doplněna samostatná tabulka `admin_message_translation`, cs/en seed administračních textů a jejich SHA-1 `default_hash` (F4-17/F4-24). |

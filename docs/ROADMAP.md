@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.120 · 27. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.121 · 28. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -49,7 +49,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **560 kroků**: hotovo 199, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 352, zrušeno 7.
+Celkem **560 kroků**: hotovo 200, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 352, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -58,7 +58,7 @@ Celkem **560 kroků**: hotovo 199, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 41 | 28 | 1 | 0 | 0 | 0 | 12 | 0 |
+| F5 | Catalog (vlna 1) | 41 | 29 | 0 | 0 | 0 | 0 | 12 | 0 |
 | F6 | Tax, Pricing, Inventory | 28 | 0 | 0 | 0 | 0 | 0 | 28 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -76,11 +76,10 @@ Celkem **560 kroků**: hotovo 199, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.120 (27. 11. 2026)
-- Uživatel potvrdil úspěšný lokální `check.bat` i všechna ruční ověření F5-24 v administraci: přímé vytvoření aktivního produktu i aktivace bez aktivní/výchozí aktivní varianty jsou odmítnuty; aktivace s aktivní výchozí variantou projde. F5-24 je HOTOVO. CI run `45975557113` prošel s 88 testy, PHPStan, coding standardem a Deptrac.
-- F5-25 je rozpracováno: implementována nevratná archivace a bezpečné vytvoření nové kopie z archivovaného produktu. Kopie zachovává opakovaně použitelné katalogové údaje a aktuální ceny, ale nedědí EAN, historické obchodní události ani skladové množství. CI run `45994818769` prošel s 89 testy, PHPStan, coding standardem a Deptrac; lokální a browser ověření ještě čeká.
-- Při další aktualizaci roadmapy byly doplněny F5-40 (produktové šablony) a opakovaný milník F5-41/F6-28 „Úklid a zkrášlení“. Přepínač jazyka administrace zůstává ve F12-22.
-- Souhrn F5: **28 hotovo**, **1 rozpracováno**, **12 plán**. Celkem: **199 hotovo**, **1 rozpracováno**, **1 k úpravě**, **352 plán**, **7 zrušeno**.
+### v3.121 (28. 11. 2026)
+- Uživatel potvrdil úspěšné lokální dopředné migrace pro produkční i testovací databázi, `check.bat` (`All active checks passed.`) a úplné ruční ověření F5-25 v administraci. Archivace je nevratná, deaktivuje aktivní varianty a archivovaný produkt zůstává dohledatelný. Vytvoření kopie zakládá nový koncept s novými ID/SKU, bez EAN a skladových stavů; opakovaně použitelné údaje, aktuální ceny a vazby na sdílená média se přenesou. F5-25 je HOTOVO.
+- CI run `46077797137` prošel po opravě explicitní registrace `ProductLifecycleService` a databázového repozitáře; 89 testů, PHPStan, coding standard a Deptrac jsou úspěšné. Oprava zachovává původní již aplikovaný seed `2026-11-27-101000-seed-catalog-product-lifecycle.sql` beze změny; šest textů pro kopírování produktu má samostatný idempotentní seed `2026-11-27-103000-seed-catalog-product-copy.sql`. Obě databáze mají dopředné migrace dokončené.
+- Souhrn F5: **29 hotovo**, **0 rozpracováno**, **12 plán**. Celkem: **200 hotovo**, **0 rozpracováno**, **1 k úpravě**, **352 plán**, **7 zrušeno**.
 
 ### v3.119 (27. 11. 2026)
 
@@ -803,7 +802,7 @@ _Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo pr
 - `[HOTOVO]` **F5-22** Admin: knihovna médií, bezpečné nahrávání, přiřazení k produktům/variantám a výběr médií v HugeRTE; soukromé výchozí nastavení, explicitní publikování, veřejné čtení pouze publikovaných derivátů a výběr pouze publikovaných položek. Uživatel potvrdil kompletní ověření hlavního workflow i opraveného prázdného stavu pickeru; zobrazení obrázku v zákaznickém detailu produktu čeká na frontend.
 - `[HOTOVO]` **F5-23** Admin: správa souvisejících a doporučených produktů – veřejné čtecí/zapisovací API, typovaná DTO, transakční přidání/odebrání/řazení a šestá záložka editoru. Kandidáty jsou jiné aktivní produkty; vztahy zůstávají směrové. Uživatel potvrdil migraci, všechny lokální testy i ruční ověření v prohlížeči.
 - `[HOTOVO]` **F5-24** Validace aktivace: nový produkt se nejprve ukládá jako koncept; aktivace vyžaduje alespoň jednu aktivní a právě jednu výchozí aktivní variantu. Ověřeno v CI, lokálně i v administraci.
-- `[ROZDĚLÁNO]` **F5-25** Nevratná archivace a bezpečné kopírování produktu: archivovaný produkt zůstává dohledatelný a historicky zachovaný; nelze jej znovu aktivovat ani upravovat. Z archivovaného produktu lze vytvořit nový koncept s novým ID produktu i variant, novým SKU a bez EAN. Kopírují se překlady, SEO, kategorie, typ, daňová třída, produktové/variantní atributy, osy a kombinace variant, zákaznické volby včetně aktuálních příplatků, aktuální ceny a vazby na sdílená média. Zachová se nastavení sledování skladu a doobjednávek, ale sklad i rezervace začínají na nule. Kopírují se také katalogové vazby na obrazové deriváty se stejnou cestou sdíleného souboru, nikoliv fyzické soubory. Nekopírují se cenová historie, skladové pohyby, objednávky, košíky, historické vazby ani vztahy k jiným produktům. CI run `45994818769` prošel: 89 testů, PHPStan, coding standard a Deptrac; čeká se na lokální migraci, `check.bat` a ruční ověření administrace.
+- `[HOTOVO]` **F5-25** Nevratná archivace a bezpečné kopírování produktu: archivovaný produkt zůstává dohledatelný a historicky zachovaný; nelze jej znovu aktivovat ani upravovat. Archivace deaktivuje všechny aktivní varianty. Z archivovaného produktu lze vytvořit nový koncept s novým ID produktu i variant, novým SKU a bez EAN. Kopírují se překlady, SEO, kategorie, typ, daňová třída, produktové/variantní atributy, osy a kombinace variant, zákaznické volby včetně aktuálních příplatků, aktuální ceny a vazby na sdílená média. Zachová se nastavení sledování skladu a doobjednávek, ale sklad i rezervace začínají na nule. Katalogové vazby na obrazové deriváty sdílejí původní soubor; fyzické soubory se neduplikují. Nekopírují se cenová historie, skladové pohyby, objednávky, košíky ani historické vztahy. CI run `46077797137` prošel: 89 testů, PHPStan, coding standard a Deptrac; uživatel potvrdil úspěšné lokální migrace, `check.bat` a ruční ověření administrace.
 - `[HOTOVO]` **F5-26** Oprávnění pro správu katalogu
 - `[PLÁN]` **F5-27** Test: načtení demo produktu 1 – bavlněné tričko (varianty velikost × barva)
 - `[PLÁN]` **F5-28** Test: načtení demo produktu 2 – GaN nabíječka (varianty výkon × počet portů × barva)
