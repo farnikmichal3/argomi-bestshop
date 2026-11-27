@@ -57,6 +57,9 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 | Front-end CSS | Sass |
 | Bundling | esbuild |
 | WYSIWYG editor | HugeRTE (MIT), lokálně hostovaný; vlastní integrace přes Nette Forms a projektový Admin JS |
+| Sanitizace HTML | HTMLPurifier 4.19.1; serverový explicitní allowlist, editor není bezpečnostní hranice |
+| Obrazové zpracování | Intervention Image 4.4.0 + intervention/gif 5.0.2; originály a WebP deriváty |
+| Administrační vzhled | AdminLTE 4.10.2, Bootstrap Icons 1.13.2 |
 | Administrační datagrid | Ublaboo Datagrid 7.2.0; použitý v administračním výpisu produktů přes projektový adaptér |
 | Front-end framework | Bootstrap 5.3.8 + Bootswatch Cosmo 5.3.8; AdminLTE 4.10.2 pro administrační layout |
 | AJAX | Naja 3 |
