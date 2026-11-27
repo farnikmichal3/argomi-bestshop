@@ -26,9 +26,9 @@ app/
 │   │   ├── Api/
 │   │   │   ├── Dto/
 │   │   │   │   ├── ProductRelationItem.php
-│   │   │   ├── ProductRelationOption.php
-│   │   │   ├── ProductRelationOrder.php
-│   │   │   ├── ProductVariantEditorData.php
+│   │   │   │   ├── ProductRelationOption.php
+│   │   │   │   ├── ProductRelationOrder.php
+│   │   │   │   ├── ProductVariantEditorData.php
 │   │   │   │   ├── ProductVariantMatrix.php
 │   │   │   │   ├── VariantMatrixAxis.php
 │   │   │   │   ├── VariantMatrixCombination.php
@@ -45,7 +45,8 @@ app/
 │   │   ├── Application/
 │   │   │   ├── Dto/
 │   │   │   │   ├── ProductDto.php
-│   │   │   │   └── ProductTranslationDto.php
+│   │   │   │   ├── ProductTranslationDto.php
+│   │   │   │   └── ProductRelationOptionDto.php
 │   │   │   ├── ProductRepository.php
 │   │   │   ├── ProductRelationRepository.php
 │   │   │   ├── ProductRelationService.php
@@ -64,7 +65,7 @@ app/
 │   │       ├── DI/
 │   │       └── Persistence/
 │   │           ├── DatabaseProductRepository.php
-│   │           └── DatabaseProductRelationRepository.php
+│   │           ├── DatabaseProductRelationRepository.php
 │   │           ├── DatabaseProductVariantGenerationRepository.php
 │   │           └── DatabaseProductVariantMatrixRepository.php
 │   ├── Checkout/
