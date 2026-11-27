@@ -15,9 +15,9 @@ final readonly class ProductRelationCommandApiService implements ProductRelation
 {
     public function __construct(private ProductRelationService $relations) {}
 
-    public function add(int $productId, int $relatedProductId, ProductRelationKind $type): void
+    public function add(int $productId, int $relatedProductId, ProductRelationKind $type, int $sortOrder = 0): void
     {
-        $this->relations->add($productId, $relatedProductId, ProductRelationType::from($type->value));
+        $this->relations->add($productId, $relatedProductId, ProductRelationType::from($type->value), $sortOrder);
     }
 
     public function remove(int $productId, int $relatedProductId, ProductRelationKind $type): bool
