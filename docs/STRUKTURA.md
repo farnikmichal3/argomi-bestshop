@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.22 · 27. 11. 2026  
+**Revize:** 4.23 · 27. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 27. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -572,4 +572,4 @@ Otevřené technické úkoly se záměrně neduplikují v tomto dokumentu. Autor
 F5-24 doplňuje veřejnou výjimku `Catalog/Api/ProductActivationRequirementsNotMet`. `ProductWriteService` odmítá přímé vytvoření produktu ve stavu active; produkt se nejprve ukládá jako koncept, protože varianty se vytvářejí až po založení. Přechod do active vyžaduje alespoň jednu aktivní variantu a právě jednu výchozí aktivní variantu. Admin formulář mapuje tuto výjimku na databázovou validační zprávu v cs/en. CI run `45975557113` prošel (88 testů, PHPStan, coding standard a Deptrac); uživatel následně potvrdil úspěšný lokální `check.bat` i všechna ruční ověření chování v administraci. F5-24 je uzavřeno.
 
 
-F5-25 přidává veřejné administrační API `Catalog/Api/ProductLifecycleWriter`, aplikační `ProductLifecycleService` a interní `ProductLifecycleRepository`; databázový adaptér `DatabaseProductLifecycleRepository` vytváří archivní kopie transakčně. Admin `ProductsPresenter` obsluhuje potvrzenou archivaci i kopírování z archivovaného záznamu přes `archive.latte`. Nevratnost archivace navíc vynucuje dopředný databázový trigger v `2026-11-27-100000-product-archive-terminal.sql`. F5-25 je implementováno a CI ověřeno, lokální/browser ověření uživatelem ještě čeká.
+F5-25 přidává veřejné administrační API `Catalog/Api/ProductLifecycleWriter`, aplikační `ProductLifecycleService` a interní `ProductLifecycleRepository`; databázový adaptér `DatabaseProductLifecycleRepository` vytváří archivní kopie transakčně. Admin `ProductsPresenter` obsluhuje potvrzenou archivaci i kopírování z archivovaného záznamu přes `archive.latte`. Nevratnost archivace navíc vynucuje dopředný databázový trigger v `2026-11-27-100000-product-archive-terminal.sql`. F5-25 je implementováno a CI ověřeno (run `45994266889`, 89 testů, PHPStan, coding standard a Deptrac), lokální/browser ověření uživatelem ještě čeká. Dopředná migrace `2026-11-27-102000-product-image-derivative-reuse.sql` umožňuje sdílet derivátovou cestu mezi samostatnými produktovými vazbami.
