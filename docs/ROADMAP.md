@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.117 · 27. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.118 · 27. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -48,7 +48,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **557 kroků**: hotovo 197, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 351, zrušeno 7.
+Celkem **557 kroků**: hotovo 198, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 351, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Celkem **557 kroků**: hotovo 197, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 39 | 26 | 1 | 0 | 0 | 0 | 12 | 0 |
+| F5 | Catalog (vlna 1) | 39 | 27 | 0 | 0 | 0 | 0 | 12 | 0 |
 | F6 | Tax, Pricing, Inventory | 27 | 0 | 0 | 0 | 0 | 0 | 27 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -75,9 +75,9 @@ Celkem **557 kroků**: hotovo 197, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.117 (27. 11. 2026)
-- F5-23: hotový první implementační řez administrační správy vztahů produktů; veřejné API, lokalizované DTO, transakční add/remove/reorder, výběr aktivních kandidátů, nová záložka editoru a idempotentní cs/en seed. CI run `45964330897` prošel (88 testů, PHPStan, coding standard, Deptrac). Lokální migrace a ruční ověření zůstávají otevřené.
-- Souhrn F5: **26 hotovo**, **1 rozpracováno**, **12 plán**. Celkem: **197 hotovo**, **1 rozpracováno**, **1 k úpravě**, **351 plán**, **7 zrušeno**.
+### v3.118 (27. 11. 2026)
+- Uživatel potvrdil úspěšnou lokální migraci, všechny lokální testy a ruční ověření F5-23 v administraci. Přidávání, odebírání i řazení souvisejících produktů funguje a změny zůstávají uložené po opětovném otevření editoru. F5-23 je HOTOVO. Ověření přepínání jazyka administrace se na tento krok nevztahuje; přepínač jazyka rozhraní zůstává výslovně součástí F12-22.
+- Souhrn F5: **27 hotovo**, **0 rozpracováno**, **12 plán**. Celkem: **198 hotovo**, **0 rozpracováno**, **1 k úpravě**, **351 plán**, **7 zrušeno**.
 
 ### v3.116 (27. 11. 2026)
 - Uživatel potvrdil kompletní ověření F5-22 včetně opraveného prázdného stavu HugeRTE pickeru. F5-22 je HOTOVO; zobrazení vloženého obrázku na veřejném produktovém detailu zůstává návazností na budoucí Front UI.
@@ -766,7 +766,7 @@ _Modul Translation: systémové texty, jednotky, obsah entit, přepsání admini
 
 ### F5: Catalog (vlna 1)
 
-_Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo produkty 1 až 5._ Hotovo 26 z 39 kroků; 1 rozpracováno; 12 plánováno.
+_Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo produkty 1 až 5._ Hotovo 27 z 39 kroků; 0 rozpracováno; 12 plánováno.
 
 - `[HOTOVO]` **F5-01** Modul `Catalog`: struktura a DI extension — zavedena `CatalogExtension`, dokumentace hranic modulu a integrační test skutečné registrace přes Bootstrap; zachováno automatické vyhledávání existujících služeb.
 - `[HOTOVO]` **F5-02** Doménové objekty: `Category`, `Product`, `ProductVariant`, `Attribute`, `CustomerOption` — typované neměnné modely a enumy stavů/typů; validace identifikátorů, kódů, SHA-256 hashe a fyzických rozměrů; doménový test bez infrastrukturních závislostí.
@@ -790,7 +790,7 @@ _Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo pr
 - `[HOTOVO]` **F5-20** Admin: přiřazení atributů k produktu, výběr a řazení os variant, profesionální karta editoru produktu, HugeRTE pro lokalizované dlouhé popisy a serverová sanitizace HTML; příprava napojení na Media modul bez uploadu v této fázi.
 - `[HOTOVO]` **F5-21** Admin: konfigurace voleb zákazníka pro produkt
 - `[HOTOVO]` **F5-22** Admin: knihovna médií, bezpečné nahrávání, přiřazení k produktům/variantám a výběr médií v HugeRTE; soukromé výchozí nastavení, explicitní publikování, veřejné čtení pouze publikovaných derivátů a výběr pouze publikovaných položek. Uživatel potvrdil kompletní ověření hlavního workflow i opraveného prázdného stavu pickeru; zobrazení obrázku v zákaznickém detailu produktu čeká na frontend.
-- `[ROZDĚLÁNO]` **F5-23** Admin: správa souvisejících a doporučených produktů
+- `[HOTOVO]` **F5-23** Admin: správa souvisejících a doporučených produktů – veřejné čtecí/zapisovací API, typovaná DTO, transakční přidání/odebrání/řazení a šestá záložka editoru. Kandidáty jsou jiné aktivní produkty; vztahy zůstávají směrové. Uživatel potvrdil migraci, všechny lokální testy i ruční ověření v prohlížeči.
 - `[PLÁN]` **F5-24** Validace: kontrola povinných údajů při aktivaci produktu
 - `[PLÁN]` **F5-25** Zákaz přímého mazání: označení produktu jako archivovaný
 - `[HOTOVO]` **F5-26** Oprávnění pro správu katalogu
@@ -998,7 +998,7 @@ _Správa obchodu: `UI/Admin`._ Hotovo 0 z 27 kroků.
 - `[PLÁN]` **F12-19** Šablony e-mailů
 - `[PLÁN]` **F12-20** Auditní log: kdo co změnil
 - `[PLÁN]` **F12-21** Hromadné akce a export seznamů
-- `[PLÁN]` **F12-22** Administrace v češtině a angličtině
+- `[PLÁN]` **F12-22** Administrace v češtině a angličtině včetně viditelného přepínače jazyka rozhraní (aktuálně přepínání jazyků v administraci ještě není implementováno)
 - `[PLÁN]` **F12-23** Potvrzení nebezpečných akcí (mazání)
 - `[PLÁN]` **F12-24** CSRF u všech akcí
 - `[PLÁN]` **F12-25** Test oprávnění: každý presenter má definovaná oprávnění
