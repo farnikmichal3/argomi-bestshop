@@ -26,6 +26,10 @@ Navigační popisky Produkty a Kategorie se proto vždy překládají přes dom�
 
 `Admin:Media` poskytuje autorizovanou knihovnu mediálních položek a nahrávání přes `MediaAssetWriter`. Náhledy se čtou přes veřejný `MediaAssetContentReader`; fyzické cesty a souborové úložiště zůstávají skryté uvnitř Media. Přístup k náhledům i uploadu kontroluje MediaPermission na serveru a aplikační službě. Role `catalog_viewer` může knihovnu prohlížet, `catalog_manager` a `admin` mohou nahrávat a mazat.
 
+### Publikování médií (F5-22)
+
+Knihovna rozlišuje soukromé a publikované položky. Nový upload ani historicky importované médium není automaticky veřejné. Správa publikování je vyhrazena rolím s Media MANAGE; veřejný HugeRTE picker zobrazuje pouze publikované položky. Zrušení publikování znepřístupní veřejnou URL, aniž by smazalo soubor nebo produktovou vazbu. Veřejná URL poskytuje pouze odvozenou variantu detail, nikoliv originál.
+
 ## Editor produktů (F5-16)
 
 - Seznam produktů zůstává stránkovaným DataGrid read modelem.
