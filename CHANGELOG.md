@@ -14,7 +14,7 @@ Development of the first production release is in progress. No production releas
 - Výslovné publikování obrázků; veřejná část zpřístupňuje pouze publikované odvozené varianty, nikoliv originály.
 - Výběr publikovaných obrázků přímo v editoru produktových popisů HugeRTE.
 - Záložková editace produktu rozdělená do pěti pracovních částí.
-- Rozpracovaná administrační správa souvisejících produktů: typované vztahy, výběr aktivních produktů a jejich pořadí.
+- Administrátorská správa souvisejících produktů: typované vztahy, výběr aktivních produktů, přidávání, odebírání a řazení.
 
 ### Recording rules
 
