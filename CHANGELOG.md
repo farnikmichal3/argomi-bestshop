@@ -15,6 +15,7 @@ Development of the first production release is in progress. No production releas
 - Výběr publikovaných obrázků přímo v editoru produktových popisů HugeRTE.
 - Záložková editace produktu rozdělená do pěti pracovních částí.
 - Administrátorská správa souvisejících produktů: typované vztahy, výběr aktivních produktů, přidávání, odebírání a řazení.
+- Kontrola aktivace produktu: produkt lze aktivovat až po vytvoření alespoň jedné aktivní varianty a nastavení právě jedné výchozí aktivní varianty.
 
 ### Recording rules
 

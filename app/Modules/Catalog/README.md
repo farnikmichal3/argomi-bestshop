@@ -368,3 +368,8 @@ vytvoření a načtení voleb, překlady, zachování ID při úpravě, hodnoty,
 pořadí, povinnost, neplatné typy a kódy, chybějící překlady a ochranu
 před odstraněním odkazovaných záznamů. Resolver zákaznického výběru
 nadále ověřují samostatné testy `OptionResolver`.
+
+
+## Validace aktivace produktu (F5-24)
+
+Nový produkt se ukládá jako koncept; jeho varianty vznikají až po založení. Přechod produktu do stavu `active` vyžaduje alespoň jednu aktivní variantu a právě jednu výchozí aktivní variantu. Databázový unikátní index již omezuje počet výchozích variant na nejvýše jednu; aplikační validace navíc ověřuje, že výchozí varianta je aktivní. Kontrola probíhá v `ProductWriteService`, tedy nezávisle na administračním formuláři. Veřejná výjimka `ProductActivationRequirementsNotMet` umožňuje UI zobrazit konkrétní lokalizovanou validační zprávu. Kategorie, obrázek, popis a ceny nejsou touto fází označeny jako povinné.
