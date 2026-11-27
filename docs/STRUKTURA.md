@@ -1,8 +1,8 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.19 · 25. 11. 2026  
-**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 24. 11. 2026
+**Revize:** 4.20 · 27. 11. 2026  
+**Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 27. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
 
@@ -69,6 +69,25 @@ app/
 │   ├── Inventory/
 │   ├── Mailing/
 │   ├── Media/
+│   │   ├── Api/
+│   │   │   ├── Dto/
+│   │   │   ├── MediaAssetReader.php
+│   │   │   ├── MediaAssetWriter.php
+│   │   │   ├── MediaAssetContentReader.php
+│   │   │   ├── MediaAssetPublicationWriter.php
+│   │   │   ├── MediaPublicAssetReader.php
+│   │   │   └── MediaPermission.php
+│   │   ├── Application/
+│   │   │   ├── MediaAssetService.php
+│   │   │   ├── MediaAssetPublicationService.php
+│   │   │   ├── MediaAssetContentService.php
+│   │   │   └── MediaPublicAssetContentService.php
+│   │   └── Infrastructure/
+│   │       ├── DI/MediaExtension.php
+│   │       ├── Image/InterventionMediaImageProcessor.php
+│   │       ├── Persistence/DatabaseMediaAssetRepository.php
+│   │       ├── Security/MediaPermissionService.php
+│   │       └── Storage/FilesystemMediaFileStorage.php
 │   ├── Orders/
 │   ├── Payments/
 │   ├── Pricing/
@@ -462,15 +481,23 @@ Tato hranice je automaticky vynucována Deptrac pravidlem `Shared: [External]` a
 9. Přidat UI pouze do odpovídající oblasti.
 10. Aktualizovat dokumentaci a ROADMAP.
 
-## 10. Otevřené technické úkoly
+## 10. Stav implementace modulů a otevřené práce
 
-- F1-34: prosadit databázi jako jediný zdroj všech překladových hodnot; žádné souborové katalogy ani runtime souborový fallback. Viz `TRANSLATIONS.md`.
-- Implementovat databázový seed/import systémových překladů bez souborových katalogů (F4).
-- `[PLÁN]` F1-37: Odstranit `OrmModel.php` a přímou závislost `nextras/orm`; před změnou znovu ověřit reference, poté aktualizovat Composer lock a spustit PHPStan/testy.
-- Vynucovat hranice modulů automatickými architektonickými testy.
-- Dokončit rozlišení kritických synchronních událostí a integračních událostí přes Transactional Outbox.
-- Doplnit centrální katalog ISO 4217 a doménové omezení přesnosti měn.
-- Prosadit explicitní kontrolu aplikačního prostředí u destruktivních konzolových příkazů.
+Adresáře modulů nejsou důkazem hotové funkčnosti. K 27. 11. 2026 je skutečný rozsah následující:
+
+| Modul/oblast | Skutečný stav |
+|---|---|
+| Catalog | Rozsáhlé doménové a administrační API; kategorie, produkty, varianty, atributy, zákaznické volby, produktové vztahy a mediální vazby. Zákaznické produktové stránky nejsou dokončeny. |
+| Media | Implementovaná knihovna, upload, bezpečné úložiště mimo www/, WebP deriváty, administrační oprávnění a explicitní publikování veřejných derivátů. |
+| Translation | Implementovaná databázová překladová infrastruktura, cache, diagnostika a správa jazyků/vlastních textů. |
+| Identity | Základ administrátorského přihlášení, oddělené session/cookies a CLI vytvoření účtu; nejde o kompletní ACL/RBAC ani správu účtů v UI. |
+| Inventory | Implementované čtení dostupnosti produktu/variant; správa skladových operací a UI zůstávají další prací. |
+| Tax | Minimální veřejný read kontrakt pro výběr daňové třídy; správa sazeb a pravidel zůstává F6. |
+| Cart, Checkout, Customer, Mailing, Orders, Payments, Pricing, Settings, Shipping | Připravené hranice/adresáře a částečné databázové základy; plná aplikační workflow nejsou implementována. |
+
+Veřejná část obsahuje prezentační kostru a endpoint pro čtení explicitně publikovaných médií. Kompletní zákaznický katalog, produktový detail, košík a checkout nejsou hotové; jejich stav a pořadí určuje výhradně ROADMAP.md.
+
+Otevřené technické úkoly se záměrně neduplikují v tomto dokumentu. Autoritativní seznam je ROADMAP.md; architektonická rozhodnutí jsou v ZAMER.md a ADR. Při dokončení kroku se aktualizuje roadmapa i dotčená technická dokumentace.
 
 ## 11. Historie
 
