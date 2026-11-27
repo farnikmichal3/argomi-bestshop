@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.124 · 28. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.125 · 28. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -49,7 +49,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **560 kroků**: hotovo 202, rozděláno 1, k úpravě 1, rozhodnout 0, blokováno 0, plán 349, zrušeno 7.
+Celkem **560 kroků**: hotovo 203, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 348, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -58,7 +58,7 @@ Celkem **560 kroků**: hotovo 202, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 41 | 31 | 1 | 0 | 0 | 0 | 9 | 0 |
+| F5 | Catalog (vlna 1) | 41 | 32 | 0 | 0 | 0 | 0 | 9 | 0 |
 | F6 | Tax, Pricing, Inventory | 28 | 0 | 0 | 0 | 0 | 0 | 28 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -76,10 +76,10 @@ Celkem **560 kroků**: hotovo 202, rozděláno 1, k úpravě 1, rozhodnout 0, bl
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 
-### v3.124 (28. 11. 2026)
-- Uživatel potvrdil lokální `check.bat` (`All active checks passed.`) pro F5-28. Krok je HOTOVO. Ověření GaN nabíječky zahrnuje lokalizovaný detail cs/en, čtyři existující SKU, tři osy s 12 kombinacemi a odmítnutí osmi chybějících kombinací.
-- Zahájen F5-29 – demo USB-C kabel (`product.id = 2`). Audit seed dat potvrdil osy délka (1/2 m), počet konektorů (1/2) a barva (černá/bílá), tedy 8 kombinací: 5 existujících SKU a 3 záměrně chybějící. Rozšířeny integrační testy výběru variant, matice a lokalizovaného detailu; bez změny databázového schématu. Čeká na CI a lokální kontrolu.
-- Souhrn F5: **31 hotovo**, **1 rozpracováno**, **9 plán**. Celkem: **202 hotovo**, **1 rozpracováno**, **1 k úpravě**, **349 plán**, **7 zrušeno**.
+### v3.125 (28. 11. 2026)
+- Uživatel potvrdil úspěšné GitHub Actions CI i lokální `check.bat` (`All active checks passed.`) pro F5-29. Krok je HOTOVO.
+- Ověření demo USB-C kabelu (`product.id = 2`) pokrývá lokalizovaný detail cs/en, všech pět existujících SKU, tři záměrně chybějící kombinace a úplnou matici 2 × 2 × 2 (délka 1/2 m × počet konektorů 1/2 × barva černá/bílá). Výběr každé existující varianty kontroluje přesnou identitu; chybějící kombinace vracejí null. Detail ověřuje také lokalizované názvy a hodnoty atributů. Bez změny databázového schématu; rozšířeny tři existující integrační testy, počet testovacích souborů zůstává 89.
+- F5-28 i F5-29 jsou HOTOVO. Souhrn F5: **32 hotovo**, **0 rozpracováno**, **9 plán**. Celkem: **203 hotovo**, **0 rozpracováno**, **1 k úpravě**, **348 plán**, **7 zrušeno**.
 
 ### v3.123 (28. 11. 2026)
 - Zahájen F5-28. Audit demo dat potvrdil, že druhý logický demo produkt (GaN nabíječka) má `product.id = 3`; třetí logický demo produkt (USB-C kabel) má `product.id = 2`. Pořadová čísla v roadmapě jsou nezávislá na databázových ID. Testy rozšiřujeme na všechny čtyři aktivní SKU, úplný kartézský prostor 12 kombinací tří os (4 existující, 8 chybějících) a lokalizovaný detail cs/en. Roadmapa byla opravena tak, aby používala skutečné ID produktu.
@@ -818,7 +818,7 @@ _Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo pr
 - `[HOTOVO]` **F5-26** Oprávnění pro správu katalogu
 - `[HOTOVO]` **F5-27** Test: načtení demo produktu 1 – bavlněné tričko (varianty velikost × barva); `VariantSelectorIntegration.phpt` ověřuje všech šest kombinací černá/bílá × S/M/L včetně přesné identity nalezené varianty. CI run `46081321571` a lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-28** Test: načtení demo produktu 2 (DB ID 3) – GaN nabíječka (varianty výkon × počet portů × barva). Lokalizovaný detail cs/en, úplná matice 3 os (65/100 W × 1/2/3 porty × černá/bílá), výběr všech 4 existujících a odmítnutí 8 neexistujících kombinací; CI i lokální `check.bat` uživatel potvrdil jako úspěšné.
-- `[ROZDĚLÁNO]` **F5-29** Test: načtení demo produktu 3 (DB ID 2) – USB-C kabel (varianty délky × počet konektorů × barva). Ověřujeme lokalizovaný detail cs/en, úplnou matici 2 × 2 × 2 (5 existujících, 3 chybějící kombinace) a výběr všech pěti SKU včetně odmítnutí chybějících kombinací.
+- `[HOTOVO]` **F5-29** Test: načtení demo produktu 3 (DB ID 2) – USB-C kabel (varianty délky × počet konektorů × barva). Lokalizovaný detail cs/en, úplná matice 2 × 2 × 2 (5 existujících, 3 chybějící kombinace), výběr všech pěti SKU a odmítnutí chybějících kombinací; CI i lokální `check.bat` uživatel potvrdil jako úspěšné.
 - `[PLÁN]` **F5-30** Test generování správného hashe kombinace varianty
 - `[PLÁN]` **F5-31** Jednotkové testy pro `VariantSelector` a `OptionResolver`
 - `[PLÁN]` **F5-32** Texty modulu Catalog (cs, en)
