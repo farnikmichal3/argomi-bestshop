@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Application;
+namespace App\Modules\Catalog\Application;
 
-use App\\Modules\\Catalog\\Api\\CatalogAccessDeniedException;
-use App\\Modules\\Catalog\\Api\\CatalogPermission;
-use App\\Modules\\Catalog\\Api\\ProductLifecycleWriter;
-use App\\Modules\\Catalog\\Domain\\Product\\ProductStatus;
-use App\\Shared\\Application\\Transaction\\Transaction;
+use App\Modules\Catalog\Api\CatalogAccessDeniedException;
+use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Api\ProductLifecycleWriter;
+use App\Modules\Catalog\Domain\Product\ProductStatus;
+use App\Shared\Application\Transaction\Transaction;
 use InvalidArgumentException;
 
 final readonly class ProductLifecycleService implements ProductLifecycleWriter
