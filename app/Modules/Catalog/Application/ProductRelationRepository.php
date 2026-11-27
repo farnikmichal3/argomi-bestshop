@@ -24,6 +24,13 @@ interface ProductRelationRepository
     public function findForProduct(int $productId, Locale $locale): array;
 
     /**
+     * Vrátí aktivní produkty vhodné pro nový vztah, kromě zdrojového produktu.
+     *
+     * @return list<\App\Modules\Catalog\Application\Dto\ProductRelationOptionDto>
+     */
+    public function findAvailableProducts(int $productId, Locale $locale): array;
+
+    /**
      * Vloží směrový vztah. Volající musí zajistit transakci.
      */
     public function add(
