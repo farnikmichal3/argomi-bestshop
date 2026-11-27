@@ -132,6 +132,9 @@ final class ProductsPresenter extends TranslatedPresenter
             );
             $this->redirect('default');
         }
+        if ($this->editData->status === ProductAdminStatus::Archived->value) {
+            $this->redirect('archive', $id);
+        }
 
         $this->loadEditorOptions();
         $this->configurationData = $this->productEditorConfigurationReader->findForProduct($id, $this->resolveLocale());
