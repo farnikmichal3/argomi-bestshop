@@ -22,7 +22,7 @@ Začni v [docs/README.md](docs/README.md). Kanonické dokumenty:
 - Nextras Migrations (SQL)
 - PHPStan level max
 - Nette Tester
-- Sass + esbuild, Bootstrap 5.3.8 + Bootswatch Cosmo 5.3.8
+- Sass + esbuild, Bootstrap 5.3.8; Bootswatch Cosmo is an approved future Front theme but is not currently imported into the build
 - Naja 3.3.3
 - AdminLTE 4.10.2 + Bootstrap Icons 1.13.2 (Admin)
 - HugeRTE 1.0.15 (lokální WYSIWYG)
