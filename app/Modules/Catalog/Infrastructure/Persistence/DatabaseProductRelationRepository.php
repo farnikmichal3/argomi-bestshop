@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Infrastructure\Persistence;
 
 use App\Modules\Catalog\Application\Dto\ProductRelationDto;
 use App\Modules\Catalog\Application\Dto\ProductRelationOrderDto;
+use App\Modules\Catalog\Application\Dto\ProductRelationOptionDto;
 use App\Modules\Catalog\Application\Dto\ProductTranslationDto;
 use App\Modules\Catalog\Application\ProductRelationRepository;
 use App\Modules\Catalog\Domain\ProductRelationType;
@@ -112,6 +113,47 @@ final class DatabaseProductRelationRepository implements ProductRelationReposito
                 $relation['sortOrder'],
                 $translationsByProductId[$relatedId] ?? null,
             );
+        }
+
+        return $result;
+    }
+
+    public function findAvailableProducts(int $productId, Locale $locale): array
+    {
+        if ($productId < 1) {
+            throw new \InvalidArgumentException('ID produktu musí být kladné.');
+        }
+
+        $products = $this->database->table('product')
+            ->where('status', 'active')
+            ->where('id != ?', $productId)
+            ->order('code ASC, id ASC')
+            ->fetchAll();
+
+        if ($products === []) {
+            return [];
+        }
+
+        $ids = [];
+        $productsById = [];
+        foreach ($products as $row) {
+            $id = $this->integer($row->id, 'product.id');
+            $ids[] = $id;
+            $productsById[$id] = $this->string($row->code, 'product.code');
+        }
+
+        $namesById = [];
+        foreach ($this->database->table('product_translation')
+            ->where('product_id', $ids)
+            ->where('locale', $locale->getCode())
+            ->fetchAll() as $row) {
+            $namesById[$this->integer($row->product_id, 'product_translation.product_id')] =
+                $this->string($row->name, 'product_translation.name');
+        }
+
+        $result = [];
+        foreach ($productsById as $id => $code) {
+            $result[] = new ProductRelationOptionDto($id, $code, $namesById[$id] ?? null);
         }
 
         return $result;
