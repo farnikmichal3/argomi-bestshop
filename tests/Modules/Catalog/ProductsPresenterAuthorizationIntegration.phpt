@@ -7,6 +7,8 @@ use App\Modules\Catalog\Api\CategoryTreeReader;
 use App\Modules\Catalog\Api\ProductEditorReader;
 use App\Modules\Catalog\Api\ProductImageReader;
 use App\Modules\Catalog\Api\ProductImageWriter;
+use App\Modules\Catalog\Api\ProductRelationReader;
+use App\Modules\Catalog\Api\ProductRelationWriter;
 use App\Modules\Catalog\Api\ProductEditorConfigurationReader;
 use App\Modules\Catalog\Api\ProductConfigurationWriter;
 use App\Modules\Catalog\Api\ProductCustomerOptionReader;
@@ -66,6 +68,8 @@ $presenter = new ProductsPresenter(
     $productEditorReader,
     $productImageReader,
     $productImageWriter,
+    $integration->container->getByType(ProductRelationReader::class),
+    $integration->container->getByType(ProductRelationWriter::class),
     $taxClassOptionReader,
     $productWriter,
     $integration->container->getByType(ProductEditorConfigurationReader::class),
