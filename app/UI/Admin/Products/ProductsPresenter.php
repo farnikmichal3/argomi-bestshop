@@ -695,9 +695,13 @@ final class ProductsPresenter extends TranslatedPresenter
         $relationOptions = [];
         foreach ($this->productRelations as $relation) {
             $relationKey = $relation->productId . ':' . $relation->type->value;
+            $typeLabel = match ($relation->type) {
+                ProductRelationKind::Accessory => $translator->translate('products.relations.type.accessory'),
+                ProductRelationKind::Alternative => $translator->translate('products.relations.type.alternative'),
+                ProductRelationKind::Compatible => $translator->translate('products.relations.type.compatible'),
+            };
             $relationOptions[$relationKey] = ($relation->name ?? $relation->productCode)
-                . ' (' . $relation->productCode . ') · '
-                . $translator->translate('products.relations.type.' . $relation->type->value);
+                . ' (' . $relation->productCode . ') · ' . $typeLabel;
         }
 
         $form = new Form();
