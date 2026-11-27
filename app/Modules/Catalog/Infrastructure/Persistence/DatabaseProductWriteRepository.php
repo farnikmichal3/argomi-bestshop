@@ -37,7 +37,7 @@ final class DatabaseProductWriteRepository implements ProductWriteRepository
             return null;
         }
         if (!is_string($value) || ProductStatus::tryFrom($value) === null) {
-            throw new \\UnexpectedValueException('Produkt obsahuje neplatný stav životního cyklu.');
+            throw new \UnexpectedValueException('Produkt obsahuje neplatný stav životního cyklu.');
         }
         return ProductStatus::from($value);
     }
