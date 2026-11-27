@@ -44,7 +44,7 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
 
                 const assets = await response.json();
                 if (!Array.isArray(assets) || assets.length === 0) {
-                    editor.windowManager.alert(textarea.dataset.mediaPickerEmpty ?? '');
+                    editorInstance.windowManager.alert(textarea.dataset.mediaPickerEmpty ?? '');
                     return;
                 }
 
@@ -52,7 +52,7 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
                     .filter((asset) => typeof asset.value === 'string' && typeof asset.title === 'string')
                     .map((asset) => ({ value: asset.value, text: asset.title }));
                 if (options.length === 0) {
-                    editor.windowManager.alert('Knihovna neobsahuje žádné publikované obrázky.');
+                    editorInstance.windowManager.alert(textarea.dataset.mediaPickerEmpty ?? '');
                     return;
                 }
 
@@ -84,7 +84,7 @@ document.querySelectorAll('textarea[data-hugerte]').forEach((textarea) => {
                     },
                 });
             } catch {
-                editor.windowManager.alert(textarea.dataset.mediaPickerFailed ?? '');
+                editorInstance.windowManager.alert(textarea.dataset.mediaPickerFailed ?? '');
             }
         },
         branding: false,
