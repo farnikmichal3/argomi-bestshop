@@ -48,16 +48,48 @@ foreach ($tshirtCombinations as $sku => $values) {
     );
 }
 
-$cable = $selector->select(2, [
-    'c_connectors' => ['type' => 'number', 'value' => '2'],
-    'color' => ['type' => 'enum', 'value' => 'black'],
-    'length_m' => ['type' => 'number', 'value' => '1'],
-]);
+// USB-C kabel (produkt ID 2): délka × počet konektorů × barva.
+$cableVariants = [
+    'CABLE-CC-1M-BK' => ['c_connectors' => '2', 'color' => 'black', 'length_m' => '1'],
+    'CABLE-CC-2M-BK' => ['c_connectors' => '2', 'color' => 'black', 'length_m' => '2'],
+    'CABLE-CC-2M-WH' => ['c_connectors' => '2', 'color' => 'white', 'length_m' => '2'],
+    'CABLE-CA-1M-BK' => ['c_connectors' => '1', 'color' => 'black', 'length_m' => '1'],
+    'CABLE-CA-2M-BK' => ['c_connectors' => '1', 'color' => 'black', 'length_m' => '2'],
+];
 
-Assert::same(
-    (int) $database->table('product_variant')->where('sku', 'CABLE-CC-1M-BK')->fetch()->id,
-    $cable,
-);
+foreach ($cableVariants as $sku => $values) {
+    $selectedVariantId = $selector->select(2, [
+        'c_connectors' => ['type' => 'number', 'value' => $values['c_connectors']],
+        'color' => ['type' => 'enum', 'value' => $values['color']],
+        'length_m' => ['type' => 'number', 'value' => $values['length_m']],
+    ]);
+
+    $expectedVariant = $database->table('product_variant')
+        ->where('sku', $sku)
+        ->fetch();
+
+    Assert::notNull($expectedVariant, sprintf('Demo USB-C cable variant %s must exist.', $sku));
+    Assert::same(
+        (int) $expectedVariant->id,
+        $selectedVariantId,
+        sprintf('The exact active USB-C cable variant %s must be selected.', $sku),
+    );
+}
+
+// Z os 1/2 konektory × 1/2 m × černá/bílá chybí tři záměrné kombinace.
+$missingCableCombinations = [
+    ['c_connectors' => '1', 'color' => 'white', 'length_m' => '1'],
+    ['c_connectors' => '1', 'color' => 'white', 'length_m' => '2'],
+    ['c_connectors' => '2', 'color' => 'white', 'length_m' => '1'],
+];
+
+foreach ($missingCableCombinations as $values) {
+    Assert::same(null, $selector->select(2, [
+        'c_connectors' => ['type' => 'number', 'value' => $values['c_connectors']],
+        'color' => ['type' => 'enum', 'value' => $values['color']],
+        'length_m' => ['type' => 'number', 'value' => $values['length_m']],
+    ]));
+}
 
 // GaN nabíječka (produkt ID 3) má čtyři skutečné kombinace ze tří os.
 $chargerVariants = [
