@@ -86,6 +86,31 @@ $database->table('stock_item')->insert([
     'quantity_on_hand' => '15.000',
     'quantity_reserved' => '3.000',
 ]);
+$mediaAsset = $database->table('media_asset')->insert([
+    'original_filename' => 'shirt-' . $token . '.jpg',
+    'storage_key' => 'catalog/test/' . $token . '.jpg',
+]);
+$sourceImage = $database->table('product_image')->insert([
+    'product_id' => $sourceId,
+    'media_asset_id' => $mediaAsset->id,
+    'product_variant_id' => $sourceVariantId,
+    'file_path' => 'catalog/test/' . $token . '.jpg',
+    'alt_text' => 'Tričko test',
+    'sort_order' => 2,
+    'is_primary' => 1,
+]);
+$sourceImageId = (int) $sourceImage->id;
+$derivativePath = 'catalog/test/' . $token . '-listing.webp';
+$database->table('product_image_derivative')->insert([
+    'product_image_id' => $sourceImageId,
+    'format' => 'webp',
+    'source_sha256' => hash('sha256', 'image-source-' . $token),
+    'recipe_sha256' => hash('sha256', 'image-recipe-' . $token),
+    'width' => 600,
+    'height' => 600,
+    'file_path' => $derivativePath,
+    'file_size_bytes' => 12345,
+]);
 
 $service->archive($sourceId);
 Assert::same(ProductStatus::Archived, $repository->findStatus($sourceId));
@@ -161,6 +186,16 @@ Assert::same(0, $database->table('variant_price_history')
     ->where('product_variant_id', $copyVariant->id)->count('*'));
 Assert::same(0, $database->table('stock_movement')
     ->where('product_variant_id', $copyVariant->id)->count('*'));
+
+$copyImage = $database->table('product_image')->where('product_id', $copyId)->fetch();
+Assert::notNull($copyImage);
+Assert::notSame($sourceImageId, (int) $copyImage->id);
+Assert::same((int) $mediaAsset->id, (int) $copyImage->media_asset_id);
+Assert::same((int) $copyVariant->id, (int) $copyImage->product_variant_id);
+$copyDerivative = $database->table('product_image_derivative')
+    ->where('product_image_id', $copyImage->id)->fetch();
+Assert::notNull($copyDerivative);
+Assert::same($derivativePath, $copyDerivative->file_path);
 
 $draft = $database->table('product')->insert([
     'code' => 'f5-25-draft-' . $token,
