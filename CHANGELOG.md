@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 Development of the first production release is in progress. No production release has been published yet.
 
+### Added
+
+- Administrátorská knihovna médií s bezpečným nahráváním a neveřejnými soubory ve výchozím stavu.
+- Výslovné publikování obrázků; veřejná část zpřístupňuje pouze publikované odvozené varianty, nikoliv originály.
+- Výběr publikovaných obrázků přímo v editoru produktových popisů HugeRTE.
+- Záložková editace produktu rozdělená do pěti pracovních částí.
+
 ### Recording rules
 
 - Keep entries in reverse chronological order.
