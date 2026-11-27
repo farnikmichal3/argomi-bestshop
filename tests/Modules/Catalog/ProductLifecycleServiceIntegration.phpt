@@ -62,7 +62,7 @@ $database->table('product_translation')->insert([
 $sourceVariant = $database->table('product_variant')->insert([
     'product_id' => $sourceId,
     'sku' => 'F525-' . strtoupper($token),
-    'ean' => '859' . str_pad((string) random_int(0, 999999999), 9, '0', STR_PAD_LEFT),
+    'ean' => '859' . str_pad((string) random_int(0, 9999999999), 10, '0', STR_PAD_LEFT),
     'combination_hash' => hash('sha256', 'f5-25-' . $token),
     'is_default' => 1,
     'is_active' => 1,
