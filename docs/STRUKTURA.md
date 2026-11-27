@@ -232,6 +232,10 @@ app/
     │   │       ├── LoginPresenter.php
     │   │       └── default.latte
     │   ├── Orders/
+    │   ├── Media/
+    │   │   ├── MediaPresenter.php
+    │   │   ├── MediaBinaryResponse.php
+    │   │   └── default.latte
     │   ├── Products/
     │   │   ├── Variant/
     │   │   │   ├── VariantPresenter.php
@@ -256,7 +260,10 @@ app/
     │   ├── Catalog/
     │   ├── Checkout/
     │   ├── Error/
-    │   └── Home/
+    │   ├── Home/
+    │   └── Media/
+    │       ├── MediaPresenter.php
+    │       └── PublicMediaResponse.php
     └── Shared/
         ├── Component/
         ├── Form/
