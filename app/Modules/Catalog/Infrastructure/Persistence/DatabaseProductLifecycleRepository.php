@@ -267,8 +267,22 @@ final readonly class DatabaseProductLifecycleRepository implements ProductLifecy
                 throw new UnexpectedValueException('Databáze nepotvrdila vytvoření kopie obrázku produktu.');
             }
 
-            // Optimalizované soubory patří sdílenému media_asset a mají globálně
-            // unikátní storage path. Nová produktová vazba je proto znovu nepřidává.
+            // Kopírujeme pouze katalogovou vazbu derivátu. Fyzický soubor i
+            // storage path zůstávají sdílené s původním media_asset.
+            foreach ($this->database->table('product_image_derivative')
+                ->where('product_image_id', $this->integer($row->id, 'product_image.id'))
+                ->fetchAll() as $derivative) {
+                $this->database->table('product_image_derivative')->insert([
+                    'product_image_id' => $this->integer($image->id, 'product_image.id'),
+                    'format' => $derivative->format,
+                    'source_sha256' => $derivative->source_sha256,
+                    'recipe_sha256' => $derivative->recipe_sha256,
+                    'width' => $derivative->width,
+                    'height' => $derivative->height,
+                    'file_path' => $derivative->file_path,
+                    'file_size_bytes' => $derivative->file_size_bytes,
+                ]);
+            }
         }
     }
 
