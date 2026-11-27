@@ -658,7 +658,11 @@ final class ProductsPresenter extends TranslatedPresenter
             }
 
             try {
-                $this->productRelationWriter->add($this->editData->id, $relatedId, $type, count($this->productRelations));
+                $nextSortOrder = 0;
+                foreach ($this->productRelations as $relation) {
+                    $nextSortOrder = max($nextSortOrder, $relation->sortOrder + 1);
+                }
+                $this->productRelationWriter->add($this->editData->id, $relatedId, $type, $nextSortOrder);
             } catch (InvalidArgumentException|\DomainException|UniqueConstraintViolationException) {
                 $form->addError($translator->translate('products.relations.error.duplicate_or_invalid'));
                 return;
