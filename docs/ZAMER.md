@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – záměr a rozhodnutí
 
 **Stav:** aktuální kanonický dokument  
-**Revize:** 1.48 · 25. 11. 2026
+**Revize:** 1.49 · 27. 11. 2026
 **Navazuje na:** [STRUKTURA](STRUKTURA.md), [DATABASE](DATABASE.md), [TRANSLATIONS](TRANSLATIONS.md), [ROADMAP](ROADMAP.md)
 
 Tento dokument zachycuje záměr projektu a rozhodnutí autora. Nezaměňuje budoucí cíle za hotovou implementaci.
@@ -46,7 +46,7 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 | Oblast | Rozhodnutí |
 |---|---|
 | PHP | PHP 8.3+ |
-| Framework | Nette 3.2 |
+| Framework | Nette; Composer constraints `^3.2`, aktuální `composer.lock` resolves hlavní komponenty 3.3.1 |
 | Šablony | Latte 3 |
 | Databáze | MySQL 8.x, InnoDB, utf8mb4 |
 | Přístup k databázi | Nette Database Explorer |
@@ -57,14 +57,14 @@ Projekt je modulární monolit. Moduly jsou hranice odpovědností uvnitř jedn�
 | Front-end CSS | Sass |
 | Bundling | esbuild |
 | WYSIWYG editor | HugeRTE (MIT), lokálně hostovaný; vlastní integrace přes Nette Forms a projektový Admin JS |
-| Administrační datagrid | Ublaboo Datagrid; vlastní aplikační obal pro omezení přímé závislosti na knihovně |
-| Front-end framework | Bootstrap 5.3.8 + Bootswatch Cosmo 5.3.8 |
+| Administrační datagrid | Ublaboo Datagrid 7.2.0; použitý v administračním výpisu produktů přes projektový adaptér |
+| Front-end framework | Bootstrap 5.3.8 + Bootswatch Cosmo 5.3.8; AdminLTE 4.10.2 pro administrační layout |
 | AJAX | Naja 3 |
 | Vite | Nepoužívat |
 | Dependency Injection | Striktní konstruktorová injekce |
 | Debug | Tracy ve vývojovém prostředí |
 
-Pro administrační tabulky je zvolen Ublaboo Datagrid. Vlastní aplikační vrstva má omezit přímou závislost na knihovně a umožnit její případnou budoucí náhradu. Knihovna zatím není v projektu implementována ani nakonfigurována; jde o schválenou technologickou volbu pro budoucí tvorbu administrace.
+Ublaboo Datagrid 7.2.0 je nainstalován a používá se v administračním seznamu produktů. UI jej obaluje vlastními datovými zdroji a továrnou; doménové moduly na knihovně nezávisí.
 
 Front-end assety se sestavují vlastními skripty Sass a esbuild. Front a Admin mají oddělené vstupy a výstupy. Nesmí se do projektu vrátit Vite jen proto, že jej obsahuje výchozí Nette skeleton.
 
@@ -118,14 +118,16 @@ Pravidla:
 - Knihovna médií a obrazových variant používá již schválený intervention/image a centrální pravidla generování uvedená níže.
 - Modul `Media` vlastní obecné mediální soubory, jejich bezpečné přijetí, neměnné originály, metadata, deriváty, fyzické úložiště a administrační knihovnu. Nezná produkty, varianty ani katalogové vztahy.
 - Modul `Catalog` vlastní pouze vazby mediálních položek na produkt a konkrétní variantu, jejich pořadí, ALT text a označení hlavního obrázku. Na Media komunikuje výhradně přes jeho veřejné API; nesmí přistupovat k jeho repozitářům ani souborovému úložišti.
-- Media nesmí poskytovat přímé veřejné zápisové URL. Upload prochází autentizovanou administrací, kontrolou oprávnění, limity velikosti a pixelů, dekódováním skutečného obsahu a bezpečným uložením mimo `www/`. Zobrazení souboru zajišťuje kontrolovaný read endpoint, který ověří oprávnění/veřejnou dostupnost a vrací pouze známé MIME typy.
+- Media nesmí poskytovat přímé veřejné zápisové URL. Upload prochází autentizovanou administrací, kontrolou oprávnění, limity velikosti a pixelů, dekódováním skutečného obsahu a bezpečným uložením mimo `www/`.
+- Mediální položky jsou **soukromé ve výchozím stavu**. Veřejná dostupnost vzniká pouze explicitní akcí publikování administrátorem; `published_at` je autoritativní podmínka veřejného čtení. Neprůhledný `public_token` je pouze identifikátor, nikoliv autorizační tajemství.
+- Veřejný endpoint vrací pouze známé odvozené varianty (`thumbnail`, `listing`, `detail`), nikdy originál. HugeRTE picker nabízí pouze publikované položky. Zrušení publikování okamžitě odebere veřejnou dostupnost bez nutnosti mazat soubor nebo token.
 - Mazání mediální položky musí být blokováno, dokud na ni existuje produktová vazba nebo jiná reference. Smazání vazby v Catalog samo o sobě nemaže mediální originál; životní cyklus souboru řídí Media.
 
 ### Generování a velikosti miniatur obrázků
 
 - Originální nahrané obrázky se vždy zachovávají beze změny; miniatury a odvozené varianty se generují z originálu.
 - Výchozím formátem generovaných obrazových variant je **WebP**. **AVIF** se může generovat jako další optimalizovaná varianta, pokud je jeho generování dostupné a provozně přiměřené.
-- Při zobrazování se upřednostní AVIF, následně WebP; originál slouží jako fallback tam, kde odvozené formáty nejsou vhodné nebo dostupné.
+- Aktuální veřejné zobrazení používá publikované WebP deriváty; originál není veřejným fallbackem. Další výstupní formáty lze přidat jako nové odvozené varianty bez zpřístupnění originálu.
 - Systém používá centrálně definované velikosti/varianty podle účelu zobrazení. Jejich rozměry a kvalita se řídí konfigurací, nikoliv hodnotami rozptýlenými v jednotlivých modulech.
 - Generování respektuje poměr stran a podporuje definovaný způsob ořezu; front-end využívá responzivní varianty obrázků podle velikosti zobrazovací plochy.
 
