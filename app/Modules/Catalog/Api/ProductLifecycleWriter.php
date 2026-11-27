@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\\Modules\\Catalog\\Api;
+namespace App\Modules\Catalog\Api;
 
 /** Veřejné operace životního cyklu produktu v administraci Catalog. */
 interface ProductLifecycleWriter
