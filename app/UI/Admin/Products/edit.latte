@@ -227,7 +227,17 @@
                                                         <strong>{$relation->name ?? $relation->productCode}</strong>
                                                         <div class="small text-body-secondary">{$relation->productCode}</div>
                                                     </td>
-                                                    <td><span class="badge text-bg-secondary">{_'products.relations.type.' . $relation->type->value}</span></td>
+                                                    <td>
+                                                        <span class="badge text-bg-secondary">
+                                                            {if $relation->type->value === 'accessory'}
+                                                                {_'products.relations.type.accessory'}
+                                                            {elseif $relation->type->value === 'alternative'}
+                                                                {_'products.relations.type.alternative'}
+                                                            {else}
+                                                                {_'products.relations.type.compatible'}
+                                                            {/if}
+                                                        </span>
+                                                    </td>
                                                     <td>{$index + 1}</td>
                                                 </tr>
                                             {/foreach}
