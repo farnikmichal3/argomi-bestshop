@@ -103,10 +103,10 @@ Počáteční soubor `2026-11-04-200000-init.sql` vytváří **46 tabulek**. Po 
 | Jazyk a jednotky | `language`, `unit`, `unit_translation` |
 | Systémové překlady | `catalog_message_translation`, `cart_message_translation`, `checkout_message_translation`, `admin_message_translation` (každá doména vlastní svou tabulku) |
 | Daně | `tax_class`, `tax_rate` |
-| Katalog | `product`, `product_translation`, `category`, `category_translation`, `product_category`, `attribute`, `attribute_translation`, `attribute_value`, `attribute_value_translation`, `product_variant_axis`, `product_variant`, `product_attribute_value`, `product_variant_attribute_value`, `product_option`, `product_option_translation`, `product_option_value`, `product_option_value_translation`, `product_relation`, `product_image` (vazby na Media), `product_image_derivative`, `catalog_message_translation` |
+| Katalog | `product`, `product_translation`, `category`, `category_translation`, `product_category`, `attribute`, `attribute_translation`, `attribute_value`, `attribute_value_translation`, `product_variant_axis`, `product_variant`, `product_attribute_value`, `product_variant_attribute_value`, `product_option`, `product_option_translation`, `product_option_value`, `product_option_value_translation`, `product_relation`, `product_image` (vazby na Media), `product_image_derivative` |
 | Média | `media_asset`, `media_asset_derivative` |
 | Administrátorská identita | `admin_user`, `admin_role`, `admin_user_role` |
-| Ceník ISO 4217 | `iso4217_catalog_release`, `iso4217_currency` |
+| Ceník a měny | `currency`, `iso4217_catalog_release`, `iso4217_currency` |
 | Sdílená infrastruktura | `outbox_message` (Transactional Outbox) |
 | Ceny | `variant_price`, `variant_price_history`, `option_value_price` |
 | Sklad | `stock_item`, `stock_movement` |
@@ -116,7 +116,7 @@ Počáteční soubor `2026-11-04-200000-init.sql` vytváří **46 tabulek**. Po 
 | Košík | `cart`, `cart_item`, `cart_item_option` |
 | Objednávky | `shop_order`, `shop_order_item`, `shop_order_item_option`, `shop_order_adjustment`, `shop_order_status_history` |
 
-Počet a názvy tabulek jsou převzaté přímo z aktuálního `init.sql`. Tabulky administrátorské identity jsou doplněny dopřednou migrací; zákaznická Identity, Mailing, Settings a samostatný Checkout workflow zatím implementovány nejsou. Přítomnost připravených modulových adresářů neznamená, že jejich aplikační workflow existuje.
+Počet a názvy tabulek jsou odvozené z počátečního `init.sql` a všech aktuálních strukturálních migrací. Tabulky administrátorské identity jsou doplněny dopřednou migrací; zákaznická Identity, Mailing, Settings a samostatný Checkout workflow zatím implementovány nejsou. Přítomnost připravených modulových adresářů neznamená, že jejich aplikační workflow existuje.
 
 ## 3. Základní data
 
