@@ -789,8 +789,8 @@ final class ProductsPresenter extends TranslatedPresenter
                 $ordered[] = ['position' => $position, 'relation' => new ProductRelationOrder($relation->productId, $relation->type)];
             }
 
-            usort($ordered, static fn (array $a, array $b): int => $a['position'] <=> $b['position']);
-            $relations = array_map(static fn (array $entry): ProductRelationOrder => $entry['relation'], $ordered);
+            usort($ordered, static fn(array $a, array $b): int => $a['position'] <=> $b['position']);
+            $relations = array_map(static fn(array $entry): ProductRelationOrder => $entry['relation'], $ordered);
 
             try {
                 $this->productRelationWriter->reorder($this->editData->id, $relations);
