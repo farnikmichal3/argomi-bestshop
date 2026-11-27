@@ -131,7 +131,12 @@ try {
         fn () => $service->update($productId, $code, ProductAdminStatus::Active, ProductAdminType::Digital, $taxClassId, $updatedTranslations, []),
         InvalidArgumentException::class,
     );
-    $database->table('product_variant')->where('id', $variantId)->update(['is_default' => 1]);
+    $database->table('product_variant')->where('id', $variantId)->update(['is_active' => 0, 'is_default' => 1]);
+    Assert::exception(
+        fn () => $service->update($productId, $code, ProductAdminStatus::Active, ProductAdminType::Digital, $taxClassId, $updatedTranslations, []),
+        InvalidArgumentException::class,
+    );
+    $database->table('product_variant')->where('id', $variantId)->update(['is_active' => 1]);
 
     $service->update(
         $productId,
@@ -176,7 +181,11 @@ try {
         // Produkty zůstávají kvůli auditní stopě; testovací variantu odstraníme a produkt archivujeme.
         $database->table('product_category')->where('product_id', $productId)->delete();
         if ($variantId !== null) {
-            $database->table('product_variant')->where('id', $variantId)->delete();
+            // Projekt chrání varianty před fyzickým smazáním; testovací záznam deaktivujeme.
+            $database->table('product_variant')->where('id', $variantId)->update([
+                'is_active' => 0,
+                'is_default' => 0,
+            ]);
         }
         $database->table('product')->where('id', $productId)->update(['status' => ProductStatus::Archived->value]);
     }
