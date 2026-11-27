@@ -12,7 +12,9 @@
                 <span class="text-body-secondary">({$product->code})</span>
             </p>
             {if $isArchived}
-                <div class="alert alert-secondary mb-0">{_'products.lifecycle.archive.already'}</div>
+                <div class="alert alert-secondary">{_'products.lifecycle.archive.already'}</div>
+                <p>{_'products.lifecycle.copy.description'}</p>
+                {control productCopyForm}
             {else}
                 <div class="alert alert-warning">{_'products.lifecycle.archive.warning'}</div>
                 {control productArchiveForm}
