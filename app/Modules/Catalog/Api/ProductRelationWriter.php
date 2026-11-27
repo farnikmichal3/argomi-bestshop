@@ -8,7 +8,7 @@ use App\Modules\Catalog\Api\Dto\ProductRelationOrder;
 
 interface ProductRelationWriter
 {
-    public function add(int $productId, int $relatedProductId, ProductRelationKind $type): void;
+    public function add(int $productId, int $relatedProductId, ProductRelationKind $type, int $sortOrder = 0): void;
 
     public function remove(int $productId, int $relatedProductId, ProductRelationKind $type): bool;
 
