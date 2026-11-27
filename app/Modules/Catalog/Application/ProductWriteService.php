@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Application;
 
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Api\ProductActivationRequirementsNotMet;
 use App\Modules\Catalog\Api\ProductAdminStatus;
 use App\Modules\Catalog\Api\ProductAdminType;
 use App\Modules\Catalog\Api\ProductWriter;
@@ -51,7 +52,7 @@ final class ProductWriteService implements ProductWriter
         // Nový produkt ještě nemůže mít varianty: ty vznikají až po uložení konceptu.
         // Aktivní produkt proto musí vzniknout jako koncept a být aktivován až následně.
         if ($domainStatus === ProductStatus::Active) {
-            throw new InvalidArgumentException('Nový produkt musí být nejprve uložen jako koncept, doplněny varianty a teprve poté aktivován.');
+            throw new ProductActivationRequirementsNotMet('Nový produkt musí být nejprve uložen jako koncept, doplněny varianty a teprve poté aktivován.');
         }
 
         if (!$this->repository->isCodeAvailable($code)) {
@@ -97,7 +98,7 @@ final class ProductWriteService implements ProductWriter
 
         $this->transaction->run(function () use ($productId, $code, $domainStatus, $domainType, $taxClassId, $localized, $categories): void {
             if ($domainStatus === ProductStatus::Active && !$this->repository->hasPublishableVariantConfiguration($productId)) {
-                throw new InvalidArgumentException('Produkt lze aktivovat pouze s alespoň jednou aktivní variantou a právě jednou výchozí aktivní variantou.');
+                throw new ProductActivationRequirementsNotMet('Produkt lze aktivovat pouze s alespoň jednou aktivní variantou a právě jednou výchozí aktivní variantou.');
             }
 
             $this->repository->updateProduct($productId, $code, $domainStatus, $domainType, $taxClassId);

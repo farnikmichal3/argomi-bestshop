@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Modules\Catalog\Api\CatalogAccessDeniedException;
 use App\Modules\Catalog\Api\CatalogPermission;
+use App\Modules\Catalog\Api\ProductActivationRequirementsNotMet;
 use App\Modules\Catalog\Api\ProductEditorReader;
 use App\Modules\Catalog\Api\ProductAdminStatus;
 use App\Modules\Catalog\Api\ProductAdminType;
@@ -83,7 +84,7 @@ try {
 
     Assert::exception(
         fn () => $service->create($code . '-active', ProductAdminStatus::Active, ProductAdminType::Physical, $taxClassId, $translations('active-create'), []),
-        InvalidArgumentException::class,
+        ProductActivationRequirementsNotMet::class,
     );
     Assert::same(null, $database->table('product')->where('code', $code . '-active')->fetch());
 
@@ -114,7 +115,7 @@ try {
     $updatedTranslations = $translations('updated-product');
     Assert::exception(
         fn () => $service->update($productId, $code, ProductAdminStatus::Active, ProductAdminType::Digital, $taxClassId, $updatedTranslations, []),
-        InvalidArgumentException::class,
+        ProductActivationRequirementsNotMet::class,
     );
     Assert::same('draft', $database->table('product')->where('id', $productId)->fetch()->status);
 
@@ -129,12 +130,12 @@ try {
     $variantId = (int) $variant->id;
     Assert::exception(
         fn () => $service->update($productId, $code, ProductAdminStatus::Active, ProductAdminType::Digital, $taxClassId, $updatedTranslations, []),
-        InvalidArgumentException::class,
+        ProductActivationRequirementsNotMet::class,
     );
     $database->table('product_variant')->where('id', $variantId)->update(['is_active' => 0, 'is_default' => 1]);
     Assert::exception(
         fn () => $service->update($productId, $code, ProductAdminStatus::Active, ProductAdminType::Digital, $taxClassId, $updatedTranslations, []),
-        InvalidArgumentException::class,
+        ProductActivationRequirementsNotMet::class,
     );
     $database->table('product_variant')->where('id', $variantId)->update(['is_active' => 1]);
 

@@ -24,6 +24,7 @@ use App\Modules\Catalog\Api\ProductCustomerOptionWriter;
 use App\Modules\Catalog\Api\Dto\ProductCustomerOptionConfigurationData;
 use App\Modules\Catalog\Api\AttributeDataType;
 use App\Modules\Catalog\Api\Dto\ProductEditorConfigurationData;
+use App\Modules\Catalog\Api\ProductActivationRequirementsNotMet;
 use App\Modules\Catalog\Api\ProductAdminStatus;
 use App\Modules\Catalog\Api\ProductAdminType;
 use App\Modules\Catalog\Api\ProductWriter;
@@ -331,6 +332,9 @@ final class ProductsPresenter extends TranslatedPresenter
                 }
             } catch (UniqueConstraintViolationException) {
                 $form->addError($translator->translate('products.editor.error.duplicate'));
+                return;
+            } catch (ProductActivationRequirementsNotMet) {
+                $form->addError($translator->translate('products.editor.error.activation_requirements'));
                 return;
             } catch (InvalidArgumentException) {
                 $form->addError($translator->translate('products.editor.error.invalid'));
