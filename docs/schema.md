@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – diagram databázového schématu
 
-**Revize:** 1.9 · 15. 11. 2026  
+**Revize:** 2.0 · 27. 11. 2026  
 **Autoritativní zdroj:** aktuální dopředné SQL migrace v `migrations/structures/`  
 **Databáze:** MySQL 8.x / InnoDB
 
@@ -8,11 +8,11 @@ Tento dokument vizualizuje skutečné tabulky a cizí klíče po aplikaci všech
 
 ## 1. Přehled tabulek podle vlastníka
 
-Schéma obsahuje **51 tabulek** a **75 cizích klíčů**. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
+Schéma obsahuje **58 tabulek** a **82 cizích klíčů** po započtení všech 20 strukturálních migrací v aktuálním repozitáři. Vlastnictví označuje odpovědnost za doménová data, nikoli oprávnění jiných modulů přistupovat přímo do cizí persistence.
 
 | Modul | Tabulek | Oblast |
 |---|---:|---|
-| Catalog | 22 | Produkty, kategorie, atributy, varianty, volby, produktové vztahy a katalogové systémové texty. Vlastní také jednotky a jejich překlady. |
+| Catalog | 23 | Produkty, kategorie, atributy, varianty, volby, produktové vztahy, obrazové deriváty a katalogové systémové texty. Vlastní také jednotky a jejich překlady. |
 | Pricing | 6 | Měny, katalog ISO 4217, ceny variant, historie cen a ceny hodnot voleb. |
 | Tax | 2 | Daňové třídy a sazby. |
 | Inventory | 2 | Skladové položky a pohyby. |
@@ -23,6 +23,9 @@ Schéma obsahuje **51 tabulek** a **75 cizích klíčů**. Vlastnictví označuj
 | Orders | 5 | Objednávky, položky, snapshoty voleb, úpravy a historie stavů. |
 | Checkout | 1 | Systémové texty průchodu objednávkou. |
 | Translation | 1 | Společný jazykový katalog a překladová infrastruktura. |
+| Identity | 3 | Administrátorské účty, role a jejich vazby. |
+| Media | 2 | Mediální položky a jejich obrazové deriváty. |
+| Admin | 1 | Systémové texty administrační domény.
 | Shared | 1 | Technická tabulka Transactional Outbox; nese volitelnou vazbu na objednávku pro ochranu demo dat. |
 
 ## 2. Význam tabulek a datové invarianty
@@ -39,12 +42,15 @@ Následující poznámky doplňují diagram o doménový význam tabulek. Neopis
 | `product_attribute_value` | Hodnota atributu na úrovni produktu, nikoli konkrétní varianty. |
 | `variant_price` / `variant_price_history` | Aktuální cena varianty a její historické body. Historie se nemaže spolu s variantou automaticky. |
 | `stock_item` / `stock_movement` | Aktuální stav zásoby varianty a neměnný skladový deník. Demo seed vytváří pro každou variantu s kladným počátečním stavem právě jeden příjem `demo_opening_balance`, jehož množství odpovídá `stock_item.quantity_on_hand`. Pohyby navázané přes `reference_type = 'shop_order'` jsou databázově zakázány pro demo objednávky. |
-| `catalog_message_translation` / `cart_message_translation` / `checkout_message_translation` | Systémové texty vlastní příslušné domény. Každá tabulka uchovává stabilní `message_key` a jazykové znění; klíč je unikátní v rámci locale a tabulky. Společná tabulka `language` zůstává vlastnictvím infrastruktury Translation. |
+| `catalog_message_translation` / `cart_message_translation` / `checkout_message_translation` / `admin_message_translation` | Systémové texty vlastní příslušné domény. Každá tabulka uchovává stabilní `message_key` a jazykové znění; klíč je unikátní v rámci locale a tabulky. Společná tabulka `language` zůstává vlastnictvím infrastruktury Translation. |
 | `cart_item` | Položka košíku odkazuje na variantu a ukládá identitu produktu pro kontrolu složené vazby. |
 | `shop_order` | Objednávka uchovává účetní souhrny v minor units. `adjustments_net_minor` je čistý součet úprav; `grand_total_minor` musí odpovídat součtu mezisoučtu, čistých úprav a daně. `placed_at IS NOT NULL` uzavírá finanční snapshot. `is_demo = 1` označuje demonstrační objednávku; její klasifikace je po založení neměnná a databáze nedovolí zařadit ji do provozního Outboxu. |
 | `shop_order_item` / `shop_order_item_option` | Historický nákupní snapshot. Hrubá částka řádku musí být součtem čisté částky a daně; po uzavření objednávky jsou položky i jejich volby neměnné. Snapshot nesmí být závislý na aktuálním názvu, ceně ani konfiguraci katalogu. |
 | `shop_order_adjustment` | Historická úprava objednávky (např. doprava nebo sleva); hrubá částka je součtem čisté částky a daně. Souhrn čistých úprav je uložen v `shop_order.adjustments_net_minor`. Po uzavření objednávky nelze úpravy měnit. |
 | `currency` / `iso4217_currency` | Obchodní měna je navázána na verzovaný katalog ISO 4217; složený FK vynucuje současnou shodu kódu a počtu minor units. |
+| `admin_user` / `admin_role` / `admin_user_role` | Základ administrátorské identity. `admin_user_role` váže účet na seedovanou roli; nejde o kompletní ACL/RBAC správu. |
+| `media_asset` / `media_asset_derivative` | Mediální položka a její odvozené obrazové soubory. Originály zůstávají v úložišti mimo `www/`; veřejný endpoint poskytuje pouze deriváty explicitně publikovaných položek. |
+| `product_image_derivative` | Odvozená varianta původní katalogové vazby obrázku; historická migrace zachovává stávající obrazové vazby. |
 | `outbox_message` | Technická integrační zpráva s vlastním životním cyklem. Volitelný `shop_order_id` odkazuje na objednávku; události `order.*` jej musí uvádět a JSON `payload.orderId` musí přesně odpovídat FK; databáze odmítá vazbu na demo objednávku. Stejná ochrana platí pro skladové pohyby s `reference_type = 'shop_order'`. Payload nesmí obsahovat tajné údaje. |
 
 ## 3. Kanonizace kombinace varianty
@@ -158,6 +164,7 @@ flowchart LR
     product_option_value_translation["product_option_value_translation"]
     product_relation["product_relation"]
     product_image["product_image"]
+    product_image_derivative["product_image_derivative"]
     catalog_message_translation["catalog_message_translation"]
   end
   subgraph Pricing["Pricing"]
@@ -214,6 +221,21 @@ flowchart LR
     shop_order_adjustment["shop_order_adjustment"]
     shop_order_status_history["shop_order_status_history"]
   end
+  subgraph Identity["Identity"]
+    direction TB
+    admin_user["admin_user"]
+    admin_role["admin_role"]
+    admin_user_role["admin_user_role"]
+  end
+  subgraph Media["Media"]
+    direction TB
+    media_asset["media_asset"]
+    media_asset_derivative["media_asset_derivative"]
+  end
+  subgraph Admin["Admin"]
+    direction TB
+    admin_message_translation["admin_message_translation"]
+  end
   subgraph Translation["Translation"]
     direction TB
     language["language"]
@@ -228,6 +250,7 @@ flowchart LR
   catalog_message_translation -->|locale → code| language
   cart_message_translation -->|locale → code| language
   checkout_message_translation -->|locale → code| language
+  admin_message_translation -->|locale → code| language
   product_translation -->|locale → code| language
   category_translation -->|locale → code| language
   attribute_translation -->|locale → code| language
@@ -265,6 +288,9 @@ flowchart LR
   product_relation -->|product_id → id| product
   product_relation -->|related_product_id → id| product
   product_image -->|product_id → id| product
+  product_image -->|media_asset_id → id| media_asset
+  product_image_derivative -->|product_image_id → id| product_image
+  media_asset_derivative -->|media_asset_id → id| media_asset
   product_image -->|product_variant_id, product_id → id, product_id| product_variant
   variant_price -->|product_variant_id → id| product_variant
   variant_price -->|currency → code| currency
@@ -298,6 +324,8 @@ flowchart LR
   iso4217_currency -->|iso4217_catalog_release_id → id| iso4217_catalog_release
   currency -->|code, minor_units → code, minor_units| iso4217_currency
   outbox_message -->|shop_order_id → id| shop_order
+  admin_user_role -->|admin_user_id → id| admin_user
+  admin_user_role -->|admin_role_id → id| admin_role
 ```
 
 ## 7. Poznámky k interpretaci
@@ -320,6 +348,16 @@ flowchart LR
 - `migrations/structures/2026-11-15-180000-archive-products-and-variants.sql` – archivace produktů a deaktivace variant, FK `ON DELETE RESTRICT` a databázové triggery zakazující fyzické mazání a neplatnou aktivaci variant.
 - `migrations/structures/2026-11-15-210000-split-system-message-translations.sql` – rozdělení systémových textů do vlastnických tabulek Catalog, Cart a Checkout; převod zachovává ID i všechna data a starou tabulku odstraní až po úplné kontrole shody.
 - `migrations/structures/2026-11-15-220000-protect-demo-orders.sql` – klasifikace demo objednávek, neměnnost příznaku, FK Outboxu a databázové triggery blokující provozní Outbox události i skladové pohyby demo objednávek.
+- `migrations/structures/2026-11-17-150000-admin-message-translation.sql` – systémové texty administrační domény.
+- `migrations/structures/2026-11-18-150500-catalog-image-derivatives.sql` – deriváty katalogových obrázků.
+- `migrations/structures/2026-11-20-220000-product-image-original-metadata.sql` – metadata původního obrázku.
+- `migrations/structures/2026-11-22-060000-protect-category-deletion.sql` – ochrana hierarchie kategorií.
+- `migrations/structures/2026-11-22-080000-add-product-type.sql` – typ produktu.
+- `migrations/structures/2026-11-22-110000-admin-identity-foundation.sql` – tabulky administrátorských účtů a rolí.
+- `migrations/structures/2026-11-24-080000-product-variant-ean.sql` – volitelný unikátní EAN varianty.
+- `migrations/structures/2026-11-25-090000-media-library.sql` – knihovna Media, deriváty a migrace existujících obrázků bez změny jejich ID.
+- `migrations/structures/2026-11-25-110000-product-image-management.sql` – hlavní obrázek a unikátní slot produktové/variantní skupiny.
+- `migrations/structures/2026-11-25-160000-media-publication.sql` – explicitní publikování; existující média zůstávají neveřejná.
 
 ## 9. Demo data
 
