@@ -42,6 +42,10 @@ takže uživatelský vstup nikdy netvoří SQL identifikátor. Neaktivní katego
 ani neaktivní produkty se do výpisu nedostanou. Výpis zahrnuje pouze přímé
 přiřazení produktu do kategorie, nikoli automaticky její potomky.
 
+## Výběr médií v HugeRTE (F5-22)
+
+Produktový editor nezískává soubory přímo z filesystemu ani z administračního binary endpointu. Picker používá Admin Media endpoint, který vrací pouze explicitně publikované položky. Do popisu se ukládá veřejná URL ve tvaru /media/{token}/detail; serverový ProductDescriptionSanitizer povoluje pouze tuto interní cestu s validním 64znakovým hex tokenem. HTMLPurifier zůstává aktivní a externí, data:, protocol-relative i administrační URL obrázků jsou odmítnuty. Veřejný Media reader navíc kontroluje stav publikování a vydává pouze derivát, nikoliv originál.
+
 ## Produktové obrázky a přiřazení médií (F5-22)
 
 Catalog vlastní pouze vazby mezi produktem/variantou a položkou z Media. Veřejné kontrakty `ProductImageReader` a `ProductImageWriter` poskytují seznam, přiřazení, úpravu ALT textu a pořadí, odstranění vazby a nastavení hlavního obrázku. Samotný soubor, originál a deriváty zůstávají ve vlastnictví Media; odstranění produktové vazby soubor nemaže. Přiřazení ověřuje existenci mediální položky přes `MediaAssetReader` a databázový FK ověřuje vlastnictví varianty produktem. Hlavní obrázek je jedinečný pro produktovou nebo konkrétní variantní skupinu.
