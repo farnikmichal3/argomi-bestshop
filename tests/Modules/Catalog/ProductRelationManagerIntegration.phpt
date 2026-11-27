@@ -86,7 +86,7 @@ try {
 
     $writer->reorder(1, [
         new ProductRelationOrder(2, ProductRelationKind::Accessory),
-        new \\App\\Modules\\Catalog\\Api\\Dto\\ProductRelationOrder(3, ProductRelationKind::Alternative),
+        new ProductRelationOrder(3, ProductRelationKind::Alternative),
     ]);
 
     $ordered = $pdo->query(
