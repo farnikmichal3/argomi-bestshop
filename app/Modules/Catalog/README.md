@@ -403,3 +403,20 @@ Testy rozšiřují existující soubory `VariantSelectorIntegration.phpt`, `Prod
 ## Ověření demo produktu 1 – bavlněné tričko (F5-27)
 
 `tests/Modules/Catalog/VariantSelectorIntegration.phpt` ověřuje všech šest kombinací os barva a velikost: černá/bílá × S/M/L. Pro každou kombinaci se předají typované enum hodnoty a ověří se přesné ID vrácené varianty. Lokalizované načtení detailu produktu a šestiprvkovou matici pokrývají samostatné integrační testy; testovací sada tak ověřuje detail, matici i skutečný výběr každé varianty. F5-27 nevyžaduje změnu databáze.
+
+
+## Deterministická identita kombinace variant (F5-30)
+
+Doménová třída `VariantCombinationHash` nejprve vytvoří kanonický zápis
+atributů se stabilním binárním řazením kódů, normalizací čísel a bezpečným
+escapováním hodnot; z něj vypočítá SHA-256. Číselné hodnoty se přijímají
+výhradně jako desetinné řetězce (nikoli `float`), booleovské hodnoty jako
+skutečný typ `bool` a text musí být platné UTF-8. Neplatné nebo prázdné
+kombinace jsou odmítnuty.
+
+Jednotkový test `VariantCombinationHash.phpt` ověřuje kanonizaci i hraniční
+vstupy. Integrační test `VariantCombinationHashIntegration.phpt` porovnává
+pro všech 15 existujících demo SKU výsledek PHP SHA-256, MySQL `SHA2(?, 256)`
+a hodnotu uloženou v databázi. Pokryty jsou tričko (6), GaN nabíječka (4)
+a USB-C kabel (5). F5-30 nevyžaduje migraci ani nový testovací soubor;
+CI run `46083987812` i lokální `check.bat` uživatele prošly.

@@ -1,7 +1,7 @@
 # ArgoMi-BestShop – struktura projektu
 
 **Stav:** schválená základní struktura  
-**Revize:** 4.26 · 28. 11. 2026  
+**Revize:** 4.27 · 28. 11. 2026  
 **Zdroj stromu:** aktuální strom repozitáře na větvi `main`, ověřeno 27. 11. 2026
 
 Tento dokument popisuje strukturu, kterou projekt skutečně používá. Není to návrh alternativního stromu. Nové soubory se mají zařazovat do existujících částí podle odpovědnosti.
@@ -578,3 +578,13 @@ F5-25 přidává veřejné administrační API `Catalog/Api/ProductLifecycleWrit
 F5-27 rozšiřuje `tests/Modules/Catalog/VariantSelectorIntegration.phpt` o úplné ověření výběru všech šesti demo variant bavlněného trička (černá/bílá × S/M/L). Test kontroluje enum hodnoty obou os i přesnou identitu nalezené varianty. Lokalizovaný detail produktu a matice kombinací mají vlastní existující integrační testy. CI run `46081321571` a lokální `check.bat` prošly; počet testovacích souborů se nezměnil.
 
 F5-28 a F5-29 rozšiřují stejné tři integrační testy demo produktů. GaN nabíječka (`product.id = 3`) ověřuje všechny čtyři SKU a 12 kombinací os; USB-C kabel (`product.id = 2`) ověřuje všech pět SKU a osm kombinací os. Testy pokrývají také lokalizovaný detail cs/en a odmítnutí neexistujících kombinací. CI i lokální `check.bat` pro oba kroky prošly; nevznikly nové testovací soubory ani databázové migrace.
+
+
+F5-30 rozšiřuje `tests/Modules/Catalog/VariantCombinationHashIntegration.phpt`
+na všech 15 skutečných demo variant (6 triček, 4 nabíječky, 5 kabelů).
+Každý výsledek SHA-256 z PHP se porovnává s MySQL `SHA2` i uloženým
+`product_variant.combination_hash`. Jednotkový test
+`VariantCombinationHash.phpt` pokrývá kanonizaci, pořadí atributů,
+číselnou normalizaci, bool/UTF-8 hodnoty, escapování a odmítnutí chybných
+vstupů. CI i lokální `check.bat` prošly; počet testovacích souborů zůstává
+89 a databázové schéma se nemění.

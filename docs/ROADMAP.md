@@ -1,6 +1,6 @@
 # ArgoMi-BestShop – plán vývoje (ROADMAP)
 
-Verze dokumentu 3.125 · 28. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
+Verze dokumentu 3.126 · 28. 11. 2026 · navazuje na `ZAMER.md`, `STRUKTURA.md`, `DATABASE.md` a `TRANSLATIONS.md`
 
 Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který navazujeme. Po každé pracovní session aktualizujeme stavy.
 
@@ -49,7 +49,7 @@ Tento dokument je **živý seznam kroků**, ke kterému se vracíme a na který 
 
 ## 2. Přehled stavu
 
-Celkem **560 kroků**: hotovo 203, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 348, zrušeno 7.
+Celkem **560 kroků**: hotovo 204, rozděláno 0, k úpravě 1, rozhodnout 0, blokováno 0, plán 347, zrušeno 7.
 
 | Fáze | Název | Kroků | HOTOVO | ROZDĚLÁNO | K ÚPRAVĚ | ROZHODNOUT | BLOKOVÁNO | PLÁN | ZRUŠENO |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -58,7 +58,7 @@ Celkem **560 kroků**: hotovo 203, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F2 | Sdílené jádro (Shared) | 20 | 20 | 0 | 0 | 0 | 0 | 0 | 0 |
 | F3 | Databáze a migrace | 34 | 33 | 0 | 0 | 0 | 0 | 0 | 1 |
 | F4 | Překlady v databázi | 29 | 24 | 0 | 0 | 0 | 0 | 0 | 5 |
-| F5 | Catalog (vlna 1) | 41 | 32 | 0 | 0 | 0 | 0 | 9 | 0 |
+| F5 | Catalog (vlna 1) | 41 | 33 | 0 | 0 | 0 | 0 | 8 | 0 |
 | F6 | Tax, Pricing, Inventory | 28 | 0 | 0 | 0 | 0 | 0 | 28 | 0 |
 | F7 | Cart | 16 | 0 | 0 | 0 | 0 | 0 | 16 | 0 |
 | F8 | Zákazníci a administrátoři | 21 | 2 | 0 | 0 | 0 | 0 | 19 | 0 |
@@ -75,6 +75,11 @@ Celkem **560 kroků**: hotovo 203, rozděláno 0, k úpravě 1, rozhodnout 0, bl
 | F19 | Speciální scénáře | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
 | F20 | Vlna 4: pokročilé konfigurace | 14 | 0 | 0 | 0 | 0 | 0 | 14 | 0 |
 | F21 | Funkce, na kterých obchodník stojí | 22 | 0 | 0 | 0 | 0 | 0 | 22 | 0 |
+
+### v3.126 (28. 11. 2026)
+- Uživatel potvrdil úspěšné GitHub Actions CI i lokální `check.bat` (`All active checks passed.`) pro F5-30. Test deterministického hashe kombinace variant nyní ověřuje všech 15 skutečných demo variant: 6 triček, 4 GaN nabíječky a 5 USB-C kabelů.
+- Pro každé SKU se porovnává kanonizovaný vstup a SHA-256 vytvořený v PHP s výsledkem MySQL `SHA2(?, 256)` a s hashem uloženým v `product_variant.combination_hash`. Samostatný unit test dále pokrývá nezávislost na pořadí atributů, normalizaci desetinných čísel a záporné nuly, bool hodnoty, UTF-8 a escapování oddělovačů i odmítnutí neplatných vstupů. Rozšířen byl existující integrační test; počet testovacích souborů zůstává 89 a databázové schéma se nemění.
+- F5-30 je HOTOVO. Souhrn F5: **33 hotovo**, **0 rozpracováno**, **8 plán**. Celkem: **204 hotovo**, **0 rozpracováno**, **1 k úpravě**, **347 plán**, **7 zrušeno**. CI run `46083987812` prošel.
 
 ### v3.125 (28. 11. 2026)
 - Uživatel potvrdil úspěšné GitHub Actions CI i lokální `check.bat` (`All active checks passed.`) pro F5-29. Krok je HOTOVO.
@@ -819,7 +824,7 @@ _Kategorie, produkty, varianty, atributy, volby zákazníka a média pro demo pr
 - `[HOTOVO]` **F5-27** Test: načtení demo produktu 1 – bavlněné tričko (varianty velikost × barva); `VariantSelectorIntegration.phpt` ověřuje všech šest kombinací černá/bílá × S/M/L včetně přesné identity nalezené varianty. CI run `46081321571` a lokální `check.bat` prošly.
 - `[HOTOVO]` **F5-28** Test: načtení demo produktu 2 (DB ID 3) – GaN nabíječka (varianty výkon × počet portů × barva). Lokalizovaný detail cs/en, úplná matice 3 os (65/100 W × 1/2/3 porty × černá/bílá), výběr všech 4 existujících a odmítnutí 8 neexistujících kombinací; CI i lokální `check.bat` uživatel potvrdil jako úspěšné.
 - `[HOTOVO]` **F5-29** Test: načtení demo produktu 3 (DB ID 2) – USB-C kabel (varianty délky × počet konektorů × barva). Lokalizovaný detail cs/en, úplná matice 2 × 2 × 2 (5 existujících, 3 chybějící kombinace), výběr všech pěti SKU a odmítnutí chybějících kombinací; CI i lokální `check.bat` uživatel potvrdil jako úspěšné.
-- `[PLÁN]` **F5-30** Test generování správného hashe kombinace varianty
+- `[HOTOVO]` **F5-30** Test generování správného hashe kombinace varianty; všech 15 demo SKU, shoda PHP SHA-256 / MySQL SHA2 / uloženého DB hashe, CI run `46083987812` a lokální `check.bat` prošly.
 - `[PLÁN]` **F5-31** Jednotkové testy pro `VariantSelector` a `OptionResolver`
 - `[PLÁN]` **F5-32** Texty modulu Catalog (cs, en)
 - `[PLÁN]` **F5-33** Šablony komponent katalogu pro Front i Admin
